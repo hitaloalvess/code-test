@@ -11,6 +11,7 @@ import Sidebar from '@/components/Sidebar';
 import ManualButton from '@/components/ManualButton';
 import ZoomButton from '@/components/ZoomButton';
 import FaqButton from '@/components/FaqButton';
+import MoutingPanel from '../../components/MoutingPanel';
 
 
 
@@ -20,6 +21,8 @@ const Platform = () => (
             <Header />
 
             <Sidebar />
+
+            <MoutingPanel />
 
             <div className={buttonsContainer}>
                 <ManualButton />

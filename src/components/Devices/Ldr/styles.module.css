@@ -1,0 +1,41 @@
+.ldrContainer {
+    position: absolute;
+    width: 100px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+
+}
+
+.ldrContent {
+    position: relative;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.ldrBody {
+    width: 80px;
+    height: 80px;
+    position: relative;
+    transition: transform .3s ease-in-out;
+}
+
+.ldrBody img {
+    width: 100%;
+    height: 100%;
+}
+
+.ldrBody:hover {
+    transform: scale(1.1);
+}
+
+@media (((max-height: 481px) and (orientation: landscape)) or ((max-width: 481px) and (orientation: portrait))) {
+    .ldrBody {
+        width: 48px;
+        height: 48px;
+    }
+}
