@@ -1,0 +1,52 @@
+.menuButtons {
+    position: relative;
+    width: 84px;
+    height: 100%;
+    padding: 44px 0;
+    border-radius: 24px;
+    border-right: 4px solid var(--yellow-800);
+    background-color: var(--yellow);
+    z-index: 1;
+}
+
+.menuButtons ul {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+@media (max-width: 769px) and (orientation: portrait) {
+    .menuButtons {
+        width: 100%;
+        max-width: 480px;
+        height: 56px;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 12px;
+        border-right: none;
+
+    }
+
+    .menuButtons ul {
+        width: 100%;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        gap: 32px;
+    }
+
+
+}
+
+/* HEIGHT */
+
+@media (max-height: 481px) and (orientation: landscape) {
+
+    .menuButtons {
+        width: 48px;
+        border-radius: 12px;
+    }
+
+}
