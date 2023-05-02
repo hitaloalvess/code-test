@@ -3,6 +3,7 @@
     height: 56px;
     border-radius: 1000px;
     border: none;
+    cursor: pointer;
     background-color: transparent;
     transition: all 0.3s ease-in-out;
 }
