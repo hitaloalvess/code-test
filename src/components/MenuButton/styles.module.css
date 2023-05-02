@@ -1,0 +1,42 @@
+.menuButton {
+    display: block;
+    width: 52px;
+    cursor: pointer;
+    border: none;
+    border-radius: 100%;
+    margin: 0 auto;
+    background-color: transparent;
+    transition: filter .3s ease-in-out, filter .3s ease-in-out;
+}
+
+.menuButton img {
+    width: 100%;
+    height: 100%;
+}
+
+.menuButton:hover,
+.menuButtonActive {
+    filter: brightness(0.8);
+}
+
+
+
+@media (max-width: 769px) and (orientation: portrait) {
+    .menuButton {
+        width: 44px;
+    }
+}
+
+@media (max-width: 481px) and (orientation: portrait) {
+    .menuButton {
+        width: 36px;
+    }
+}
+
+/* HEIGHT */
+
+@media (max-height: 481px) and (orientation: landscape) {
+    .menuButton {
+        width: 32px;
+    }
+}

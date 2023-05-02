@@ -1,0 +1,60 @@
+.container {
+    width: 124px;
+    height: 90%;
+    border-radius: 0 24px 24px 0;
+    border-right: 4px solid var(--yellow-900);
+    background-color: var(--yellow-600);
+
+}
+
+.container ul {
+    overflow-y: auto;
+    height: 100%;
+}
+
+.container ul::-webkit-scrollbar {
+    display: none;
+}
+
+
+
+@media (max-width: 769px) and (orientation: portrait) {
+    .container {
+        width: 420px;
+        height: 96px;
+        border-radius: 12px 12px 0 0;
+    }
+
+    .container ul {
+        overflow-x: auto;
+        overflow-y: hidden;
+        display: flex;
+        align-items: center;
+        gap: 24px;
+        padding: 0 24px;
+    }
+}
+
+@media (max-width: 481px) and (orientation: portrait) {
+    .container {
+        max-width: 260px;
+        height: 64px;
+
+    }
+
+}
+
+
+/* HEIGHT */
+
+@media (max-height: 481px) and (orientation: landscape) {
+    .container {
+        max-width: 84px;
+        border-radius: 0 12px 12px 0;
+        width: 100%;
+    }
+
+
+
+
+}
