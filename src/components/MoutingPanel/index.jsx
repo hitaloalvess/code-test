@@ -3,7 +3,7 @@ import { useDrop, useDragDropManager } from 'react-dnd';
 import { v4 } from 'uuid';
 
 import { positionDevice } from '../../utils/devices-functions';
-import { Devices } from '@/components/devices';
+import Device from '@/components/Device/index';
 import BackgroundGrade from './BackgroundGrade';
 import LinesContainer from './LinesContainer';
 
@@ -64,13 +64,9 @@ const MoutingPanel = () => {
         >
             {
                 devices.map(device => (
-                    React.createElement(Devices[device.name], {
-                        key: device.id,
-                        device: device
-                    })
+                    <Device key={device.id} device={device} />
                 ))
             }
-
             <LinesContainer />
 
             <BackgroundGrade moutingPanelRef={moutingPanelRef} />
