@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
-import SidebarArea from '../SidebarArea';
-import MenuButtons from '../MenuButtons';
+import SidebarArea from './SidebarArea';
+import MenuButtons from './MenuButtons';
 
 import { menu } from './styles.module.css';
 

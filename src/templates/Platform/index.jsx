@@ -1,5 +1,5 @@
 
-import { container } from './styles.module.css';
+import { container, buttonsContainer } from './styles.module.css';
 
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
@@ -8,6 +8,10 @@ import { isMobile } from 'react-device-detect';
 
 import Header from '@/components/Header';
 import Sidebar from '@/components/Sidebar';
+import ManualButton from '@/components/ManualButton';
+import ZoomButton from '@/components/ZoomButton';
+import FaqButton from '@/components/FaqButton';
+
 
 
 const Platform = () => (
@@ -16,6 +20,12 @@ const Platform = () => (
             <Header />
 
             <Sidebar />
+
+            <div className={buttonsContainer}>
+                <ManualButton />
+                <FaqButton />
+                <ZoomButton />
+            </div>
         </main>
     </DndProvider>
 )
