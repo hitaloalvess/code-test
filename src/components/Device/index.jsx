@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import Ldr from './Ldr';
 import Led from './Led';
 
@@ -14,4 +15,4 @@ const Device = ({ device }) => {
     }
 };
 
-export default Device;
+export default memo(Device);

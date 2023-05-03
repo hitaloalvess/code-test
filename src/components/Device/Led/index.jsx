@@ -1,38 +1,70 @@
 
+import { useState } from 'react';
 import { useDrag } from 'react-dnd';
 
 import Connector from '@/components/Connector';
 
 import {
-    ledContainer,
-    ledContent,
-    ledBody,
+    deviceContainer,
+    deviceContent,
+    deviceBody
+} from '../styles.module.css';
+
+import {
     ledLight,
     ledLightElement
 } from './styles.module.css';
-import { useState } from 'react';
+
 
 
 const Led = ({ device }) => {
+    console.log('RENDERIZANDO')
     const [lightActive, setLightActive] = useState(false);
+    const [value, setValue] = useState({
+        current: 0,
+        max: 0
+    });
+    const [typeValueReceived, setTypeValueReceived] = useState(null);
+    const [brightness, setBrightness] = useState(0);
+    const [color, setColor] = useState('#ff1450');
+    const [opacity, setOpacity] = useState(0);
 
     const [{ }, drag] = useDrag(() => ({
         type: 'device',
         item: { ...device }
     }), []);
 
+    const enableLight = (opacityValue) => {
+        const opacity = opacityValue / value.max;
+
+        setOpacity(opacity);
+        setLightActive(true);
+    }
+
+    const disableLight = () => {
+        setOpacity(0);
+        setLightActive(false);
+    }
+
     return (
         <div
-            className={ledContainer}
+            className={deviceContainer}
             style={{ left: `${device.posX}px`, top: `${device.posY}px` }}
         >
 
             <div
-                className={ledContent}
+                className={deviceContent}
+                onClick={() => {
+                    if (lightActive) {
+                        disableLight();
+                    } else {
+                        enableLight(800);
+                    }
+                }}
             >
                 <div className={ledLight}>
                     {lightActive && (
-                        <svg className={ledLightElement} viewBox="0 0 51 74"
+                        <svg className={ledLightElement} style={{ fill: `${color}`, fillOpacity: `${opacity}` }} viewBox="0 0 51 74"
                             xmlns="http://www.w3.org/2000/svg">
                             <ellipse cx="25.5" cy="68" rx="7.6" ry="4.1" />
                             <path
@@ -43,7 +75,7 @@ const Led = ({ device }) => {
                     )}
                 </div>
                 <div
-                    className={ledBody}
+                    className={deviceBody}
                     ref={drag}
                 >
                     <img

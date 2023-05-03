@@ -1,30 +1,35 @@
+import { useRef, useState } from 'react';
 import { useDrag } from 'react-dnd';
 
-import { handleInputRange } from '@/utils/devices-functions';
 import Connector from '@/components/Connector';
 
 import {
-    ldrContainer,
-    ldrContent,
-    ldrBody
-} from './styles.module.css';
-
-import {
+    deviceContainer,
+    deviceContent,
+    deviceBody,
     inputContainer,
     inputValue
-} from '@/styles/common.module.css';
+} from '../styles.module.css';
 
+const MAX_VALUE = 1023;
 const Ldr = ({ device }) => {
+    const inputRef = useRef(null);
+    const showValueRef = useRef(null);
 
     const [{ }, drag] = useDrag(() => ({
         type: 'device',
         item: { ...device }
     }), []);
 
+    const handleOnInput = () => {
+        const input = inputRef.current;
+
+        showValueRef.current.innerHTML = input.value;
+    }
 
     return (
         <div
-            className={ldrContainer}
+            className={deviceContainer}
             style={{ left: `${device.posX}px`, top: `${device.posY}px` }}
         >
             <div className={inputContainer}>
@@ -33,16 +38,19 @@ const Ldr = ({ device }) => {
                     min="0"
                     max="1023"
                     step="1"
-                    defaultValue="0"
-                    onInput={handleInputRange}
+                    onInput={handleOnInput}
+                    ref={inputRef}
                 />
-                <p className={inputValue}>0</p>
+                <p
+                    className={inputValue}
+                    ref={showValueRef}
+                >0</p>
             </div>
             <div
-                className={ldrContent}
+                className={deviceContent}
             >
                 <div
-                    className={ldrBody}
+                    className={deviceBody}
                     ref={drag}
                 >
                     <img
