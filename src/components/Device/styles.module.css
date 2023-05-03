@@ -37,6 +37,9 @@
 /* DEVICE INPUT RANGE*/
 
 .inputContainer {
+    position: absolute;
+    top: -32px;
+    left: -6px;
     display: flex;
     align-items: center;
     justify-content: space-between;

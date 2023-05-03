@@ -1,27 +1,23 @@
-import { useRef, useState } from 'react';
+import { memo, useRef, useState } from 'react';
 import { useDrag } from 'react-dnd';
-import { FaTrashAlt } from 'react-icons/fa';
 
 import Connector from '@/components/Connector';
+
 import {
-    deviceContainer,
-    deviceContent,
     deviceBody,
     inputContainer,
-    inputValue,
-    actionButtonsContainer
+    inputValue
 } from '../styles.module.css';
 
-import ActionButton from '../../ActionButton';
-
 const MAX_VALUE = 1023;
-const Ldr = ({ device }) => {
+const Ldr = ({ imgSrc, name, ...device }) => {
+
     const inputRef = useRef(null);
     const showValueRef = useRef(null);
 
     const [{ }, drag] = useDrag(() => ({
         type: 'device',
-        item: { ...device }
+        item: { imgSrc, name, ...device }
     }), []);
 
     const handleOnInput = () => {
@@ -31,10 +27,8 @@ const Ldr = ({ device }) => {
     }
 
     return (
-        <div
-            className={deviceContainer}
-            style={{ left: `${device.posX}px`, top: `${device.posY}px` }}
-        >
+
+        <>
             <div className={inputContainer}>
                 <input
                     type="range"
@@ -49,46 +43,22 @@ const Ldr = ({ device }) => {
                     ref={showValueRef}
                 >0</p>
             </div>
+
             <div
-                className={deviceContent}
+                className={deviceBody}
+                ref={drag}
             >
-                <div className={actionButtonsContainer}>
-                    <ActionButton
-                        onClick={() => console.log('Clicando no delete')}
-                    >
-                        <FaTrashAlt />
-                    </ActionButton>
-
-                    <ActionButton
-                        onClick={() => console.log('Clicando no delete')}
-                    >
-                        <FaTrashAlt />
-                    </ActionButton>
-
-                    <ActionButton
-                        onClick={() => console.log('Clicando no delete')}
-                    >
-                        <FaTrashAlt />
-                    </ActionButton>
-                </div>
-
-                <div
-                    className={deviceBody}
-                    ref={drag}
-                >
-                    <img
-                        src={device.imgSrc}
-                        alt={`Device ${device.name}`}
-                        loading='lazy'
-                    />
-                </div>
-
-                <div>
-                    <Connector type={'exit'} />
-                </div>
+                <img
+                    src={imgSrc}
+                    alt={`Device ${name}`}
+                    loading='lazy'
+                />
             </div>
-        </div >
+            <div>
+                <Connector type={'exit'} />
+            </div>
+        </>
     );
 };
 
-export default Ldr;
+export default memo(Ldr);
