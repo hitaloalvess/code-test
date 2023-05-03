@@ -1,15 +1,18 @@
 import { useRef, useState } from 'react';
 import { useDrag } from 'react-dnd';
+import { FaTrashAlt } from 'react-icons/fa';
 
 import Connector from '@/components/Connector';
-
 import {
     deviceContainer,
     deviceContent,
     deviceBody,
     inputContainer,
-    inputValue
+    inputValue,
+    actionButtonsContainer
 } from '../styles.module.css';
+
+import ActionButton from '../../ActionButton';
 
 const MAX_VALUE = 1023;
 const Ldr = ({ device }) => {
@@ -49,6 +52,26 @@ const Ldr = ({ device }) => {
             <div
                 className={deviceContent}
             >
+                <div className={actionButtonsContainer}>
+                    <ActionButton
+                        onClick={() => console.log('Clicando no delete')}
+                    >
+                        <FaTrashAlt />
+                    </ActionButton>
+
+                    <ActionButton
+                        onClick={() => console.log('Clicando no delete')}
+                    >
+                        <FaTrashAlt />
+                    </ActionButton>
+
+                    <ActionButton
+                        onClick={() => console.log('Clicando no delete')}
+                    >
+                        <FaTrashAlt />
+                    </ActionButton>
+                </div>
+
                 <div
                     className={deviceBody}
                     ref={drag}
@@ -59,6 +82,7 @@ const Ldr = ({ device }) => {
                         loading='lazy'
                     />
                 </div>
+
                 <div>
                     <Connector type={'exit'} />
                 </div>
