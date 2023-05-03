@@ -1,12 +1,16 @@
-import { memo, useRef, useState } from 'react';
+import { memo, useRef } from 'react';
 import { useDrag } from 'react-dnd';
+import { FaTrashAlt } from 'react-icons/fa'
 
+import ActionButton from '@/components/ActionButton';
 import Connector from '@/components/Connector';
 
 import {
     deviceBody,
     inputContainer,
-    inputValue
+    inputValue,
+    actionButtonsContainer,
+    actionButtonsContainerLeft
 } from '../styles.module.css';
 
 const MAX_VALUE = 1023;
@@ -54,8 +58,22 @@ const Ldr = ({ imgSrc, name, ...device }) => {
                     loading='lazy'
                 />
             </div>
+
             <div>
                 <Connector type={'exit'} />
+            </div>
+
+            <div
+                className={
+                    `${actionButtonsContainer} ${actionButtonsContainerLeft}`
+                }
+            >
+                <ActionButton
+                    onClick={() => console.log('Clicando')}
+                >
+                    <FaTrashAlt />
+                </ActionButton>
+
             </div>
         </>
     );

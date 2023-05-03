@@ -1,11 +1,16 @@
 
 import { memo, useState } from 'react';
 import { useDrag } from 'react-dnd';
+import { AiFillSetting } from 'react-icons/ai';
+import { FaTrashAlt } from 'react-icons/fa';
 
+import ActionButton from '@/components/ActionButton';
 import Connector from '@/components/Connector';
 
 import {
-    deviceBody
+    deviceBody,
+    actionButtonsContainer,
+    actionButtonsContainerRight
 } from '../styles.module.css';
 
 import {
@@ -76,6 +81,24 @@ const Led = ({ imgSrc, name, ...device }) => {
             </div>
             <div>
                 <Connector type={'entry'} />
+            </div>
+
+            <div
+                className={
+                    `${actionButtonsContainer} ${actionButtonsContainerRight}`
+                }
+            >
+                <ActionButton
+                    onClick={() => console.log('Clicando')}
+                >
+                    <FaTrashAlt />
+                </ActionButton>
+
+                <ActionButton
+                    onClick={() => console.log('Clicando')}
+                >
+                    <AiFillSetting />
+                </ActionButton>
             </div>
         </>
 

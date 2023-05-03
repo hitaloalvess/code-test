@@ -16,6 +16,7 @@
     justify-content: center;
 }
 
+
 .deviceBody {
     width: 80px;
     height: 80px;
@@ -80,15 +81,48 @@
 
 /* ACTION BUTTONS CONTAINER */
 
+
+
 .actionButtonsContainer {
     position: absolute;
-    top: -1.4rem;
-    left: -2.8rem;
+    top: -24px;
     display: flex;
     flex-direction: column;
+    width: 44px;
+    min-height: 96px;
     gap: 8px;
-    opacity: 0.5;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+    pointer-events: none;
 }
+
+.actionButtonsContainerLeft {
+    left: -44px;
+}
+
+.actionButtonsContainerRight {
+    right: -48px;
+    align-items: flex-end;
+}
+
+.actionButtonsContainerBottom {
+    flex-direction: row;
+    top: auto;
+    bottom: -30px;
+    min-height: 16px;
+    width: 112px;
+}
+
+
+.deviceContent:hover .actionButtonsContainer {
+    opacity: 0.5;
+    pointer-events: auto;
+}
+
+.deviceContent:hover .actionButtonsContainer:hover {
+    opacity: 1;
+}
+
 
 @media (((max-height: 481px) and (orientation: landscape)) or ((max-width: 481px) and (orientation: portrait))) {
     .deviceBody {
