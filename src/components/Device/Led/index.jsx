@@ -4,8 +4,11 @@ import { useDrag } from 'react-dnd';
 import { AiFillSetting } from 'react-icons/ai';
 import { FaTrashAlt } from 'react-icons/fa';
 
+import { useModal } from '@/hooks/useModal';
 import ActionButton from '@/components/ActionButton';
 import Connector from '@/components/Connector';
+import ConfirmationModal from '@/components/Modals/ConfirmationModal';
+import ConfigLedModal from '@/components/Modals/ConfigLedModal';
 
 import {
     deviceBody,
@@ -19,8 +22,16 @@ import {
 } from './styles.module.css';
 
 
-
 const Led = ({ imgSrc, name, ...device }) => {
+
+    const [
+        modalConfirmIsOpen, enableConfirmModal, disableConfirmModal
+    ] = useModal();
+
+    const [
+        modalConfigIsOpen, enableConfigModal, disableConfigModal
+    ] = useModal();
+
     const [lightActive, setLightActive] = useState(false);
     const [value, setValue] = useState({
         current: 0,
@@ -47,6 +58,7 @@ const Led = ({ imgSrc, name, ...device }) => {
         setOpacity(0);
         setLightActive(false);
     }
+
 
     return (
         <>
@@ -89,17 +101,27 @@ const Led = ({ imgSrc, name, ...device }) => {
                 }
             >
                 <ActionButton
-                    onClick={() => console.log('Clicando')}
+                    onClick={() => enableConfirmModal()}
                 >
                     <FaTrashAlt />
                 </ActionButton>
 
                 <ActionButton
-                    onClick={() => console.log('Clicando')}
+                    onClick={() => enableConfigModal()}
                 >
                     <AiFillSetting />
                 </ActionButton>
             </div>
+
+            <ConfirmationModal
+                modalIsOpen={modalConfirmIsOpen}
+                closeModal={disableConfirmModal}
+            />
+
+            <ConfigLedModal
+                modalIsOpen={modalConfigIsOpen}
+                closeModal={disableConfigModal}
+            />
         </>
 
 
