@@ -22,7 +22,7 @@ import {
 } from './styles.module.css';
 
 
-const Led = ({ imgSrc, name, ...device }) => {
+const Led = ({ imgSrc, name, handleDelete, ...device }) => {
 
     const [
         modalConfirmIsOpen, enableConfirmModal, disableConfirmModal
@@ -44,7 +44,7 @@ const Led = ({ imgSrc, name, ...device }) => {
 
     const [{ }, drag] = useDrag(() => ({
         type: 'device',
-        item: { imgSrc, name, ...device }
+        item: { imgSrc, name, handleDelete, ...device }
     }), []);
 
     const enableLight = (opacityValue) => {
@@ -77,13 +77,6 @@ const Led = ({ imgSrc, name, ...device }) => {
             <div
                 className={deviceBody}
                 ref={drag}
-                onClick={() => {
-                    if (lightActive) {
-                        disableLight();
-                    } else {
-                        enableLight(800);
-                    }
-                }}
             >
                 <img
                     src={imgSrc}
@@ -114,8 +107,11 @@ const Led = ({ imgSrc, name, ...device }) => {
             </div>
 
             <ConfirmationModal
+                title='Cuidado'
+                subtitle='Tem certeza que deseja excluir o componente?'
                 modalIsOpen={modalConfirmIsOpen}
                 closeModal={disableConfirmModal}
+                handleConfirm={() => handleDelete(device.id)}
             />
 
             <ConfigLedModal

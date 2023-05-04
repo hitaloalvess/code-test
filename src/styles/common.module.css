@@ -1,0 +1,31 @@
+/* BUTTONS */
+
+.btn {
+    padding: 12px 32px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    color: var(--white);
+    background-color: var(--gray-100);
+}
+
+/* BUTTONS -- BLUE */
+.btnBlue {
+    background-color: var(--blue);
+    transition: filter 0.3s ease-in-out;
+}
+
+.btnBlue:hover {
+    filter: brightness(0.85);
+}
+
+/* BUTTONS -- CANCEL */
+
+.btnCancel {
+    transition: background-color 0.3s ease-in-out;
+}
+
+.btnCancel:hover {
+    background-color: var(--red);
+}

@@ -1,0 +1,36 @@
+.confirmationModalContent {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 44px;
+    padding: 32px 64px;
+}
+
+.confirmationModalHeader {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 18px;
+}
+
+.confirmationModalHeader svg {
+    width: 80px;
+    height: 80px;
+    color: var(--yellow);
+}
+
+.confirmationModalTitle {
+    font-size: 32px;
+    color: var(--yellow);
+}
+
+.confirmationModalMsg {
+    font-size: 16px;
+}
+
+.confirmModalActions {
+    display: flex;
+    gap: 24px;
+}

@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import { useDrop, useDragDropManager } from 'react-dnd';
 import { v4 } from 'uuid';
 
@@ -13,6 +13,11 @@ const MoutingPanel = () => {
     const [devices, setDevices] = useState([]);
     const monitor = useDragDropManager().getMonitor();
     const moutingPanelRef = useRef(null);
+
+    const attachRef = (el) => {
+        drop(el);
+        moutingPanelRef.current = el;
+    }
 
     const [_, drop] = useDrop(() => ({
         accept: 'device',
@@ -52,10 +57,12 @@ const MoutingPanel = () => {
         setDevices(newListDevices);
     }
 
-    const attachRef = (el) => {
-        drop(el);
-        moutingPanelRef.current = el;
-    }
+    const deleteDevice = useCallback((id) => {
+        const newDevices = devices.filter(device => device.id !== id);
+
+        setDevices(newDevices);
+
+    }, [devices])
 
     return (
         <div
@@ -64,7 +71,13 @@ const MoutingPanel = () => {
         >
             {
                 devices.map(device => (
-                    <Device key={device.id} device={device} />
+                    <Device
+                        key={device.id}
+                        device={{
+                            ...device,
+                            handleDelete: deleteDevice
+                        }}
+                    />
                 ))
             }
             <LinesContainer />

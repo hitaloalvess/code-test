@@ -1,16 +1,21 @@
+import imgLogoMicrodigo from '@/assets/images/logo-microdigo.svg';
 import Modal from 'react-modal';
+import { FaTimes } from 'react-icons/fa';
+
+import {
+    container,
+    header,
+    btnClose
+} from './styles.module.css';
 
 const customStyles = {
-    content: {
-        top: '50%',
-        left: '50%',
-        right: 'auto',
-        bottom: 'auto',
-        marginRight: '-50%',
-        transform: 'translate(-50%, -50%)',
-    },
     overlay: {
-        zIndex: 100
+        zIndex: 100,
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(40, 40, 50, 0.3)',
+        backdropFilter: 'blur(8px)',
     }
 };
 
@@ -22,12 +27,22 @@ const ModalContainer = ({ modalIsOpen, closeModal, children }) => {
             isOpen={modalIsOpen}
             onRequestClose={closeModal}
             contentLabel='Example Modal'
+            className={container}
         >
-            <button
-                onClick={closeModal}
-            >
-                X
-            </button>
+            <header className={header}>
+                <img
+                    src={imgLogoMicrodigo}
+                    alt="logo microdigo"
+                    loading='lazy'
+                />
+
+                <button
+                    className={btnClose}
+                    onClick={closeModal}
+                >
+                    <FaTimes />
+                </button>
+            </header>
             {children}
         </Modal>
     );

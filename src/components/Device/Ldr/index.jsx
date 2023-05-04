@@ -2,6 +2,8 @@ import { memo, useRef } from 'react';
 import { useDrag } from 'react-dnd';
 import { FaTrashAlt } from 'react-icons/fa'
 
+import { useModal } from '@/hooks/useModal';
+import ConfirmationModal from '@/components/Modals/ConfirmationModal';
 import ActionButton from '@/components/ActionButton';
 import Connector from '@/components/Connector';
 
@@ -14,7 +16,11 @@ import {
 } from '../styles.module.css';
 
 const MAX_VALUE = 1023;
-const Ldr = ({ imgSrc, name, ...device }) => {
+const Ldr = ({ imgSrc, name, handleDelete, ...device }) => {
+
+    const [
+        modalConfirmIsOpen, enableConfirmModal, disableConfirmModal
+    ] = useModal();
 
     const inputRef = useRef(null);
     const showValueRef = useRef(null);
@@ -69,12 +75,20 @@ const Ldr = ({ imgSrc, name, ...device }) => {
                 }
             >
                 <ActionButton
-                    onClick={() => console.log('Clicando')}
+                    onClick={() => enableConfirmModal()}
                 >
                     <FaTrashAlt />
                 </ActionButton>
 
             </div>
+
+            <ConfirmationModal
+                title='Cuidado'
+                subtitle='Tem certeza que deseja excluir o componente?'
+                modalIsOpen={modalConfirmIsOpen}
+                closeModal={disableConfirmModal}
+                handleConfirm={() => handleDelete(device.id)}
+            />
         </>
     );
 };
