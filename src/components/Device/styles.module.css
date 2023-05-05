@@ -114,10 +114,12 @@
 }
 
 
+
 .deviceContent:hover .actionButtonsContainer {
     opacity: 0.5;
     pointer-events: auto;
 }
+
 
 .deviceContent:hover .actionButtonsContainer:hover {
     opacity: 1;
@@ -146,4 +148,14 @@
         height: 8px;
     }
 
+    /* ACTION BUTTONS CONTAINER */
+
+    .actionButtonsContainerRight {
+        right: -36px;
+        align-items: flex-end;
+    }
+
+    .deviceContent:hover .actionButtonsContainer {
+        opacity: 1;
+    }
 }
