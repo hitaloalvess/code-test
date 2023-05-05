@@ -1,5 +1,5 @@
 
-import { memo, useState } from 'react';
+import { memo, useCallback, useState } from 'react';
 import { useDrag } from 'react-dnd';
 import { AiFillSetting } from 'react-icons/ai';
 import { FaTrashAlt } from 'react-icons/fa';
@@ -59,6 +59,15 @@ const Led = ({ imgSrc, name, handleDelete, ...device }) => {
         setLightActive(false);
     }
 
+    const handleSettingUpdate = useCallback((newColor, newBrightness) => {
+        if (newColor !== color) {
+            setColor(newColor);
+        }
+
+        if (newBrightness !== brightness) {
+            setBrightness(newBrightness);
+        }
+    }, [color, brightness]);
 
     return (
         <>
@@ -117,6 +126,9 @@ const Led = ({ imgSrc, name, handleDelete, ...device }) => {
             <ConfigLedModal
                 modalIsOpen={modalConfigIsOpen}
                 closeModal={disableConfigModal}
+                handleSaveConfig={handleSettingUpdate}
+                defaultColor={color}
+                defaultBrightness={brightness}
             />
         </>
 

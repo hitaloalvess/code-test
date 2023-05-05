@@ -9,7 +9,7 @@ import Connector from '@/components/Connector';
 
 import {
     deviceBody,
-    inputContainer,
+    inputRangeDeviceContainer,
     inputValue,
     actionButtonsContainer,
     actionButtonsContainerLeft
@@ -17,13 +17,12 @@ import {
 
 const MAX_VALUE = 1023;
 const Ldr = ({ imgSrc, name, handleDelete, ...device }) => {
+    const inputRef = useRef(null);
+    const showValueRef = useRef(null);
 
     const [
         modalConfirmIsOpen, enableConfirmModal, disableConfirmModal
     ] = useModal();
-
-    const inputRef = useRef(null);
-    const showValueRef = useRef(null);
 
     const [{ }, drag] = useDrag(() => ({
         type: 'device',
@@ -39,7 +38,7 @@ const Ldr = ({ imgSrc, name, handleDelete, ...device }) => {
     return (
 
         <>
-            <div className={inputContainer}>
+            <div className={inputRangeDeviceContainer}>
                 <input
                     type="range"
                     min="0"

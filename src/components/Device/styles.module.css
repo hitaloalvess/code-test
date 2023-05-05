@@ -37,7 +37,7 @@
 
 /* DEVICE INPUT RANGE*/
 
-.inputContainer {
+.inputRangeDeviceContainer {
     position: absolute;
     top: -32px;
     left: -6px;
@@ -48,7 +48,7 @@
     gap: 4px;
 }
 
-.inputContainer input[type="range"] {
+.inputRangeDeviceContainer input[type="range"] {
     appearance: none;
     -webkit-appearance: none;
     width: 85px;
@@ -57,7 +57,7 @@
     background: rgba(28, 28, 32, 0.4);
 }
 
-.inputContainer input[type="range"]::-webkit-slider-thumb {
+.inputRangeDeviceContainer input[type="range"]::-webkit-slider-thumb {
     appearance: none;
     position: relative;
     cursor: pointer;
@@ -68,7 +68,7 @@
     transition: all 0.3s ease-in-out;
 }
 
-.inputContainer input[type="range"]::-webkit-slider-thumb:hover {
+.inputRangeDeviceContainer input[type="range"]::-webkit-slider-thumb:hover {
     transform: scale(1.2);
 }
 
@@ -133,15 +133,15 @@
     /* COMMON */
 
     /* DEVICE INPUT RANGE*/
-    .inputContainer {
+    .inputRangeDeviceContainer {
         width: 80px;
     }
 
-    .inputContainer input[type="range"] {
+    .inputRangeDeviceContainer input[type="range"] {
         width: 64px;
     }
 
-    .inputContainer input[type="range"]::-webkit-slider-thumb {
+    .inputRangeDeviceContainer input[type="range"]::-webkit-slider-thumb {
         width: 8px;
         height: 8px;
     }

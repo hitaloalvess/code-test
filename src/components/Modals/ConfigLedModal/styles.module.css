@@ -1,0 +1,32 @@
+.configLedContent {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 24px;
+    padding: 24px 64px;
+}
+
+.configLedTitle {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.inputsArea,
+.inputArea {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.inputsArea {
+    gap: 24px;
+}
+
+.inputArea {
+    gap: 12px;
+}
+
+.labelInput {
+    font-size: 16px;
+}
