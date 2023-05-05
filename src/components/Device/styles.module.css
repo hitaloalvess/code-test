@@ -125,8 +125,24 @@
     opacity: 1;
 }
 
+@media (max-width: 769px) and ((orientation: portrait) or (orientation: landscape)) {
+    /* TABLET - LANDSCAPE OR PORTRAIT*/
+
+    /* ACTION BUTTONS CONTAINER */
+
+    .actionButtonsContainerRight {
+        right: -36px;
+        align-items: flex-end;
+    }
+
+    .deviceContent:hover .actionButtonsContainer {
+        opacity: 1;
+    }
+}
 
 @media (((max-height: 481px) and (orientation: landscape)) or ((max-width: 481px) and (orientation: portrait))) {
+    /* MOBILE */
+
     .deviceBody {
         width: 48px;
         height: 48px;
