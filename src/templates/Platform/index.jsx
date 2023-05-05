@@ -11,7 +11,8 @@ import Sidebar from '@/components/Sidebar';
 import ManualButton from '@/components/ManualButton';
 import ZoomButton from '@/components/ZoomButton';
 import FaqButton from '@/components/FaqButton';
-import MoutingPanel from '../../components/MoutingPanel';
+import MoutingPanel from '@/components/MoutingPanel';
+import CustomDragLayer from '@/components/CustomDragLayer';
 
 
 
@@ -30,6 +31,7 @@ const Platform = () => (
                 <ZoomButton />
             </div>
         </main>
+        {isMobile && <CustomDragLayer />}
     </DndProvider>
 )
 
