@@ -29,6 +29,7 @@ const ModalContainer = ({ modalIsOpen, closeModal, children }) => {
             contentLabel='Example Modal'
             className={container}
         >
+
             <header className={header}>
                 <img
                     src={imgLogoMicrodigo}
