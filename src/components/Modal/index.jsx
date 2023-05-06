@@ -2,6 +2,9 @@ import imgLogoMicrodigo from '@/assets/images/logo-microdigo.svg';
 import Modal from 'react-modal';
 import { FaTimes } from 'react-icons/fa';
 
+import ConfigLedModal from './ConfigLedModal';
+import ConfirmationModal from './ConfirmationModal';
+
 import {
     container,
     header,
@@ -19,7 +22,19 @@ const customStyles = {
     }
 };
 
-const ModalContainer = ({ modalIsOpen, closeModal, children }) => {
+const ModalContainer = ({ modalIsOpen, closeModal, contentData }) => {
+    const contents = {
+        'confirmation': <ConfirmationModal
+            closeModal={closeModal}
+            contentData={contentData}
+        />,
+        'config-led': <ConfigLedModal
+            closeModal={closeModal}
+            contentData={contentData}
+        />
+    }
+
+    const currentContent = contents[contentData.typeContent];
 
     return (
         <Modal
@@ -29,7 +44,6 @@ const ModalContainer = ({ modalIsOpen, closeModal, children }) => {
             contentLabel='Example Modal'
             className={container}
         >
-
             <header className={header}>
                 <img
                     src={imgLogoMicrodigo}
@@ -44,7 +58,7 @@ const ModalContainer = ({ modalIsOpen, closeModal, children }) => {
                     <FaTimes />
                 </button>
             </header>
-            {children}
+            {currentContent}
         </Modal>
     );
 };

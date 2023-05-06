@@ -1,10 +1,10 @@
 .container {
+    position: relative;
     width: 124px;
     height: 90%;
     border-radius: 0 24px 24px 0;
     border-right: 4px solid var(--yellow-900);
     background-color: var(--yellow-600);
-
 }
 
 .container ul {
@@ -16,9 +16,29 @@
     display: none;
 }
 
+.trashArea {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: inherit;
+    backdrop-filter: blur(10px);
+    background-color: rgba(255, 255, 255, 0.3);
+    transition: all 0.3s ease-in-out;
+}
 
+.trashArea svg {
+    width: 32px;
+    height: 32px;
+}
 
 @media (max-width: 769px) and (orientation: portrait) {
+
+    /* TABLET */
     .container {
         width: 420px;
         height: 96px;
@@ -36,25 +56,26 @@
 }
 
 @media (max-width: 481px) and (orientation: portrait) {
+
+    /* MOBILE - RETRATO */
     .container {
         max-width: 260px;
         height: 64px;
 
     }
 
+    .trashArea svg {
+        width: 18px;
+        height: 18px;
+    }
 }
 
-
-/* HEIGHT */
-
 @media (max-height: 481px) and (orientation: landscape) {
+
+    /* MOBILE - PAISAGEM*/
     .container {
         max-width: 84px;
         border-radius: 0 12px 12px 0;
         width: 100%;
     }
-
-
-
-
 }
