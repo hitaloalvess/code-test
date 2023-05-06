@@ -1,4 +1,5 @@
 
+import { memo } from 'react';
 import styles, {
     connector,
     connectorRange,
@@ -37,4 +38,4 @@ const Connector = ({ type }) => {
     );
 };
 
-export default Connector;
+export default memo(Connector);

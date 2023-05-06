@@ -1,0 +1,51 @@
+.confirmationModalContent {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 44px;
+    padding: 32px 64px;
+}
+
+.confirmationModalHeader {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 18px;
+}
+
+.confirmationModalHeader svg {
+    width: 80px;
+    height: 80px;
+    color: var(--yellow);
+}
+
+.confirmationModalTitle {
+    font-size: 32px;
+    color: var(--yellow);
+}
+
+.confirmationModalMsg {
+    font-size: 16px;
+}
+
+.confirmModalActions {
+    display: flex;
+    gap: 24px;
+}
+
+
+@media (((max-height: 481px) and (orientation: landscape)) or ((max-width: 481px) and (orientation: portrait))) {
+    /* MOBILE */
+
+    .confirmationModalContent {
+        padding: 24px 32px;
+        gap: 32px;
+        max-width: 320px;
+    }
+
+    .confirmModalActions {
+        gap: 12px;
+    }
+}

@@ -7,7 +7,7 @@ const MenuDevice = ({ device }) => {
     const [refDevice, setRefDevice] = useState(null);
 
     const [_, drag] = useDrag(() => ({
-        type: 'device',
+        type: 'menu-device',
         item: {
             ...device,
             draggedDevice: refDevice

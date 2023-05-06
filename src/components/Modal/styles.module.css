@@ -1,0 +1,49 @@
+.container {
+    box-shadow: 0px 0px 16px rgba(40, 40, 50, 0.5);
+    background-color: var(--white);
+}
+
+.header {
+    position: relative;
+    width: 100%;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    padding: 8px 12px;
+    background-color: var(--blue);
+}
+
+.header::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background-color: var(--blue-900);
+}
+
+.header img {
+    height: 24px;
+}
+
+.btnClose {
+    margin-left: auto;
+    border: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: transparent;
+}
+
+.btnClose svg {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    color: var(--white);
+    transition: color 0.3s ease-in-out;
+}
+
+.btnClose svg:hover {
+    color: var(--red);
+}

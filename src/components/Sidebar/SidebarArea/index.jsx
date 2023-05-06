@@ -1,10 +1,11 @@
+import { FaTrashAlt } from 'react-icons/fa';
 import { mockDevices } from '@/data/devices.js';
 
 import MenuDevice from '../MenuDevice';
 
-import { container } from './styles.module.css';
+import { container, trashArea } from './styles.module.css';
 
-const SidebarArea = ({ area }) => {
+const SidebarArea = ({ area, activeTrashArea }) => {
     return (
         <div className={container}>
             {
@@ -20,6 +21,13 @@ const SidebarArea = ({ area }) => {
                     }
                 </ul>
             }
+            {activeTrashArea && (
+                <div
+                    className={trashArea}
+                >
+                    <FaTrashAlt />
+                </div>
+            )}
         </div>
     );
 };
