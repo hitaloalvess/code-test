@@ -1,41 +1,49 @@
 
 import { memo } from 'react';
+import P from 'prop-types';
+
 import styles, {
-    connector,
-    connectorRange,
+  connector,
+  connectorRange,
 } from './styles.module.css';
 
 import { useDrop, useDrag } from 'react-dnd';
 
-const Connector = ({ type }) => {
+const Connector = memo(function Connector({ type }) {
 
-    const [{ }, drop] = useDrop(() => ({
-        accept: 'connector',
-        drop: () => console.log('Connector dropped')
-    }), []);
+  // eslint-disable-next-line no-empty-pattern
+  const [{ }, drop] = useDrop(() => ({
+    accept: 'connector',
+    drop: () => console.log('Connector dropped')
+  }), []);
 
-    const [{ }, drag] = useDrag(() => ({
-        type: 'connector',
-        item: {},
-    }), []);
+  // eslint-disable-next-line no-empty-pattern
+  const [{ }, drag] = useDrag(() => ({
+    type: 'connector',
+    item: {},
+  }), []);
 
-    const attachRef = (el) => {
-        drag(el)
-        drop(el)
-    }
+  const attachRef = (el) => {
+    drag(el)
+    drop(el)
+  }
 
-    return (
-        <div
-            className={`${connector} ${styles[`${type}Connector`]}`}
-            onTouchStart={(event) => console.log(event)}
-        >
-            <div
-                className={`${connectorRange} ${styles[`${type}ConnectorRange`]}`}
-                ref={attachRef}
-            >
-            </div>
-        </div>
-    );
-};
+  return (
+    <div
+      className={`${connector} ${styles[`${type}Connector`]}`}
+      onTouchStart={(event) => console.log(event)}
+    >
+      <div
+        className={`${connectorRange} ${styles[`${type}ConnectorRange`]}`}
+        ref={attachRef}
+      >
+      </div>
+    </div>
+  );
+});
 
-export default memo(Connector);
+Connector.propTypes = {
+  type: P.string.isRequired
+}
+
+export default Connector;

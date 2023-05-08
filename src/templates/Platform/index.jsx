@@ -20,75 +20,79 @@ import { container, buttonsContainer } from './styles.module.css';
 import { ModalProvider } from '../../contexts/ModalContext';
 
 const Platform = () => {
-    const [devices, setDevices] = useState([]);
+  const [devices, setDevices] = useState([]);
+  //TRANSFORMAR EM CONTEXT
+  const handleDeleteDevice = useCallback((id) => {
+    const newDevices = devices.filter(device => {
+      console.log({ device: device.id, id })
+      return device.id !== id
+    });
 
-    const handleDeleteDevice = useCallback((id) => {
-        const newDevices = devices.filter(device => device.id !== id);
+    setDevices(newDevices);
+  }, [devices]);
 
-        setDevices(newDevices);
-    }, [devices]);
+  const handleAddDevice = useCallback((item, monitor) => {
+    const { width, height } = item.draggedDevice.getBoundingClientRect();
+    const { x, y } = monitor.getClientOffset();
+    const [posX, posY] = positionDevice({ x, y, width, height });
 
-    const handleAddDevice = useCallback((item, devices, monitor) => {
-        const { width, height } = item.draggedDevice.getBoundingClientRect();
-        const { x, y } = monitor.getClientOffset();
-        const [posX, posY] = positionDevice({ x, y, width, height });
+    const elementIndex = devices.find(device => device.id === item.id);
 
-        const elementIndex = devices.find(device => device.id === item.id);
+    if (!elementIndex) {
+      setDevices((devices) => [...devices, {
+        ...item,
+        id: v4(),
+        posX,
+        posY
+      }]);
 
-        if (!elementIndex) {
-            setDevices((devices) => [...devices, {
-                ...item,
-                id: v4(),
-                posX,
-                posY
-            }]);
+      console.log(devices);
+      return;
 
-            return;
+    }
 
+    const newListDevices = devices.map(device => {
+      if (device.id === item.id) {
+        return {
+          ...device,
+          posX,
+          posY
         }
+      }
+      console.log(devices)
+      return device
+    })
+    setDevices(newListDevices);
 
-        const newListDevices = devices.map(device => {
-            if (device.id === item.id) {
-                return {
-                    ...device,
-                    posX,
-                    posY
-                }
-            }
+  }, [devices]);
 
-            return device
-        })
-        setDevices(newListDevices);
+  return (
+    <DndProvider backend={isMobile ? TouchBackend : HTML5Backend}>
+      <ModalProvider>
+        <main className={container}>
+          <Header />
 
-    }, [devices]);
+          <Sidebar
+            deleteDevice={handleDeleteDevice}
+          />
 
-    return (
-        <DndProvider backend={isMobile ? TouchBackend : HTML5Backend}>
-            <ModalProvider>
-                <main className={container}>
-                    <Header />
+          <MoutingPanel
+            devices={devices}
+            deleteDevice={handleDeleteDevice}
+            addDevice={handleAddDevice}
+          />
 
-                    <Sidebar
-                        deleteDevice={handleDeleteDevice}
-                    />
+          <div className={buttonsContainer}>
+            <ManualButton />
+            <FaqButton />
+            <ZoomButton />
+          </div>
+        </main>
+      </ModalProvider>
 
-                    <MoutingPanel
-                        devices={devices}
-                        deleteDevice={handleDeleteDevice}
-                        addDevice={handleAddDevice}
-                    />
-
-                    <div className={buttonsContainer}>
-                        <ManualButton />
-                        <FaqButton />
-                        <ZoomButton />
-                    </div>
-                </main>
-            </ModalProvider>
-
-            {isMobile && <CustomDragLayer />}
-        </DndProvider>
-    )
+      {isMobile && <CustomDragLayer />}
+    </DndProvider>
+  )
 }
 
 export default Platform;

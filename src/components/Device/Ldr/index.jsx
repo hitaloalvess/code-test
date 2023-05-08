@@ -1,91 +1,105 @@
 import { memo, useRef } from 'react';
 import { useDrag } from 'react-dnd';
-import { FaTrashAlt } from 'react-icons/fa'
+import { FaTrashAlt } from 'react-icons/fa';
+import P from 'prop-types';
 
 import { useModal } from '@/hooks/useModal';
 import ActionButton from '@/components/ActionButton';
 import Connector from '@/components/Connector';
 
 import {
-    deviceBody,
-    inputRangeDeviceContainer,
-    inputValue,
-    actionButtonsContainer,
-    actionButtonsContainerLeft
+  deviceBody,
+  inputRangeDeviceContainer,
+  inputValue,
+  actionButtonsContainer,
+  actionButtonsContainerLeft
 } from '../styles.module.css';
 
-const MAX_VALUE = 1023;
-const Ldr = ({ imgSrc, name, handleDelete, ...device }) => {
-    const inputRef = useRef(null);
-    const showValueRef = useRef(null);
+const Ldr = memo(function Ldr({ imgSrc, name, handleDelete, ...device }) {
+  const inputRef = useRef(null);
+  const showValueRef = useRef(null);
 
-    const { enableModal, disableModal } = useModal();
-    const [{ }, drag] = useDrag(() => ({
-        type: 'device',
-        item: { imgSrc, name, ...device }
-    }), []);
+  const { enableModal, disableModal } = useModal();
 
-    const handleOnInput = () => {
-        const input = inputRef.current;
+  // eslint-disable-next-line no-empty-pattern
+  const [{ }, drag] = useDrag(() => ({
+    type: 'device',
+    item: { imgSrc, name, ...device }
+  }), []);
 
-        showValueRef.current.innerHTML = input.value;
-    }
+  const handleOnInput = () => {
+    const input = inputRef.current;
 
-    return (
+    showValueRef.current.innerHTML = input.value;
+  }
 
-        <>
-            <div className={inputRangeDeviceContainer}>
-                <input
-                    type="range"
-                    min="0"
-                    max="1023"
-                    step="1"
-                    onInput={handleOnInput}
-                    ref={inputRef}
-                />
-                <p
-                    className={inputValue}
-                    ref={showValueRef}
-                >0</p>
-            </div>
+  return (
 
-            <div
-                className={deviceBody}
-                ref={drag}
-            >
-                <img
-                    src={imgSrc}
-                    alt={`Device ${name}`}
-                    loading='lazy'
-                />
-            </div>
+    <>
+      <div className={inputRangeDeviceContainer}>
+        <input
+          type="range"
+          min="0"
+          max="1023"
+          step="1"
+          onInput={handleOnInput}
+          ref={inputRef}
+        />
+        <p
+          className={inputValue}
+          ref={showValueRef}
+        >0</p>
+      </div>
 
-            <div>
-                <Connector type={'exit'} />
-            </div>
+      <div
+        className={deviceBody}
+        ref={drag}
+      >
+        <img
+          src={imgSrc}
+          alt={`Device ${name}`}
+          loading='lazy'
+        />
+      </div>
 
-            <div
-                className={
-                    `${actionButtonsContainer} ${actionButtonsContainerLeft}`
-                }
-            >
-                <ActionButton
-                    onClick={() => enableModal({
-                        typeContent: 'confirmation',
-                        title: 'Cuidado',
-                        subtitle: 'Tem certeza que deseja excluir o componente?',
-                        handleConfirm: () => {
-                            handleDelete(device.id);
-                            disableModal();
-                        }
-                    })}
-                >
-                    <FaTrashAlt />
-                </ActionButton>
+      <div>
+        <Connector type={'exit'} />
+      </div>
 
-            </div>
-        </>
-    );
-};
+      <div
+        className={
+          `${actionButtonsContainer} ${actionButtonsContainerLeft}`
+        }
+      >
+        <ActionButton
+          onClick={() => enableModal({
+            typeContent: 'confirmation',
+            title: 'Cuidado',
+            subtitle: 'Tem certeza que deseja excluir o componente?',
+            handleConfirm: () => {
+              handleDelete(device.id);
+              disableModal();
+            }
+          })}
+        >
+          <FaTrashAlt />
+        </ActionButton>
 
-export default memo(Ldr);
+      </div>
+    </>
+  );
+});
+
+Ldr.propTypes = {
+  id: P.string.isRequired,
+  name: P.string.isRequired,
+  imgSrc: P.string.isRequired,
+  handleDelete: P.func.isRequired,
+  type: P.string,
+  category: P.string,
+  posX: P.number,
+  posY: P.number,
+  draggedDevice: P.object
+}
+
+export default Ldr;

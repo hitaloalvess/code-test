@@ -1,22 +1,28 @@
 import { memo } from "react";
+import P from 'prop-types';
 
 import {
-    devicePreviewBody
+  devicePreviewBody
 } from './styles.module.css';
 
-const DevicePreview = ({ name, imgSrc }) => {
-    return (
-        <>
-            <div className={devicePreviewBody}>
-                <img
-                    src={imgSrc}
-                    alt={`Imagem do dispositivo ${name}`}
-                    loading='lazy'
-                />
-            </div>
+const DevicePreview = memo(function DevicePreview({ name, imgSrc }) {
+  return (
+    <>
+      <div className={devicePreviewBody}>
+        <img
+          src={imgSrc}
+          alt={`Imagem do dispositivo ${name}`}
+          loading='lazy'
+        />
+      </div>
 
-        </>
-    );
-};
+    </>
+  );
+});
 
-export default memo(DevicePreview);
+DevicePreview.propTypes = {
+  name: P.string.isRequired,
+  imgSrc: P.string.isRequired
+}
+
+export default DevicePreview;
