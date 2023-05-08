@@ -39,7 +39,6 @@ Device.propTypes = {
     id: P.string,
     name: P.string.isRequired,
     imgSrc: P.string,
-    handleDelete: P.func,
     type: P.string,
     category: P.string,
     posX: P.number.isRequired,

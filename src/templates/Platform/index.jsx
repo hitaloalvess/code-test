@@ -1,12 +1,11 @@
 
-import { useCallback, useState } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { TouchBackend } from 'react-dnd-touch-backend';
 import { isMobile } from 'react-device-detect';
-import { v4 } from 'uuid';
 
-import { positionDevice } from '@/utils/devices-functions';
+import { ModalProvider } from '../../contexts/ModalContext';
+import { DevicesProvider } from '../../contexts/DevicesContext';
 
 import Header from '@/components/Header';
 import Sidebar from '@/components/Sidebar';
@@ -17,77 +16,28 @@ import MoutingPanel from '@/components/MoutingPanel';
 import CustomDragLayer from '@/components/CustomDragLayer';
 
 import { container, buttonsContainer } from './styles.module.css';
-import { ModalProvider } from '../../contexts/ModalContext';
+
 
 const Platform = () => {
-  const [devices, setDevices] = useState([]);
-  //TRANSFORMAR EM CONTEXT
-  const handleDeleteDevice = useCallback((id) => {
-    const newDevices = devices.filter(device => {
-      console.log({ device: device.id, id })
-      return device.id !== id
-    });
-
-    setDevices(newDevices);
-  }, [devices]);
-
-  const handleAddDevice = useCallback((item, monitor) => {
-    const { width, height } = item.draggedDevice.getBoundingClientRect();
-    const { x, y } = monitor.getClientOffset();
-    const [posX, posY] = positionDevice({ x, y, width, height });
-
-    const elementIndex = devices.find(device => device.id === item.id);
-
-    if (!elementIndex) {
-      setDevices((devices) => [...devices, {
-        ...item,
-        id: v4(),
-        posX,
-        posY
-      }]);
-
-      console.log(devices);
-      return;
-
-    }
-
-    const newListDevices = devices.map(device => {
-      if (device.id === item.id) {
-        return {
-          ...device,
-          posX,
-          posY
-        }
-      }
-      console.log(devices)
-      return device
-    })
-    setDevices(newListDevices);
-
-  }, [devices]);
 
   return (
     <DndProvider backend={isMobile ? TouchBackend : HTML5Backend}>
       <ModalProvider>
-        <main className={container}>
-          <Header />
+        <DevicesProvider>
+          <main className={container}>
+            <Header />
 
-          <Sidebar
-            deleteDevice={handleDeleteDevice}
-          />
+            <Sidebar />
 
-          <MoutingPanel
-            devices={devices}
-            deleteDevice={handleDeleteDevice}
-            addDevice={handleAddDevice}
-          />
+            <MoutingPanel />
 
-          <div className={buttonsContainer}>
-            <ManualButton />
-            <FaqButton />
-            <ZoomButton />
-          </div>
-        </main>
+            <div className={buttonsContainer}>
+              <ManualButton />
+              <FaqButton />
+              <ZoomButton />
+            </div>
+          </main>
+        </DevicesProvider>
       </ModalProvider>
 
       {isMobile && <CustomDragLayer />}

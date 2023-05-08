@@ -5,6 +5,7 @@ import { AiFillSetting } from 'react-icons/ai';
 import { FaTrashAlt } from 'react-icons/fa';
 import P from 'prop-types';
 
+import { useDevices } from '@/hooks/useDevices';
 import { useModal } from '@/hooks/useModal';
 import ActionButton from '@/components/ActionButton';
 import Connector from '@/components/Connector';
@@ -20,8 +21,9 @@ import {
   ledLightElement
 } from './styles.module.css';
 
-const Led = memo(function Led({ imgSrc, name, handleDelete, ...device }) {
+const Led = memo(function Led({ imgSrc, name, ...device }) {
 
+  const { deleteDevice } = useDevices();
   const { enableModal, disableModal } = useModal();
 
   const [lightActive] = useState(false);
@@ -37,7 +39,7 @@ const Led = memo(function Led({ imgSrc, name, handleDelete, ...device }) {
   // eslint-disable-next-line no-empty-pattern
   const [{ }, drag] = useDrag(() => ({
     type: 'device',
-    item: { imgSrc, name, handleDelete, ...device }
+    item: { imgSrc, name, ...device }
   }), []);
 
   // const enableLight = (opacityValue) => {
@@ -102,7 +104,7 @@ const Led = memo(function Led({ imgSrc, name, handleDelete, ...device }) {
             title: 'Cuidado',
             subtitle: 'Tem certeza que deseja excluir o componente?',
             handleConfirm: () => {
-              handleDelete(device.id);
+              deleteDevice(device.id);
               disableModal();
             }
           })}
@@ -129,7 +131,6 @@ Led.propTypes = {
   id: P.string.isRequired,
   name: P.string.isRequired,
   imgSrc: P.string.isRequired,
-  handleDelete: P.func.isRequired,
   type: P.string,
   category: P.string,
   posX: P.number,

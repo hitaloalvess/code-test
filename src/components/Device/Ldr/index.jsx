@@ -3,6 +3,7 @@ import { useDrag } from 'react-dnd';
 import { FaTrashAlt } from 'react-icons/fa';
 import P from 'prop-types';
 
+import { useDevices } from '@/hooks/useDevices';
 import { useModal } from '@/hooks/useModal';
 import ActionButton from '@/components/ActionButton';
 import Connector from '@/components/Connector';
@@ -15,10 +16,11 @@ import {
   actionButtonsContainerLeft
 } from '../styles.module.css';
 
-const Ldr = memo(function Ldr({ imgSrc, name, handleDelete, ...device }) {
+const Ldr = memo(function Ldr({ imgSrc, name, ...device }) {
   const inputRef = useRef(null);
   const showValueRef = useRef(null);
 
+  const { deleteDevice } = useDevices();
   const { enableModal, disableModal } = useModal();
 
   // eslint-disable-next-line no-empty-pattern
@@ -77,7 +79,7 @@ const Ldr = memo(function Ldr({ imgSrc, name, handleDelete, ...device }) {
             title: 'Cuidado',
             subtitle: 'Tem certeza que deseja excluir o componente?',
             handleConfirm: () => {
-              handleDelete(device.id);
+              deleteDevice(device.id);
               disableModal();
             }
           })}
@@ -94,7 +96,6 @@ Ldr.propTypes = {
   id: P.string.isRequired,
   name: P.string.isRequired,
   imgSrc: P.string.isRequired,
-  handleDelete: P.func.isRequired,
   type: P.string,
   category: P.string,
   posX: P.number,

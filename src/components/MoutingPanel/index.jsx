@@ -1,14 +1,15 @@
 import { useRef } from 'react';
 import { useDrop } from 'react-dnd';
-import P from 'prop-types';
 
+import { useDevices } from '@/hooks/useDevices';
 import Device from '@/components/Device/index';
 import BackgroundGrade from './BackgroundGrade';
 import LinesContainer from './LinesContainer';
 
 import { moutingPanelContainer } from './styles.module.css';
 
-const MoutingPanel = ({ devices = [], deleteDevice, addDevice }) => {
+const MoutingPanel = () => {
+  const { devices, addDevice } = useDevices();
   const moutingPanelRef = useRef(null);
 
   const attachRef = (el) => {
@@ -31,10 +32,7 @@ const MoutingPanel = ({ devices = [], deleteDevice, addDevice }) => {
         devices.map(device => (
           <Device
             key={device.id}
-            device={{
-              ...device,
-              handleDelete: deleteDevice
-            }}
+            device={device}
           />
         ))
       }
@@ -44,17 +42,5 @@ const MoutingPanel = ({ devices = [], deleteDevice, addDevice }) => {
     </div>
   );
 };
-
-MoutingPanel.propTypes = {
-  devices: P.arrayOf(P.shape({
-    id: P.string.isRequired,
-    name: P.string.isRequired,
-    imgSrc: P.string.isRequired,
-    type: P.string.isRequired,
-    category: P.string.isRequired
-  })),
-  deleteDevice: P.func.isRequired,
-  addDevice: P.func.isRequired
-}
 
 export default MoutingPanel;
