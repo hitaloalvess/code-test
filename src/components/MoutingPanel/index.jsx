@@ -12,6 +12,7 @@ const MoutingPanel = () => {
   const { devices, addDevice } = useDevices();
   const moutingPanelRef = useRef(null);
 
+
   const attachRef = (el) => {
     drop(el);
     moutingPanelRef.current = el;
@@ -38,7 +39,10 @@ const MoutingPanel = () => {
       }
       <LinesContainer />
 
-      <BackgroundGrade moutingPanelRef={moutingPanelRef} />
+      <BackgroundGrade
+        moutingPanelRef={moutingPanelRef}
+      />
+
     </div>
   );
 };

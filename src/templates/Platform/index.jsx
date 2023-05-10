@@ -4,8 +4,9 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 import { TouchBackend } from 'react-dnd-touch-backend';
 import { isMobile } from 'react-device-detect';
 
-import { ModalProvider } from '../../contexts/ModalContext';
-import { DevicesProvider } from '../../contexts/DevicesContext';
+import { ModalProvider } from '@/contexts/ModalContext';
+import { DevicesProvider } from '@/contexts/DevicesContext';
+import { FlowProvider } from '@/contexts/FlowContext';
 
 import Header from '@/components/Header';
 import Sidebar from '@/components/Sidebar';
@@ -24,19 +25,21 @@ const Platform = () => {
     <DndProvider backend={isMobile ? TouchBackend : HTML5Backend}>
       <ModalProvider>
         <DevicesProvider>
-          <main className={container}>
-            <Header />
+          <FlowProvider>
+            <main className={container}>
+              <Header />
 
-            <Sidebar />
+              <Sidebar />
 
-            <MoutingPanel />
+              <MoutingPanel />
 
-            <div className={buttonsContainer}>
-              <ManualButton />
-              <FaqButton />
-              <ZoomButton />
-            </div>
-          </main>
+              <div className={buttonsContainer}>
+                <ManualButton />
+                <FaqButton />
+                <ZoomButton />
+              </div>
+            </main>
+          </FlowProvider>
         </DevicesProvider>
       </ModalProvider>
 

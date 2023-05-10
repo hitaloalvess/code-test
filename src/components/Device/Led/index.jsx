@@ -21,7 +21,7 @@ import {
   ledLightElement
 } from './styles.module.css';
 
-const Led = memo(function Led({ imgSrc, name, ...device }) {
+const Led = memo(function Led({ id, imgSrc, name, ...device }) {
 
   const { deleteDevice } = useDevices();
   const { enableModal, disableModal } = useModal();
@@ -39,7 +39,7 @@ const Led = memo(function Led({ imgSrc, name, ...device }) {
   // eslint-disable-next-line no-empty-pattern
   const [{ }, drag] = useDrag(() => ({
     type: 'device',
-    item: { imgSrc, name, ...device }
+    item: { id, imgSrc, name, ...device }
   }), []);
 
   // const enableLight = (opacityValue) => {
@@ -90,7 +90,10 @@ const Led = memo(function Led({ imgSrc, name, ...device }) {
         />
       </div>
       <div>
-        <Connector type={'entry'} />
+        <Connector
+          type={'entry'}
+          idDevice={id}
+        />
       </div>
 
       <div
@@ -104,7 +107,7 @@ const Led = memo(function Led({ imgSrc, name, ...device }) {
             title: 'Cuidado',
             subtitle: 'Tem certeza que deseja excluir o componente?',
             handleConfirm: () => {
-              deleteDevice(device.id);
+              deleteDevice(id);
               disableModal();
             }
           })}
@@ -135,7 +138,7 @@ Led.propTypes = {
   category: P.string,
   posX: P.number,
   posY: P.number,
-  draggedDevice: P.object
+  draggedDevice: P.object,
 }
 
 export default Led;

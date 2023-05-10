@@ -16,7 +16,7 @@ import {
   actionButtonsContainerLeft
 } from '../styles.module.css';
 
-const Ldr = memo(function Ldr({ imgSrc, name, ...device }) {
+const Ldr = memo(function Ldr({ id, imgSrc, name, ...device }) {
   const inputRef = useRef(null);
   const showValueRef = useRef(null);
 
@@ -26,7 +26,7 @@ const Ldr = memo(function Ldr({ imgSrc, name, ...device }) {
   // eslint-disable-next-line no-empty-pattern
   const [{ }, drag] = useDrag(() => ({
     type: 'device',
-    item: { imgSrc, name, ...device }
+    item: { id, imgSrc, name, ...device }
   }), []);
 
   const handleOnInput = () => {
@@ -65,7 +65,10 @@ const Ldr = memo(function Ldr({ imgSrc, name, ...device }) {
       </div>
 
       <div>
-        <Connector type={'exit'} />
+        <Connector
+          type={'exit'}
+          idDevice={id}
+        />
       </div>
 
       <div
@@ -79,7 +82,7 @@ const Ldr = memo(function Ldr({ imgSrc, name, ...device }) {
             title: 'Cuidado',
             subtitle: 'Tem certeza que deseja excluir o componente?',
             handleConfirm: () => {
-              deleteDevice(device.id);
+              deleteDevice(id);
               disableModal();
             }
           })}
@@ -100,7 +103,7 @@ Ldr.propTypes = {
   category: P.string,
   posX: P.number,
   posY: P.number,
-  draggedDevice: P.object
+  draggedDevice: P.object,
 }
 
 export default Ldr;

@@ -10,8 +10,12 @@ import {
 
 const Device = memo(function Device({ device: { posX, posY, ...device } }) {
   const devices = {
-    'ldr': <Ldr {...device} />,
-    'led': <Led {...device} />
+    'ldr': <Ldr
+      {...device}
+    />,
+    'led': <Led
+      {...device}
+    />
   }
 
   const currentDevice = devices[device.name];
@@ -44,7 +48,7 @@ Device.propTypes = {
     posX: P.number.isRequired,
     posY: P.number.isRequired,
     draggedDevice: P.object
-  })
+  }),
 }
 
 export default Device;
