@@ -74,19 +74,19 @@ const Connector = memo(function Connector({ type, idDevice }) {
     <div
       ref={ref}
       className={`${connector} ${styles[`${type}Connector`]}`}
-      // onTouchStart={() => createFlow({
-      //   idDevices: {
-      //     from: idDevice,
-      //     to: null
-      //   },
-      //   connectors: {
-      //     from: {
-      //       ...position
-      //     },
-      //     to: null
-      //   },
-      //   lineId: null,
-      // })}
+      onTouchStart={() => createFlow({
+        idDevices: {
+          from: idDevice,
+          to: null
+        },
+        connectors: {
+          from: {
+            ...position
+          },
+          to: null
+        },
+        lineId: null,
+      })}
       onMouseDown={() => createFlow({
         idDevices: {
           from: idDevice,

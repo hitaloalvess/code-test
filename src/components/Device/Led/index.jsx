@@ -1,6 +1,5 @@
 
 import { memo, useCallback, useState } from 'react';
-import { useDrag } from 'react-dnd';
 import { AiFillSetting } from 'react-icons/ai';
 import { FaTrashAlt } from 'react-icons/fa';
 import P from 'prop-types';
@@ -21,7 +20,7 @@ import {
   ledLightElement
 } from './styles.module.css';
 
-const Led = memo(function Led({ id, imgSrc, name, ...device }) {
+const Led = memo(function Led({ id, imgSrc, name, deviceRef }) {
 
   const { deleteDevice } = useDevices();
   const { enableModal, disableModal } = useModal();
@@ -35,12 +34,6 @@ const Led = memo(function Led({ id, imgSrc, name, ...device }) {
   const [brightness, setBrightness] = useState(0);
   const [color, setColor] = useState('#ff1450');
   const [opacity] = useState(0);
-
-  // eslint-disable-next-line no-empty-pattern
-  const [{ }, drag] = useDrag(() => ({
-    type: 'device',
-    item: { id, imgSrc, name, ...device }
-  }), []);
 
   // const enableLight = (opacityValue) => {
   //   const opacity = opacityValue / value.max;
@@ -69,7 +62,7 @@ const Led = memo(function Led({ id, imgSrc, name, ...device }) {
 
       <div
         className={deviceBody}
-        ref={drag}
+        ref={deviceRef}
       >
         <div className={ledLight}>
           {lightActive && (
@@ -139,6 +132,7 @@ Led.propTypes = {
   posX: P.number,
   posY: P.number,
   draggedDevice: P.object,
+  deviceRef: P.func.isRequired
 }
 
 export default Led;

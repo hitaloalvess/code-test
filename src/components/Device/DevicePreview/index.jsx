@@ -21,8 +21,8 @@ const DevicePreview = memo(function DevicePreview({ name, imgSrc }) {
 });
 
 DevicePreview.propTypes = {
-  name: P.string.isRequired,
-  imgSrc: P.string.isRequired
+  name: P.string,
+  imgSrc: P.string
 }
 
 export default DevicePreview;

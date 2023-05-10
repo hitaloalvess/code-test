@@ -1,7 +1,6 @@
 import { memo, useRef } from 'react';
-import { useDrag } from 'react-dnd';
-import { FaTrashAlt } from 'react-icons/fa';
 import P from 'prop-types';
+import { FaTrashAlt } from 'react-icons/fa';
 
 import { useDevices } from '@/hooks/useDevices';
 import { useModal } from '@/hooks/useModal';
@@ -16,18 +15,13 @@ import {
   actionButtonsContainerLeft
 } from '../styles.module.css';
 
-const Ldr = memo(function Ldr({ id, imgSrc, name, ...device }) {
+const Ldr = memo(function Ldr({ id, imgSrc, name, deviceRef }) {
   const inputRef = useRef(null);
   const showValueRef = useRef(null);
 
   const { deleteDevice } = useDevices();
   const { enableModal, disableModal } = useModal();
 
-  // eslint-disable-next-line no-empty-pattern
-  const [{ }, drag] = useDrag(() => ({
-    type: 'device',
-    item: { id, imgSrc, name, ...device }
-  }), []);
 
   const handleOnInput = () => {
     const input = inputRef.current;
@@ -55,7 +49,7 @@ const Ldr = memo(function Ldr({ id, imgSrc, name, ...device }) {
 
       <div
         className={deviceBody}
-        ref={drag}
+        ref={deviceRef}
       >
         <img
           src={imgSrc}
@@ -104,6 +98,7 @@ Ldr.propTypes = {
   posX: P.number,
   posY: P.number,
   draggedDevice: P.object,
+  deviceRef: P.func.isRequired
 }
 
 export default Ldr;

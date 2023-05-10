@@ -124,23 +124,6 @@ export const FlowProvider = ({ children }) => {
     //Verificar se os conectores já conectam
     /// ARRUMAR AQUI
 
-    // if (!flowTemp.currentLine) {
-    //   const line = createLine({
-    //     fromPos: {
-    //       x: connectorFrom.x,
-    //       y: connectorFrom.y
-    //     },
-    //     toPos: {
-    //       x: connectorTo.x,
-    //       y: connectorTo.y
-    //     }
-    //   });
-
-    //   setFlowTemp(prev => ({
-    //     ...prev,
-    //     currentLine: line
-    //   }))
-    // } else {
     updatePosLine({
       id: flowTemp.currentLine.id,
       fromPos: {
@@ -152,7 +135,6 @@ export const FlowProvider = ({ children }) => {
         y: connectorTo.y
       }
     });
-    // }
 
     const flow = {
       id: uuid(),
