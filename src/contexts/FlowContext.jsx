@@ -18,7 +18,6 @@ export const FlowProvider = ({ children }) => {
   });
 
   //LINES
-
   const [connectionLines, setConnectionLines] = useState([]);
 
   const createLine = useCallback(({ fromPos, toPos, }) => {
@@ -37,19 +36,17 @@ export const FlowProvider = ({ children }) => {
 
   }, []);
 
-  const updatePosLine = useCallback(({ id, fromPos, toPos }) => {
-    const newLines = connectionLines.map(line => {
-      if (line.id === id) {
-        return {
-          id, fromPos, toPos
-        }
-      }
+  const updateLines = useCallback((lines) => {
+    const newLines = connectionLines.map(connectionLine => {
+      const newLine = lines.find(line => line.id === connectionLine.id);
 
-      return line
-    });
+      if (newLine) return newLine;
+
+      return connectionLine;
+    })
 
     setConnectionLines(newLines);
-  }, [connectionLines])
+  }, [connectionLines]);
 
   const deleteLine = useCallback(({ id }) => {
     const newLines = connectionLines.filter(line => line.id !== id);
@@ -124,17 +121,19 @@ export const FlowProvider = ({ children }) => {
     //Verificar se os conectores já conectam
     /// ARRUMAR AQUI
 
-    updatePosLine({
-      id: flowTemp.currentLine.id,
-      fromPos: {
-        x: connectorFrom.x,
-        y: connectorFrom.y
-      },
-      toPos: {
-        x: connectorTo.x,
-        y: connectorTo.y
+    updateLines([
+      {
+        id: flowTemp.currentLine.id,
+        fromPos: {
+          x: connectorFrom.x,
+          y: connectorFrom.y
+        },
+        toPos: {
+          x: connectorTo.x,
+          y: connectorTo.y
+        }
       }
-    });
+    ]);
 
     const flow = {
       id: uuid(),
@@ -154,7 +153,7 @@ export const FlowProvider = ({ children }) => {
 
     //Executar o flow de forma inicial
 
-  }, [devices, flowTemp, createLine, updatePosLine, deleteLine]);
+  }, [devices, flowTemp, createLine, updateLines, deleteLine]);
 
   const clearFlowTemp = () => {
     setFlowTemp({
@@ -165,6 +164,17 @@ export const FlowProvider = ({ children }) => {
     });
   };
 
+  const updateFlows = useCallback((newFlows) => {
+    const newFlowsList = flows.map(flow => {
+      const newFlow = newFlows.find(currentFlow => currentFlow.id === flow.id);
+      if (flow.id === newFlow?.id) return newFlow;
+
+      return flow;
+    });
+
+    setFlows(newFlowsList);
+  }, [flows]);
+
   return (
     <FlowContext.Provider
       value={{
@@ -172,8 +182,10 @@ export const FlowProvider = ({ children }) => {
         flowTemp,
         connectionLines,
         createFlow,
-        updatePosLine,
-        deleteLine
+        // updateLines,
+        deleteLine,
+        updateFlows,
+        updateLines
       }}
     >
       {children}

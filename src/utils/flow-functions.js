@@ -10,7 +10,14 @@ export const calcPositionConnector = (connector) => {
   const x = ((connectorLeft + connectorRight) / 2);
   const y = ((connectorTop + connectorBottom) / 2);
 
-  return { x, y }
+  return {
+    x,
+    y,
+    connectorLeft,
+    connectorRight,
+    connectorTop,
+    connectorBottom
+  }
 }
 
 export const verifConnector = ({ deviceFrom, deviceTo }) => {

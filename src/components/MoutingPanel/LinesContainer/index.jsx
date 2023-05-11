@@ -26,7 +26,7 @@ const LinesContainer = () => {
     flowTemp,
     connectionLines,
     deleteLine,
-    updatePosLine
+    updateLines
   } = useFlow();
 
   const handleMouseMove = useCallback(({ mousePosX, mousePosY }) => {
@@ -34,18 +34,20 @@ const LinesContainer = () => {
 
     const { currentLine, from } = flowTemp;
 
-    updatePosLine({
-      id: currentLine.id,
-      fromPos: {
-        x: from.connectorPos.x,
-        y: from.connectorPos.y
-      },
-      toPos: {
-        x: mousePosX,
-        y: mousePosY
+    updateLines([
+      {
+        id: currentLine.id,
+        fromPos: {
+          x: from.connectorPos.x,
+          y: from.connectorPos.y
+        },
+        toPos: {
+          x: mousePosX,
+          y: mousePosY
+        }
       }
-    });
-  }, [flowTemp, updatePosLine]);
+    ]);
+  }, [flowTemp, updateLines]);
 
   // eslint-disable-next-line no-unused-vars
   const [_, drop] = useDrop(() => ({

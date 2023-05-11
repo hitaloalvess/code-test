@@ -4,7 +4,6 @@ import { useDrop, useDrag } from 'react-dnd';
 import P from 'prop-types';
 
 import { useFlow } from '@/hooks/useFlow';
-import { useDevices } from '@/hooks/useDevices';
 
 import { calcPositionConnector } from '../../utils/flow-functions';
 
@@ -14,20 +13,23 @@ import styles, {
 } from './styles.module.css';
 
 
-const Connector = memo(function Connector({ type, idDevice }) {
-  const ref = useRef(null);
+const Connector = memo(function Connector({
+  type, idDevice, updateConn, refConn
+}) {
+  const connRef = useRef(null);
 
-  const { devices } = useDevices();
   const { flowTemp, createFlow, deleteLine } = useFlow();
-  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const [position, setPosition] = useState({
+    x: 0, y: 0
+  });
 
   useEffect(() => {
-    const { x, y } = calcPositionConnector(ref.current);
+    const { x, y } = calcPositionConnector(connRef.current);
+    setPosition({ x, y });
 
-    setPosition({
-      x, y
-    });
-  }, [ref]);
+  }, [updateConn]);
+
+
 
   // eslint-disable-next-line no-empty-pattern
   const [{ }, drop] = useDrop(() => ({
@@ -46,12 +48,12 @@ const Connector = memo(function Connector({ type, idDevice }) {
         },
         connectors: {
           from: { ...connectorPosFrom },
-          to: { ...position, type }
+          to: { ...position }
         },
         lineId: null
       })
     }
-  }), [position, devices, flowTemp]);
+  }), [flowTemp, position]);
 
   // eslint-disable-next-line no-empty-pattern
   const [{ }, drag] = useDrag(() => ({
@@ -66,13 +68,18 @@ const Connector = memo(function Connector({ type, idDevice }) {
   }), [position]);
 
   const attachRef = (el) => {
-    drag(el)
-    drop(el)
+    drag(el);
+    drop(el);
+  }
+
+  const attachRefConn = (el) => {
+    connRef.current = el;
+    refConn.current = el;
   }
 
   return (
     <div
-      ref={ref}
+      ref={attachRefConn}
       className={`${connector} ${styles[`${type}Connector`]}`}
       onTouchStart={() => createFlow({
         idDevices: {
@@ -111,9 +118,12 @@ const Connector = memo(function Connector({ type, idDevice }) {
   );
 });
 
+
 Connector.propTypes = {
   type: P.string.isRequired,
   idDevice: P.string.isRequired,
+  updateConn: P.number.isRequired,
+  refConn: P.object.isRequired
 }
 
 export default Connector;

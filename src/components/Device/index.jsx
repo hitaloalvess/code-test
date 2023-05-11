@@ -1,5 +1,4 @@
 import { memo } from 'react';
-import { useDrag } from 'react-dnd';
 import P from 'prop-types';
 
 import Ldr from './Ldr';
@@ -10,21 +9,12 @@ import {
   deviceContent
 } from './styles.module.css';
 
-const Device = memo(function Device({ device: { posX, posY, ...device } }) {
-
-  // eslint-disable-next-line no-empty-pattern
-  const [{ }, drag] = useDrag(() => ({
-    type: 'device',
-    item: { ...device }
-  }), []);
-
+const Device = memo(function Device({ device: { ...device } }) {
   const devices = {
     'ldr': <Ldr
-      deviceRef={drag}
       {...device}
     />,
     'led': <Led
-      deviceRef={drag}
       {...device}
     />
   }
@@ -35,10 +25,12 @@ const Device = memo(function Device({ device: { posX, posY, ...device } }) {
     return;
   }
 
+
+
   return (
     <div
       className={deviceContainer}
-      style={{ left: `${posX}px`, top: `${posY}px` }}
+      style={{ left: `${device.posX}px`, top: `${device.posY}px` }}
     >
       <div
         className={deviceContent}

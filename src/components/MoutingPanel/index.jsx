@@ -2,6 +2,8 @@ import { useRef } from 'react';
 import { useDrop } from 'react-dnd';
 
 import { useDevices } from '@/hooks/useDevices';
+import { useFlow } from '@/hooks/useFlow';
+
 import Device from '@/components/Device/index';
 import BackgroundGrade from './BackgroundGrade';
 import LinesContainer from './LinesContainer';
@@ -9,20 +11,48 @@ import LinesContainer from './LinesContainer';
 import { moutingPanelContainer } from './styles.module.css';
 
 const MoutingPanel = () => {
-  const { devices, addDevice } = useDevices();
+  const { devices, addDevice, repositionDevice } = useDevices();
+  const { flows, connectionLines, updateLines, updateFlows } = useFlow();
   const moutingPanelRef = useRef(null);
-
 
   const attachRef = (el) => {
     drop(el);
     moutingPanelRef.current = el;
   }
 
+  const deviceHover = (item, monitor) => {
+    const elementIndex = devices.find(device => device.id === item.id);
+
+    if (!elementIndex) {
+      return;
+    }
+
+    repositionDevice({
+      device: { ...item },
+      screen: monitor,
+      flows,
+      connectionLines,
+      updateLines,
+      updateFlows
+    });
+  }
+
+  const deviceDrop = (item, monitor) => {
+    const elementIndex = devices.find(device => device.id === item.id);
+
+    if (elementIndex) {
+      return;
+    }
+
+    addDevice(item, monitor)
+  }
+
   // eslint-disable-next-line no-unused-vars
   const [_, drop] = useDrop(() => ({
     accept: ['device', 'menu-device'],
-    drop: (item, monitor) => addDevice(item, monitor)
-  }), [devices]);
+    drop: (item, monitor) => deviceDrop(item, monitor),
+    hover: (item, monitor) => deviceHover(item, monitor),
+  }), [devices, flows, connectionLines]);
 
   return (
     <div
