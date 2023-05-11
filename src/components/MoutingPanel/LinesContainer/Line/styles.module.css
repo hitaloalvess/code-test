@@ -1,0 +1,13 @@
+.line {
+  position: absolute;
+  height: 6px;
+  background-color: var(--yellow);
+  transform-origin: center left;
+  display: flex;
+  align-items: center;
+}
+
+.lineRange {
+  height: 30px;
+  background-color: '#ffeeee00';
+}
