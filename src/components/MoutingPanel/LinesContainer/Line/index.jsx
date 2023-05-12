@@ -1,8 +1,9 @@
 import P from 'prop-types';
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { FaTrashAlt } from 'react-icons/fa';
 
 import { calcDistance, calcAngle } from '@/utils/line-functions';
-import { line, lineRange } from './styles.module.css';
+import { line, lineRange, btnDeleteLine } from './styles.module.css';
 
 const Line = ({ id, fromPos, toPos }) => {
   const lineRef = useRef(null);
@@ -45,7 +46,6 @@ const Line = ({ id, fromPos, toPos }) => {
         width: `${dimensions.width}px`,
         transform: `rotate(${dimensions.angle}deg)`,
       }}
-      onClick={() => console.log('Cliquei na linha')}
     >
       <div
         className={lineRange}
@@ -54,8 +54,17 @@ const Line = ({ id, fromPos, toPos }) => {
           width: `${dimensions.width}px`,
         }}
       >
-
       </div>
+
+      <button
+        className={btnDeleteLine}
+        onClick={(e) => {
+          e.stopPropagation();
+          console.log('Excluir linha');
+        }}
+      >
+        <FaTrashAlt />
+      </button>
     </div>
   );
 };
