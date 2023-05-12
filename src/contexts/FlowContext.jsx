@@ -2,8 +2,8 @@ import { createContext, useCallback, useState } from "react";
 import P from 'prop-types';
 import { v4 as uuid } from 'uuid';
 
+import { findFlowByDeviceId, verifConnector } from "@/utils/flow-functions";
 import { useDevices } from '@/hooks/useDevices';
-import { verifConnector } from "../utils/flow-functions";
 
 export const FlowContext = createContext();
 
@@ -57,6 +57,67 @@ export const FlowProvider = ({ children }) => {
   }, [connectionLines]);
 
   //FLOWS
+
+  const saveFlow = useCallback((connection) => {
+    const { deviceFrom, deviceTo } = connection;
+
+
+
+    const fromHasFlow = findFlowByDeviceId(flows, deviceFrom.id);
+    const toHasFlow = findFlowByDeviceId(flows, deviceTo.id);
+
+    //device to and from already has flows ()
+    if (fromHasFlow && toHasFlow) {
+      //group all connections in the from stream
+      const newFlow = { ...fromHasFlow }
+      toHasFlow.connections.forEach(connection => {
+        newFlow.connections.push(connection);
+      });
+      newFlow.connections.push(connection);
+
+      const newFlows = flows.filter(flow => {
+        return flow.id !== fromHasFlow.id && flow.id !== toHasFlow.id
+      });
+      newFlows.push(newFlow);
+
+      setFlows(newFlows);
+
+      return;
+    }
+
+    //from or to are part of a flow
+    if (fromHasFlow || toHasFlow) {
+      //bundle the new connection to the existing flow
+      const flowKey = fromHasFlow ? fromHasFlow.id : toHasFlow.id;
+
+      const newFlow = flows.find(flow => flow.id === flowKey);
+      newFlow.connections.push(connection);
+
+      const newFlows = flows.filter(flow => {
+        if (flow.id === newFlow.id) return newFlow;
+
+        return flow;
+      });
+
+      setFlows(newFlows);
+
+      return newFlow;
+    }
+
+    //create new flow if from or to does not participate flow
+    const newFlowKey = uuid();
+
+    const flow = {
+      id: newFlowKey,
+      connections: [{ ...connection }]
+    }
+
+    setFlows(prev => [
+      ...prev,
+      flow
+    ])
+  }, [flows]);
+
   const createFlow = useCallback(({
     idDevices,
     connectors,
@@ -135,7 +196,7 @@ export const FlowProvider = ({ children }) => {
       }
     ]);
 
-    const flow = {
+    const connFlow = {
       id: uuid(),
       deviceFrom: { ...deviceFrom },
       deviceTo: { ...deviceTo },
@@ -146,23 +207,17 @@ export const FlowProvider = ({ children }) => {
       }
     }
 
-    setFlows(prev => [
-      ...prev,
-      flow
-    ]);
+    //save flow
+
+    saveFlow(connFlow);
+    // setFlows(prev => [
+    //   ...prev,
+    //   flow
+    // ]);
 
     //Executar o flow de forma inicial
 
-  }, [devices, flowTemp, createLine, updateLines, deleteLine]);
-
-  const clearFlowTemp = () => {
-    setFlowTemp({
-      from: null,
-      to: null,
-      currentLine: undefined,
-      connectorClicked: false
-    });
-  };
+  }, [devices, flowTemp, createLine, updateLines, deleteLine, saveFlow]);
 
   const updateFlows = useCallback((newFlows) => {
     const newFlowsList = flows.map(flow => {
@@ -174,6 +229,15 @@ export const FlowProvider = ({ children }) => {
 
     setFlows(newFlowsList);
   }, [flows]);
+
+  const clearFlowTemp = () => {
+    setFlowTemp({
+      from: null,
+      to: null,
+      currentLine: undefined,
+      connectorClicked: false
+    });
+  };
 
   return (
     <FlowContext.Provider

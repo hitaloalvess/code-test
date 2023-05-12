@@ -83,3 +83,14 @@ export const verifConnector = ({ deviceFrom, deviceTo }) => {
 
   return true;
 }
+
+export const findFlowByDeviceId = (flows, deviceId) => {
+  const foundFlows = flows.find(flow => {
+    return flow.connections.find(conn => {
+      return (conn.deviceFrom.id === deviceId ||
+        conn.deviceTo.id === deviceId);
+    });
+  });
+
+  return foundFlows;
+}

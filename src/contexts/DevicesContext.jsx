@@ -4,6 +4,7 @@ import { v4 } from 'uuid';
 
 import { calcPositionDevice } from '@/utils/devices-functions';
 import { calcPositionConnector } from '@/utils/flow-functions';
+import { findFlowByDeviceId } from "../utils/flow-functions";
 
 export const DevicesContext = createContext();
 
@@ -57,30 +58,25 @@ export const DevicesProvider = ({ children }) => {
 
 
     //Verificar se o dispositivo possui fluxos
-    const deviceFlows = flows.filter(flow => {
-      return flow.deviceFrom.id === id || flow.deviceTo.id === id;
-    });
+    const deviceFlow = findFlowByDeviceId(flows, id);
 
-
-    if (deviceFlows.length > 0) {
+    if (deviceFlow) {
       const { x: connPosX, y: connPosY } = calcPositionConnector(connRef.current);
 
       //Update device placement in your flows
       let lines = [];
-      let flows = [];
-
-      deviceFlows.forEach(flow => {
-
-        const connectionLine = connectionLines.find(line => line.id === flow.idLine);
+      let connections = [];
+      deviceFlow.connections.forEach(connection => {
+        const connectionLine = connectionLines.find(line => line.id === connection.idLine);
         let newLine = {};
-        let newFlow = {}
+        let newConnection = {}
 
-        if (flow.deviceFrom.id === id) {
+        if (connection.deviceFrom.id === id) {
 
-          newFlow = {
-            ...flow,
+          newConnection = {
+            ...connection,
             deviceFrom: {
-              ...flow.deviceFrom,
+              ...connection.deviceFrom,
               posX, posY
             },
             connectors: {
@@ -88,12 +84,12 @@ export const DevicesProvider = ({ children }) => {
                 x: connPosX,
                 y: connPosY
               },
-              to: { ...flow.connectors.to }
+              to: { ...connection.connectors.to }
             }
           }
 
           newLine = {
-            id: flow.idLine,
+            id: connection.idLine,
             fromPos: {
               x: connPosX,
               y: connPosY
@@ -103,20 +99,20 @@ export const DevicesProvider = ({ children }) => {
             }
           };
 
-          flows.push(newFlow);
+          connections.push(newConnection);
           lines.push(newLine);
 
         } else {
 
-          newFlow = {
-            ...flow,
+          newConnection = {
+            ...connection,
             deviceTo: {
-              ...flow.deviceTo,
+              ...connection.deviceTo,
               posX, posY
             },
             connectors: {
               from: {
-                ...flow.connectors.from
+                ...connection.connectors.from
               },
               to: {
                 x: connPosX,
@@ -126,7 +122,7 @@ export const DevicesProvider = ({ children }) => {
           }
 
           newLine = {
-            id: flow.idLine,
+            id: connection.idLine,
             fromPos: {
               ...connectionLine.fromPos
             },
@@ -136,14 +132,16 @@ export const DevicesProvider = ({ children }) => {
             }
           }
 
-          flows.push(newFlow);
+          connections.push(newConnection);
           lines.push(newLine);
         }
-
       });
 
       updateLines(lines);
-      updateFlows(flows);
+      updateFlows([{
+        ...deviceFlow,
+        connections
+      }]);
     }
 
     setDevices(newListDevices);
