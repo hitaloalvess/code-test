@@ -8,6 +8,7 @@ import { line, lineRange, btnDeleteLine } from './styles.module.css';
 const Line = ({ id, fromPos, toPos }) => {
   const lineRef = useRef(null);
   const [height, setHeight] = useState(0);
+  const [disableBtnDelete, setDisableBtnDelete] = useState(true);
 
   useEffect(() => {
     if (lineRef.current) {
@@ -36,6 +37,10 @@ const Line = ({ id, fromPos, toPos }) => {
 
   }, [fromPos, toPos, height]);
 
+  const handleBtnDelete = () => {
+    setDisableBtnDelete(prev => !prev);
+  }
+
   return (
     <div
       ref={lineRef}
@@ -46,6 +51,7 @@ const Line = ({ id, fromPos, toPos }) => {
         width: `${dimensions.width}px`,
         transform: `rotate(${dimensions.angle}deg)`,
       }}
+      onClick={() => handleBtnDelete()}
     >
       <div
         className={lineRange}
@@ -62,6 +68,7 @@ const Line = ({ id, fromPos, toPos }) => {
           e.stopPropagation();
           console.log('Excluir linha');
         }}
+        disabled={disableBtnDelete}
       >
         <FaTrashAlt />
       </button>
