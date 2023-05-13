@@ -4,6 +4,7 @@ import { FaTrashAlt } from 'react-icons/fa';
 import { useDrag } from 'react-dnd';
 
 import { useDevices } from '@/hooks/useDevices';
+import { useFlow } from '@/hooks/useFlow';
 import { useModal } from '@/hooks/useModal';
 import ActionButton from '@/components/ActionButton';
 import Connector from '@/components/Connector';
@@ -16,14 +17,24 @@ import {
   actionButtonsContainerLeft
 } from '../styles.module.css';
 
+const MAX_VALUE = 1023;
 const Ldr = memo(function Ldr({
   id, imgSrc, name, ...device
 }) {
+  const { deleteDevice } = useDevices();
+  const { executeFlow } = useFlow();
+  const { enableModal, disableModal } = useModal();
+
   const inputRef = useRef(null);
   const showValueRef = useRef(null);
-  const { deleteDevice } = useDevices();
-  const { enableModal, disableModal } = useModal();
   const connRef = useRef(null);
+
+  const defaultBehavior = () => {
+    return {
+      value: Number(inputRef.current.value),
+      max: MAX_VALUE
+    };
+  }
 
   // eslint-disable-next-line no-empty-pattern
   const [{ }, drag] = useDrag(() => ({
@@ -33,14 +44,15 @@ const Ldr = memo(function Ldr({
       id,
       imgSrc,
       name,
-      connRef
+      connRef,
     },
   }), [connRef]);
 
   const handleOnInput = () => {
     const input = inputRef.current;
-
     showValueRef.current.innerHTML = input.value;
+
+    executeFlow(id);
   }
 
   return (
@@ -53,6 +65,7 @@ const Ldr = memo(function Ldr({
           min="0"
           max="1023"
           step="1"
+          defaultValue={0}
           onInput={handleOnInput}
           ref={inputRef}
         />
@@ -76,9 +89,13 @@ const Ldr = memo(function Ldr({
       <div>
         <Connector
           type={'exit'}
-          idDevice={id}
+          device={{
+            id,
+            defaultBehavior
+          }}
           updateConn={device.posX}
           refConn={connRef}
+
         />
       </div>
 

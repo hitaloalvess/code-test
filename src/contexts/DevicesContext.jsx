@@ -13,11 +13,9 @@ export const DevicesProvider = ({ children }) => {
   const [devices, setDevices] = useState([]);
 
   const addDevice = (item, monitor) => {
-
     const { width, height } = item.draggedDevice.getBoundingClientRect();
     const { x, y } = monitor.getClientOffset();
     const [posX, posY] = calcPositionDevice({ x, y, width, height });
-
 
     setDevices((devices) => [...devices, {
       ...item,

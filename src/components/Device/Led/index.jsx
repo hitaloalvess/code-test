@@ -28,17 +28,54 @@ const Led = memo(function Led({
   const { deleteDevice } = useDevices();
   const { enableModal, disableModal } = useModal();
 
-  const [lightActive] = useState(false);
-  // const [value, setValue] = useState({
-  //   current: 0,
-  //   max: 0
-  // });
-  // const [typeValueReceived, setTypeValueReceived] = useState(null);
+  const [lightActive, setLightActive] = useState(false);
+  // eslint-disable-next-line no-unused-vars
+  const [value, setValue] = useState({
+    current: 0,
+    max: 0,
+    type: null
+  });
   const [brightness, setBrightness] = useState(0);
   const [color, setColor] = useState('#ff1450');
-  const [opacity] = useState(0);
+  const [opacity, setOpacity] = useState(0);
   const connRef = useRef(null);
 
+  const enableLight = ({ brightness, maxValue }) => {
+    const opacity = brightness / maxValue;
+
+    setOpacity(opacity);
+    setLightActive(true);
+  }
+
+  const disableLight = () => {
+    setOpacity(0);
+    setLightActive(false);
+  }
+
+  const defaultBehavior = (valueReceived) => {
+    const { value, max } = valueReceived;
+
+    const objValue = {
+      value: typeof value === 'boolean' ? brightness : value,
+      max: typeof value === 'boolean' ? 1023 : max,
+      type: typeof value
+    }
+
+    if (objValue?.value !== 0) {
+      const { value, max } = objValue;
+      const brigthnessValue = objValue.value < 0 ? value * -1 : value;
+
+      enableLight({
+        brightness: brigthnessValue,
+        maxValue: max
+      });
+
+    } else {
+      disableLight();
+    }
+
+    setValue(objValue);
+  }
 
   // eslint-disable-next-line no-empty-pattern
   const [{ }, drag] = useDrag(() => ({
@@ -48,21 +85,9 @@ const Led = memo(function Led({
       id,
       imgSrc,
       name,
-      connRef
+      connRef,
     }
   }), [connRef]);
-
-  // const enableLight = (opacityValue) => {
-  //   const opacity = opacityValue / value.max;
-
-  //   setOpacity(opacity);
-  //   setLightActive(true);
-  // }
-
-  // const disableLight = () => {
-  //   setOpacity(0);
-  //   setLightActive(false);
-  // }
 
   const handleSettingUpdate = useCallback((newColor, newBrightness) => {
     if (newColor !== color) {
@@ -102,7 +127,10 @@ const Led = memo(function Led({
       <div>
         <Connector
           type={'entry'}
-          idDevice={id}
+          device={{
+            id,
+            defaultBehavior
+          }}
           updateConn={device.posX}
           refConn={connRef}
         />

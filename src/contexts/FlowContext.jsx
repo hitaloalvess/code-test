@@ -118,29 +118,29 @@ export const FlowProvider = ({ children }) => {
   }, [flows]);
 
   const createFlow = useCallback(({
-    idDevices,
-    connectors,
+    devices: devicesParam
   }) => {
+    const { from, to } = devicesParam;
 
-    if (connectors.from && !connectors.to && !flowTemp.connectorClicked) {
-      const deviceFrom = devices.find(device => device.id === idDevices.from);
+    if (from.connector && !to?.connector && !flowTemp.connectorClicked) {
+      const deviceFrom = devices.find(device => device.id === from.id);
 
       const line = createLine({
         fromPos: {
-          x: connectors.from.x,
-          y: connectors.from.y
+          x: from.connector.x,
+          y: from.connector.y
         },
         toPos: {
-          x: connectors.from.x,
-          y: connectors.from.y
+          x: from.connector.x,
+          y: from.connector.y
         }
       });
 
       setFlowTemp({
         from: {
           ...deviceFrom,
-          connectorPos: {
-            ...connectors.from
+          connector: {
+            ...from.connector
           },
         },
         to: null,
@@ -152,22 +152,25 @@ export const FlowProvider = ({ children }) => {
     }
 
     //ARRUMAR AQUI -> VALIDAR SE O COMPONENTE NAO ESTA QUERENDO CRIAR UM FLUXO COM ELE MESMO
-    if (idDevices.from === idDevices.to) return;
+    if (from.id === to.id) return;
 
-    let { from: connectorFrom, to: connectorTo } = connectors;
+    let deviceFrom = devices.find(device => device.id === from.id);
+    let deviceTo = devices.find(device => device.id === to.id);
 
-    let deviceFrom = devices.find(device => device.id === idDevices.from);
-    let deviceTo = devices.find(device => device.id === idDevices.to);
+    deviceFrom = {
+      ...deviceFrom,
+      ...from
+    }
 
-    if (connectorFrom.type === 'entry') {
+    deviceTo = {
+      ...deviceTo,
+      ...to
+    }
+    if (from.connector.type === 'entry') {
       //input device started stream creation
       let flag = { ...deviceFrom };
       deviceFrom = { ...deviceTo };
       deviceTo = { ...flag }
-
-      flag = { ...connectorFrom }
-      connectorFrom = { ...connectorTo }
-      connectorTo = { ...flag }
     }
 
     if (!verifConnector({ deviceFrom, deviceTo })) {
@@ -188,23 +191,20 @@ export const FlowProvider = ({ children }) => {
       deviceFrom: { ...deviceFrom },
       deviceTo: { ...deviceTo },
       idLine: flowTemp.currentLine.id,
-      connectors: {
-        from: { ...connectorFrom },
-        to: { ...connectorTo }
-      }
     }
 
+    console.log(deviceFrom)
     updateLines([
       {
         id: flowTemp.currentLine.id,
         idConnection: connection.id,
         fromPos: {
-          x: connectorFrom.x,
-          y: connectorFrom.y
+          x: deviceFrom.connector.x,
+          y: deviceFrom.connector.y
         },
         toPos: {
-          x: connectorTo.x,
-          y: connectorTo.y
+          x: deviceTo.connector.x,
+          y: deviceTo.connector.y
         }
       }
     ]);
@@ -255,9 +255,17 @@ export const FlowProvider = ({ children }) => {
     //ARRUMAR AQUI -> Redefine behavior device
   }, [flows, deleteLine]);
 
-  // const executeFlow = () => {
+  const executeFlow = (deviceId) => {
+    const deviceFlow = findFlowByDeviceId(flows, deviceId);
+    const deviceConnections = deviceFlow.connections.filter(conn => {
+      return conn.deviceFrom.id === deviceId;
+    })
 
-  // }
+    deviceConnections.forEach(conn => {
+      const valueFrom = conn.deviceFrom.defaultBehavior();
+      conn.deviceTo.defaultBehavior(valueFrom);
+    })
+  }
 
   const clearFlowTemp = () => {
     setFlowTemp({
@@ -278,7 +286,8 @@ export const FlowProvider = ({ children }) => {
         deleteLine,
         deleteConnection,
         updateFlows,
-        updateLines
+        updateLines,
+        executeFlow
       }}
     >
       {children}

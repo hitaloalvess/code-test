@@ -38,6 +38,8 @@ const MoutingPanel = () => {
   }
 
   const deviceDrop = (item, monitor) => {
+    console.log(item);
+
     const elementIndex = devices.find(device => device.id === item.id);
 
     if (elementIndex) {

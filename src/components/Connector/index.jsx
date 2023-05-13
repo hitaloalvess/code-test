@@ -14,7 +14,7 @@ import styles, {
 
 
 const Connector = memo(function Connector({
-  type, idDevice, updateConn, refConn
+  type, device, updateConn, refConn
 }) {
   const connRef = useRef(null);
 
@@ -35,20 +35,21 @@ const Connector = memo(function Connector({
   const [{ }, drop] = useDrop(() => ({
     accept: 'connector',
     drop: (item) => {
-      const { connectorPosFrom } = item;
-
       deleteLine({
         id: flowTemp.currentLine.id
       });
 
       createFlow({
-        idDevices: {
-          from: item.idDevice,
-          to: idDevice
-        },
-        connectors: {
-          from: { ...connectorPosFrom },
-          to: { ...position }
+        devices: {
+          from: { ...item },
+          to: {
+            ...device,
+            connector: {
+              ...position,
+              type,
+              ref: connRef
+            }
+          }
         },
         lineId: null
       })
@@ -59,11 +60,12 @@ const Connector = memo(function Connector({
   const [{ }, drag] = useDrag(() => ({
     type: 'connector',
     item: {
-      idDevice,
-      connectorPosFrom: {
+      ...device,
+      connector: {
         ...position,
-        type
-      }
+        type,
+        ref: connRef
+      },
     },
   }), [position]);
 
@@ -77,37 +79,28 @@ const Connector = memo(function Connector({
     refConn.current = el;
   }
 
+  const handleConnDown = () => {
+    createFlow({
+      devices: {
+        from: {
+          ...device,
+          connector: {
+            ...position,
+            type,
+            ref: connRef
+          },
+        },
+        to: null
+      },
+      lineId: null
+    })
+  }
   return (
     <div
       ref={attachRefConn}
       className={`${connector} ${styles[`${type}Connector`]}`}
-      onTouchStart={() => createFlow({
-        idDevices: {
-          from: idDevice,
-          to: null
-        },
-        connectors: {
-          from: {
-            ...position
-          },
-          to: null
-        },
-        lineId: null,
-      })}
-      onMouseDown={() => createFlow({
-        idDevices: {
-          from: idDevice,
-          to: null
-        },
-        connectors: {
-          from: {
-            ...position,
-            type
-          },
-          to: null
-        },
-        lineId: null
-      })}
+      onTouchStart={handleConnDown}
+      onMouseDown={handleConnDown}
     >
       <div
         className={`${connectorRange} ${styles[`${type}ConnectorRange`]}`}
@@ -121,7 +114,7 @@ const Connector = memo(function Connector({
 
 Connector.propTypes = {
   type: P.string.isRequired,
-  idDevice: P.string.isRequired,
+  device: P.object.isRequired, //ARRUMAR AQUI -> COLOCAR O OBJETO CORRETO
   updateConn: P.number.isRequired,
   refConn: P.object.isRequired
 }

@@ -25,8 +25,8 @@ const LinesContainer = () => {
       {
         id: currentLine.id,
         fromPos: {
-          x: from.connectorPos.x,
-          y: from.connectorPos.y
+          x: from.connector.x,
+          y: from.connector.y
         },
         toPos: {
           x: mousePosX,
