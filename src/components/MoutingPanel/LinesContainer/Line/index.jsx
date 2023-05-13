@@ -5,7 +5,7 @@ import { FaTrashAlt } from 'react-icons/fa';
 import { calcDistance, calcAngle } from '@/utils/line-functions';
 import { line, lineRange, btnDeleteLine } from './styles.module.css';
 
-const Line = ({ id, fromPos, toPos }) => {
+const Line = ({ id, fromPos, toPos, idConnection = '', deleteLine }) => {
   const lineRef = useRef(null);
   const [height, setHeight] = useState(0);
   const [disableBtnDelete, setDisableBtnDelete] = useState(true);
@@ -66,7 +66,7 @@ const Line = ({ id, fromPos, toPos }) => {
         className={btnDeleteLine}
         onClick={(e) => {
           e.stopPropagation();
-          console.log('Excluir linha');
+          deleteLine({ idConnection, idLine: id })
         }}
         disabled={disableBtnDelete}
       >
@@ -78,6 +78,7 @@ const Line = ({ id, fromPos, toPos }) => {
 
 Line.propTypes = {
   id: P.string.isRequired,
+  idConnection: P.string,
   fromPos: P.shape({
     x: P.number.isRequired,
     y: P.number.isRequired
@@ -85,7 +86,8 @@ Line.propTypes = {
   toPos: P.shape({
     x: P.number.isRequired,
     y: P.number.isRequired
-  })
+  }),
+  deleteLine: P.func.isRequired
 }
 
 export default Line;

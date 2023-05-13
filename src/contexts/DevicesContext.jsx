@@ -68,6 +68,7 @@ export const DevicesProvider = ({ children }) => {
       let connections = [];
       deviceFlow.connections.forEach(connection => {
         const connectionLine = connectionLines.find(line => line.id === connection.idLine);
+
         let newLine = {};
         let newConnection = {}
 
@@ -89,14 +90,11 @@ export const DevicesProvider = ({ children }) => {
           }
 
           newLine = {
-            id: connection.idLine,
+            ...connectionLine,
             fromPos: {
               x: connPosX,
               y: connPosY
             },
-            toPos: {
-              ...connectionLine.toPos
-            }
           };
 
           connections.push(newConnection);
@@ -122,10 +120,7 @@ export const DevicesProvider = ({ children }) => {
           }
 
           newLine = {
-            id: connection.idLine,
-            fromPos: {
-              ...connectionLine.fromPos
-            },
+            ...connectionLine,
             toPos: {
               x: connPosX,
               y: connPosY

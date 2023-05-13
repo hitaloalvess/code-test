@@ -85,12 +85,22 @@ export const verifConnector = ({ deviceFrom, deviceTo }) => {
 }
 
 export const findFlowByDeviceId = (flows, deviceId) => {
-  const foundFlows = flows.find(flow => {
+  const foundFlow = flows.find(flow => {
     return flow.connections.find(conn => {
       return (conn.deviceFrom.id === deviceId ||
         conn.deviceTo.id === deviceId);
     });
   });
 
-  return foundFlows;
+  return foundFlow;
+}
+
+export const findFlowByConnectionId = (flows, connectionId) => {
+  const foundFlow = flows.find(flow => {
+    return flow.connections.find(conn => {
+      return conn.id === connectionId;
+    });
+  });
+
+  return foundFlow;
 }

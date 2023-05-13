@@ -12,7 +12,8 @@ const LinesContainer = () => {
     flowTemp,
     connectionLines,
     deleteLine,
-    updateLines
+    updateLines,
+    deleteConnection
   } = useFlow();
 
   const handleMouseMove = useCallback(({ mousePosX, mousePosY }) => {
@@ -59,12 +60,14 @@ const LinesContainer = () => {
       id={lines}
       ref={drop}
     >
-      {connectionLines.map(({ id, fromPos, toPos }) => (
+      {connectionLines.map(({ id, fromPos, toPos, idConnection }) => (
         <Line
           key={id}
           id={id}
           fromPos={fromPos}
           toPos={toPos}
+          idConnection={idConnection}
+          deleteLine={deleteConnection}
         />
       ))}
     </div>

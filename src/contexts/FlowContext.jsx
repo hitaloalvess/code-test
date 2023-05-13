@@ -4,6 +4,7 @@ import { v4 as uuid } from 'uuid';
 
 import { findFlowByDeviceId, verifConnector } from "@/utils/flow-functions";
 import { useDevices } from '@/hooks/useDevices';
+import { findFlowByConnectionId } from "../utils/flow-functions";
 
 export const FlowContext = createContext();
 
@@ -60,8 +61,6 @@ export const FlowProvider = ({ children }) => {
 
   const saveFlow = useCallback((connection) => {
     const { deviceFrom, deviceTo } = connection;
-
-
 
     const fromHasFlow = findFlowByDeviceId(flows, deviceFrom.id);
     const toHasFlow = findFlowByDeviceId(flows, deviceTo.id);
@@ -152,6 +151,7 @@ export const FlowProvider = ({ children }) => {
       return;
     }
 
+    //ARRUMAR AQUI -> VALIDAR SE O COMPONENTE NAO ESTA QUERENDO CRIAR UM FLUXO COM ELE MESMO
     if (idDevices.from === idDevices.to) return;
 
     let { from: connectorFrom, to: connectorTo } = connectors;
@@ -182,9 +182,22 @@ export const FlowProvider = ({ children }) => {
     //Verificar se os conectores já conectam
     /// ARRUMAR AQUI
 
+
+    const connection = {
+      id: uuid(),
+      deviceFrom: { ...deviceFrom },
+      deviceTo: { ...deviceTo },
+      idLine: flowTemp.currentLine.id,
+      connectors: {
+        from: { ...connectorFrom },
+        to: { ...connectorTo }
+      }
+    }
+
     updateLines([
       {
         id: flowTemp.currentLine.id,
+        idConnection: connection.id,
         fromPos: {
           x: connectorFrom.x,
           y: connectorFrom.y
@@ -196,24 +209,7 @@ export const FlowProvider = ({ children }) => {
       }
     ]);
 
-    const connFlow = {
-      id: uuid(),
-      deviceFrom: { ...deviceFrom },
-      deviceTo: { ...deviceTo },
-      idLine: flowTemp.currentLine.id,
-      connectors: {
-        from: { ...connectorFrom },
-        to: { ...connectorTo }
-      }
-    }
-
-    //save flow
-
-    saveFlow(connFlow);
-    // setFlows(prev => [
-    //   ...prev,
-    //   flow
-    // ]);
+    saveFlow(connection);
 
     //Executar o flow de forma inicial
 
@@ -229,6 +225,39 @@ export const FlowProvider = ({ children }) => {
 
     setFlows(newFlowsList);
   }, [flows]);
+
+  const deleteConnection = useCallback(({ idConnection, idLine }) => {
+    const currentFlow = findFlowByConnectionId(flows, idConnection);
+
+    deleteLine({ id: idLine });
+
+    const deleteFlow = (flow) => flow.id !== currentFlow.id;
+    const flowRemoveConnection = (flow) => {
+      if (flow.id === currentFlow.id) {
+        const newConnections = flow.connections.filter(conn => {
+          return conn.id !== idConnection
+        });
+
+        return {
+          ...flow,
+          connections: newConnections
+        };
+      }
+
+      return flow;
+    };
+    const newFlows = currentFlow.connections.length <= 1 ?
+      flows.filter(deleteFlow) :
+      flows.map(flowRemoveConnection)
+
+    setFlows(newFlows);
+
+    //ARRUMAR AQUI -> Redefine behavior device
+  }, [flows, deleteLine]);
+
+  // const executeFlow = () => {
+
+  // }
 
   const clearFlowTemp = () => {
     setFlowTemp({
@@ -246,8 +275,8 @@ export const FlowProvider = ({ children }) => {
         flowTemp,
         connectionLines,
         createFlow,
-        // updateLines,
         deleteLine,
+        deleteConnection,
         updateFlows,
         updateLines
       }}
