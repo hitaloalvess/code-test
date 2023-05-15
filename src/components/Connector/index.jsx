@@ -100,7 +100,11 @@ const Connector = memo(function Connector({
       ref={attachRefConn}
       className={`${connector} ${styles[`${type}Connector`]}`}
       onTouchStart={handleConnDown}
-      onMouseDown={handleConnDown}
+      onMouseDown={() => handleConnDown()}
+      onMouseUp={() => deleteLine({
+        id: flowTemp.currentLine.id
+      })}
+
     >
       <div
         className={`${connectorRange} ${styles[`${type}ConnectorRange`]}`}
