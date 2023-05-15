@@ -145,7 +145,6 @@ export const FlowProvider = ({ children }) => {
     const { from, to } = devicesParam;
 
     if (from.connector && !to?.connector && !flowTemp.connectorClicked) {
-      console.log('DENTRO DO PRIMEIRO IF')
       const deviceFrom = devices.find(device => device.id === from.id);
 
       const line = createLine({
@@ -174,7 +173,6 @@ export const FlowProvider = ({ children }) => {
       return;
     }
 
-    console.log('APÓS 1 IF')
     //ARRUMAR AQUI -> VALIDAR SE O COMPONENTE NAO ESTA QUERENDO CRIAR UM FLUXO COM ELE MESMO
     if (from.id === to.id) return;
 

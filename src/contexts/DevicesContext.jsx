@@ -54,72 +54,52 @@ export const DevicesProvider = ({ children }) => {
       return device
     });
 
-
-    //Verificar se o dispositivo possui fluxos
     const deviceFlow = findFlowByDeviceId(flows, id);
 
     if (deviceFlow) {
-      const { x: connPosX, y: connPosY } = calcPositionConnector(connRef.current);
 
-      //Update device placement in your flows
+      const { x: connPosX, y: connPosY } = calcPositionConnector(connRef.current);
       let lines = [];
       let connections = [];
+
       deviceFlow.connections.forEach(connection => {
+        const { deviceFrom, deviceTo } = connection;
         const connectionLine = connectionLines.find(line => line.id === connection.idLine);
 
         let newLine = {};
         let newConnection = {}
 
-        if (connection.deviceFrom.id === id) {
+        if (deviceFrom.id !== id && deviceTo.id !== id) {
 
-          newConnection = {
-            ...connection,
-            deviceFrom: {
-              ...connection.deviceFrom,
-              posX, posY
-            },
-            connectors: {
-              from: {
-                x: connPosX,
-                y: connPosY
-              },
-              to: { ...connection.connectors.to }
-            }
-          }
-
-          newLine = {
-            ...connectionLine,
-            fromPos: {
-              x: connPosX,
-              y: connPosY
-            },
-          };
-
-          connections.push(newConnection);
-          lines.push(newLine);
+          connections.push(connection);
+          lines.push(connectionLine);
 
         } else {
 
+          const { deviceType, connType } = deviceFrom.id === id ? {
+            deviceType: 'deviceFrom',
+            connType: 'from'
+          } : {
+            deviceType: 'deviceTo',
+            connType: 'to'
+          };
+
           newConnection = {
             ...connection,
-            deviceTo: {
-              ...connection.deviceTo,
-              posX, posY
-            },
-            connectors: {
-              from: {
-                ...connection.connectors.from
-              },
-              to: {
+            [`${deviceType}`]: {
+              ...connection[`${deviceType}`],
+              posX, posY,
+              connector: {
+                ...connection[`${deviceType}`].connector,
                 x: connPosX,
                 y: connPosY
               }
-            }
+            },
           }
 
           newLine = {
             ...connectionLine,
-            toPos: {
+            [`${connType}Pos`]: {
               x: connPosX,
               y: connPosY
             }
@@ -128,6 +108,7 @@ export const DevicesProvider = ({ children }) => {
           connections.push(newConnection);
           lines.push(newLine);
         }
+
       });
 
       updateLines(lines);
