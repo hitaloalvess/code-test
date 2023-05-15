@@ -20,26 +20,42 @@ export const calcPositionConnector = (connector) => {
   }
 }
 
-export const verifConnector = ({ deviceFrom, deviceTo }) => {
-  //Obj device
-  // category: "entry"
-  // draggedDevice: div._deviceItemContent_1c24a_9
-  // id: "6f86f666-3d21-49b0-b476-24fadbdc245e"
-  // imgSrc: "/src/assets/images/devices/entry/ldr.svg"
-  // name: "ldr"
-  // posX: 300
-  // posY: 166
-  // type: "virtual"
+const getQtdConnections = (flows, connector) => {
+  if (flows.length === 0) return 0;
+
+  const { id, type } = connector;
+  const connectorType = type === 'exit' ? 'deviceFrom' : 'deviceTo';
+
+  const flow = flows.find(flow => {
+    return flow.connections.find(connection => {
+      return connection[`${connectorType}`].connector.id === id;
+    })
+  });
+
+  if (!flow) return 0;
+
+  const qtd = flow.connections.reduce((acc, connection) => {
+    if (connection[`${connectorType}`].connector.id === id) {
+      return acc + 1;
+    }
+
+    return acc;
+  }, 0)
+
+  return qtd;
+}
+
+export const verifConnector = ({ flows, deviceFrom, deviceTo }) => {
 
   if (deviceFrom && !deviceTo) {
     const { name, category } = deviceFrom;
-    // const qtdInputConnections = 0;
-    const qtdOutputConnections = 0;// CORRIGIR --> VOLTAR AQUI E ARRUMAR A GERACAO DE QUANTIDADE DE CONEXOES
+
+    const qtdFromOutputConnections = getQtdConnections(flows, deviceFrom.connector);
 
     const deviceFromIsInvalid = (
       deviceConnectorRules[name].acceptedConnections.includes('oneEntry') &&
       category === 'entry' &&
-      qtdOutputConnections > 0
+      qtdFromOutputConnections > 0
     );
 
     if (deviceFromIsInvalid) {
@@ -52,20 +68,28 @@ export const verifConnector = ({ deviceFrom, deviceTo }) => {
   const { name: fromName, category: fromCategory } = deviceFrom;
   const { name: toName, category: toCategory } = deviceTo;
 
-  const qtdOutputFromConnections = 0;
-  const qtdToInputConnections = 0;
+  const qtdFromOutputConnections = getQtdConnections(flows, deviceFrom.connector);
+  const qtdToInputConnections = getQtdConnections(flows, deviceTo.connector);
 
+  console.log({ qtdFromOutputConnections, qtdToInputConnections })
   const deviceFromIsInvalid = (
-    deviceConnectorRules[fromName].acceptedConnections.includes('oneEntry') &&
+    deviceConnectorRules[fromName].acceptedConnections.includes('oneExit') &&
     fromCategory === 'entry' &&
-    qtdOutputFromConnections > 0
+    qtdFromOutputConnections > 0
   );
 
   const deviceToIsInvalid = (
-    deviceConnectorRules[toName].acceptedConnections.includes('oneExit') &&
+    deviceConnectorRules[toName].acceptedConnections.includes('oneEntry') &&
     toCategory === 'exit' &&
     qtdToInputConnections > 0
   );
+
+  console.log({
+    name: deviceConnectorRules[toName],
+    test1: deviceConnectorRules[toName].acceptedConnections.includes('oneEntry'),
+    test2: toCategory === 'exit',
+    test3: qtdToInputConnections > 0
+  })
 
   const connectionBetweenFromAndToIsValid = deviceConnectorRules[fromName]?.connectsTo.some(item => ['all', toName].includes(item))
   const connectionBetweenToAndFromIsValid = deviceConnectorRules[toName].connectsFrom.some(item => ['all', fromName].includes(item));
@@ -103,4 +127,16 @@ export const findFlowByConnectionId = (flows, connectionId) => {
   });
 
   return foundFlow;
+}
+
+export const findConnectionsBetweenConnector = (flows, connFrom, connTo) => {
+  const flow = flows.find(flow => {
+    return flow.connections.find(conn => {
+      return (conn.deviceFrom.connector.id === connFrom.id &&
+        conn.deviceTo.connector.id === connTo.id
+      );
+    });
+  });
+
+  return flow;
 }

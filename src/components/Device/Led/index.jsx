@@ -126,6 +126,7 @@ const Led = memo(function Led({
       </div>
       <div>
         <Connector
+          name={'brightness'}
           type={'entry'}
           device={{
             id,

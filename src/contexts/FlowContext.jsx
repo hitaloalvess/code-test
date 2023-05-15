@@ -4,7 +4,7 @@ import { v4 as uuid } from 'uuid';
 
 import { findFlowByDeviceId, verifConnector } from "@/utils/flow-functions";
 import { useDevices } from '@/hooks/useDevices';
-import { findFlowByConnectionId } from "../utils/flow-functions";
+import { findConnectionsBetweenConnector, findFlowByConnectionId } from "../utils/flow-functions";
 
 export const FlowContext = createContext();
 
@@ -173,7 +173,7 @@ export const FlowProvider = ({ children }) => {
       return;
     }
 
-    //ARRUMAR AQUI -> VALIDAR SE O COMPONENTE NAO ESTA QUERENDO CRIAR UM FLUXO COM ELE MESMO
+    //checks if the device is not wanting to connect with itself
     if (from.id === to.id) return;
 
     let deviceFrom = devices.find(device => device.id === from.id);
@@ -195,18 +195,27 @@ export const FlowProvider = ({ children }) => {
       deviceTo = { ...flag }
     }
 
-    if (!verifConnector({ deviceFrom, deviceTo })) {
+    //ARRUMAR AQUI -> Corrigir validações de verif connector
+    if (!verifConnector({ flows: [...flows], deviceFrom, deviceTo })) {
       deleteLine({
         id: flowTemp.currentLine.id
-      })
+      });
 
       clearFlowTemp();
-      return false;
+      return;
     }
 
-    //Verificar se os conectores já conectam
-    /// ARRUMAR AQUI
+    //Check if the connectors already connect
+    const connsAlreadyConnect = findConnectionsBetweenConnector(
+      flows, deviceFrom.connector, deviceTo.connector
+    );
 
+    // console.log(connsAlreadyConnect);
+
+    if (connsAlreadyConnect) {
+      clearFlowTemp();
+      return;
+    }
 
     const connection = {
       id: uuid(),
@@ -231,8 +240,6 @@ export const FlowProvider = ({ children }) => {
     ]);
 
     saveFlow(connection);
-
-    //Executar o flow de forma inicial
 
   }, [devices, flowTemp, createLine, updateLines, deleteLine, saveFlow]);
 

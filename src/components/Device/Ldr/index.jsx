@@ -29,13 +29,6 @@ const Ldr = memo(function Ldr({
   const showValueRef = useRef(null);
   const connRef = useRef(null);
 
-  const defaultBehavior = () => {
-    return {
-      value: Number(inputRef.current.value),
-      max: MAX_VALUE
-    };
-  }
-
   // eslint-disable-next-line no-empty-pattern
   const [{ }, drag] = useDrag(() => ({
     type: 'device',
@@ -53,6 +46,13 @@ const Ldr = memo(function Ldr({
     showValueRef.current.innerHTML = input.value;
 
     executeFlow(flows, id);
+  }
+
+  const getLuminosity = () => {
+    return {
+      value: Number(inputRef.current.value),
+      max: MAX_VALUE
+    };
   }
 
   return (
@@ -88,10 +88,11 @@ const Ldr = memo(function Ldr({
 
       <div>
         <Connector
+          name={'luminosity'}
           type={'exit'}
           device={{
             id,
-            defaultBehavior
+            defaultBehavior: getLuminosity
           }}
           updateConn={device.posX}
           refConn={connRef}
