@@ -22,7 +22,7 @@ const Ldr = memo(function Ldr({
   id, imgSrc, name, ...device
 }) {
   const { deleteDevice } = useDevices();
-  const { executeFlow } = useFlow();
+  const { executeFlow, flows } = useFlow();
   const { enableModal, disableModal } = useModal();
 
   const inputRef = useRef(null);
@@ -52,7 +52,7 @@ const Ldr = memo(function Ldr({
     const input = inputRef.current;
     showValueRef.current.innerHTML = input.value;
 
-    executeFlow(id);
+    executeFlow(flows, id);
   }
 
   return (

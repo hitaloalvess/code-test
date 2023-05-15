@@ -59,14 +59,49 @@ export const FlowProvider = ({ children }) => {
 
   //FLOWS
 
+  const executeFlow = (flows, deviceId) => {
+    if (flows.length <= 0) return;
+
+    const deviceFlow = findFlowByDeviceId(flows, deviceId);
+
+    if (!deviceFlow) return;
+
+    const deviceConnections = deviceFlow.connections.filter(conn => {
+      return conn.deviceFrom.id === deviceId;
+    })
+
+    deviceConnections.forEach(conn => {
+      const valueFrom = conn.deviceFrom.defaultBehavior();
+      conn.deviceTo.defaultBehavior(valueFrom);
+    })
+  }
+
   const saveFlow = useCallback((connection) => {
     const { deviceFrom, deviceTo } = connection;
 
     const fromHasFlow = findFlowByDeviceId(flows, deviceFrom.id);
     const toHasFlow = findFlowByDeviceId(flows, deviceTo.id);
 
-    //device to and from already has flows ()
+    let newFlows;
+
+    if ((fromHasFlow && !toHasFlow) || (toHasFlow && !fromHasFlow)) {
+      //from or to are part of a flow
+      //bundle the new connection to the existing flow
+      const flowKey = fromHasFlow ? fromHasFlow.id : toHasFlow.id;
+
+      const newFlow = flows.find(flow => flow.id === flowKey);
+      newFlow.connections.push(connection);
+
+      newFlows = flows.filter(flow => {
+        if (flow.id === newFlow.id) return newFlow;
+
+        return flow;
+      });
+
+    }
+
     if (fromHasFlow && toHasFlow) {
+      //device to and from already has flows
       //group all connections in the from stream
       const newFlow = { ...fromHasFlow }
       toHasFlow.connections.forEach(connection => {
@@ -74,47 +109,34 @@ export const FlowProvider = ({ children }) => {
       });
       newFlow.connections.push(connection);
 
-      const newFlows = flows.filter(flow => {
+      newFlows = flows.filter(flow => {
         return flow.id !== fromHasFlow.id && flow.id !== toHasFlow.id
       });
       newFlows.push(newFlow);
 
-      setFlows(newFlows);
-
-      return;
     }
 
-    //from or to are part of a flow
-    if (fromHasFlow || toHasFlow) {
-      //bundle the new connection to the existing flow
-      const flowKey = fromHasFlow ? fromHasFlow.id : toHasFlow.id;
+    if (!fromHasFlow && !toHasFlow) {
+      //create new flow if from or to does not participate flow
 
-      const newFlow = flows.find(flow => flow.id === flowKey);
-      newFlow.connections.push(connection);
+      const newFlowKey = uuid();
 
-      const newFlows = flows.filter(flow => {
-        if (flow.id === newFlow.id) return newFlow;
+      const flow = {
+        id: newFlowKey,
+        connections: [{ ...connection }]
+      }
 
-        return flow;
-      });
+      newFlows = [
+        ...flows,
+        flow
+      ]
 
-      setFlows(newFlows);
-
-      return newFlow;
     }
 
-    //create new flow if from or to does not participate flow
-    const newFlowKey = uuid();
+    setFlows(newFlows);
 
-    const flow = {
-      id: newFlowKey,
-      connections: [{ ...connection }]
-    }
+    executeFlow(newFlows, deviceFrom.id);
 
-    setFlows(prev => [
-      ...prev,
-      flow
-    ])
   }, [flows]);
 
   const createFlow = useCallback(({
@@ -255,17 +277,6 @@ export const FlowProvider = ({ children }) => {
     //ARRUMAR AQUI -> Redefine behavior device
   }, [flows, deleteLine]);
 
-  const executeFlow = (deviceId) => {
-    const deviceFlow = findFlowByDeviceId(flows, deviceId);
-    const deviceConnections = deviceFlow.connections.filter(conn => {
-      return conn.deviceFrom.id === deviceId;
-    })
-
-    deviceConnections.forEach(conn => {
-      const valueFrom = conn.deviceFrom.defaultBehavior();
-      conn.deviceTo.defaultBehavior(valueFrom);
-    })
-  }
 
   const clearFlowTemp = () => {
     setFlowTemp({
