@@ -35,7 +35,7 @@ export const DevicesProvider = ({ children }) => {
       flows,
       connectionLines,
       updateLines,
-      updateFlows
+      updateFlow
     } = data;
     const { id, draggedDevice, connRef } = device;
 
@@ -112,10 +112,10 @@ export const DevicesProvider = ({ children }) => {
       });
 
       updateLines(lines);
-      updateFlows([{
+      updateFlow({
         ...deviceFlow,
         connections
-      }]);
+      });
     }
 
     setDevices(newListDevices);

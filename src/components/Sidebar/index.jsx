@@ -3,6 +3,7 @@ import { useDrop } from 'react-dnd';
 
 import { useModal } from '@/hooks/useModal';
 import { useDevices } from '@/hooks/useDevices';
+import { useFlow } from '@/hooks/useFlow';
 import SidebarArea from './SidebarArea';
 import MenuButtons from './MenuButtons';
 
@@ -10,6 +11,7 @@ import { menu } from './styles.module.css';
 
 const Sidebar = () => {
   const { enableModal, disableModal } = useModal();
+  const { deleteDeviceConnections } = useFlow();
   const { devices, deleteDevice } = useDevices();
 
   const [currentArea, setCurrentArea] = useState('entry');
@@ -22,6 +24,7 @@ const Sidebar = () => {
         title: 'Cuidado',
         subtitle: 'Tem certeza que deseja excluir o componente?',
         handleConfirm: () => {
+          deleteDeviceConnections(item.id);
           deleteDevice(item.id);
           disableModal();
         }

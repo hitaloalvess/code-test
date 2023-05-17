@@ -12,7 +12,7 @@ import { moutingPanelContainer } from './styles.module.css';
 
 const MoutingPanel = () => {
   const { devices, addDevice, repositionDevice } = useDevices();
-  const { flows, connectionLines, updateLines, updateFlows } = useFlow();
+  const { flows, connectionLines, updateLines, updateFlow } = useFlow();
   const moutingPanelRef = useRef(null);
 
   const attachRef = (el) => {
@@ -33,7 +33,7 @@ const MoutingPanel = () => {
       flows,
       connectionLines,
       updateLines,
-      updateFlows
+      updateFlow
     });
   }
 

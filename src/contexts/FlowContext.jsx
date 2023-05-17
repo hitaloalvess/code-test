@@ -21,7 +21,7 @@ export const FlowProvider = ({ children }) => {
   //LINES
   const [connectionLines, setConnectionLines] = useState([]);
 
-  const createLine = useCallback(({ fromPos, toPos, }) => {
+  const createLine = ({ fromPos, toPos, }) => {
     const lineObj = {
       id: uuid(),
       fromPos,
@@ -35,7 +35,7 @@ export const FlowProvider = ({ children }) => {
 
     return lineObj;
 
-  }, []);
+  };
 
   const updateLines = useCallback((lines) => {
     const newLines = connectionLines.map(connectionLine => {
@@ -50,9 +50,11 @@ export const FlowProvider = ({ children }) => {
   }, [connectionLines]);
 
   const deleteLine = useCallback(({ id }) => {
-    const newLines = connectionLines.filter(line => line.id !== id);
 
-    setConnectionLines(newLines);
+    setConnectionLines(prevConnLines => {
+      const newLines = prevConnLines.filter(line => line.id !== id)
+      return newLines;
+    });
 
     clearFlowTemp();
   }, [connectionLines]);
@@ -243,46 +245,88 @@ export const FlowProvider = ({ children }) => {
 
   }, [devices, flowTemp, createLine, updateLines, deleteLine, saveFlow]);
 
-  const updateFlows = useCallback((newFlows) => {
-    const newFlowsList = flows.map(flow => {
-      const newFlow = newFlows.find(currentFlow => currentFlow.id === flow.id);
-      if (flow.id === newFlow?.id) return newFlow;
+  const updateFlow = (newFlow) => {
+    setFlows(prevFlows => {
+      return prevFlows.map(flow => {
 
-      return flow;
+        if (flow.id === newFlow.id) return newFlow;
+
+        return flow;
+      });
     });
-
-    setFlows(newFlowsList);
-  }, [flows]);
+  };
 
   const deleteConnection = useCallback(({ idConnection, idLine }) => {
-    const currentFlow = findFlowByConnectionId(flows, idConnection);
+    const { id: currentFlowId, connections: currentFlowConnections } = findFlowByConnectionId(flows, idConnection);
+    const connectionDelete = currentFlowConnections.find(conn => conn.id === idConnection);
+
+    const flowRemoveConnection = (flow, currentFlowId) => {
+      const { id, connections } = flow;
+
+      if (id !== currentFlowId) return flow;
+
+
+      const newConnections = connections.filter(conn => {
+        return conn.id !== idConnection;
+      })
+
+      return {
+        ...flow,
+        connections: newConnections
+      };
+
+    };
+
+    //redefine devices from the connection
+    if (connectionDelete.deviceFrom.redefineBehavior) {
+      connectionDelete.deviceFrom.redefineBehavior();
+    }
+
+    if (connectionDelete.deviceTo.redefineBehavior) {
+      connectionDelete.deviceTo.redefineBehavior();
+    }
 
     deleteLine({ id: idLine });
 
-    const deleteFlow = (flow) => flow.id !== currentFlow.id;
-    const flowRemoveConnection = (flow) => {
-      if (flow.id === currentFlow.id) {
-        const newConnections = flow.connections.filter(conn => {
-          return conn.id !== idConnection
-        });
 
-        return {
-          ...flow,
-          connections: newConnections
-        };
+    setFlows(prevFlows => {
+      const flow = prevFlows.find(flow => flow.id === currentFlowId);
+
+      if (flow.connections.length <= 1) {
+        return prevFlows.filter(flow => {
+          return flow.id !== currentFlowId;
+        })
       }
 
-      return flow;
-    };
-    const newFlows = currentFlow.connections.length <= 1 ?
-      flows.filter(deleteFlow) :
-      flows.map(flowRemoveConnection)
+      return prevFlows.map(flow => flowRemoveConnection(flow, currentFlowId))
+    });
 
-    setFlows(newFlows);
-
-    //ARRUMAR AQUI -> Redefine behavior device
   }, [flows, deleteLine]);
 
+  const deleteDeviceConnections = useCallback((deviceId) => {
+    const selectedFlows = flows.find(flow => {
+      return flow.connections.find(({ deviceFrom, deviceTo }) => {
+        return deviceFrom.id === deviceId || deviceTo.id === deviceId;
+      });
+    });
+
+    console.log(selectedFlows);
+    if (selectedFlows) {
+
+      const deviceConnections = selectedFlows.connections.filter(conn => {
+        return conn.deviceFrom.id === deviceId || conn.deviceTo.id === deviceId;
+      });
+
+      console.log({ deviceConnections, deviceId })
+      deviceConnections.forEach(({ id, idLine }) => {
+
+        deleteConnection({
+          idConnection: id,
+          idLine
+        });
+      })
+    }
+  }, [flows, deleteConnection]);
 
   const clearFlowTemp = () => {
     setFlowTemp({
@@ -302,9 +346,10 @@ export const FlowProvider = ({ children }) => {
         createFlow,
         deleteLine,
         deleteConnection,
-        updateFlows,
+        updateFlow,
         updateLines,
-        executeFlow
+        executeFlow,
+        deleteDeviceConnections
       }}
     >
       {children}

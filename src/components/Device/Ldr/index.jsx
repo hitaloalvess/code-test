@@ -22,7 +22,7 @@ const Ldr = memo(function Ldr({
   id, imgSrc, name, ...device
 }) {
   const { deleteDevice } = useDevices();
-  const { executeFlow, flows } = useFlow();
+  const { executeFlow, flows, deleteDeviceConnections } = useFlow();
   const { enableModal, disableModal } = useModal();
 
   const inputRef = useRef(null);
@@ -111,6 +111,7 @@ const Ldr = memo(function Ldr({
             title: 'Cuidado',
             subtitle: 'Tem certeza que deseja excluir o componente?',
             handleConfirm: () => {
+              deleteDeviceConnections(id);
               deleteDevice(id);
               disableModal();
             }

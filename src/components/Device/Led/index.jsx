@@ -6,6 +6,7 @@ import P from 'prop-types';
 import { useDrag } from 'react-dnd';
 
 import { useDevices } from '@/hooks/useDevices';
+import { useFlow } from '@/hooks/useFlow';
 import { useModal } from '@/hooks/useModal';
 import ActionButton from '@/components/ActionButton';
 import Connector from '@/components/Connector';
@@ -26,6 +27,7 @@ const Led = memo(function Led({
 }) {
 
   const { deleteDevice } = useDevices();
+  const { deleteDeviceConnections } = useFlow();
   const { enableModal, disableModal } = useModal();
 
   const [lightActive, setLightActive] = useState(false);
@@ -40,6 +42,18 @@ const Led = memo(function Led({
   const [opacity, setOpacity] = useState(0);
   const connRef = useRef(null);
 
+  // eslint-disable-next-line no-empty-pattern
+  const [{ }, drag] = useDrag(() => ({
+    type: 'device',
+    item: {
+      ...device,
+      id,
+      imgSrc,
+      name,
+      connRef,
+    }
+  }), [connRef]);
+
   const enableLight = ({ brightness, maxValue }) => {
     const opacity = brightness / maxValue;
 
@@ -51,6 +65,16 @@ const Led = memo(function Led({
     setOpacity(0);
     setLightActive(false);
   }
+
+  const handleSettingUpdate = useCallback((newColor, newBrightness) => {
+    if (newColor !== color) {
+      setColor(newColor);
+    }
+
+    if (newBrightness !== brightness) {
+      setBrightness(newBrightness);
+    }
+  }, [color, brightness]);
 
   const defaultBehavior = (valueReceived) => {
     const { value, max } = valueReceived;
@@ -77,27 +101,16 @@ const Led = memo(function Led({
     setValue(objValue);
   }
 
-  // eslint-disable-next-line no-empty-pattern
-  const [{ }, drag] = useDrag(() => ({
-    type: 'device',
-    item: {
-      ...device,
-      id,
-      imgSrc,
-      name,
-      connRef,
-    }
-  }), [connRef]);
-
-  const handleSettingUpdate = useCallback((newColor, newBrightness) => {
-    if (newColor !== color) {
-      setColor(newColor);
-    }
-
-    if (newBrightness !== brightness) {
-      setBrightness(newBrightness);
-    }
-  }, [color, brightness]);
+  const redefineBehavior = () => {
+    setBrightness(0);
+    setColor('#ff1450');
+    setOpacity(0);
+    setValue({
+      current: 0,
+      max: 0,
+      type: null
+    })
+  }
 
   return (
     <>
@@ -130,7 +143,8 @@ const Led = memo(function Led({
           type={'entry'}
           device={{
             id,
-            defaultBehavior
+            defaultBehavior,
+            redefineBehavior
           }}
           updateConn={device.posX}
           refConn={connRef}
@@ -148,6 +162,7 @@ const Led = memo(function Led({
             title: 'Cuidado',
             subtitle: 'Tem certeza que deseja excluir o componente?',
             handleConfirm: () => {
+              deleteDeviceConnections(id);
               deleteDevice(id);
               disableModal();
             }
