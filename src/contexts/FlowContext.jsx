@@ -175,6 +175,8 @@ export const FlowProvider = ({ children }) => {
       return;
     }
 
+    if (!from || !to) return;
+
     //checks if the device is not wanting to connect with itself
     if (from.id === to.id) return;
 

@@ -75,7 +75,15 @@ const Connector = memo(function Connector({
         ref: connRef
       },
     },
-  }), [position]);
+    end: (item, monitor) => {
+      if (!monitor.didDrop()) {
+        //dropped in invalid local
+        deleteLine({
+          id: flowTemp.currentLine.id
+        })
+      }
+    }
+  }), [position, flowTemp]);
 
   const attachRef = (el) => {
     drag(el);
