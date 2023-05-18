@@ -30,7 +30,7 @@ const Ldr = memo(function Ldr({
   const connRef = useRef(null);
 
   // eslint-disable-next-line no-empty-pattern
-  const [{ }, drag] = useDrag(() => ({
+  const [{ isDragging }, drag, preview] = useDrag(() => ({
     type: 'device',
     item: {
       ...device,
@@ -39,6 +39,9 @@ const Ldr = memo(function Ldr({
       name,
       connRef,
     },
+    collect: (monitor) => ({
+      isDragging: monitor.isDragging(),
+    }),
   }), [connRef]);
 
   const handleOnInput = () => {
@@ -54,6 +57,8 @@ const Ldr = memo(function Ldr({
       max: MAX_VALUE
     };
   }
+
+  if (isDragging) return <div ref={preview}></div>
 
   return (
 
@@ -79,6 +84,7 @@ const Ldr = memo(function Ldr({
         className={deviceBody}
         ref={drag}
       >
+
         <img
           src={imgSrc}
           alt={`Device ${name}`}

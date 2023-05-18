@@ -42,8 +42,7 @@ const Led = memo(function Led({
   const [opacity, setOpacity] = useState(0);
   const connRef = useRef(null);
 
-  // eslint-disable-next-line no-empty-pattern
-  const [{ }, drag] = useDrag(() => ({
+  const [{ isDragging }, drag, preview] = useDrag(() => ({
     type: 'device',
     item: {
       ...device,
@@ -51,7 +50,10 @@ const Led = memo(function Led({
       imgSrc,
       name,
       connRef,
-    }
+    },
+    collect: (monitor) => ({
+      isDragging: !!monitor.isDragging()
+    })
   }), [connRef]);
 
   const enableLight = ({ brightness, maxValue }) => {
@@ -111,6 +113,8 @@ const Led = memo(function Led({
       type: null
     })
   }
+
+  if (isDragging) return <div ref={preview}></div>
 
   return (
     <>
