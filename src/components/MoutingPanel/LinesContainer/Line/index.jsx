@@ -1,9 +1,9 @@
 import P from 'prop-types';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { FaTrashAlt } from 'react-icons/fa';
 
 import { calcDistance, calcAngle } from '@/utils/line-functions';
-import { line, lineRange, btnDeleteLine } from './styles.module.css';
+import { line, lineRange } from './styles.module.css';
+import ButtonDeleteLine from '../ButtonDeleteLine';
 
 const Line = ({ id, fromPos, toPos, idConnection = '', deleteLine }) => {
   const lineRef = useRef(null);
@@ -62,16 +62,14 @@ const Line = ({ id, fromPos, toPos, idConnection = '', deleteLine }) => {
       >
       </div>
 
-      <button
-        className={btnDeleteLine}
-        onClick={(e) => {
-          e.stopPropagation();
-          deleteLine({ idConnection, idLine: id })
+      <ButtonDeleteLine
+        data={{
+          idConnection,
+          idLine: id
         }}
-        disabled={disableBtnDelete}
-      >
-        <FaTrashAlt />
-      </button>
+        isActive={disableBtnDelete}
+        deleteLine={deleteLine}
+      />
     </div>
   );
 };

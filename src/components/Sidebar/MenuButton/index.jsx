@@ -15,6 +15,7 @@ const MenuButton = ({ type, src, active, onClick }) => {
         src={src}
         alt={`Botão para seção de componentes de ${type}`}
         loading='lazy'
+        draggable={false}
       />
     </button>
   );

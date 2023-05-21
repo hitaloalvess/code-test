@@ -114,8 +114,6 @@
   width: 112px;
 }
 
-
-
 .deviceContent:hover .actionButtonsContainer {
   opacity: 0.5;
   pointer-events: auto;
@@ -131,6 +129,10 @@
 
   /* ACTION BUTTONS CONTAINER */
 
+  .actionButtonsContainer {
+    width: 32px;
+  }
+
   .actionButtonsContainerRight {
     right: -36px;
     align-items: flex-end;
@@ -145,8 +147,8 @@
   /* MOBILE */
 
   .deviceBody {
-    width: 48px;
-    height: 48px;
+    width: 56px;
+    height: 56px;
   }
 
   /* COMMON */
@@ -154,15 +156,22 @@
   /* DEVICE INPUT RANGE*/
   .inputRangeDeviceContainer {
     width: 80px;
+    top: -24px;
+    width: 52px;
   }
 
   .inputRangeDeviceContainer input[type="range"] {
-    width: 64px;
+    width: 52px;
+    height: 4px;
   }
 
   .inputRangeDeviceContainer input[type="range"]::-webkit-slider-thumb {
     width: 8px;
     height: 8px;
+  }
+
+  .inputValue {
+    font-size: 14px;
   }
 
   /* ACTION BUTTONS CONTAINER */
@@ -175,4 +184,6 @@
   .deviceContent:hover .actionButtonsContainer {
     opacity: 1;
   }
+
+
 }

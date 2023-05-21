@@ -15,41 +15,16 @@
 }
 
 .line,
-.lineRange,
-.btnDeleteLine {
+.lineRange {
   cursor: pointer;
 }
 
-.btnDeleteLine {
-  position: absolute;
-  width: 44px;
-  height: 44px;
-  border-radius: 100px;
-  border: none;
-  cursor: pointer;
-  background-color: var(--gray-50);
-  box-shadow: 0px 0px 4px rgba(40, 40, 50, 0.7);
-  opacity: 1;
-  transition: all 0.3s ease-in-out;
-}
+@media (((max-height: 481px) and (orientation: landscape)) or ((max-width: 481px) and (orientation: portrait))) {
+  /* MOBILE */
 
-.btnDeleteLine:hover {
-  opacity: 1;
-  background-color: var(--red);
-}
+  .line {
+    height: 4px;
 
-.btnDeleteLine svg {
-  width: 16px;
-  height: 16px;
-  color: var(--gray-100);
-  transition: color 0.3s ease-in-out;
-}
+  }
 
-.btnDeleteLine:hover svg {
-  color: var(--white);
-}
-
-.btnDeleteLine:disabled {
-  opacity: 0;
-  pointer-events: none;
 }
