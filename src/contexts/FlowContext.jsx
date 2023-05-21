@@ -214,8 +214,6 @@ export const FlowProvider = ({ children }) => {
       flows, deviceFrom.connector, deviceTo.connector
     );
 
-    // console.log(connsAlreadyConnect);
-
     if (connsAlreadyConnect) {
       clearFlowTemp();
       return;
@@ -312,14 +310,12 @@ export const FlowProvider = ({ children }) => {
       });
     });
 
-    console.log(selectedFlows);
     if (selectedFlows) {
 
       const deviceConnections = selectedFlows.connections.filter(conn => {
         return conn.deviceFrom.id === deviceId || conn.deviceTo.id === deviceId;
       });
 
-      console.log({ deviceConnections, deviceId })
       deviceConnections.forEach(({ id, idLine }) => {
 
         deleteConnection({

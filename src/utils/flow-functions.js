@@ -71,7 +71,6 @@ export const verifConnector = ({ flows, deviceFrom, deviceTo }) => {
   const qtdFromOutputConnections = getQtdConnections(flows, deviceFrom.connector);
   const qtdToInputConnections = getQtdConnections(flows, deviceTo.connector);
 
-  console.log({ qtdFromOutputConnections, qtdToInputConnections })
   const deviceFromIsInvalid = (
     deviceConnectorRules[fromName].acceptedConnections.includes('oneExit') &&
     fromCategory === 'entry' &&
@@ -83,13 +82,6 @@ export const verifConnector = ({ flows, deviceFrom, deviceTo }) => {
     toCategory === 'exit' &&
     qtdToInputConnections > 0
   );
-
-  console.log({
-    name: deviceConnectorRules[toName],
-    test1: deviceConnectorRules[toName].acceptedConnections.includes('oneEntry'),
-    test2: toCategory === 'exit',
-    test3: qtdToInputConnections > 0
-  })
 
   const connectionBetweenFromAndToIsValid = deviceConnectorRules[fromName]?.connectsTo.some(item => ['all', toName].includes(item))
   const connectionBetweenToAndFromIsValid = deviceConnectorRules[toName].connectsFrom.some(item => ['all', fromName].includes(item));
