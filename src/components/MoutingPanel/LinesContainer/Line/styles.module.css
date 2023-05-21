@@ -1,0 +1,30 @@
+.line {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 6px;
+  transform-origin: center left;
+  background-color: var(--yellow);
+}
+
+.lineRange {
+  position: relative;
+  height: 30px;
+  background-color: '#ffeeee00';
+}
+
+.line,
+.lineRange {
+  cursor: pointer;
+}
+
+@media (((max-height: 481px) and (orientation: landscape)) or ((max-width: 481px) and (orientation: portrait))) {
+  /* MOBILE */
+
+  .line {
+    height: 4px;
+
+  }
+
+}

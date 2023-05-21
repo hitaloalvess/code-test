@@ -1,67 +1,75 @@
 import { FaExclamationTriangle } from 'react-icons/fa';
-
-import ModalContainer from "..";
+import P from 'prop-types';
 
 import {
-    confirmationModalContent,
-    confirmationModalHeader,
-    confirmationModalTitle,
-    confirmationModalMsg,
-    confirmModalActions
+  confirmationModalContent,
+  confirmationModalHeader,
+  confirmationModalTitle,
+  confirmationModalMsg,
+  confirmModalActions
 } from './styles.module.css';
 
 import {
-    btn,
-    btnBlue,
-    btnCancel
+  btn,
+  btnBlue,
+  btnCancel
 } from '@/styles/common.module.css';
 
 const ConfirmationModal = ({
-    closeModal, contentData
+  closeModal, contentData
 }) => {
-    const { title, subtitle, handleConfirm } = contentData;
-    return (
+  const { title, subtitle, handleConfirm } = contentData;
+  return (
 
-        <section
-            className={confirmationModalContent}
+    <section
+      className={confirmationModalContent}
+    >
+      <header
+        className={confirmationModalHeader}
+      >
+
+        <FaExclamationTriangle />
+
+        <h1
+          className={confirmationModalTitle}
         >
-            <header
-                className={confirmationModalHeader}
-            >
+          {title}
+        </h1>
 
-                <FaExclamationTriangle />
+        <p
+          className={confirmationModalMsg}
+        >
+          {subtitle}
+        </p>
+      </header>
 
-                <h1
-                    className={confirmationModalTitle}
-                >
-                    {title}
-                </h1>
-
-                <p
-                    className={confirmationModalMsg}
-                >
-                    {subtitle}
-                </p>
-            </header>
-
-            <div
-                className={confirmModalActions}
-            >
-                <button
-                    className={`${btn} ${btnBlue}`}
-                    onClick={handleConfirm}
-                >
-                    Confirmar
-                </button>
-                <button
-                    className={`${btn} ${btnCancel}`}
-                    onClick={closeModal}
-                >
-                    Cancel
-                </button>
-            </div>
-        </section>
-    );
+      <div
+        className={confirmModalActions}
+      >
+        <button
+          className={`${btn} ${btnBlue}`}
+          onClick={handleConfirm}
+        >
+          Confirmar
+        </button>
+        <button
+          className={`${btn} ${btnCancel}`}
+          onClick={closeModal}
+        >
+          Cancel
+        </button>
+      </div>
+    </section>
+  );
 };
+
+ConfirmationModal.propTypes = {
+  closeModal: P.func.isRequired,
+  contentData: P.shape({
+    title: P.string,
+    subtitle: P.string,
+    handleConfirm: P.func
+  }).isRequired
+}
 
 export default ConfirmationModal;

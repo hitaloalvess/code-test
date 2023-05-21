@@ -1,36 +1,37 @@
 .deviceContainer {
-    position: absolute;
-    width: 100px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
+  position: absolute;
+  width: 100px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  z-index: 4;
 }
 
 .deviceContent {
-    position: relative;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  position: relative;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 
 .deviceBody {
-    width: 80px;
-    height: 80px;
-    position: relative;
-    transition: transform .3s ease-in-out;
+  width: 80px;
+  height: 80px;
+  position: relative;
+  transition: transform .3s ease-in-out;
 }
 
 .deviceBody img {
-    width: 100%;
-    height: 100%;
+  width: 100%;
+  height: 100%;
 }
 
 .deviceBody:hover {
-    transform: scale(1.1);
+  transform: scale(1.1);
 }
 
 /* COMMON */
@@ -38,45 +39,45 @@
 /* DEVICE INPUT RANGE*/
 
 .inputRangeDeviceContainer {
-    position: absolute;
-    top: -32px;
-    left: -6px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100px;
-    gap: 4px;
+  position: absolute;
+  top: -32px;
+  left: -6px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100px;
+  gap: 4px;
 }
 
 .inputRangeDeviceContainer input[type="range"] {
-    appearance: none;
-    -webkit-appearance: none;
-    width: 85px;
-    height: 6px;
-    border-radius: 24px;
-    background: rgba(28, 28, 32, 0.4);
+  appearance: none;
+  -webkit-appearance: none;
+  width: 85px;
+  height: 6px;
+  border-radius: 24px;
+  background: rgba(28, 28, 32, 0.4);
 }
 
 .inputRangeDeviceContainer input[type="range"]::-webkit-slider-thumb {
-    appearance: none;
-    position: relative;
-    cursor: pointer;
-    width: 10px;
-    height: 10px;
-    background-color: #282832;
-    border-radius: 4px;
-    transition: all 0.3s ease-in-out;
+  appearance: none;
+  position: relative;
+  cursor: pointer;
+  width: 10px;
+  height: 10px;
+  background-color: #282832;
+  border-radius: 4px;
+  transition: all 0.3s ease-in-out;
 }
 
 .inputRangeDeviceContainer input[type="range"]::-webkit-slider-thumb:hover {
-    transform: scale(1.2);
+  transform: scale(1.2);
 }
 
 .inputValue {
-    white-space: nowrap;
-    font-size: 16px;
-    font-weight: bold;
-    margin: 0 auto;
+  white-space: nowrap;
+  font-size: 16px;
+  font-weight: bold;
+  margin: 0 auto;
 }
 
 /* ACTION BUTTONS CONTAINER */
@@ -84,94 +85,105 @@
 
 
 .actionButtonsContainer {
-    position: absolute;
-    top: -24px;
-    display: flex;
-    flex-direction: column;
-    width: 44px;
-    min-height: 96px;
-    gap: 8px;
-    opacity: 0;
-    transition: opacity 0.3s ease-in-out;
-    pointer-events: none;
+  position: absolute;
+  top: -24px;
+  display: flex;
+  flex-direction: column;
+  width: 44px;
+  min-height: 96px;
+  gap: 8px;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+  pointer-events: none;
 }
 
 .actionButtonsContainerLeft {
-    left: -44px;
+  left: -44px;
 }
 
 .actionButtonsContainerRight {
-    right: -48px;
-    align-items: flex-end;
+  right: -48px;
+  align-items: flex-end;
 }
 
 .actionButtonsContainerBottom {
-    flex-direction: row;
-    top: auto;
-    bottom: -30px;
-    min-height: 16px;
-    width: 112px;
+  flex-direction: row;
+  top: auto;
+  bottom: -30px;
+  min-height: 16px;
+  width: 112px;
 }
 
-
-
 .deviceContent:hover .actionButtonsContainer {
-    opacity: 0.5;
-    pointer-events: auto;
+  opacity: 0.5;
+  pointer-events: auto;
 }
 
 
 .deviceContent:hover .actionButtonsContainer:hover {
-    opacity: 1;
+  opacity: 1;
 }
 
 @media (max-width: 769px) and ((orientation: portrait) or (orientation: landscape)) {
-    /* TABLET - LANDSCAPE OR PORTRAIT*/
+  /* TABLET - LANDSCAPE OR PORTRAIT*/
 
-    /* ACTION BUTTONS CONTAINER */
+  /* ACTION BUTTONS CONTAINER */
 
-    .actionButtonsContainerRight {
-        right: -36px;
-        align-items: flex-end;
-    }
+  .actionButtonsContainer {
+    width: 32px;
+  }
 
-    .deviceContent:hover .actionButtonsContainer {
-        opacity: 1;
-    }
+  .actionButtonsContainerRight {
+    right: -36px;
+    align-items: flex-end;
+  }
+
+  .deviceContent:hover .actionButtonsContainer {
+    opacity: 1;
+  }
 }
 
 @media (((max-height: 481px) and (orientation: landscape)) or ((max-width: 481px) and (orientation: portrait))) {
-    /* MOBILE */
+  /* MOBILE */
 
-    .deviceBody {
-        width: 48px;
-        height: 48px;
-    }
+  .deviceBody {
+    width: 56px;
+    height: 56px;
+  }
 
-    /* COMMON */
+  /* COMMON */
 
-    /* DEVICE INPUT RANGE*/
-    .inputRangeDeviceContainer {
-        width: 80px;
-    }
+  /* DEVICE INPUT RANGE*/
+  .inputRangeDeviceContainer {
+    width: 80px;
+    top: -24px;
+    width: 52px;
+  }
 
-    .inputRangeDeviceContainer input[type="range"] {
-        width: 64px;
-    }
+  .inputRangeDeviceContainer input[type="range"] {
+    width: 52px;
+    height: 4px;
+  }
 
-    .inputRangeDeviceContainer input[type="range"]::-webkit-slider-thumb {
-        width: 8px;
-        height: 8px;
-    }
+  .inputRangeDeviceContainer input[type="range"]::-webkit-slider-thumb {
+    width: 8px;
+    height: 8px;
+  }
 
-    /* ACTION BUTTONS CONTAINER */
+  .inputValue {
+    font-size: 14px;
+  }
 
-    .actionButtonsContainerRight {
-        right: -36px;
-        align-items: flex-end;
-    }
+  /* ACTION BUTTONS CONTAINER */
 
-    .deviceContent:hover .actionButtonsContainer {
-        opacity: 1;
-    }
+  .actionButtonsContainerRight {
+    right: -36px;
+    align-items: flex-end;
+  }
+
+  .deviceContent:hover .actionButtonsContainer {
+    opacity: 1;
+  }
+
+
 }

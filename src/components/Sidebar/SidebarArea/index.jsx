@@ -1,35 +1,41 @@
 import { FaTrashAlt } from 'react-icons/fa';
 import { mockDevices } from '@/data/devices.js';
+import P from 'prop-types';
 
 import MenuDevice from '../MenuDevice';
 
 import { container, trashArea } from './styles.module.css';
 
 const SidebarArea = ({ area, activeTrashArea }) => {
-    return (
-        <div className={container}>
-            {
-                <ul>
-                    {
-                        mockDevices[area]
-                            .map((device) => (
-                                <MenuDevice
-                                    key={device.id}
-                                    device={device}
-                                />
-                            ))
-                    }
-                </ul>
-            }
-            {activeTrashArea && (
-                <div
-                    className={trashArea}
-                >
-                    <FaTrashAlt />
-                </div>
-            )}
+  return (
+    <div className={container}>
+      {
+        <ul>
+          {
+            mockDevices[area]
+              .map((device) => (
+                <MenuDevice
+                  key={device.id}
+                  device={device}
+                />
+              ))
+          }
+        </ul>
+      }
+      {activeTrashArea && (
+        <div
+          className={trashArea}
+        >
+          <FaTrashAlt />
         </div>
-    );
+      )}
+    </div>
+  );
 };
+
+SidebarArea.propTypes = {
+  area: P.string.isRequired,
+  activeTrashArea: P.bool.isRequired
+}
 
 export default SidebarArea;
