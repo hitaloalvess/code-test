@@ -1,21 +1,42 @@
-import { memo } from 'react';
+import { memo, useRef } from 'react';
 import P from 'prop-types';
+import { DragPreviewImage, useDrag } from 'react-dnd';
+
+import imgInvisible from '@/assets/images/devices/preview-default.svg';
 
 import Ldr from './Ldr';
 import Led from './Led';
 
 import {
   deviceContainer,
-  deviceContent
+  deviceContent,
 } from './styles.module.css';
 
 const Device = memo(function Device({ device: { ...device } }) {
+  const connRef = useRef(null);
+
+  // eslint-disable-next-line no-empty-pattern
+  const [{ }, drag, preview] = useDrag(() => ({
+    type: 'device',
+    item: {
+      ...device,
+      connRef,
+    },
+    collect: (monitor) => ({
+      isDragging: monitor.isDragging(),
+    }),
+  }), [connRef]);
+
   const devices = {
     'ldr': <Ldr
-      {...device}
+      connRef={connRef}
+      device={device}
+      dragRef={drag}
     />,
     'led': <Led
-      {...device}
+      connRef={connRef}
+      device={device}
+      dragRef={drag}
     />
   }
 
@@ -25,19 +46,21 @@ const Device = memo(function Device({ device: { ...device } }) {
     return;
   }
 
-
-
   return (
-    <div
-      className={deviceContainer}
-      style={{ left: `${device.posX}px`, top: `${device.posY}px` }}
-    >
+    <>
+      <DragPreviewImage connect={preview} src={imgInvisible} style={{ opacity: 0 }} />
+
       <div
-        className={deviceContent}
+        className={deviceContainer}
+        style={{ left: `${device.posX}px`, top: `${device.posY}px` }}
       >
-        {CurrentDevice}
+        <div
+          className={deviceContent}
+        >
+          {CurrentDevice}
+        </div>
       </div>
-    </div>
+    </>
   )
 });
 

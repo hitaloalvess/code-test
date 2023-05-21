@@ -1,9 +1,8 @@
 
-import { memo, useCallback, useRef, useState } from 'react';
+import { memo, useCallback, useState } from 'react';
 import { AiFillSetting } from 'react-icons/ai';
 import { FaTrashAlt } from 'react-icons/fa';
 import P from 'prop-types';
-import { useDrag } from 'react-dnd';
 
 import { useDevices } from '@/hooks/useDevices';
 import { useFlow } from '@/hooks/useFlow';
@@ -23,7 +22,7 @@ import {
 } from './styles.module.css';
 
 const Led = memo(function Led({
-  id, imgSrc, name, ...device
+  connRef, dragRef, device: { id, imgSrc, name, posX }
 }) {
 
   const { deleteDevice } = useDevices();
@@ -31,8 +30,7 @@ const Led = memo(function Led({
   const { enableModal, disableModal } = useModal();
 
   const [lightActive, setLightActive] = useState(false);
-  // eslint-disable-next-line no-unused-vars
-  const [value, setValue] = useState({
+  const [, setValue] = useState({
     current: 0,
     max: 0,
     type: null
@@ -40,21 +38,7 @@ const Led = memo(function Led({
   const [brightness, setBrightness] = useState(0);
   const [color, setColor] = useState('#ff1450');
   const [opacity, setOpacity] = useState(0);
-  const connRef = useRef(null);
 
-  const [{ isDragging }, drag, preview] = useDrag(() => ({
-    type: 'device',
-    item: {
-      ...device,
-      id,
-      imgSrc,
-      name,
-      connRef,
-    },
-    collect: (monitor) => ({
-      isDragging: !!monitor.isDragging()
-    })
-  }), [connRef]);
 
   const enableLight = ({ brightness, maxValue }) => {
     const opacity = brightness / maxValue;
@@ -114,14 +98,11 @@ const Led = memo(function Led({
     })
   }
 
-  if (isDragging) return <div ref={preview}></div>
-
   return (
     <>
-
       <div
         className={deviceBody}
-        ref={drag}
+        ref={dragRef}
       >
         <div className={ledLight}>
           {lightActive && (
@@ -150,7 +131,7 @@ const Led = memo(function Led({
             defaultBehavior,
             redefineBehavior
           }}
-          updateConn={device.posX}
+          updateConn={posX}
           refConn={connRef}
         />
       </div>
@@ -191,14 +172,9 @@ const Led = memo(function Led({
 });
 
 Led.propTypes = {
-  id: P.string.isRequired,
-  name: P.string.isRequired,
-  imgSrc: P.string.isRequired,
-  type: P.string,
-  category: P.string,
-  posX: P.number,
-  posY: P.number,
-  draggedDevice: P.object,
+  connRef: P.object.isRequired,
+  dragRef: P.func.isRequired,
+  device: P.object.isRequired
 }
 
 export default Led;

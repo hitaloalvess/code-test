@@ -1,7 +1,6 @@
 import { memo, useRef } from 'react';
 import P from 'prop-types';
 import { FaTrashAlt } from 'react-icons/fa';
-import { useDrag } from 'react-dnd';
 
 import { useDevices } from '@/hooks/useDevices';
 import { useFlow } from '@/hooks/useFlow';
@@ -19,7 +18,7 @@ import {
 
 const MAX_VALUE = 1023;
 const Ldr = memo(function Ldr({
-  id, imgSrc, name, ...device
+  connRef, dragRef, device: { id, imgSrc, name, posX }
 }) {
   const { deleteDevice } = useDevices();
   const { executeFlow, flows, deleteDeviceConnections } = useFlow();
@@ -27,22 +26,6 @@ const Ldr = memo(function Ldr({
 
   const inputRef = useRef(null);
   const showValueRef = useRef(null);
-  const connRef = useRef(null);
-
-  // eslint-disable-next-line no-empty-pattern
-  const [{ isDragging }, drag, preview] = useDrag(() => ({
-    type: 'device',
-    item: {
-      ...device,
-      id,
-      imgSrc,
-      name,
-      connRef,
-    },
-    collect: (monitor) => ({
-      isDragging: monitor.isDragging(),
-    }),
-  }), [connRef]);
 
   const handleOnInput = () => {
     const input = inputRef.current;
@@ -57,8 +40,6 @@ const Ldr = memo(function Ldr({
       max: MAX_VALUE
     };
   }
-
-  if (isDragging) return <div ref={preview}></div>
 
   return (
 
@@ -82,7 +63,7 @@ const Ldr = memo(function Ldr({
 
       <div
         className={deviceBody}
-        ref={drag}
+        ref={dragRef}
       >
 
         <img
@@ -100,7 +81,7 @@ const Ldr = memo(function Ldr({
             id,
             defaultBehavior: getLuminosity
           }}
-          updateConn={device.posX}
+          updateConn={posX}
           refConn={connRef}
 
         />
@@ -132,14 +113,9 @@ const Ldr = memo(function Ldr({
 });
 
 Ldr.propTypes = {
-  id: P.string.isRequired,
-  name: P.string.isRequired,
-  imgSrc: P.string.isRequired,
-  type: P.string,
-  category: P.string,
-  posX: P.number,
-  posY: P.number,
-  draggedDevice: P.object,
+  connRef: P.object.isRequired,
+  dragRef: P.func.isRequired,
+  device: P.object.isRequired
 }
 
 export default Ldr;
