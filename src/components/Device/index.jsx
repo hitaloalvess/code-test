@@ -4,8 +4,9 @@ import { DragPreviewImage, useDrag } from 'react-dnd';
 
 import imgInvisible from '@/assets/images/devices/preview-default.svg';
 
-import Ldr from './Ldr';
-import Led from './Led';
+import Ldr from './Entry/Ldr';
+import Potentiometer from './Entry/Potentiometer';
+import Led from './Exit/Led';
 
 import {
   deviceContainer,
@@ -37,7 +38,12 @@ const Device = memo(function Device({ device: { ...device } }) {
       connRef={connRef}
       device={device}
       dragRef={drag}
-    />
+    />,
+    'potentiometer': <Potentiometer
+      connRef={connRef}
+      device={device}
+      dragRef={drag}
+    />,
   }
 
   const CurrentDevice = devices[device.name];

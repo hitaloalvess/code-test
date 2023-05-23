@@ -1,5 +1,6 @@
 //entry
 import deviceLdr from '@/assets/images/devices/entry/ldr.svg';
+import devicePotentiometer from '@/assets/images/devices/entry/potentiometer.svg';
 
 //exit
 import deviceLed from '@/assets/images/devices/exit/led.svg';
@@ -14,16 +15,23 @@ import devicePickColor from '@/assets/images/devices/event/pickcolor.svg';
 export const mockDevices = {
   entry: [
     {
-      id: 1,
+      id: 5,
       imgSrc: deviceLdr,
       name: 'ldr',
+      type: 'virtual',
+      category: 'entry'
+    },
+    {
+      id: 8,
+      imgSrc: devicePotentiometer,
+      name: 'potentiometer',
       type: 'virtual',
       category: 'entry'
     },
   ],
   exit: [
     {
-      id: 2,
+      id: 6,
       imgSrc: deviceLed,
       name: 'led',
       type: 'virtual',
@@ -32,7 +40,7 @@ export const mockDevices = {
   ],
   conditional: [
     {
-      id: 3,
+      id: 12,
       imgSrc: deviceAnd,
       name: 'and',
       type: 'virtual',
@@ -41,7 +49,7 @@ export const mockDevices = {
   ],
   event: [
     {
-      id: 4,
+      id: 15,
       imgSrc: devicePickColor,
       name: 'pickColor',
       type: 'virtual',

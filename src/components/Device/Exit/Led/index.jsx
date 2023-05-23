@@ -14,7 +14,7 @@ import {
   deviceBody,
   actionButtonsContainer,
   actionButtonsContainerRight
-} from '../styles.module.css';
+} from '../../styles.module.css';
 
 import {
   ledLight,

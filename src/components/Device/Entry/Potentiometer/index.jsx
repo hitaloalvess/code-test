@@ -14,10 +14,10 @@ import {
   inputValue,
   actionButtonsContainer,
   actionButtonsContainerLeft
-} from '../styles.module.css';
+} from '../../styles.module.css';
 
 const MAX_VALUE = 1023;
-const Ldr = memo(function Ldr({
+const Potentiometer = memo(function Ldr({
   connRef, dragRef, device: { id, imgSrc, name, posX }
 }) {
   const { deleteDevice } = useDevices();
@@ -112,10 +112,10 @@ const Ldr = memo(function Ldr({
   );
 });
 
-Ldr.propTypes = {
+Potentiometer.propTypes = {
   connRef: P.object.isRequired,
   dragRef: P.func.isRequired,
   device: P.object.isRequired
 }
 
-export default Ldr;
+export default Potentiometer;
