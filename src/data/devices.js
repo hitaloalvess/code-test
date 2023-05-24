@@ -4,6 +4,7 @@ import devicePotentiometer from '@/assets/images/devices/entry/potentiometer.svg
 
 //exit
 import deviceLed from '@/assets/images/devices/exit/led.svg';
+import deviceLedMono from '@/assets/images/devices/exit/ledMono.svg';
 
 //conditional
 import deviceAnd from '@/assets/images/devices/conditional/and.svg';
@@ -34,6 +35,13 @@ export const mockDevices = {
       id: 6,
       imgSrc: deviceLed,
       name: 'led',
+      type: 'virtual',
+      category: 'exit'
+    },
+    {
+      id: 7,
+      imgSrc: deviceLedMono,
+      name: 'ledMono',
       type: 'virtual',
       category: 'exit'
     },
