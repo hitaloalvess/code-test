@@ -1,0 +1,23 @@
+.laserLight {
+  position: absolute;
+  top: 34px;
+  left: 57px;
+  z-index: 2;
+}
+
+.laserLightElement {
+  width: 104px;
+}
+
+
+@media (((max-height: 481px) and (orientation: landscape)) or ((max-width: 481px) and (orientation: portrait))) {
+
+  .laserLight {
+    top: 34px;
+    left: 57px;
+  }
+
+  .laserLightElement {
+    width: 104px;
+  }
+}

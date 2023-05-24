@@ -8,6 +8,7 @@ import Ldr from './Entry/Ldr';
 import Potentiometer from './Entry/Potentiometer';
 import Led from './Exit/Led';
 import LedMono from './Exit/LedMono';
+import Laser from './Exit/Laser';
 
 import {
   deviceContainer,
@@ -46,6 +47,11 @@ const Device = memo(function Device({ device: { ...device } }) {
     dragRef={drag}
     />,
     'ledMono': <LedMono
+    connRef={connRef}
+    device={device}
+    dragRef={drag}
+    />,
+    'laser': <Laser
     connRef={connRef}
     device={device}
     dragRef={drag}
