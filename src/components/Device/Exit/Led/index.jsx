@@ -65,11 +65,17 @@ const Led = memo(function Led({
   const defaultBehavior = (valueReceived) => {
     const { value, max } = valueReceived;
 
+    console.log("antes:", valueReceived);
+
     const objValue = {
       value: typeof value === 'boolean' ? brightness : value,
       max: typeof value === 'boolean' ? 1023 : max,
       type: typeof value
     }
+
+
+    console.log("depois:", objValue.value);
+
 
     if (objValue?.value !== 0) {
       const { value, max } = objValue;

@@ -6,6 +6,7 @@ import imgInvisible from '@/assets/images/devices/preview-default.svg';
 
 import Ldr from './Entry/Ldr';
 import Potentiometer from './Entry/Potentiometer';
+import Switch from './Entry/Switch';
 import Led from './Exit/Led';
 import LedMono from './Exit/LedMono';
 import Laser from './Exit/Laser';
@@ -40,6 +41,11 @@ const Device = memo(function Device({ device: { ...device } }) {
       connRef={connRef}
       device={device}
       dragRef={drag}
+    />,
+    'switch': <Switch
+    connRef={connRef}
+    device={device}
+    dragRef={drag}
     />,
     'led': <Led
     connRef={connRef}

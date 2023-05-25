@@ -1,6 +1,7 @@
 //entry
 import deviceLdr from '@/assets/images/devices/entry/ldr.svg';
 import devicePotentiometer from '@/assets/images/devices/entry/potentiometer.svg';
+import deviceSwitch from '@/assets/images/devices/entry/switchOn.svg';
 
 //exit
 import deviceLed from '@/assets/images/devices/exit/led.svg';
@@ -27,6 +28,13 @@ export const mockDevices = {
       id: 8,
       imgSrc: devicePotentiometer,
       name: 'potentiometer',
+      type: 'virtual',
+      category: 'entry'
+    },
+    {
+      id: 10,
+      imgSrc: deviceSwitch,
+      name: 'switch',
       type: 'virtual',
       category: 'entry'
     },
