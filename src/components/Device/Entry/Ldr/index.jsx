@@ -27,18 +27,18 @@ const Ldr = memo(function Ldr({
   const inputRef = useRef(null);
   const showValueRef = useRef(null);
 
-  const handleOnInput = () => {
-    const input = inputRef.current;
-    showValueRef.current.innerHTML = input.value;
-
-    executeFlow(flows, id);
-  }
-
   const getLuminosity = () => {
     return {
       value: Number(inputRef.current.value),
       max: MAX_VALUE
     };
+  }
+
+  const handleOnInput = () => {
+    const input = inputRef.current;
+    showValueRef.current.innerHTML = input.value;
+
+    executeFlow(flows, id, getLuminosity);
   }
 
   return (

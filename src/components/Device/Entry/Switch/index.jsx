@@ -1,6 +1,6 @@
-import { memo, useState } from 'react';
+import { memo, useCallback, useEffect, useState } from 'react';
 import P from 'prop-types';
-import {FaTrashAlt } from 'react-icons/fa';
+import { FaTrashAlt } from 'react-icons/fa';
 
 import { useDevices } from '@/hooks/useDevices';
 import { useFlow } from '@/hooks/useFlow';
@@ -13,6 +13,7 @@ import {
   actionButtonsContainer,
   actionButtonsContainerLeft
 } from '../../styles.module.css';
+import { findFlowByDeviceId } from '../../../../utils/flow-functions';
 
 const Switch = memo(function Switch({
   connRef, dragRef, device: { id, imgSrc, name, posX }
@@ -22,19 +23,24 @@ const Switch = memo(function Switch({
   const { enableModal, disableModal } = useModal();
   const [click, setClick] = useState(false);
 
-  const handleOnClick = () => {
-    setClick(prevClick => !prevClick);
-
-    console.log("handleOnClick", click);
-    executeFlow(flows, id);
-  }
-
-  const getBoolean = () => {
-    console.log("getBoolean", click);
+  const getBoolean = useCallback(() => {
     return {
       value: click,
     };
-  };
+  }, [click])
+
+
+  useEffect(() => {
+    const existFlow = findFlowByDeviceId(flows, id)
+
+    if (existFlow) {
+      executeFlow(flows, id, getBoolean);
+    }
+  }, [click]);
+
+  const handleOnClick = () => {
+    setClick(prevClick => !prevClick);
+  }
 
   return (
     <>

@@ -17,7 +17,7 @@ import {
 } from '../../styles.module.css';
 
 const MAX_VALUE = 1023;
-const Potentiometer = memo(function Ldr({
+const Potentiometer = memo(function Potentiometer({
   connRef, dragRef, device: { id, imgSrc, name, posX }
 }) {
   const { deleteDevice } = useDevices();
@@ -27,18 +27,18 @@ const Potentiometer = memo(function Ldr({
   const inputRef = useRef(null);
   const showValueRef = useRef(null);
 
-  const handleOnInput = () => {
-    const input = inputRef.current;
-    showValueRef.current.innerHTML = input.value;
-
-    executeFlow(flows, id);
-  }
-
-  const getLuminosity = () => {
+  const getResistance = () => {
     return {
       value: Number(inputRef.current.value),
       max: MAX_VALUE
     };
+  }
+
+  const handleOnInput = () => {
+    const input = inputRef.current;
+    showValueRef.current.innerHTML = input.value;
+
+    executeFlow(flows, id, getResistance);
   }
 
   return (
@@ -79,7 +79,7 @@ const Potentiometer = memo(function Ldr({
           type={'exit'}
           device={{
             id,
-            defaultBehavior: getLuminosity
+            defaultBehavior: getResistance
           }}
           updateConn={posX}
           refConn={connRef}

@@ -35,7 +35,7 @@ const Led = memo(function Led({
     max: 0,
     type: null
   });
-  const [brightness, setBrightness] = useState(0);
+  const [brightness, setBrightness] = useState(1023);
   const [color, setColor] = useState('#ff1450');
   const [opacity, setOpacity] = useState(0);
 
@@ -65,17 +65,12 @@ const Led = memo(function Led({
   const defaultBehavior = (valueReceived) => {
     const { value, max } = valueReceived;
 
-    console.log("antes:", valueReceived);
-
     const objValue = {
-      value: typeof value === 'boolean' ? brightness : value,
+      value: typeof value === 'boolean' ?
+        (value ? brightness : 0) : value,
       max: typeof value === 'boolean' ? 1023 : max,
       type: typeof value
     }
-
-
-    console.log("depois:", objValue.value);
-
 
     if (objValue?.value !== 0) {
       const { value, max } = objValue;
@@ -94,7 +89,7 @@ const Led = memo(function Led({
   }
 
   const redefineBehavior = () => {
-    setBrightness(0);
+    setBrightness(1023);
     setColor('#ff1450');
     setOpacity(0);
     setValue({

@@ -61,7 +61,7 @@ export const FlowProvider = ({ children }) => {
 
   //FLOWS
 
-  const executeFlow = (flows, deviceId) => {
+  const executeFlow = (flows, deviceId, fromBehaviorCallback) => {
     if (flows.length <= 0) return;
 
     const deviceFlow = findFlowByDeviceId(flows, deviceId);
@@ -73,7 +73,7 @@ export const FlowProvider = ({ children }) => {
     })
 
     deviceConnections.forEach(conn => {
-      const valueFrom = conn.deviceFrom.defaultBehavior();
+      const valueFrom = fromBehaviorCallback();
       conn.deviceTo.defaultBehavior(valueFrom);
     })
   }
@@ -86,13 +86,23 @@ export const FlowProvider = ({ children }) => {
 
     let newFlows;
 
+    const newDeviceFrom = { ...deviceFrom }
+    delete newDeviceFrom.defaultBehavior;
+
+    const objConnection = {
+      ...connection,
+      deviceFrom: {
+        ...newDeviceFrom
+      }
+    }
+
     if ((fromHasFlow && !toHasFlow) || (toHasFlow && !fromHasFlow)) {
       //from or to are part of a flow
       //bundle the new connection to the existing flow
       const flowKey = fromHasFlow ? fromHasFlow.id : toHasFlow.id;
 
       const newFlow = flows.find(flow => flow.id === flowKey);
-      newFlow.connections.push(connection);
+      newFlow.connections.push(objConnection);
 
       newFlows = flows.filter(flow => {
         if (flow.id === newFlow.id) return newFlow;
@@ -109,7 +119,7 @@ export const FlowProvider = ({ children }) => {
       toHasFlow.connections.forEach(connection => {
         newFlow.connections.push(connection);
       });
-      newFlow.connections.push(connection);
+      newFlow.connections.push(objConnection);
 
       newFlows = flows.filter(flow => {
         return flow.id !== fromHasFlow.id && flow.id !== toHasFlow.id
@@ -125,7 +135,7 @@ export const FlowProvider = ({ children }) => {
 
       const flow = {
         id: newFlowKey,
-        connections: [{ ...connection }]
+        connections: [{ ...objConnection }]
       }
 
       newFlows = [
@@ -137,7 +147,7 @@ export const FlowProvider = ({ children }) => {
 
     setFlows(newFlows);
 
-    executeFlow(newFlows, deviceFrom.id);
+    executeFlow(newFlows, deviceFrom.id, deviceFrom.defaultBehavior);
 
   }, [flows]);
 
