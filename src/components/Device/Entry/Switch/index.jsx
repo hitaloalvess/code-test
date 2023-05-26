@@ -15,6 +15,8 @@ import {
 } from '../../styles.module.css';
 import { findFlowByDeviceId } from '../../../../utils/flow-functions';
 
+import switchOn from '@/assets/images/devices/entry/switchOn.svg';
+
 const Switch = memo(function Switch({
   connRef, dragRef, device: { id, imgSrc, name, posX }
 }) {
@@ -50,7 +52,7 @@ const Switch = memo(function Switch({
         onClick={handleOnClick}
       >
         <img
-          src={imgSrc}
+          src={click ? switchOn : imgSrc}
           alt={`Device ${name}`}
           loading='lazy'
         />

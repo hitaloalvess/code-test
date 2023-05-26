@@ -1,7 +1,7 @@
 //entry
 import deviceLdr from '@/assets/images/devices/entry/ldr.svg';
 import devicePotentiometer from '@/assets/images/devices/entry/potentiometer.svg';
-import deviceSwitch from '@/assets/images/devices/entry/switchOn.svg';
+import deviceSwitch from '@/assets/images/devices/entry/switchOff.svg';
 
 //exit
 import deviceLed from '@/assets/images/devices/exit/led.svg';
