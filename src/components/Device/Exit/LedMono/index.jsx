@@ -20,7 +20,7 @@ import {
   ledLightElement
 } from './styles.module.css';
 
-const LedMono = memo(function Led({
+const LedMono = memo(function LedMono({
   connRef, dragRef, device: { id, imgSrc, name, posX }
 }) {
 
@@ -34,7 +34,7 @@ const LedMono = memo(function Led({
     max: 0,
     type: null
   });
-  const [brightness, setBrightness] = useState(0);
+  const [brightness, setBrightness] = useState(1023);
   const [opacity, setOpacity] = useState(0);
 
 
@@ -55,7 +55,8 @@ const LedMono = memo(function Led({
     const { value, max } = valueReceived;
 
     const objValue = {
-      value: typeof value === 'boolean' ? brightness : value,
+      value: typeof value === 'boolean' ?
+        (value ? brightness : 0) : value,
       max: typeof value === 'boolean' ? 1023 : max,
       type: typeof value
     }
@@ -77,7 +78,7 @@ const LedMono = memo(function Led({
   }
 
   const redefineBehavior = () => {
-    setBrightness(0);
+    setBrightness(1023);
     setOpacity(0);
     setValue({
       current: 0,

@@ -1,4 +1,3 @@
-
 import { memo, useState } from 'react';
 import { FaTrashAlt } from 'react-icons/fa';
 import P from 'prop-types';
@@ -34,7 +33,7 @@ const Laser = memo(function Laser({
     max: 0,
     type: null
   });
-  const [brightness, setBrightness] = useState(0);
+  const [brightness, setBrightness] = useState(1023);
   const [opacity, setOpacity] = useState(0);
 
 
@@ -55,7 +54,8 @@ const Laser = memo(function Laser({
     const { value, max } = valueReceived;
 
     const objValue = {
-      value: typeof value === 'boolean' ? brightness : value,
+      value: typeof value === 'boolean' ?
+        (value ? brightness : 0) : value,
       max: typeof value === 'boolean' ? 1023 : max,
       type: typeof value
     }
@@ -77,7 +77,7 @@ const Laser = memo(function Laser({
   }
 
   const redefineBehavior = () => {
-    setBrightness(0);
+    setBrightness(1023);
     setOpacity(0);
     setValue({
       current: 0,
