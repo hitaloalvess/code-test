@@ -1,6 +1,6 @@
 import { memo, useState } from 'react';
 import P from 'prop-types';
-import {FaTrashAlt } from 'react-icons/fa';
+import { FaTrashAlt } from 'react-icons/fa';
 
 import { useDevices } from '@/hooks/useDevices';
 import { useFlow } from '@/hooks/useFlow';
@@ -11,12 +11,15 @@ import Connector from '@/components/Connector';
 import {
   deviceBody,
   actionButtonsContainer,
-  actionButtonsContainerLeft
+  actionButtonsContainerLeft,
+  connectorsContainer,
+  connectorsContainerExit
 } from '../../styles.module.css';
 
 const Switch = memo(function Switch({
-  connRef, dragRef, device: { id, imgSrc, name, posX }
+  dragRef, device
 }) {
+  const { id, imgSrc, name, posX, posY } = device;
   const { deleteDevice } = useDevices();
   const { executeFlow, flows, deleteDeviceConnections } = useFlow();
   const { enableModal, disableModal } = useModal();
@@ -50,7 +53,9 @@ const Switch = memo(function Switch({
         />
       </div>
 
-      <div>
+      <div
+        className={`${connectorsContainer} ${connectorsContainerExit}`}
+      >
         <Connector
           name={'bool'}
           type={'exit'}
@@ -58,8 +63,7 @@ const Switch = memo(function Switch({
             id,
             defaultBehavior: getBoolean
           }}
-          updateConn={posX}
-          refConn={connRef}
+          updateConn={{ posX, posY }}
 
         />
       </div>
@@ -90,7 +94,6 @@ const Switch = memo(function Switch({
 });
 
 Switch.propTypes = {
-  connRef: P.object.isRequired,
   dragRef: P.func.isRequired,
   device: P.object.isRequired
 }

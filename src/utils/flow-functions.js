@@ -100,11 +100,22 @@ export const verifConnector = ({ flows, deviceFrom, deviceTo }) => {
   return true;
 }
 
-export const findFlowByDeviceId = (flows, deviceId) => {
-  const foundFlow = flows.find(flow => {
+export const findFlowsByDeviceId = (flows, deviceId) => {
+  const foundFlow = flows.filter(flow => {
     return flow.connections.find(conn => {
       return (conn.deviceFrom.id === deviceId ||
         conn.deviceTo.id === deviceId);
+    });
+  });
+
+  return foundFlow;
+}
+
+export const findFlowByConnectorId = (flows, connectorId) => {
+  const foundFlow = flows.find(flow => {
+    return flow.connections.find(conn => {
+      return (conn.deviceFrom.connector.id === connectorId ||
+        conn.deviceTo.connector.id === connectorId);
     });
   });
 

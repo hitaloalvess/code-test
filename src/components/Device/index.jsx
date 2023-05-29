@@ -1,8 +1,6 @@
-import { memo, useRef } from 'react';
+import { memo } from 'react';
 import P from 'prop-types';
-import { DragPreviewImage, useDrag } from 'react-dnd';
-
-import imgInvisible from '@/assets/images/devices/preview-default.svg';
+import { useDrag } from 'react-dnd';
 
 import Ldr from './Entry/Ldr';
 import Potentiometer from './Entry/Potentiometer';
@@ -17,50 +15,38 @@ import {
 } from './styles.module.css';
 
 const Device = memo(function Device({ device: { ...device } }) {
-  const connRef = useRef(null);
-
   // eslint-disable-next-line no-empty-pattern
-  const [{ }, drag, preview] = useDrag(() => ({
+  const [{ }, drag] = useDrag(() => ({
     type: 'device',
     item: {
       ...device,
-      connRef,
     },
-    collect: (monitor) => ({
-      isDragging: monitor.isDragging(),
-    }),
-  }), [connRef]);
+  }), []);
 
   const devices = {
     'ldr': <Ldr
-      connRef={connRef}
       device={device}
       dragRef={drag}
     />,
     'potentiometer': <Potentiometer
-      connRef={connRef}
       device={device}
       dragRef={drag}
     />,
     'switch': <Switch
-    connRef={connRef}
-    device={device}
-    dragRef={drag}
+      device={device}
+      dragRef={drag}
     />,
     'led': <Led
-    connRef={connRef}
-    device={device}
-    dragRef={drag}
+      device={device}
+      dragRef={drag}
     />,
     'ledMono': <LedMono
-    connRef={connRef}
-    device={device}
-    dragRef={drag}
+      device={device}
+      dragRef={drag}
     />,
     'laser': <Laser
-    connRef={connRef}
-    device={device}
-    dragRef={drag}
+      device={device}
+      dragRef={drag}
     />,
   }
 
@@ -72,8 +58,6 @@ const Device = memo(function Device({ device: { ...device } }) {
 
   return (
     <>
-      <DragPreviewImage connect={preview} src={imgInvisible} style={{ opacity: 0 }} />
-
       <div
         className={deviceContainer}
         style={{ left: `${device.posX}px`, top: `${device.posY}px` }}

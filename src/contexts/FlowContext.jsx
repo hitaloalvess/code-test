@@ -2,9 +2,9 @@ import { createContext, useCallback, useState } from "react";
 import P from 'prop-types';
 import { v4 as uuid } from 'uuid';
 
-import { findFlowByDeviceId, verifConnector } from "@/utils/flow-functions";
+import { findFlowsByDeviceId, verifConnector } from "@/utils/flow-functions";
 import { useDevices } from '@/hooks/useDevices';
-import { findConnectionsBetweenConnector, findFlowByConnectionId } from "../utils/flow-functions";
+import { findConnectionsBetweenConnector, findFlowByConnectionId, findFlowByConnectorId } from "../utils/flow-functions";
 
 export const FlowContext = createContext();
 
@@ -37,17 +37,18 @@ export const FlowProvider = ({ children }) => {
 
   };
 
-  const updateLines = useCallback((lines) => {
-    const newLines = connectionLines.map(connectionLine => {
-      const newLine = lines.find(line => line.id === connectionLine.id);
+  const updateLines = (lines) => {
+    setConnectionLines(prevLines => {
+      return prevLines.map(connectionLine => {
+        const newLine = lines.find(line => line.id === connectionLine.id);
 
-      if (newLine) return newLine;
+        if (newLine) return newLine;
 
-      return connectionLine;
+        return connectionLine;
+      })
     })
 
-    setConnectionLines(newLines);
-  }, [connectionLines]);
+  };
 
   const deleteLine = useCallback(({ id }) => {
 
@@ -64,25 +65,27 @@ export const FlowProvider = ({ children }) => {
   const executeFlow = (flows, deviceId) => {
     if (flows.length <= 0) return;
 
-    const deviceFlow = findFlowByDeviceId(flows, deviceId);
+    const selectedFlows = findFlowsByDeviceId(flows, deviceId);
 
-    if (!deviceFlow) return;
+    if (!selectedFlows) return;
 
-    const deviceConnections = deviceFlow.connections.filter(conn => {
-      return conn.deviceFrom.id === deviceId;
-    })
+    selectedFlows.forEach(flow => {
+      const deviceConnections = flow.connections.filter(conn => {
+        return conn.deviceFrom.id === deviceId;
+      })
 
-    deviceConnections.forEach(conn => {
-      const valueFrom = conn.deviceFrom.defaultBehavior();
-      conn.deviceTo.defaultBehavior(valueFrom);
+      deviceConnections.forEach(conn => {
+        const valueFrom = conn.deviceFrom.defaultBehavior();
+        conn.deviceTo.defaultBehavior(valueFrom);
+      })
     })
   }
 
   const saveFlow = useCallback((connection) => {
     const { deviceFrom, deviceTo } = connection;
 
-    const fromHasFlow = findFlowByDeviceId(flows, deviceFrom.id);
-    const toHasFlow = findFlowByDeviceId(flows, deviceTo.id);
+    const fromHasFlow = findFlowByConnectorId(flows, deviceFrom.connector.id);
+    const toHasFlow = findFlowByConnectorId(flows, deviceTo.connector.id);
 
     let newFlows;
 
@@ -199,7 +202,6 @@ export const FlowProvider = ({ children }) => {
       deviceTo = { ...flag }
     }
 
-    //ARRUMAR AQUI -> Corrigir validações de verif connector
     if (!verifConnector({ flows: [...flows], deviceFrom, deviceTo })) {
       deleteLine({
         id: flowTemp.currentLine.id
@@ -304,15 +306,12 @@ export const FlowProvider = ({ children }) => {
   }, [flows, deleteLine]);
 
   const deleteDeviceConnections = useCallback((deviceId) => {
-    const selectedFlows = flows.find(flow => {
-      return flow.connections.find(({ deviceFrom, deviceTo }) => {
-        return deviceFrom.id === deviceId || deviceTo.id === deviceId;
-      });
-    });
+    const selectedFlows = findFlowsByDeviceId(flows, deviceId);
 
-    if (selectedFlows) {
+    if (!selectedFlows) return;
 
-      const deviceConnections = selectedFlows.connections.filter(conn => {
+    selectedFlows.forEach(flow => {
+      const deviceConnections = flow.connections.filter(conn => {
         return conn.deviceFrom.id === deviceId || conn.deviceTo.id === deviceId;
       });
 
@@ -323,7 +322,8 @@ export const FlowProvider = ({ children }) => {
           idLine
         });
       })
-    }
+    })
+
   }, [flows, deleteConnection]);
 
   const clearFlowTemp = () => {
@@ -347,7 +347,8 @@ export const FlowProvider = ({ children }) => {
         updateFlow,
         updateLines,
         executeFlow,
-        deleteDeviceConnections
+        deleteDeviceConnections,
+        clearFlowTemp
       }}
     >
       {children}

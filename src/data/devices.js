@@ -64,7 +64,7 @@ export const mockDevices = {
   ],
   conditional: [
     {
-      id: 12,
+      id: 100,
       imgSrc: deviceAnd,
       name: 'and',
       type: 'virtual',
@@ -73,7 +73,7 @@ export const mockDevices = {
   ],
   event: [
     {
-      id: 15,
+      id: 200,
       imgSrc: devicePickColor,
       name: 'pickColor',
       type: 'virtual',

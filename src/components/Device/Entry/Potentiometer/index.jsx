@@ -13,13 +13,17 @@ import {
   inputRangeDeviceContainer,
   inputValue,
   actionButtonsContainer,
-  actionButtonsContainerLeft
+  actionButtonsContainerLeft,
+  connectorsContainer,
+  connectorsContainerExit
 } from '../../styles.module.css';
 
 const MAX_VALUE = 1023;
 const Potentiometer = memo(function Ldr({
-  connRef, dragRef, device: { id, imgSrc, name, posX }
+  dragRef, device
 }) {
+
+  const { id, imgSrc, name, posX, posY } = device;
   const { deleteDevice } = useDevices();
   const { executeFlow, flows, deleteDeviceConnections } = useFlow();
   const { enableModal, disableModal } = useModal();
@@ -73,7 +77,9 @@ const Potentiometer = memo(function Ldr({
         />
       </div>
 
-      <div>
+      <div
+        className={`${connectorsContainer} ${connectorsContainerExit}`}
+      >
         <Connector
           name={'luminosity'}
           type={'exit'}
@@ -81,9 +87,7 @@ const Potentiometer = memo(function Ldr({
             id,
             defaultBehavior: getLuminosity
           }}
-          updateConn={posX}
-          refConn={connRef}
-
+          updateConn={{ posX, posY }}
         />
       </div>
 
@@ -113,7 +117,6 @@ const Potentiometer = memo(function Ldr({
 });
 
 Potentiometer.propTypes = {
-  connRef: P.object.isRequired,
   dragRef: P.func.isRequired,
   device: P.object.isRequired
 }

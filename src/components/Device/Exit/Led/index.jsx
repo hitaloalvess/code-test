@@ -13,7 +13,9 @@ import Connector from '@/components/Connector';
 import {
   deviceBody,
   actionButtonsContainer,
-  actionButtonsContainerRight
+  actionButtonsContainerRight,
+  connectorsContainer,
+  connectorsContainerEntry
 } from '../../styles.module.css';
 
 import {
@@ -22,9 +24,10 @@ import {
 } from './styles.module.css';
 
 const Led = memo(function Led({
-  connRef, dragRef, device: { id, imgSrc, name, posX }
+  device, dragRef
 }) {
 
+  const { id, imgSrc, name, posX, posY } = device;
   const { deleteDevice } = useDevices();
   const { deleteDeviceConnections } = useFlow();
   const { enableModal, disableModal } = useModal();
@@ -38,7 +41,6 @@ const Led = memo(function Led({
   const [brightness, setBrightness] = useState(0);
   const [color, setColor] = useState('#ff1450');
   const [opacity, setOpacity] = useState(0);
-
 
   const enableLight = ({ brightness, maxValue }) => {
     const opacity = brightness / maxValue;
@@ -65,17 +67,13 @@ const Led = memo(function Led({
   const defaultBehavior = (valueReceived) => {
     const { value, max } = valueReceived;
 
-    console.log("antes:", valueReceived);
-
     const objValue = {
-      value: typeof value === 'boolean' ? brightness : value,
+      value: typeof value === 'boolean' ? (
+        value ? brightness : 0
+      ) : value,
       max: typeof value === 'boolean' ? 1023 : max,
       type: typeof value
     }
-
-
-    console.log("depois:", objValue.value);
-
 
     if (objValue?.value !== 0) {
       const { value, max } = objValue;
@@ -128,7 +126,9 @@ const Led = memo(function Led({
           loading='lazy'
         />
       </div>
-      <div>
+      <div
+        className={`${connectorsContainer} ${connectorsContainerEntry}`}
+      >
         <Connector
           name={'brightness'}
           type={'entry'}
@@ -137,8 +137,7 @@ const Led = memo(function Led({
             defaultBehavior,
             redefineBehavior
           }}
-          updateConn={posX}
-          refConn={connRef}
+          updateConn={{ posX, posY }}
         />
       </div>
 
@@ -178,9 +177,8 @@ const Led = memo(function Led({
 });
 
 Led.propTypes = {
-  connRef: P.object.isRequired,
-  dragRef: P.func.isRequired,
-  device: P.object.isRequired
+  device: P.object.isRequired,
+  dragRef: P.func.isRequired
 }
 
 export default Led;

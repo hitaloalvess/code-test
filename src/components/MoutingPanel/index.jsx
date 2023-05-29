@@ -20,10 +20,13 @@ const MoutingPanel = () => {
     moutingPanelRef.current = el;
   }
 
-  const deviceHover = (item, monitor) => {
+  const deviceDrop = (item, monitor) => {
+
     const elementIndex = devices.find(device => device.id === item.id);
 
     if (!elementIndex) {
+      addDevice(item, monitor)
+
       return;
     }
 
@@ -37,22 +40,10 @@ const MoutingPanel = () => {
     });
   }
 
-  const deviceDrop = (item, monitor) => {
-
-    const elementIndex = devices.find(device => device.id === item.id);
-
-    if (elementIndex) {
-      return;
-    }
-
-    addDevice(item, monitor)
-  }
-
   // eslint-disable-next-line no-unused-vars
   const [_, drop] = useDrop(() => ({
     accept: ['device', 'menu-device'],
     drop: (item, monitor) => deviceDrop(item, monitor),
-    hover: (item, monitor) => deviceHover(item, monitor),
   }), [devices, flows, connectionLines]);
 
   return (

@@ -12,7 +12,9 @@ import Connector from '@/components/Connector';
 import {
   deviceBody,
   actionButtonsContainer,
-  actionButtonsContainerRight
+  actionButtonsContainerRight,
+  connectorsContainer,
+  connectorsContainerEntry
 } from '../../styles.module.css';
 
 import {
@@ -21,9 +23,10 @@ import {
 } from './styles.module.css';
 
 const Laser = memo(function Laser({
-  connRef, dragRef, device: { id, imgSrc, name, posX }
+  dragRef, device
 }) {
 
+  const { id, imgSrc, name, posX, posY } = device;
   const { deleteDevice } = useDevices();
   const { deleteDeviceConnections } = useFlow();
   const { enableModal, disableModal } = useModal();
@@ -95,11 +98,11 @@ const Laser = memo(function Laser({
         <div className={laserLight}>
           {lightActive && (
             <svg className={laserLightElement} style={{ fillOpacity: `${opacity}` }} viewBox="0 0 243 131"
-            fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path
+              fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path
                 d="M39.3808 16.1655L127.972 59.171L130.467 62.1185C137.247 70.1275 131.51 82.4001 121.017 82.3354L26.0204 32.3048L39.3808 16.1655Z"
                 fill="#C62626" />
-            <path
+              <path
                 d="M39.3922 28C42.1144 24.5 45.8922 14.5 36.8922 11C29.8922 12 19.8922 22.5 22.3921 33.5C25.3921 36 34.0224 34.904 39.3922 28Z"
                 fill="#C62626" />
             </svg>
@@ -111,7 +114,9 @@ const Laser = memo(function Laser({
           loading='lazy'
         />
       </div>
-      <div>
+      <div
+        className={`${connectorsContainer} ${connectorsContainerEntry}`}
+      >
         <Connector
           name={'brightness'}
           type={'entry'}
@@ -120,8 +125,7 @@ const Laser = memo(function Laser({
             defaultBehavior,
             redefineBehavior
           }}
-          updateConn={posX}
-          refConn={connRef}
+          updateConn={{ posX, posY }}
         />
       </div>
 
@@ -150,7 +154,6 @@ const Laser = memo(function Laser({
 });
 
 Laser.propTypes = {
-  connRef: P.object.isRequired,
   dragRef: P.func.isRequired,
   device: P.object.isRequired
 }

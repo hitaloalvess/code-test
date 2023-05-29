@@ -1,10 +1,11 @@
 
-import { memo, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useDrop, useDrag } from 'react-dnd';
 import P from 'prop-types';
 import { v4 as uuid } from 'uuid';
 
 import { useFlow } from '@/hooks/useFlow';
+import { useDevices } from '@/hooks/useDevices';
 
 import { calcPositionConnector } from '../../utils/flow-functions';
 
@@ -14,12 +15,22 @@ import styles, {
 } from './styles.module.css';
 
 
-const Connector = memo(function Connector({
-  name, type, device, updateConn, refConn
-}) {
-  const connRef = useRef(null);
+const Connector = ({
+  name, type, device, updateConn
+}) => {
+  const {
+    flows,
+    flowTemp,
+    createFlow,
+    deleteLine,
+    clearFlowTemp,
+    connectionLines,
+    updateLines,
+    updateFlow
+  } = useFlow();
+  const { repositionConnections } = useDevices();
 
-  const { flowTemp, createFlow, deleteLine } = useFlow();
+  const connRef = useRef(null);
   const [id] = useState(() => {
     return `${name}-${uuid()}`
   })
@@ -31,7 +42,24 @@ const Connector = memo(function Connector({
     const { x, y } = calcPositionConnector(connRef.current);
     setPosition({ x, y });
 
-  }, [updateConn]);
+    repositionConnections({
+      device: {
+        id: device.id,
+        posX: updateConn.posX,
+        posY: updateConn.posY
+      },
+      connector: {
+        id,
+        posX: x,
+        posY: y
+      },
+      flows,
+      connectionLines,
+      updateLines,
+      updateFlow
+    })
+
+  }, [updateConn.posX, updateConn.posY]);
 
 
 
@@ -39,9 +67,8 @@ const Connector = memo(function Connector({
   const [{ }, drop] = useDrop(() => ({
     accept: 'connector',
     drop: (item) => {
-      deleteLine({
-        id: flowTemp.currentLine.id
-      });
+
+      clearFlowTemp();
 
       createFlow({
         devices: {
@@ -92,7 +119,7 @@ const Connector = memo(function Connector({
 
   const attachRefConn = (el) => {
     connRef.current = el;
-    refConn.current = el;
+    // refConn.current = el;
   }
 
   const handleConnDown = () => {
@@ -120,24 +147,30 @@ const Connector = memo(function Connector({
       onMouseUp={() => deleteLine({
         id: flowTemp.currentLine.id
       })}
-
+      id={id}
     >
       <div
-        className={`${connectorRange} ${styles[`${type}ConnectorRange`]}`}
+        className={`${connectorRange}`}
         ref={attachRef}
       >
       </div>
     </div>
   );
-});
+};
 
 
 Connector.propTypes = {
   name: P.string.isRequired,
   type: P.string.isRequired,
-  device: P.object.isRequired, //ARRUMAR AQUI -> COLOCAR O OBJETO CORRETO
-  updateConn: P.number.isRequired,
-  refConn: P.object.isRequired
+  device: P.shape({
+    id: P.string.isRequired,
+    defaultBehavior: P.func.isRequired
+  }),
+  // refConn: P.object.isRequired,
+  updateConn: P.shape({
+    posX: P.number.isRequired,
+    posY: P.number.isRequired
+  })
 }
 
 export default Connector;
