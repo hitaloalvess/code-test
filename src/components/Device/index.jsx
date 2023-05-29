@@ -7,6 +7,7 @@ import imgInvisible from '@/assets/images/devices/preview-default.svg';
 import Ldr from './Entry/Ldr';
 import Potentiometer from './Entry/Potentiometer';
 import Switch from './Entry/Switch';
+import PushButton from './Entry/PushButton';
 import Led from './Exit/Led';
 import LedMono from './Exit/LedMono';
 import Laser from './Exit/Laser';
@@ -15,6 +16,7 @@ import {
   deviceContainer,
   deviceContent,
 } from './styles.module.css';
+
 
 const Device = memo(function Device({ device: { ...device } }) {
   const connRef = useRef(null);
@@ -41,6 +43,11 @@ const Device = memo(function Device({ device: { ...device } }) {
       connRef={connRef}
       device={device}
       dragRef={drag}
+    />,
+    'pushButton': <PushButton
+    connRef={connRef}
+    device={device}
+    dragRef={drag}
     />,
     'switch': <Switch
     connRef={connRef}
