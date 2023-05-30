@@ -5,6 +5,7 @@ import { useDrag } from 'react-dnd';
 import Ldr from './Entry/Ldr';
 import Potentiometer from './Entry/Potentiometer';
 import Switch from './Entry/Switch';
+import PushButton from './Entry/PushButton';
 import Led from './Exit/Led';
 import LedMono from './Exit/LedMono';
 import Laser from './Exit/Laser';
@@ -13,6 +14,7 @@ import {
   deviceContainer,
   deviceContent,
 } from './styles.module.css';
+
 
 const Device = memo(function Device({ device: { ...device } }) {
   // eslint-disable-next-line no-empty-pattern
@@ -29,6 +31,10 @@ const Device = memo(function Device({ device: { ...device } }) {
       dragRef={drag}
     />,
     'potentiometer': <Potentiometer
+      device={device}
+      dragRef={drag}
+    />,
+    'pushButton': <PushButton
       device={device}
       dragRef={drag}
     />,

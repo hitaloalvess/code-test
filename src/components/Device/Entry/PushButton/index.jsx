@@ -17,9 +17,9 @@ import {
   connectorsContainerExit
 } from '../../styles.module.css';
 
-import switchOn from '@/assets/images/devices/entry/switchOn.svg';
+import pushButtonOn from '@/assets/images/devices/entry/pushButtonOn.svg';
 
-const Switch = memo(function Switch({
+const PushButton = memo(function PushButton({
   dragRef, device
 }) {
   const { id, imgSrc, name, posX, posY } = device;
@@ -43,8 +43,12 @@ const Switch = memo(function Switch({
     }
   }, [click]);
 
-  const handleOnClick = () => {
-    setClick(prevClick => !prevClick);
+  const handleOnClickUp = () => {
+    setClick(false);
+  }
+
+  const handleOnClickDown = () => {
+    setClick(true);
   }
 
   return (
@@ -52,10 +56,14 @@ const Switch = memo(function Switch({
       <div
         className={deviceBody}
         ref={dragRef}
-        onClick={handleOnClick}
+        onMouseUp={handleOnClickUp}
+        onMouseDown={handleOnClickDown}
+        onDragEnd={handleOnClickUp}
+        onTouchStart={handleOnClickDown}
+        onTouchEnd={handleOnClickUp}
       >
         <img
-          src={click ? switchOn : imgSrc}
+          src={click ? pushButtonOn : imgSrc}
           alt={`Device ${name}`}
           loading='lazy'
         />
@@ -101,9 +109,9 @@ const Switch = memo(function Switch({
   );
 });
 
-Switch.propTypes = {
+PushButton.propTypes = {
   dragRef: P.func.isRequired,
   device: P.object.isRequired
 }
 
-export default Switch;
+export default PushButton;

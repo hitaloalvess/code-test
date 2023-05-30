@@ -11,6 +11,7 @@
   top: -12px;
   left: -2px;
   border: 16px solid transparent;
+  opacity: 0;
 }
 
 /* CONNECTOR ENTRY */
