@@ -84,9 +84,18 @@ export const FlowProvider = ({ children }) => {
   const saveFlow = useCallback((connection) => {
     const { deviceFrom, deviceTo } = connection;
 
-    const fromHasFlow = findFlowByConnectorId(flows, deviceFrom.connector.id);
-    const toHasFlow = findFlowByConnectorId(flows, deviceTo.connector.id);
+    const fromHasFlow = deviceFrom.category === 'conditional' ?
+      findFlowsByDeviceId(flows, deviceFrom.id)[0] :
+      findFlowByConnectorId(flows, deviceFrom.connector.id);
 
+    const toHasFlow = deviceTo.category === 'conditional' ?
+      findFlowsByDeviceId(flows, deviceTo.id)[0] :
+      findFlowByConnectorId(flows, deviceTo.connector.id);
+
+    console.log({
+      fromHasFlow,
+      toHasFlow
+    })
     let newFlows;
 
     const newDeviceFrom = { ...deviceFrom }
@@ -118,6 +127,7 @@ export const FlowProvider = ({ children }) => {
     if (fromHasFlow && toHasFlow) {
       //device to and from already has flows
       //group all connections in the from stream
+
       const newFlow = { ...fromHasFlow }
       toHasFlow.connections.forEach(connection => {
         newFlow.connections.push(connection);

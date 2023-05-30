@@ -107,6 +107,7 @@
   top: -24px;
   display: flex;
   flex-direction: column;
+  justify-content: center;
   width: 44px;
   min-height: 96px;
   gap: 8px;
@@ -127,7 +128,7 @@
 .actionButtonsContainerBottom {
   flex-direction: row;
   top: auto;
-  bottom: -30px;
+  bottom: -36px;
   min-height: 16px;
   width: 112px;
 }

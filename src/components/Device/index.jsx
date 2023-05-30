@@ -6,9 +6,12 @@ import Ldr from './Entry/Ldr';
 import Potentiometer from './Entry/Potentiometer';
 import Switch from './Entry/Switch';
 import PushButton from './Entry/PushButton';
+
 import Led from './Exit/Led';
 import LedMono from './Exit/LedMono';
 import Laser from './Exit/Laser';
+
+import And from './Conditional/And';
 
 import {
   deviceContainer,
@@ -54,6 +57,10 @@ const Device = memo(function Device({ device: { ...device } }) {
       device={device}
       dragRef={drag}
     />,
+    'and': <And
+      device={device}
+      dragRef={drag}
+    />
   }
 
   const CurrentDevice = devices[device.name];

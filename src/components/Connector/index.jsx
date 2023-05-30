@@ -16,7 +16,7 @@ import styles, {
 
 
 const Connector = ({
-  name, type, device, updateConn
+  name, type, device, updateConn, onDrop = null
 }) => {
   const {
     flows,
@@ -86,6 +86,10 @@ const Connector = ({
         },
         lineId: null
       })
+
+      if (onDrop) {
+        onDrop();
+      }
     }
   }), [flowTemp, position]);
 
@@ -166,11 +170,14 @@ Connector.propTypes = {
     id: P.string.isRequired,
     defaultBehavior: P.func.isRequired
   }),
-  // refConn: P.object.isRequired,
   updateConn: P.shape({
     posX: P.number.isRequired,
     posY: P.number.isRequired
-  })
+  }),
+  onDrop: P.oneOfType([
+    P.func,
+    P.object
+  ])
 }
 
 export default Connector;
