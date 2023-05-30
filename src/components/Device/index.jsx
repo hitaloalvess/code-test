@@ -8,14 +8,17 @@ import Ldr from './Entry/Ldr';
 import Potentiometer from './Entry/Potentiometer';
 import Switch from './Entry/Switch';
 import PushButton from './Entry/PushButton';
+
 import Led from './Exit/Led';
 import LedMono from './Exit/LedMono';
 import Laser from './Exit/Laser';
+import ShakeMotor from './Exit/ShakeMotor';
 
 import {
   deviceContainer,
   deviceContent,
 } from './styles.module.css';
+
 
 
 const Device = memo(function Device({ device: { ...device } }) {
@@ -65,6 +68,11 @@ const Device = memo(function Device({ device: { ...device } }) {
     dragRef={drag}
     />,
     'laser': <Laser
+    connRef={connRef}
+    device={device}
+    dragRef={drag}
+    />,
+    'shakeMotor': <ShakeMotor
     connRef={connRef}
     device={device}
     dragRef={drag}
