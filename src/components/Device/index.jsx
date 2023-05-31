@@ -10,6 +10,7 @@ import PushButton from './Entry/PushButton';
 import Led from './Exit/Led';
 import LedMono from './Exit/LedMono';
 import Laser from './Exit/Laser';
+import ShakeMotor from './Exit/ShakeMotor';
 
 import And from './Conditional/And';
 
@@ -17,6 +18,7 @@ import {
   deviceContainer,
   deviceContent,
 } from './styles.module.css';
+
 
 
 const Device = memo(function Device({ device: { ...device } }) {
@@ -54,6 +56,10 @@ const Device = memo(function Device({ device: { ...device } }) {
       dragRef={drag}
     />,
     'laser': <Laser
+      device={device}
+      dragRef={drag}
+    />,
+    'shakeMotor': <ShakeMotor
       device={device}
       dragRef={drag}
     />,

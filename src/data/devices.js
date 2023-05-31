@@ -8,6 +8,7 @@ import devicePushButton from '@/assets/images/devices/entry/pushButtonOff.svg';
 import deviceLed from '@/assets/images/devices/exit/led.svg';
 import deviceLedMono from '@/assets/images/devices/exit/ledMono.svg';
 import deviceLaser from '@/assets/images/devices/exit/laser.svg';
+import deviceShakeMotor from '@/assets/images/devices/exit/shakeMotor.svg';
 
 //conditional
 import deviceAnd from '@/assets/images/devices/conditional/and.svg';
@@ -76,6 +77,13 @@ export const mockDevices = {
       id: 4,
       imgSrc: deviceLaser,
       name: 'laser',
+      type: 'virtual',
+      category: 'exit'
+    },
+    {
+      id: 11,
+      imgSrc: deviceShakeMotor,
+      name: 'shakeMotor',
       type: 'virtual',
       category: 'exit'
     },
