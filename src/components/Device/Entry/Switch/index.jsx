@@ -23,7 +23,7 @@ const Switch = memo(function Switch({
   dragRef, device
 }) {
   const { id, imgSrc, name, posX, posY } = device;
-  const { deleteDevice } = useDevices();
+  const { deleteDevice, updateDeviceValue } = useDevices();
   const { executeFlow, flows, deleteDeviceConnections } = useFlow();
   const { enableModal, disableModal } = useModal();
   const [click, setClick] = useState(false);
@@ -37,14 +37,19 @@ const Switch = memo(function Switch({
 
   useEffect(() => {
     const existFlow = findFlowsByDeviceId(flows, id)
-
+    updateDeviceValue(id, {
+      value: click
+    });
     if (existFlow.length > 0) {
       executeFlow(flows, id, getBoolean);
     }
   }, [click]);
 
   const handleOnClick = () => {
-    setClick(prevClick => !prevClick);
+    setClick(prevClick => {
+
+      return !prevClick
+    });
   }
 
   return (

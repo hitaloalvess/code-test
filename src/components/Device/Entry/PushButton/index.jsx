@@ -23,10 +23,10 @@ const PushButton = memo(function PushButton({
   dragRef, device
 }) {
   const { id, imgSrc, name, posX, posY } = device;
-  const { deleteDevice } = useDevices();
+  const { deleteDevice, updateDeviceValue } = useDevices();
   const { executeFlow, flows, deleteDeviceConnections } = useFlow();
   const { enableModal, disableModal } = useModal();
-  const [click, setClick] = useState(false);
+  const [click, setClick] = useState(device.value);
 
   const getBoolean = useCallback(() => {
     return {
@@ -44,10 +44,17 @@ const PushButton = memo(function PushButton({
   }, [click]);
 
   const handleOnClickUp = () => {
+    updateDeviceValue(id, {
+      value: false
+    });
+
     setClick(false);
   }
 
   const handleOnClickDown = () => {
+    updateDeviceValue(id, {
+      value: true
+    });
     setClick(true);
   }
 

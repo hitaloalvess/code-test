@@ -92,10 +92,6 @@ export const FlowProvider = ({ children }) => {
       findFlowsByDeviceId(flows, deviceTo.id)[0] :
       findFlowByConnectorId(flows, deviceTo.connector.id);
 
-    console.log({
-      fromHasFlow,
-      toHasFlow
-    })
     let newFlows;
 
     const newDeviceFrom = { ...deviceFrom }
@@ -299,15 +295,6 @@ export const FlowProvider = ({ children }) => {
 
     };
 
-    //redefine devices from the connection
-    if (connectionDelete.deviceFrom.redefineBehavior) {
-      connectionDelete.deviceFrom.redefineBehavior();
-    }
-
-    if (connectionDelete.deviceTo.redefineBehavior) {
-      connectionDelete.deviceTo.redefineBehavior();
-    }
-
     deleteLine({ id: idLine });
 
 
@@ -322,6 +309,19 @@ export const FlowProvider = ({ children }) => {
 
       return prevFlows.map(flow => flowRemoveConnection(flow, currentFlowId))
     });
+
+    //redefine devices from the connection
+    if (connectionDelete.deviceFrom.redefineBehavior) {
+      connectionDelete.deviceFrom.redefineBehavior({
+        idConnectionDelete: connectionDelete.id
+      });
+    }
+
+    if (connectionDelete.deviceTo.redefineBehavior) {
+      connectionDelete.deviceTo.redefineBehavior({
+        idConnectionDelete: connectionDelete.id
+      });
+    }
 
   }, [flows, deleteLine]);
 

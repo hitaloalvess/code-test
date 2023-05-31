@@ -23,28 +23,38 @@ export const mockDevices = {
       imgSrc: deviceLdr,
       name: 'ldr',
       type: 'virtual',
-      category: 'entry'
+      category: 'entry',
+      value: {
+        current: 0,
+        max: 1023
+      }
     },
     {
       id: 8,
       imgSrc: devicePotentiometer,
       name: 'potentiometer',
       type: 'virtual',
-      category: 'entry'
+      category: 'entry',
+      value: {
+        current: 0,
+        max: 1023
+      }
     },
     {
       id: 9,
       imgSrc: devicePushButton,
       name: 'pushButton',
       type: 'virtual',
-      category: 'entry'
+      category: 'entry',
+      value: false
     },
     {
       id: 10,
       imgSrc: deviceSwitch,
       name: 'switch',
       type: 'virtual',
-      category: 'entry'
+      category: 'entry',
+      value: false
     },
   ],
   exit: [

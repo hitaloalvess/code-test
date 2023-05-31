@@ -152,9 +152,32 @@ export const DevicesProvider = ({ children }) => {
     setDevices(newDevices);
   }, [devices]);
 
+  const updateDeviceValue = (deviceId, newValues) => {
+
+    setDevices(prevDevices => {
+      return prevDevices.map(device => {
+        if (device.id === deviceId) {
+          return {
+            ...device,
+            ...newValues
+          }
+        }
+
+        return device;
+      })
+    })
+  }
+
   return (
     <DevicesContext.Provider
-      value={{ devices, addDevice, deleteDevice, repositionDevice, repositionConnections }}
+      value={{
+        devices,
+        addDevice,
+        deleteDevice,
+        repositionDevice,
+        repositionConnections,
+        updateDeviceValue
+      }}
     >
       {children}
     </DevicesContext.Provider>

@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import P from 'prop-types';
 import { FaTrashAlt } from 'react-icons/fa';
 
@@ -6,6 +7,7 @@ import { useFlow } from '@/hooks/useFlow';
 import { useDevices } from '@/hooks/useDevices';
 import Connector from '@/components/Connector';
 import ActionButton from '@/components/ActionButton';
+import { findFlowsByDeviceId } from '@/utils/flow-functions';
 
 import {
   deviceBody,
@@ -15,37 +17,105 @@ import {
   connectorsContainerExit,
   connectorsContainerEntry
 } from '../../styles.module.css';
-import { useEffect, useState } from 'react';
-// import { useState } from 'react';
 
 const And = ({
   dragRef, device
 }) => {
 
   const { id, imgSrc, name, posX, posY } = device;
-  const { deleteDevice } = useDevices();
-  const { deleteDeviceConnections } = useFlow();
+  const { deleteDevice, devices } = useDevices();
+  const { deleteDeviceConnections, flows } = useFlow();
   const { enableModal, disableModal } = useModal();
 
-  // const [value, setValue] = useState(true);
+  const [value, setValue] = useState(false);
+  const [connectionValues, setConnectionValues] = useState([]);
   const [qtdIncomingConn, setQtdIncomingConn] = useState(0);
 
   const connectionReceiver = () => {
     setQtdIncomingConn(prev => prev + 1)
   }
 
+  const handleConnections = () => {
 
-  const defaultBehavior = () => {
-    console.log('DEFAULT BEHAVIOR')
+    const [flow] = findFlowsByDeviceId(flows, id);
+
+    if (!flow) {
+      setValue(false);
+      return;
+    }
+
+    const incomingConns = flow.connections.filter(conn => {
+      return conn.deviceTo.id === id
+    });
+
+    const values = incomingConns.reduce((acc, conn) => {
+      const device = devices.find(device => device.id === conn.deviceFrom.id);
+      return [...acc, {
+        idConnection: conn.id,
+        value: [undefined, null].includes(device.value.current) ?
+          device.value :
+          device.value.current
+      }];
+    }, []);
+
+    setConnectionValues(values);
+
   }
 
-  // const getValue = () => ({ value });
+  const calcValues = () => {
+    if (connectionValues.length <= 0) {
+      setValue(false);
+
+      return;
+    }
+    const incomingConnsValues = connectionValues.map(connInput => !connInput.value === false);
+    const allValidValues = incomingConnsValues.every(value => value === true);
+
+    setValue(allValidValues);
+  }
+
+  const sendValue = () => {
+    const [flow] = findFlowsByDeviceId(flows, id);
+
+    if (!flow) return;
+
+    const connsOutput = flow.connections.filter(conn => {
+      return conn.deviceFrom.id === id
+    });
+
+    connsOutput.forEach(conn => {
+      conn.deviceTo.defaultBehavior({ value });
+    })
+  }
+
+  const redefineBehavior = (data) => {
+    const { idConnectionDelete } = data;
+
+    setConnectionValues(prevConn => {
+      return prevConn.filter(connValue => {
+        if (connValue.idConnection !== idConnectionDelete) {
+          return connValue
+        }
+      });
+    })
+
+  }
+
+  const getValue = () => ({ value });
 
   useEffect(() => {
     if (qtdIncomingConn > 0) {
-      defaultBehavior();
+      handleConnections();
     }
-  }, [qtdIncomingConn])
+  }, [qtdIncomingConn]);
+
+  useEffect(() => {
+    sendValue();
+  }, [value]);
+
+  useEffect(() => {
+    calcValues();
+  }, [connectionValues])
 
   return (
     <>
@@ -69,7 +139,8 @@ const And = ({
           type={'entry'}
           device={{
             id,
-            defaultBehavior: connectionReceiver
+            defaultBehavior: connectionReceiver,
+            redefineBehavior
           }}
           updateConn={{ posX, posY }}
         />
@@ -84,7 +155,8 @@ const And = ({
           type={'exit'}
           device={{
             id,
-            defaultBehavior: () => ({ value: true })
+            defaultBehavior: getValue,
+            redefineBehavior
           }}
           updateConn={{ posX, posY }}
         />

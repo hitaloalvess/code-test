@@ -24,7 +24,7 @@ const Ldr = memo(function Ldr({
 }) {
 
   const { id, imgSrc, name, posX, posY } = device;
-  const { deleteDevice } = useDevices();
+  const { deleteDevice, updateDeviceValue } = useDevices();
   const { executeFlow, flows, deleteDeviceConnections } = useFlow();
   const { enableModal, disableModal } = useModal();
 
@@ -39,8 +39,15 @@ const Ldr = memo(function Ldr({
   }
 
   const handleOnInput = () => {
-    const input = inputRef.current;
-    showValueRef.current.innerHTML = input.value;
+    const inputValue = Number(inputRef.current.value);
+    showValueRef.current.innerHTML = inputValue;
+
+    updateDeviceValue(id, {
+      value: {
+        current: inputValue,
+        max: MAX_VALUE
+      }
+    });
 
     executeFlow(flows, id, getLuminosity);
   }
