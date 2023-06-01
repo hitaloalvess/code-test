@@ -13,6 +13,7 @@ import deviceShakeMotor from '@/assets/images/devices/exit/shakeMotor.svg';
 //conditional
 import deviceAnd from '@/assets/images/devices/conditional/and.svg';
 import deviceOr from '@/assets/images/devices/conditional/or.svg';
+import deviceNot from '@/assets/images/devices/conditional/not.svg';
 
 //event
 import devicePickColor from '@/assets/images/devices/event/pickcolor.svg';
@@ -104,6 +105,13 @@ export const mockDevices = {
     type: 'virtual',
     category: 'conditional'
     },
+    {
+    id: 102,
+    imgSrc: deviceNot,
+    name: 'not',
+    type: 'virtual',
+    category: 'conditional'
+    },
   ],
   event: [
     {
@@ -177,7 +185,7 @@ export const deviceConnectorRules = {
     connectsTo: ['all'],
   },
   not: {
-    acceptedConnections: ['oneEntry', 'oneExit'],
+    acceptedConnections: ['oneEntry', 'allExit'],
     connectsFrom: ['all'],
     connectsTo: ['all'],
   },

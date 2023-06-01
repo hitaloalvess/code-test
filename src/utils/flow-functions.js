@@ -46,9 +46,9 @@ const getQtdConnections = (flows, connector) => {
 }
 
 export const verifConnector = ({ flows, deviceFrom, deviceTo }) => {
-
   if (deviceFrom && !deviceTo) {
     const { name, category } = deviceFrom;
+
 
     const qtdFromOutputConnections = getQtdConnections(flows, deviceFrom.connector);
 
@@ -65,21 +65,21 @@ export const verifConnector = ({ flows, deviceFrom, deviceTo }) => {
     return true;
   }
 
-  const { name: fromName, category: fromCategory } = deviceFrom;
-  const { name: toName, category: toCategory } = deviceTo;
+  const { name: fromName, connector: { type: fromConnCategory} } = deviceFrom;
+  const { name: toName, connector: { type: toConnCategory } } = deviceTo;
 
   const qtdFromOutputConnections = getQtdConnections(flows, deviceFrom.connector);
   const qtdToInputConnections = getQtdConnections(flows, deviceTo.connector);
 
   const deviceFromIsInvalid = (
     deviceConnectorRules[fromName].acceptedConnections.includes('oneExit') &&
-    fromCategory === 'entry' &&
+    fromConnCategory === 'exit' &&
     qtdFromOutputConnections > 0
   );
 
   const deviceToIsInvalid = (
     deviceConnectorRules[toName].acceptedConnections.includes('oneEntry') &&
-    toCategory === 'exit' &&
+    toConnCategory === 'entry' &&
     qtdToInputConnections > 0
   );
 
@@ -87,9 +87,9 @@ export const verifConnector = ({ flows, deviceFrom, deviceTo }) => {
   const connectionBetweenToAndFromIsValid = deviceConnectorRules[toName].connectsFrom.some(item => ['all', fromName].includes(item));
 
 
-  if (fromCategory === 'exit' && toCategory === 'exit') return false;
+  if (fromConnCategory === 'exit' && deviceConnectorRules === 'exit') return false;
 
-  if (fromCategory === 'entry' && toCategory === 'entry') return false;
+  if (fromConnCategory === 'entry' && deviceConnectorRules === 'entry') return false;
 
   if (deviceFromIsInvalid || deviceToIsInvalid) return false;
 

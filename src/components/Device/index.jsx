@@ -14,6 +14,7 @@ import ShakeMotor from './Exit/ShakeMotor';
 
 import And from './Conditional/And';
 import Or from './Conditional/Or';
+import Not from './Conditional/Not';
 
 import {
   deviceContainer,
@@ -69,6 +70,10 @@ const Device = memo(function Device({ device: { ...device } }) {
       dragRef={drag}
     />,
     'or': <Or
+      device={device}
+      dragRef={drag}
+    />,
+    'not': <Not
       device={device}
       dragRef={drag}
     />
