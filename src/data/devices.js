@@ -12,6 +12,7 @@ import deviceShakeMotor from '@/assets/images/devices/exit/shakeMotor.svg';
 
 //conditional
 import deviceAnd from '@/assets/images/devices/conditional/and.svg';
+import deviceOr from '@/assets/images/devices/conditional/or.svg';
 
 //event
 import devicePickColor from '@/assets/images/devices/event/pickcolor.svg';
@@ -95,6 +96,13 @@ export const mockDevices = {
       name: 'and',
       type: 'virtual',
       category: 'conditional'
+    },
+    {
+    id: 101,
+    imgSrc: deviceOr,
+    name: 'or',
+    type: 'virtual',
+    category: 'conditional'
     },
   ],
   event: [
