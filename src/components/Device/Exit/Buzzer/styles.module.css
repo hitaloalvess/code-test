@@ -1,0 +1,24 @@
+.buzzerIconOff {
+  display: none;
+  position: absolute;
+}
+
+.buzzerIconOn {
+  display: block;
+  margin: -20px auto 0px auto;
+  animation: music-animation 2s infinite;
+}
+
+@keyframes music-animation {
+  0% {
+    transform: translateY(-2rem);
+  }
+
+  50% {
+    transform: translateY(0rem);
+  }
+
+  100% {
+    transform: translateY(-2rem);
+  }
+}

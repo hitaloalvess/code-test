@@ -11,6 +11,7 @@ import Led from './Exit/Led';
 import LedMono from './Exit/LedMono';
 import Laser from './Exit/Laser';
 import ShakeMotor from './Exit/ShakeMotor';
+import Buzzer from './Exit/Buzzer';
 
 import And from './Conditional/And';
 import Or from './Conditional/Or';
@@ -64,6 +65,10 @@ const Device = memo(function Device({ device: { ...device } }) {
     'shakeMotor': <ShakeMotor
       device={device}
       dragRef={drag}
+    />,
+    'buzzer': <Buzzer
+    device={device}
+    dragRef={drag}
     />,
     'and': <And
       device={device}
