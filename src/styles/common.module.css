@@ -30,6 +30,8 @@
     background-color: var(--red);
 }
 
+/* COMMON */
+
 /* INPUTS */
 
 /* INPUTS -- COLOR */
@@ -52,9 +54,19 @@
     border-radius: 100px;
 }
 
-/* COMMON */
+/* INPUTS -- NUMBER */
+.inputNumber {
+  -webkit-appearance: none;
+  appearance: none;
+  border: none;
+  width: 200px;
+  height: 30px;
+  cursor: pointer;
+  padding: 10px;
+  background-color: #d9d9d9;
+}
 
-/* DEVICE INPUT RANGE*/
+/* INPUT --RANGE*/
 
 .inputRangeContainer {
     display: flex;

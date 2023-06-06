@@ -4,6 +4,7 @@ import { FaTimes } from 'react-icons/fa';
 import P from 'prop-types';
 
 import ConfigLedModal from './ConfigLedModal';
+import ConfigBuzzerModal from './ConfigBuzzerModal';
 import ConfirmationModal from './ConfirmationModal';
 
 import {
@@ -32,7 +33,11 @@ const ModalContainer = ({ modalIsOpen, closeModal, contentData }) => {
     'config-led': <ConfigLedModal
       closeModal={closeModal}
       contentData={contentData}
-    />
+    />,
+    'config-buzzer': <ConfigBuzzerModal
+    closeModal={closeModal}
+    contentData={contentData}
+  />
   }
 
   const currentContent = contents[contentData.typeContent];
