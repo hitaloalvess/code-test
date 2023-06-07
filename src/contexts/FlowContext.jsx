@@ -84,11 +84,13 @@ export const FlowProvider = ({ children }) => {
   const saveFlow = useCallback((connection) => {
     const { deviceFrom, deviceTo } = connection;
 
-    const fromHasFlow = deviceFrom.category === 'conditional' ?
+    const deviceCategoriesTwoConns = ['conditional', 'event'];
+
+    const fromHasFlow = deviceCategoriesTwoConns.includes(deviceFrom.category) ?
       findFlowsByDeviceId(flows, deviceFrom.id)[0] :
       findFlowByConnectorId(flows, deviceFrom.connector.id);
 
-    const toHasFlow = deviceTo.category === 'conditional' ?
+    const toHasFlow = deviceCategoriesTwoConns.includes(deviceTo.category) ?
       findFlowsByDeviceId(flows, deviceTo.id)[0] :
       findFlowByConnectorId(flows, deviceTo.connector.id);
 
