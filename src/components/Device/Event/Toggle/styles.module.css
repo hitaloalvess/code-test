@@ -1,0 +1,32 @@
+.testeInput[type=checkbox]{
+  height: 0;
+  width: 0;
+  visibility: hidden;
+}
+
+.testeLabel {
+  width: 51px;
+  height: 35px;
+  background: rgba(128, 128, 128, 0);
+  border: 4px solid #282832;
+  margin: -65px auto 0 auto;
+  display: block;
+  border-radius: 200px;
+  position: relative;
+}
+
+.testeLabel:after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 3px;
+  width: 23px;
+  height: 23px;
+  background: #282832;
+  border-radius: 100%;
+  transition: 0.3s;
+}
+
+.testeInput:checked + .testeLabel:after {
+  transform: translateX(15px);
+}

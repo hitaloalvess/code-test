@@ -39,7 +39,7 @@ const Buzzer = memo(function Buzzer({
     type: null
   });
 
-  const[audio] = useState(new Audio(buzzerAudio));
+  const [audio] = useState(new Audio(buzzerAudio));
   const [duration, setDuration] = useState(4);
   const [volume, setVolume] = useState(50);
   const [soundActive, setSoundActive] = useState(false);

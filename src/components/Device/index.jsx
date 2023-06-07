@@ -17,6 +17,8 @@ import And from './Conditional/And';
 import Or from './Conditional/Or';
 import Not from './Conditional/Not';
 
+import Toggle from './Event/Toggle';
+
 import {
   deviceContainer,
   deviceContent,
@@ -79,6 +81,10 @@ const Device = memo(function Device({ device: { ...device } }) {
       dragRef={drag}
     />,
     'not': <Not
+      device={device}
+      dragRef={drag}
+    />,
+    'toggle': <Toggle
       device={device}
       dragRef={drag}
     />

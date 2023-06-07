@@ -18,6 +18,7 @@ import deviceNot from '@/assets/images/devices/conditional/not.svg';
 
 //event
 import devicePickColor from '@/assets/images/devices/event/pickcolor.svg';
+import deviceToggle from '@/assets/images/devices/event/toggle.svg';
 
 
 export const mockDevices = {
@@ -126,6 +127,13 @@ export const mockDevices = {
       id: 200,
       imgSrc: devicePickColor,
       name: 'pickColor',
+      type: 'virtual',
+      category: 'event'
+    },
+    {
+      id: 201,
+      imgSrc: deviceToggle,
+      name: 'toggle',
       type: 'virtual',
       category: 'event'
     }
