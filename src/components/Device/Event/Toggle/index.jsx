@@ -19,8 +19,8 @@ import {
 } from '../../styles.module.css';
 
 import {
-  testeInput,
-  testeLabel
+  toggleInput,
+  toggleLabel
 } from './styles.module.css';
 
 import eventBaseImg from '@/assets/images/devices/event/eventBase.svg';
@@ -76,8 +76,6 @@ const Toggle = ({
       return;
     }
 
-    console.log(typeof connectionValues[0].value);
-
     if (typeof connectionValues[0].value === 'boolean' && connectionValues[0].value === true)
       setValue(!value);
     else if (typeof connectionValues[0].value === 'number')
@@ -85,7 +83,6 @@ const Toggle = ({
   }
 
   const sendValue = () => {
-    console.log(value);
     const [flow] = findFlowsByDeviceId(flows, id);
 
     if (!flow) return;
@@ -142,10 +139,10 @@ const Toggle = ({
         <input
           type="checkbox"
           checked={value}
-          className = {testeInput}
+          className = {toggleInput}
           readOnly={true}
         />
-        <label className = {testeLabel}></label>
+        <label className = {toggleLabel}></label>
       </div>
 
       <div

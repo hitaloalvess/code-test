@@ -1,10 +1,10 @@
-.testeInput[type=checkbox]{
+.toggleInput[type=checkbox]{
   height: 0;
   width: 0;
   visibility: hidden;
 }
 
-.testeLabel {
+.toggleLabel {
   width: 51px;
   height: 35px;
   background: rgba(128, 128, 128, 0);
@@ -15,7 +15,7 @@
   position: relative;
 }
 
-.testeLabel:after {
+.toggleLabel:after {
   content: '';
   position: absolute;
   top: 2px;
@@ -27,6 +27,6 @@
   transition: 0.3s;
 }
 
-.testeInput:checked + .testeLabel:after {
+.toggleInput:checked + .toggleLabel:after {
   transform: translateX(15px);
 }
