@@ -9,6 +9,8 @@ import { useModal } from '@/hooks/useModal';
 import ActionButton from '@/components/ActionButton';
 import Connector from '@/components/Connector';
 
+import pushButtonOn from '@/assets/images/devices/entry/pushButtonOn.svg';
+
 import {
   deviceBody,
   actionButtonsContainer,
@@ -17,13 +19,12 @@ import {
   connectorsContainerExit
 } from '../../styles.module.css';
 
-import pushButtonOn from '@/assets/images/devices/entry/pushButtonOn.svg';
 
 const PushButton = memo(function PushButton({
-  dragRef, device
+  dragRef, device, updateValue
 }) {
   const { id, imgSrc, name, posX, posY } = device;
-  const { deleteDevice, updateDeviceValue } = useDevices();
+  const { deleteDevice } = useDevices();
   const { executeFlow, flows, deleteDeviceConnections } = useFlow();
   const { enableModal, disableModal } = useModal();
   const [click, setClick] = useState(device.value);
@@ -43,20 +44,9 @@ const PushButton = memo(function PushButton({
     }
   }, [click]);
 
-  const handleOnClickUp = () => {
-    updateDeviceValue(id, {
-      value: false
-    });
+  const handleOnClickUp = () => updateValue(setClick, id, false);
 
-    setClick(false);
-  }
-
-  const handleOnClickDown = () => {
-    updateDeviceValue(id, {
-      value: true
-    });
-    setClick(true);
-  }
+  const handleOnClickDown = () => updateValue(setClick, id, true);
 
   return (
     <>
@@ -118,7 +108,8 @@ const PushButton = memo(function PushButton({
 
 PushButton.propTypes = {
   dragRef: P.func.isRequired,
-  device: P.object.isRequired
+  device: P.object.isRequired,
+  updateValue: P.func.isRequired
 }
 
 export default PushButton;

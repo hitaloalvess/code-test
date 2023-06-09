@@ -20,11 +20,11 @@ import {
 
 const MAX_VALUE = 1023;
 const Potentiometer = memo(function Ldr({
-  dragRef, device
+  dragRef, device, updateValue
 }) {
 
   const { id, imgSrc, name, posX, posY } = device;
-  const { deleteDevice, updateDeviceValue } = useDevices();
+  const { deleteDevice } = useDevices();
   const { executeFlow, flows, deleteDeviceConnections } = useFlow();
   const { enableModal, disableModal } = useModal();
 
@@ -42,12 +42,11 @@ const Potentiometer = memo(function Ldr({
     const inputValue = Number(inputRef.current.value);
     showValueRef.current.innerHTML = inputValue;
 
-    updateDeviceValue(id, {
-      value: {
-        current: inputValue,
-        max: MAX_VALUE
-      }
+    updateValue(null, id, {
+      current: inputValue,
+      max: MAX_VALUE
     });
+
     executeFlow(flows, id, getResistance);
   }
 
@@ -124,7 +123,8 @@ const Potentiometer = memo(function Ldr({
 
 Potentiometer.propTypes = {
   dragRef: P.func.isRequired,
-  device: P.object.isRequired
+  device: P.object.isRequired,
+  updateValue: P.func.isRequired
 }
 
 export default Potentiometer;

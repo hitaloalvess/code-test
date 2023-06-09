@@ -20,11 +20,11 @@ import {
 
 const MAX_VALUE = 1023;
 const Ldr = memo(function Ldr({
-  device, dragRef
+  device, dragRef, updateValue
 }) {
 
   const { id, imgSrc, name, posX, posY } = device;
-  const { deleteDevice, updateDeviceValue } = useDevices();
+  const { deleteDevice } = useDevices();
   const { executeFlow, flows, deleteDeviceConnections } = useFlow();
   const { enableModal, disableModal } = useModal();
 
@@ -42,11 +42,9 @@ const Ldr = memo(function Ldr({
     const inputValue = Number(inputRef.current.value);
     showValueRef.current.innerHTML = inputValue;
 
-    updateDeviceValue(id, {
-      value: {
-        current: inputValue,
-        max: MAX_VALUE
-      }
+    updateValue(null, id, {
+      current: inputValue,
+      max: MAX_VALUE
     });
 
     executeFlow(flows, id, getLuminosity);
@@ -127,7 +125,8 @@ const Ldr = memo(function Ldr({
 
 Ldr.propTypes = {
   device: P.object.isRequired,
-  dragRef: P.func.isRequired
+  dragRef: P.func.isRequired,
+  updateValue: P.func.isRequired
 }
 
 export default Ldr;

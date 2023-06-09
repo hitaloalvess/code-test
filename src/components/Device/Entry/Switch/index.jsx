@@ -20,10 +20,10 @@ import {
 import switchOn from '@/assets/images/devices/entry/switchOn.svg';
 
 const Switch = memo(function Switch({
-  dragRef, device
+  dragRef, device, updateValue
 }) {
   const { id, imgSrc, name, posX, posY } = device;
-  const { deleteDevice, updateDeviceValue } = useDevices();
+  const { deleteDevice } = useDevices();
   const { executeFlow, flows, deleteDeviceConnections } = useFlow();
   const { enableModal, disableModal } = useModal();
   const [click, setClick] = useState(false);
@@ -36,20 +36,17 @@ const Switch = memo(function Switch({
 
 
   useEffect(() => {
+    updateValue(null, id, click);
+
     const existFlow = findFlowsByDeviceId(flows, id)
-    updateDeviceValue(id, {
-      value: click
-    });
+
     if (existFlow.length > 0) {
       executeFlow(flows, id, getBoolean);
     }
   }, [click]);
 
   const handleOnClick = () => {
-    setClick(prevClick => {
-
-      return !prevClick
-    });
+    setClick(prevClick => !prevClick);
   }
 
   return (
@@ -108,7 +105,8 @@ const Switch = memo(function Switch({
 
 Switch.propTypes = {
   dragRef: P.func.isRequired,
-  device: P.object.isRequired
+  device: P.object.isRequired,
+  updateValue: P.func.isRequired
 }
 
 export default Switch;
