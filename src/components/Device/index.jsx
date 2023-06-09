@@ -2,6 +2,8 @@ import { memo } from 'react';
 import P from 'prop-types';
 import { useDrag } from 'react-dnd';
 
+import { useDevices } from '@/hooks/useDevices.js';
+
 import Ldr from './Entry/Ldr';
 import Potentiometer from './Entry/Potentiometer';
 import Switch from './Entry/Switch';
@@ -27,6 +29,9 @@ import {
 
 
 const Device = memo(function Device({ device: { ...device } }) {
+
+  const { updateDeviceValue } = useDevices();
+
   // eslint-disable-next-line no-empty-pattern
   const [{ }, drag] = useDrag(() => ({
     type: 'device',
@@ -35,59 +40,28 @@ const Device = memo(function Device({ device: { ...device } }) {
     },
   }), []);
 
+  const updateValue = (callbackUpdate, deviceId, value) => {
+    if (callbackUpdate) callbackUpdate(value);
+
+    updateDeviceValue(deviceId, {
+      value
+    });
+  }
+
   const devices = {
-    'ldr': <Ldr
-      device={device}
-      dragRef={drag}
-    />,
-    'potentiometer': <Potentiometer
-      device={device}
-      dragRef={drag}
-    />,
-    'pushButton': <PushButton
-      device={device}
-      dragRef={drag}
-    />,
-    'switch': <Switch
-      device={device}
-      dragRef={drag}
-    />,
-    'led': <Led
-      device={device}
-      dragRef={drag}
-    />,
-    'ledMono': <LedMono
-      device={device}
-      dragRef={drag}
-    />,
-    'laser': <Laser
-      device={device}
-      dragRef={drag}
-    />,
-    'shakeMotor': <ShakeMotor
-      device={device}
-      dragRef={drag}
-    />,
-    'buzzer': <Buzzer
-    device={device}
-    dragRef={drag}
-    />,
-    'and': <And
-      device={device}
-      dragRef={drag}
-    />,
-    'or': <Or
-      device={device}
-      dragRef={drag}
-    />,
-    'not': <Not
-      device={device}
-      dragRef={drag}
-    />,
-    'toggle': <Toggle
-      device={device}
-      dragRef={drag}
-    />
+    ldr: Ldr,
+    potentiometer: Potentiometer,
+    pushButton: PushButton,
+    switch: Switch,
+    led: Led,
+    ledMono: LedMono,
+    laser: Laser,
+    shakeMotor: ShakeMotor,
+    buzzer: Buzzer,
+    and: And,
+    or: Or,
+    not: Not,
+    toggle: Toggle
   }
 
   const CurrentDevice = devices[device.name];
@@ -105,7 +79,13 @@ const Device = memo(function Device({ device: { ...device } }) {
         <div
           className={deviceContent}
         >
-          {CurrentDevice}
+          {
+            <CurrentDevice
+              device={device}
+              dragRef={drag}
+              updateValue={updateValue}
+            />
+          }
         </div>
       </div>
     </>

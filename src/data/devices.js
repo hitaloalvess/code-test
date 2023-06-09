@@ -68,35 +68,74 @@ export const mockDevices = {
       imgSrc: deviceLed,
       name: 'led',
       type: 'virtual',
-      category: 'exit'
+      category: 'exit',
+      value: {
+        active: false,
+        current: 0,
+        max: 0,
+        type: null,
+        color: '#ff1450',
+        opacity: 0,
+        brightness: 1023
+      }
     },
     {
       id: 7,
       imgSrc: deviceLedMono,
       name: 'ledMono',
       type: 'virtual',
-      category: 'exit'
+      category: 'exit',
+      value: {
+        active: false,
+        current: 0,
+        max: 0,
+        type: null,
+        opacity: 0,
+        brightness: 1023
+      }
     },
     {
       id: 4,
       imgSrc: deviceLaser,
       name: 'laser',
       type: 'virtual',
-      category: 'exit'
+      category: 'exit',
+      value: {
+        active: false,
+        current: 0,
+        max: 0,
+        type: null,
+        opacity: 0,
+        brightness: 1023
+      }
     },
     {
       id: 11,
       imgSrc: deviceShakeMotor,
       name: 'shakeMotor',
       type: 'virtual',
-      category: 'exit'
+      category: 'exit',
+      value: {
+        active: false,
+        current: 0,
+        max: 0,
+        type: null
+      }
     },
     {
       id: 1,
       imgSrc: deviceBuzzer,
       name: 'buzzer',
       type: 'virtual',
-      category: 'exit'
+      category: 'exit',
+      value: {
+        active: false,
+        current: 0,
+        max: 0,
+        type: null,
+        duration: 4,
+        volume: 0.5,
+      }
     },
   ],
   conditional: [
@@ -105,21 +144,24 @@ export const mockDevices = {
       imgSrc: deviceAnd,
       name: 'and',
       type: 'virtual',
-      category: 'conditional'
+      category: 'conditional',
+      value: false
     },
     {
-    id: 101,
-    imgSrc: deviceOr,
-    name: 'or',
-    type: 'virtual',
-    category: 'conditional'
+      id: 101,
+      imgSrc: deviceOr,
+      name: 'or',
+      type: 'virtual',
+      category: 'conditional',
+      value: false
     },
     {
-    id: 102,
-    imgSrc: deviceNot,
-    name: 'not',
-    type: 'virtual',
-    category: 'conditional'
+      id: 102,
+      imgSrc: deviceNot,
+      name: 'not',
+      type: 'virtual',
+      category: 'conditional',
+      value: false
     },
   ],
   event: [
@@ -135,7 +177,8 @@ export const mockDevices = {
       imgSrc: deviceToggle,
       name: 'toggle',
       type: 'virtual',
-      category: 'event'
+      category: 'event',
+      value: false
     }
   ]
 };
