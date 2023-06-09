@@ -23,7 +23,7 @@ import {
 } from './styles.module.css';
 
 const LedMono = memo(function Led({
-  dragRef, device
+  dragRef, device, updateValue
 }) {
 
   const { id, imgSrc, name, posX, posY } = device;
@@ -31,63 +31,50 @@ const LedMono = memo(function Led({
   const { deleteDeviceConnections } = useFlow();
   const { enableModal, disableModal } = useModal();
 
-  const [lightActive, setLightActive] = useState(false);
-  const [, setValue] = useState({
-    current: 0,
-    max: 0,
-    type: null
-  });
-  const [brightness, setBrightness] = useState(1023);
-  const [opacity, setOpacity] = useState(0);
-
-
-  const enableLight = ({ brightness, maxValue }) => {
-    const opacity = brightness / maxValue;
-
-    setOpacity(opacity);
-    setLightActive(true);
-  }
-
-  const disableLight = () => {
-    setOpacity(0);
-    setLightActive(false);
-  }
-
+  const [value, setValue] = useState(device.value);
 
   const defaultBehavior = (valueReceived) => {
-    const { value, max } = valueReceived;
+    const { value: newValue, max } = valueReceived;
 
     const objValue = {
-      value: typeof value === 'boolean' ?
-        (value ? brightness : 0) : value,
-      max: typeof value === 'boolean' ? 1023 : max,
-      type: typeof value
+      ...value,
+      current: typeof newValue === 'boolean' ?
+        (newValue ? value.brightness : 0) : newValue,
+      max: typeof newValue === 'boolean' ? 1023 : max,
+      type: typeof newValue,
     }
 
-    if (objValue?.value !== 0) {
-      const { value, max } = objValue;
-      const brigthnessValue = objValue.value < 0 ? value * -1 : value;
+    if (objValue?.current !== 0) {
+      //enable light
+      const { current, max } = objValue;
+      const brigthnessValue = current < 0 ? current * -1 : current;
 
-      enableLight({
-        brightness: brigthnessValue,
-        maxValue: max
+      updateValue(setValue, id, {
+        ...objValue,
+        active: true,
+        opacity: brigthnessValue / max
       });
 
     } else {
-      disableLight();
+      //disable light
+      updateValue(setValue, id, {
+        ...objValue,
+        opacity: 0,
+        active: false
+      });
     }
 
-    setValue(objValue);
   }
 
   const redefineBehavior = () => {
-    setBrightness(1023);
-    setOpacity(0);
-    setValue({
+    updateValue(setValue, id, {
+      active: false,
       current: 0,
       max: 0,
-      type: null
-    })
+      type: null,
+      opacity: 0,
+      brightness: 1023
+    });
   }
 
   return (
@@ -97,8 +84,8 @@ const LedMono = memo(function Led({
         ref={dragRef}
       >
         <div className={ledLight}>
-          {lightActive && (
-            <svg className={ledLightElement} style={{ fillOpacity: `${opacity * 0.5}` }} viewBox="0 0 143 143"
+          {value.active && (
+            <svg className={ledLightElement} style={{ fillOpacity: `${value.opacity * 0.5}` }} viewBox="0 0 143 143"
               xmlns="http://www.w3.org/2000/svg">
               <path d="M32.273 62.4038C32.1137 43.8898 46.8756 33.7997 61.6353 33.1042C77.2726 32.3675 92.884 43.8334 92.8871 62.1665C92.8931 105.403 93.6193 113.977 92.9704 122.874C84.96 141.895 37.3388 138.956 32.2677 123.39C31.4452 118.404 32.273 62.4038 32.273 62.4038Z"
                 fill="white" />
@@ -154,7 +141,8 @@ const LedMono = memo(function Led({
 
 LedMono.propTypes = {
   dragRef: P.func.isRequired,
-  device: P.object.isRequired
+  device: P.object.isRequired,
+  updateValue: P.func.isRequired
 }
 
 export default LedMono;

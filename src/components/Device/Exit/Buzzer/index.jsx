@@ -26,89 +26,127 @@ import {
 } from './styles.module.css';
 
 const Buzzer = memo(function Buzzer({
-  dragRef, device
+  dragRef, device, updateValue
 }) {
   const { id, imgSrc, name, posX, posY } = device;
   const { deleteDevice } = useDevices();
   const { deleteDeviceConnections } = useFlow();
   const { enableModal, disableModal } = useModal();
 
-  const [, setValue] = useState({
+  const [audio] = useState(new Audio(buzzerAudio));
+  const [value, setValue] = useState(device.value);
+  const [valueTemp, setValueTemp] = useState({
+    active: false,
     current: 0,
     max: 0,
     type: null
   });
 
-  const [audio] = useState(new Audio(buzzerAudio));
-  const [duration, setDuration] = useState(4);
-  const [volume, setVolume] = useState(50);
-  const [soundActive, setSoundActive] = useState(false);
   const timeoutStopAudio = useRef(null);
 
   const enableSound = () => {
-    audio.load();
-    audio.volume = volume * 0.01;
     audio.loop = true;
     audio.play();
-
-    timeoutStopAudio.current = setTimeout(() => disableSound(), duration * 1000);
   };
 
   const disableSound = () => {
     audio.pause();
     audio.loop = false;
-    setSoundActive(false);
+
+    setValueTemp({
+      ...valueTemp,
+      active: false
+    })
 
     clearTimeout(timeoutStopAudio.current);
   }
 
-  useEffect(() => {
-    if (soundActive) {
-      enableSound();
-    }
-    else
-    {
-      disableSound();
-    }
-  }, [soundActive]);
-
-
   const handleSettingUpdate = useCallback((newDuration, newVolume) => {
-    if (newDuration !== duration) {
-      setDuration(newDuration);
-    }
 
-    if (newVolume !== volume) {
-      setVolume(newVolume);
-    }
+    updateValue(setValue, id, {
+      ...value,
+      duration: newDuration,
+      volume: newVolume
+    });
 
-    disableSound();
-  }, [duration, volume]);
+  }, [value.duration, value.volume]);
 
   const defaultBehavior = (valueReceived) => {
-    const { value, max } = valueReceived;
+    const { value: newValue, max } = valueReceived;
 
     const objValue = {
-      value: typeof value === 'boolean' ?
-        (value ? 1023 : 0) : value,
-      max: typeof value === 'boolean' ? 1023 : max,
-      type: typeof value
+      current: typeof newValue === 'boolean' ?
+        (newValue ? 1023 : 0) : newValue,
+      max: typeof newValue === 'boolean' ? 1023 : max,
+      type: typeof newValue
     }
 
-    if (objValue?.value !== 0) {
-      setSoundActive(true);
-    }
-    setValue(objValue);
-  }
+    setValueTemp({
+      ...objValue,
+      active: objValue.current !== 0
+    })
+  };
 
   const redefineBehavior = () => {
-      setSoundActive(false),
-      setValue({
-        current: 0,
-        max: 0,
-        type: null
-      })
+
+    updateValue(setValue, id, {
+      ...device.value
+    });
+
+    setValueTemp({
+      active: false,
+      current: 0,
+      max: 0,
+      type: null
+    })
   }
+
+
+  useEffect(() => {
+
+
+    const { current, max, type } = valueTemp;
+    if (valueTemp.active) {
+
+      updateValue(setValue, id, {
+        ...value,
+        current, max, type,
+        active: true
+      });
+
+      enableSound();
+
+      timeoutStopAudio.current = setTimeout(() => disableSound(), value.duration * 1000);
+
+    }
+    else {
+      updateValue(setValue, id, {
+        ...value,
+        current, max, type,
+        active: false
+      });
+
+      disableSound();
+
+    }
+  }, [valueTemp.active]);
+
+
+  useEffect(() => {
+
+    const { current, max, type } = valueTemp;
+
+    audio.volume = value.volume;
+
+    updateValue(setValue, id, {
+      ...value,
+      current, max, type,
+      active: false
+    });
+
+    disableSound();
+
+  }, [value.volume, value.duration]);
 
   return (
     <>
@@ -117,7 +155,7 @@ const Buzzer = memo(function Buzzer({
         ref={dragRef}
       >
         <svg
-          className={soundActive ? buzzerIconOn : buzzerIconOff}
+          className={valueTemp.active ? buzzerIconOn : buzzerIconOff}
           width="20"
           height="20"
           viewBox="0 0 20 20"
@@ -175,8 +213,8 @@ const Buzzer = memo(function Buzzer({
           onClick={() => enableModal({
             typeContent: 'config-buzzer',
             handleSaveConfig: handleSettingUpdate,
-            defaultDuration: duration,
-            defaultVolume: volume
+            defaultDuration: value.duration,
+            defaultVolume: value.volume
           })}
         >
           <AiFillSetting />
@@ -188,7 +226,8 @@ const Buzzer = memo(function Buzzer({
 
 Buzzer.propTypes = {
   dragRef: P.func.isRequired,
-  device: P.object.isRequired
+  device: P.object.isRequired,
+  updateValue: P.func.isRequired
 }
 
 export default Buzzer;

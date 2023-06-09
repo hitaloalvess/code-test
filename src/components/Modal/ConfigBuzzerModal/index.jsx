@@ -67,7 +67,7 @@ const ConfigBuzzerModal = ({ closeModal, contentData }) => {
           <input
             type="number"
             id='buzzerDuration'
-            min = "0"
+            min="0"
             className={inputNumber}
             defaultValue={defaultDuration}
             ref={durationRef}
@@ -89,8 +89,9 @@ const ConfigBuzzerModal = ({ closeModal, contentData }) => {
               type="range"
               id='buzzerVolume'
               ref={volumeRef}
-              max={100}
+              max={1}
               min={0}
+              step={0.01}
               defaultValue={defaultVolume}
               onInput={handleInputRange}
             />

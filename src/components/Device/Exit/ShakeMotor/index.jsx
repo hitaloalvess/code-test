@@ -23,61 +23,51 @@ import {
 } from './styles.module.css';
 
 const ShakeMotor = memo(function ShakeMotor({
-  dragRef, device
+  dragRef, device, updateValue
 }) {
   const { id, imgSrc, name, posX, posY } = device;
   const { deleteDevice } = useDevices();
   const { deleteDeviceConnections } = useFlow();
   const { enableModal, disableModal } = useModal();
 
-  const [motorActive, setMotorActive] = useState(false);
-  const [, setValue] = useState({
-    current: 0,
-    max: 0,
-    type: null
-  });
+  const [value, setValue] = useState(device.value);
   const showValueRef = useRef(null);
 
-
-  const enableShake = () => {
-    setMotorActive(true);
-  }
-
-  const disableShake = () => {
-    setMotorActive(false);
-  }
-
-
   const defaultBehavior = (valueReceived) => {
-    const { value, max } = valueReceived;
+    const { value: newValue, max } = valueReceived;
 
     const objValue = {
-      value: typeof value === 'boolean' ?
-        (value ? 1023 : 0) : value,
-      max: typeof value === 'boolean' ? 1023 : max,
-      type: typeof value
+      current: typeof newValue === 'boolean' ?
+        (newValue ? 1023 : 0) : newValue,
+      max: typeof newValue === 'boolean' ? 1023 : max,
+      type: typeof newValue
     }
 
-    if (objValue?.value !== 0) {
-      enableShake();
-      const convertedValue = objValue.value * 100 / objValue.max;
+    let active = false;
+    if (objValue?.current !== 0) {
+      active = true;
+      const convertedValue = objValue.current * 100 / objValue.max;
       showValueRef.current.innerHTML = convertedValue.toFixed() + '%';
 
     } else {
-      disableShake();
       showValueRef.current.innerHTML = '0%';
     }
-    setValue(objValue);
+
+    updateValue(setValue, id, {
+      ...objValue,
+      active
+    })
   }
 
   const redefineBehavior = () => {
-    showValueRef.current.innerHTML = '0%',
-      setMotorActive(false),
-      setValue({
-        current: 0,
-        max: 0,
-        type: null
-      })
+    showValueRef.current.innerHTML = '0%';
+
+    updateValue(setValue, id, {
+      active: false,
+      current: 0,
+      max: 0,
+      type: null
+    })
   }
 
   return (
@@ -93,7 +83,7 @@ const ShakeMotor = memo(function ShakeMotor({
           0%
         </p>
         <img
-          className={motorActive ? shake : ''}
+          className={value.active ? shake : ''}
           src={imgSrc}
           alt={`Device ${name}`}
           loading='lazy'
@@ -140,7 +130,8 @@ const ShakeMotor = memo(function ShakeMotor({
 
 ShakeMotor.propTypes = {
   dragRef: P.func.isRequired,
-  device: P.object.isRequired
+  device: P.object.isRequired,
+  updateValue: P.func.isRequired
 }
 
 export default ShakeMotor;

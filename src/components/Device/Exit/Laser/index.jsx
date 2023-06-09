@@ -22,7 +22,7 @@ import {
 } from './styles.module.css';
 
 const Laser = memo(function Laser({
-  dragRef, device
+  dragRef, device, updateValue
 }) {
 
   const { id, imgSrc, name, posX, posY } = device;
@@ -30,63 +30,50 @@ const Laser = memo(function Laser({
   const { deleteDeviceConnections } = useFlow();
   const { enableModal, disableModal } = useModal();
 
-  const [lightActive, setLightActive] = useState(false);
-  const [, setValue] = useState({
-    current: 0,
-    max: 0,
-    type: null
-  });
-  const [brightness, setBrightness] = useState(1023);
-  const [opacity, setOpacity] = useState(0);
-
-
-  const enableLight = ({ brightness, maxValue }) => {
-    const opacity = brightness / maxValue;
-
-    setOpacity(opacity);
-    setLightActive(true);
-  }
-
-  const disableLight = () => {
-    setOpacity(0);
-    setLightActive(false);
-  }
-
+  const [value, setValue] = useState(device.value);
 
   const defaultBehavior = (valueReceived) => {
-    const { value, max } = valueReceived;
+    const { value: newValue, max } = valueReceived;
 
     const objValue = {
-      value: typeof value === 'boolean' ?
-        (value ? brightness : 0) : value,
-      max: typeof value === 'boolean' ? 1023 : max,
-      type: typeof value
+      ...value,
+      current: typeof newValue === 'boolean' ?
+        (newValue ? value.brightness : 0) : newValue,
+      max: typeof newValue === 'boolean' ? 1023 : max,
+      type: typeof newValue,
     }
 
-    if (objValue?.value !== 0) {
-      const { value, max } = objValue;
-      const brigthnessValue = objValue.value < 0 ? value * -1 : value;
+    if (objValue?.current !== 0) {
+      //enable light
+      const { current, max } = objValue;
+      const brigthnessValue = current < 0 ? current * -1 : current;
 
-      enableLight({
-        brightness: brigthnessValue,
-        maxValue: max
+      updateValue(setValue, id, {
+        ...objValue,
+        active: true,
+        opacity: brigthnessValue / max
       });
 
     } else {
-      disableLight();
+      //disable light
+      updateValue(setValue, id, {
+        ...objValue,
+        opacity: 0,
+        active: false
+      });
     }
 
-    setValue(objValue);
   }
 
   const redefineBehavior = () => {
-    setBrightness(1023);
-    setOpacity(0);
-    setValue({
+    updateValue(setValue, id, {
+      active: false,
       current: 0,
       max: 0,
-      type: null
-    })
+      type: null,
+      opacity: 0,
+      brightness: 1023
+    });
   }
 
   return (
@@ -96,8 +83,8 @@ const Laser = memo(function Laser({
         ref={dragRef}
       >
         <div className={laserLight}>
-          {lightActive && (
-            <svg className={laserLightElement} style={{ fillOpacity: `${opacity}` }} viewBox="0 0 243 131"
+          {value.active && (
+            <svg className={laserLightElement} style={{ fillOpacity: `${value.opacity}` }} viewBox="0 0 243 131"
               fill="none" xmlns="http://www.w3.org/2000/svg">
               <path
                 d="M39.3808 16.1655L127.972 59.171L130.467 62.1185C137.247 70.1275 131.51 82.4001 121.017 82.3354L26.0204 32.3048L39.3808 16.1655Z"
@@ -155,7 +142,8 @@ const Laser = memo(function Laser({
 
 Laser.propTypes = {
   dragRef: P.func.isRequired,
-  device: P.object.isRequired
+  device: P.object.isRequired,
+  updateValue: P.func.isRequired
 }
 
 export default Laser;
