@@ -26,7 +26,7 @@ import {
 import eventBaseImg from '@/assets/images/devices/event/eventBase.svg';
 
 const Toggle = ({
-  dragRef, device
+  dragRef, device, updateValue
 }) => {
 
   const { id, name, posX, posY } = device;
@@ -47,7 +47,8 @@ const Toggle = ({
     const [flow] = findFlowsByDeviceId(flows, id);
 
     if (!flow) {
-      setValue(false);
+      updateValue(setValue, id, false);
+
       return;
     }
 
@@ -71,15 +72,17 @@ const Toggle = ({
 
   const calcValues = () => {
     if (connectionValues.length <= 0) {
-      setValue(false);
+      updateValue(setValue, id, false);
 
       return;
     }
 
-    if (typeof connectionValues[0].value === 'boolean' && connectionValues[0].value === true)
-      setValue(!value);
-    else if (typeof connectionValues[0].value === 'number')
-      setValue(!connectionValues[0].value === false);
+    let value = typeof connectionValues[0].value === 'boolean' && connectionValues[0].value ?
+      !value :
+      !connectionValues[0].value === false
+
+    updateValue(setValue, id, value);
+
   }
 
   const sendValue = () => {
@@ -131,18 +134,19 @@ const Toggle = ({
         className={deviceBody}
         ref={dragRef}
       >
+        <input
+          type="checkbox"
+          checked={value}
+          className={toggleInput}
+          readOnly={true}
+        />
+        <label className={toggleLabel}></label>
+
         <img
           src={eventBaseImg}
           alt={`Device ${name}`}
           loading='lazy'
         />
-        <input
-          type="checkbox"
-          checked={value}
-          className = {toggleInput}
-          readOnly={true}
-        />
-        <label className = {toggleLabel}></label>
       </div>
 
       <div
@@ -205,7 +209,8 @@ const Toggle = ({
 
 Toggle.propTypes = {
   device: P.object.isRequired,
-  dragRef: P.func.isRequired
+  dragRef: P.func.isRequired,
+  updateValue: P.func.isRequired
 }
 
 export default Toggle;
