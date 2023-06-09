@@ -19,7 +19,7 @@ import {
 } from '../../styles.module.css';
 
 const Or = ({
-  dragRef, device
+  dragRef, device, updateValue
 }) => {
 
   const { id, imgSrc, name, posX, posY } = device;
@@ -27,7 +27,7 @@ const Or = ({
   const { deleteDeviceConnections, flows } = useFlow();
   const { enableModal, disableModal } = useModal();
 
-  const [value, setValue] = useState(false);
+  const [value, setValue] = useState(device.value);
   const [connectionValues, setConnectionValues] = useState([]);
   const [qtdIncomingConn, setQtdIncomingConn] = useState(0);
 
@@ -39,7 +39,8 @@ const Or = ({
     const [flow] = findFlowsByDeviceId(flows, id);
 
     if (!flow) {
-      setValue(false);
+      updateValue(setValue, id, false);
+
       return;
     }
 
@@ -48,7 +49,7 @@ const Or = ({
     });
 
     const values = incomingConns.reduce((acc, conn) => {
-    const device = devices.find(device => device.id === conn.deviceFrom.id);
+      const device = devices.find(device => device.id === conn.deviceFrom.id);
 
       return [...acc, {
         idConnection: conn.id,
@@ -64,13 +65,15 @@ const Or = ({
 
   const calcValues = () => {
     if (connectionValues.length <= 0) {
-      setValue(false);
+      updateValue(setValue, id, false);
+
       return;
     }
     const incomingConnsValues = connectionValues.map(connInput => !connInput.value === false);
     const allValidValues = incomingConnsValues.some(value => value === true);
 
-    setValue(allValidValues);
+    updateValue(setValue, id, allValidValues);
+
   }
 
   const sendValue = () => {
@@ -189,7 +192,8 @@ const Or = ({
 
 Or.propTypes = {
   device: P.object.isRequired,
-  dragRef: P.func.isRequired
+  dragRef: P.func.isRequired,
+  updateValue: P.func.isRequired
 }
 
 export default Or;

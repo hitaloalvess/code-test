@@ -19,7 +19,7 @@ import {
 } from '../../styles.module.css';
 
 const And = ({
-  dragRef, device
+  dragRef, device, updateValue
 }) => {
 
   const { id, imgSrc, name, posX, posY } = device;
@@ -27,7 +27,7 @@ const And = ({
   const { deleteDeviceConnections, flows } = useFlow();
   const { enableModal, disableModal } = useModal();
 
-  const [value, setValue] = useState(false);
+  const [value, setValue] = useState(device.value);
   const [connectionValues, setConnectionValues] = useState([]);
   const [qtdIncomingConn, setQtdIncomingConn] = useState(0);
 
@@ -40,7 +40,8 @@ const And = ({
     const [flow] = findFlowsByDeviceId(flows, id);
 
     if (!flow) {
-      setValue(false);
+      updateValue(setValue, id, false);
+
       return;
     }
 
@@ -50,6 +51,7 @@ const And = ({
 
     const values = incomingConns.reduce((acc, conn) => {
       const device = devices.find(device => device.id === conn.deviceFrom.id);
+
       return [...acc, {
         idConnection: conn.id,
         value: [undefined, null].includes(device.value.current) ?
@@ -64,14 +66,15 @@ const And = ({
 
   const calcValues = () => {
     if (connectionValues.length <= 0) {
-      setValue(false);
+      updateValue(setValue, id, false);
 
       return;
     }
+
     const incomingConnsValues = connectionValues.map(connInput => !connInput.value === false);
     const allValidValues = incomingConnsValues.every(value => value === true);
 
-    setValue(allValidValues);
+    updateValue(setValue, id, allValidValues);
   }
 
   const sendValue = () => {
@@ -191,7 +194,8 @@ const And = ({
 
 And.propTypes = {
   device: P.object.isRequired,
-  dragRef: P.func.isRequired
+  dragRef: P.func.isRequired,
+  updateValue: P.func.isRequired
 }
 
 export default And;

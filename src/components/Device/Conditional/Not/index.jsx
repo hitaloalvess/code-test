@@ -19,7 +19,7 @@ import {
 } from '../../styles.module.css';
 
 const Not = ({
-  dragRef, device
+  dragRef, device, updateValue
 }) => {
 
   const { id, imgSrc, name, posX, posY } = device;
@@ -27,7 +27,7 @@ const Not = ({
   const { deleteDeviceConnections, flows } = useFlow();
   const { enableModal, disableModal } = useModal();
 
-  const [value, setValue] = useState(false);
+  const [value, setValue] = useState(device.value);
   const [connectionValues, setConnectionValues] = useState([]);
   const [qtdIncomingConn, setQtdIncomingConn] = useState(0);
 
@@ -40,7 +40,8 @@ const Not = ({
     const [flow] = findFlowsByDeviceId(flows, id);
 
     if (!flow) {
-      setValue(false);
+      updateValue(setValue, id, false);
+
       return;
     }
 
@@ -64,13 +65,14 @@ const Not = ({
 
   const calcValues = () => {
     if (connectionValues.length <= 0) {
-      setValue(false);
+      updateValue(setValue, id, false);
 
       return;
     }
     const incomingConnValue = !connectionValues[0].value === false;
 
-    setValue(!incomingConnValue);
+    updateValue(setValue, id, !incomingConnValue);
+
   }
 
   const sendValue = () => {
@@ -190,7 +192,8 @@ const Not = ({
 
 Not.propTypes = {
   device: P.object.isRequired,
-  dragRef: P.func.isRequired
+  dragRef: P.func.isRequired,
+  updateValue: P.func.isRequired
 }
 
 export default Not;
