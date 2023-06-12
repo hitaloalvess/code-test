@@ -46,8 +46,6 @@ const Led = memo(function Led({
   const defaultBehavior = (valueReceived) => {
     const { value: newValue, max } = valueReceived;
 
-    console.log(valueReceived)
-
     const objValue = {
       ...value,
       current: typeof newValue === 'boolean' ?
@@ -60,8 +58,6 @@ const Led = memo(function Led({
       //enable light
       const { current, max } = objValue;
       const brigthnessValue = current < 0 ? current * -1 : current;
-
-      console.log({ brigthnessValue, max, result: brigthnessValue / max });
 
       updateValue(setValue, id, {
         ...objValue,

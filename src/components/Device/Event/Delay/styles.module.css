@@ -1,0 +1,7 @@
+.delayNumber {
+  color: var(--black);
+  font-size: 1.7rem;
+  font-weight: 900;
+  text-align: center;
+  margin: -65px auto 0 auto;
+}

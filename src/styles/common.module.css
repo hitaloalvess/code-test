@@ -20,6 +20,19 @@
     filter: brightness(0.85);
 }
 
+/* BUTTONS -- white */
+.btnWhite {
+  background-color: var(--white);
+  border: 1px solid var(--blue);
+  transition: 0.3s ease-in-out;
+  color: var(--blue);
+}
+
+.btnWhite:hover {
+  background-color: var(--blue);
+  color: var(--white);
+}
+
 /* BUTTONS -- CANCEL */
 
 .btnCancel {
