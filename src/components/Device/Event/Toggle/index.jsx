@@ -77,11 +77,11 @@ const Toggle = ({
       return;
     }
 
-    let value = typeof connectionValues[0].value === 'boolean' && connectionValues[0].value ?
+    let newValue = typeof connectionValues[0].value === 'boolean' && connectionValues[0].value ?
       !value :
       !connectionValues[0].value === false
 
-    updateValue(setValue, id, value);
+    updateValue(setValue, id, newValue);
 
   }
 
