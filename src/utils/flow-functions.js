@@ -65,7 +65,7 @@ export const verifConnector = ({ flows, deviceFrom, deviceTo }) => {
     return true;
   }
 
-  const { name: fromName, connector: { type: fromConnCategory} } = deviceFrom;
+  const { name: fromName, connector: { type: fromConnCategory } } = deviceFrom;
   const { name: toName, connector: { type: toConnCategory } } = deviceTo;
 
   const qtdFromOutputConnections = getQtdConnections(flows, deviceFrom.connector);
@@ -101,7 +101,9 @@ export const verifConnector = ({ flows, deviceFrom, deviceTo }) => {
 }
 
 export const findFlowsByDeviceId = (flows, deviceId) => {
-  const foundFlow = flows.filter(flow => {
+  if (flows.length <= 0) return;
+
+  const foundFlow = flows.find(flow => {
     return flow.connections.find(conn => {
       return (conn.deviceFrom.id === deviceId ||
         conn.deviceTo.id === deviceId);
@@ -112,6 +114,8 @@ export const findFlowsByDeviceId = (flows, deviceId) => {
 }
 
 export const findFlowByConnectorId = (flows, connectorId) => {
+  if (flows.length <= 0) return;
+
   const foundFlow = flows.find(flow => {
     return flow.connections.find(conn => {
       return (conn.deviceFrom.connector.id === connectorId ||
@@ -123,6 +127,8 @@ export const findFlowByConnectorId = (flows, connectorId) => {
 }
 
 export const findFlowByConnectionId = (flows, connectionId) => {
+  if (flows.length <= 0) return;
+
   const foundFlow = flows.find(flow => {
     return flow.connections.find(conn => {
       return conn.id === connectionId;

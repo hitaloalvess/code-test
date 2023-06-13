@@ -44,7 +44,7 @@ const Toggle = ({
 
   const handleConnections = () => {
 
-    const [flow] = findFlowsByDeviceId(flows, id);
+    const flow = findFlowsByDeviceId(flows, id);
 
     if (!flow) {
       updateValue(setValue, id, false);
@@ -86,7 +86,9 @@ const Toggle = ({
   }
 
   const sendValue = () => {
-    const [flow] = findFlowsByDeviceId(flows, id);
+    console.log(flows);
+
+    const flow = findFlowsByDeviceId(flows, id);
 
     if (!flow) return;
 
