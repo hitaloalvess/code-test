@@ -21,6 +21,7 @@ import Not from './Conditional/Not';
 
 import Toggle from './Event/Toggle';
 import Delay from './Event/Delay';
+import Slider from './Event/Slider';
 
 import {
   deviceContainer,
@@ -63,7 +64,8 @@ const Device = memo(function Device({ device: { ...device } }) {
     or: Or,
     not: Not,
     toggle: Toggle,
-    delay: Delay
+    delay: Delay,
+    slider: Slider
   }
 
   const CurrentDevice = devices[device.name];

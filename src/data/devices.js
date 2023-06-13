@@ -20,6 +20,7 @@ import deviceNot from '@/assets/images/devices/conditional/not.svg';
 import devicePickColor from '@/assets/images/devices/event/pickcolor.svg';
 import deviceToggle from '@/assets/images/devices/event/toggle.svg';
 import deviceDelay from '@/assets/images/devices/event/delay.svg';
+import deviceSlider from '@/assets/images/devices/event/eventBase.svg';
 
 export const mockDevices = {
   entry: [
@@ -184,6 +185,14 @@ export const mockDevices = {
       id: 202,
       imgSrc: deviceDelay,
       name: 'delay',
+      type: 'virtual',
+      category: 'event',
+      value: false
+    },
+    {
+      id: 203,
+      imgSrc: deviceSlider,
+      name: 'slider',
       type: 'virtual',
       category: 'event',
       value: false

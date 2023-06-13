@@ -6,6 +6,7 @@ import P from 'prop-types';
 import ConfigLedModal from './ConfigLedModal';
 import ConfigDelayModal from './ConfigDelayModal';
 import ConfigBuzzerModal from './ConfigBuzzerModal';
+import ConfigSliderModal from './ConfigSliderModal';
 import ConfirmationModal from './ConfirmationModal';
 
 import {
@@ -40,6 +41,10 @@ const ModalContainer = ({ modalIsOpen, closeModal, contentData }) => {
     contentData={contentData}
     />,
     'config-delay': <ConfigDelayModal
+    closeModal={closeModal}
+    contentData={contentData}
+    />,
+    'config-slider': <ConfigSliderModal
     closeModal={closeModal}
     contentData={contentData}
     />
