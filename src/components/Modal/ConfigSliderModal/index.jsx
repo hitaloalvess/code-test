@@ -38,7 +38,7 @@ const ConfigSliderModal = ({ closeModal, contentData }) => {
         <h1
           className={configSliderTitle}
         >
-          Delay
+          Slider
         </h1>
       </header>
 
@@ -52,7 +52,7 @@ const ConfigSliderModal = ({ closeModal, contentData }) => {
             htmlFor='rangeSlider'
             className={labelInput}
           >
-            Selecione o limite do lider:
+            Selecione o limite do slider:
           </label>
 
           <input

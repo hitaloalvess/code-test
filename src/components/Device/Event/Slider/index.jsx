@@ -153,7 +153,7 @@ const Slider = ({
           min='0'
           className={rangeSlider}
           max={limit}
-          value={value}
+          value={value.current}
           readOnly={true}
         />
 

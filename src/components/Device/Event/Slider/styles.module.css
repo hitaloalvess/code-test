@@ -31,3 +31,24 @@
   border-radius: 100%;
   background: #d9d9d9;
 }
+
+
+@media (((max-height: 481px) and (orientation: landscape)) or ((max-width: 481px) and (orientation: portrait))) {
+
+  .numberValue {
+    bottom: 58px;
+    width: 100%;
+  }
+
+  .rangeSlider {
+    width: 40px;
+    height: 12px;
+    top: 20px;
+    left: 8px;
+  }
+
+  .rangeSlider::-webkit-slider-thumb {
+    width: 8px;
+    height: 8px;
+  }
+}
