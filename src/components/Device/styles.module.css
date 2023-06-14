@@ -128,7 +128,7 @@
 .actionButtonsContainerBottom {
   flex-direction: row;
   top: auto;
-  bottom: -36px;
+  bottom: -25px;
   min-height: 16px;
   width: 112px;
 }
@@ -148,10 +148,6 @@
 
   /* ACTION BUTTONS CONTAINER */
 
-  .actionButtonsContainer {
-    width: 32px;
-  }
-
   .actionButtonsContainerRight {
     right: -36px;
     align-items: flex-end;
@@ -160,6 +156,7 @@
   .deviceContent:hover .actionButtonsContainer {
     opacity: 1;
   }
+
 }
 
 @media (((max-height: 481px) and (orientation: landscape)) or ((max-width: 481px) and (orientation: portrait))) {
