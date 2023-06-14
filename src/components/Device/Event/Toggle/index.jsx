@@ -25,6 +25,7 @@ import {
 
 import eventBaseImg from '@/assets/images/devices/event/eventBase.svg';
 
+const devicesDbClick = ['pushButton'];
 const Toggle = ({
   dragRef, device, updateValue
 }) => {
@@ -35,7 +36,7 @@ const Toggle = ({
   const { enableModal, disableModal } = useModal();
 
   const [value, setValue] = useState(false);
-  const [connectionValues, setConnectionValues] = useState([]);
+  const [connectionValue, setConnectionValue] = useState({});
   const [qtdIncomingConn, setQtdIncomingConn] = useState(0);
 
   const connectionReceiver = () => {
@@ -44,7 +45,7 @@ const Toggle = ({
 
   const handleConnections = () => {
 
-    const [flow] = findFlowsByDeviceId(flows, id);
+    const flow = findFlowsByDeviceId(flows, id);
 
     if (!flow) {
       updateValue(setValue, id, false);
@@ -56,37 +57,57 @@ const Toggle = ({
       return conn.deviceTo.id === id
     });
 
-    const values = incomingConns.reduce((acc, conn) => {
+    const value = incomingConns.reduce((acc, conn) => {
       const device = devices.find(device => device.id === conn.deviceFrom.id);
-      return [...acc, {
+      return {
         idConnection: conn.id,
+        name: device.name,
         value: [undefined, null].includes(device.value.current) ?
           device.value :
           device.value.current
-      }];
-    }, []);
+      };
+    }, {});
 
-    setConnectionValues(values);
+    setConnectionValue(value);
 
   }
 
   const calcValues = () => {
-    if (connectionValues.length <= 0) {
+    if (!Object.hasOwn(connectionValue, 'idConnection')) {
       updateValue(setValue, id, false);
 
       return;
     }
+    const currentValue = connectionValue.value;
 
-    let newValue = typeof connectionValues[0].value === 'boolean' && connectionValues[0].value ?
-      !value :
-      !connectionValues[0].value === false
+    if (devicesDbClick.includes(connectionValue.name)) {
+      let newValue = value;
+      if (currentValue) {
+        newValue = value ? false : true;
+      }
 
-    updateValue(setValue, id, newValue);
+      updateValue(setValue, id, newValue);
+      return;
+    }
+
+    if (typeof currentValue === 'boolean') {
+      const newValue = currentValue && !value ? true : false;
+
+      updateValue(setValue, id, newValue);
+      return;
+    }
+
+    if (typeof currentValue === 'number') {
+      const newValue = currentValue > 0 ? true : false
+
+      updateValue(setValue, id, newValue);
+      return;
+    }
 
   }
 
   const sendValue = () => {
-    const [flow] = findFlowsByDeviceId(flows, id);
+    const flow = findFlowsByDeviceId(flows, id);
 
     if (!flow) return;
 
@@ -99,18 +120,7 @@ const Toggle = ({
     })
   }
 
-  const redefineBehavior = (data) => {
-    const { idConnectionDelete } = data;
-
-    setConnectionValues(prevConn => {
-      return prevConn.filter(connValue => {
-        if (connValue.idConnection !== idConnectionDelete) {
-          return connValue
-        }
-      });
-    })
-
-  }
+  const redefineBehavior = () => setConnectionValue({});
 
   const getValue = () => ({ value });
 
@@ -126,7 +136,7 @@ const Toggle = ({
 
   useEffect(() => {
     calcValues();
-  }, [connectionValues])
+  }, [connectionValue])
 
   return (
     <>

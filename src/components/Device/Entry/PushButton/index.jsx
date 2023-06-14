@@ -37,10 +37,10 @@ const PushButton = memo(function PushButton({
 
 
   useEffect(() => {
-    const existFlow = findFlowsByDeviceId(flows, id)
+    const existFlow = findFlowsByDeviceId(flows, id);
 
-    if (existFlow.length > 0) {
-      executeFlow(flows, id, getBoolean);
+    if (existFlow) {
+      executeFlow({ deviceId: id, fromBehaviorCallback: getBoolean });
     }
   }, [click]);
 

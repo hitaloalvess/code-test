@@ -37,7 +37,7 @@ const Not = ({
 
   const handleConnections = () => {
 
-    const [flow] = findFlowsByDeviceId(flows, id);
+    const flow = findFlowsByDeviceId(flows, id);
 
     if (!flow) {
       updateValue(setValue, id, false);
@@ -73,7 +73,7 @@ const Not = ({
   }
 
   const sendValue = () => {
-    const [flow] = findFlowsByDeviceId(flows, id);
+    const flow = findFlowsByDeviceId(flows, id);
 
     if (!flow) return;
 

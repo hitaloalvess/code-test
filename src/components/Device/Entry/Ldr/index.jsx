@@ -25,7 +25,7 @@ const Ldr = memo(function Ldr({
 
   const { id, imgSrc, name, posX, posY } = device;
   const { deleteDevice } = useDevices();
-  const { executeFlow, flows, deleteDeviceConnections } = useFlow();
+  const { executeFlow, deleteDeviceConnections } = useFlow();
   const { enableModal, disableModal } = useModal();
 
   const inputRef = useRef(null);
@@ -47,7 +47,7 @@ const Ldr = memo(function Ldr({
       max: MAX_VALUE
     });
 
-    executeFlow(flows, id, getLuminosity);
+    executeFlow({ deviceId: id, fromBehaviorCallback: getLuminosity });
   }
 
   return (

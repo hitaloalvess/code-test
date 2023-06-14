@@ -40,8 +40,9 @@ const Switch = memo(function Switch({
 
     const existFlow = findFlowsByDeviceId(flows, id)
 
-    if (existFlow.length > 0) {
-      executeFlow(flows, id, getBoolean);
+    if (existFlow) {
+      executeFlow({ flows, deviceId: id, fromBehaviorCallback: getBoolean });
+
     }
   }, [click]);
 

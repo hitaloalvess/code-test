@@ -37,7 +37,7 @@ const And = ({
 
   const handleConnections = () => {
 
-    const [flow] = findFlowsByDeviceId(flows, id);
+    const flow = findFlowsByDeviceId(flows, id);
 
     if (!flow) {
       updateValue(setValue, id, false);
@@ -78,7 +78,7 @@ const And = ({
   }
 
   const sendValue = () => {
-    const [flow] = findFlowsByDeviceId(flows, id);
+    const flow = findFlowsByDeviceId(flows, id);
 
     if (!flow) return;
 

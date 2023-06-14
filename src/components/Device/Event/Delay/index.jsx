@@ -55,7 +55,7 @@ const Delay = ({
 
   const handleConnections = () => {
 
-    const [flow] = findFlowsByDeviceId(flows, id);
+    const flow = findFlowsByDeviceId(flows, id);
 
     if (!flow) {
       return;
@@ -85,8 +85,7 @@ const Delay = ({
       setValue(false);
       return;
     }
-    else if (connectionValues.length >= 1)
-    {
+    else if (connectionValues.length >= 1) {
       let currentDuration = duration;
 
       restartTimer();
@@ -116,7 +115,7 @@ const Delay = ({
   }, [duration]);
 
   const sendValue = () => {
-    const [flow] = findFlowsByDeviceId(flows, id);
+    const flow = findFlowsByDeviceId(flows, id);
 
     if (!flow) return;
 
@@ -172,10 +171,10 @@ const Delay = ({
           loading='lazy'
         />
         <p ref={showDurationRef}
-        className={delayNumber}>
+          className={delayNumber}>
           5
         </p>
-        </div>
+      </div>
 
       <div
         className={`${connectorsContainer} ${connectorsContainerEntry}`}
