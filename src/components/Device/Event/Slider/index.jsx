@@ -42,9 +42,7 @@ const Slider = ({
   const showValueRef = useRef(null);
 
   const handleSettingUpdate = useCallback((newLimit) => {
-    if (newLimit !== limit) {
-      setLimit(newLimit);
-    }
+    setLimit(newLimit);
   }, [limit]);
 
 
@@ -53,7 +51,7 @@ const Slider = ({
   }
 
   const handleConnections = () => {
-    const [flow] = findFlowsByDeviceId(flows, id);
+    const flow = findFlowsByDeviceId(flows, id);
 
     if (!flow) {
       updateValue(setValue, id, { value: 0, max: 0 });
@@ -100,7 +98,7 @@ const Slider = ({
   }
 
   const sendValue = () => {
-    const [flow] = findFlowsByDeviceId(flows, id);
+    const flow = findFlowsByDeviceId(flows, id);
 
     if (!flow) return;
 

@@ -187,7 +187,10 @@ export const mockDevices = {
       name: 'delay',
       type: 'virtual',
       category: 'event',
-      value: false
+      value: {
+        current: 0,
+        max: 0
+      }
     },
     {
       id: 203,
