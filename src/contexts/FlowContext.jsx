@@ -4,11 +4,11 @@ import { v4 as uuid } from 'uuid';
 
 import { findFlowsByDeviceId, verifConnector } from "@/utils/flow-functions";
 import { useDevices } from '@/hooks/useDevices';
-import { findConnectionsBetweenConnector, findFlowByConnectionId, findFlowByConnectorId } from "../utils/flow-functions";
+import { concatConnections, findConnectionsBetweenConnector, findFlowByConnectionId, findFlowByConnectorId } from "../utils/flow-functions";
 
 
 const initialState = {
-  flows: [],
+  flows: {},
   connectionLines: [],
   exec: {},
   flowTemp: {},
@@ -31,7 +31,6 @@ const reducer = (state, action) => {
           findFlowByConnectorId(state.flows, deviceTo.connector.id);
 
         const newDeviceFrom = { ...deviceFrom }
-        // delete newDeviceFrom.defaultBehavior;
 
         const objConnection = {
           ...action.payload.connection,
@@ -46,20 +45,25 @@ const reducer = (state, action) => {
           //device deviceTo and deviceFrom already has flows
           //group all connections in the deviceFrom stream
 
+          const groupConns = concatConnections(fromHasFlow.connections, toHasFlow.connections);
           const newFlow = {
             id: fromHasFlow.id,
             connections: [
-              ...fromHasFlow.connections,
-              ...toHasFlow.connections,
+              ...groupConns,
               objConnection
             ]
           }
 
-          newFlows = state.flows.filter(flow => {
-            return flow.id !== fromHasFlow.id && flow.id !== toHasFlow.id
-          });
+          newFlows = {
+            ...state.flows,
+            [`${newFlow.id}`]: {
+              ...newFlow
+            }
+          }
 
-          newFlows.push(newFlow);
+          if (fromHasFlow.id !== toHasFlow.id) {
+            delete newFlows[`${toHasFlow.id}`]
+          }
 
         }
 
@@ -67,6 +71,7 @@ const reducer = (state, action) => {
           //deviceFrom or to are part of a flow
           //bundle the new connection to the existing flow
 
+          //ARRUMAR AQUI
           const previousConns = fromHasFlow ?
             [...fromHasFlow.connections] :
             [...toHasFlow.connections];
@@ -79,11 +84,12 @@ const reducer = (state, action) => {
             ]
           }
 
-          newFlows = state.flows.map(flow => {
-            if (flow.id === newFlow.id) return newFlow;
-
-            return flow;
-          });
+          newFlows = {
+            ...state.flows,
+            [`${newFlow.id}`]: {
+              ...newFlow
+            }
+          }
 
         }
 
@@ -97,10 +103,12 @@ const reducer = (state, action) => {
             connections: [{ ...objConnection }]
           };
 
-          newFlows = [
+          newFlows = {
             ...state.flows,
-            newFlow
-          ];
+            [`${newFlow.id}`]: {
+              ...newFlow
+            }
+          }
         }
 
         return {
@@ -115,23 +123,24 @@ const reducer = (state, action) => {
       }
     case 'UPDATE-FLOW':
       {
-        const { newFlow } = action.payload;
+        const { id, connections } = action.payload;
+
         return {
           ...state,
-          flows: state.flows.map(flow => {
-            if (flow.id === newFlow.id) return newFlow;
-
-            return flow;
-          })
+          flows: {
+            ...state.flows,
+            [`${id}`]: {
+              id, connections
+            }
+          }
         }
       }
     case 'RECREATE-FLOW':
       {
         const { flowId, connectionId } = action.payload;
 
-        const newFlows = state.flows.filter(flow => {
-          return flow.id !== flowId
-        })
+        const newFlows = { ...state.flows };
+        delete newFlows[`${flowId}`];
 
         const flow = findFlowByConnectionId(state.flows, connectionId);
 
@@ -151,8 +160,6 @@ const reducer = (state, action) => {
           )
         });
 
-
-
         return {
           ...state,
           flows: newFlows
@@ -163,20 +170,26 @@ const reducer = (state, action) => {
         const { flowId, connections } = action.payload;
 
         const connsIds = connections.reduce((acc, conn) => [...acc, conn.id], []);
-        const flow = state.flows.find(flow => flow.id === flowId);
+        const flow = state.flows[`${flowId}`];
 
         const newFlow = {
           ...flow,
           connections: flow.connections.filter(conn => !connsIds.includes(conn.id))
         }
 
-        const newFlows = newFlow.connections.length <= 0 ?
-          state.flows.filter(flow => flow.id !== newFlow.id) :
-          state.flows.map(flow => {
-            if (flow.id === newFlow.id) return newFlow;
+        let newFlows;
 
-            return flow;
-          });
+        if (newFlow.connections.length <= 0) {
+          newFlows = { ...state.flows };
+          delete newFlows[`${newFlow.id}`];
+        } else {
+          newFlows = {
+            ...state.flows,
+            [`${newFlow.id}`]: {
+              ...newFlow
+            }
+          }
+        }
 
         return {
           ...state,
@@ -305,15 +318,7 @@ export const FlowProvider = ({ children }) => {
   };
 
   const updateLines = (lines) => {
-    // setConnectionLines(prevLines => {
-    //   return prevLines.map(connectionLine => {
-    //     const newLine = lines.find(line => line.id === connectionLine.id);
 
-    //     if (newLine) return newLine;
-
-    //     return connectionLine;
-    //   })
-    // })
     dispatch({
       type: 'UPDATE-LINES',
       payload: {
@@ -323,13 +328,6 @@ export const FlowProvider = ({ children }) => {
   };
 
   const deleteLine = ({ id }) => {
-
-    // setConnectionLines(prevConnLines => {
-    //   const newLines = prevConnLines.filter(line => line.id !== id)
-    //   return newLines;
-    // });
-
-    // clearFlowTemp();
 
     dispatch({
       type: 'DELETE-LINE',
@@ -418,22 +416,19 @@ export const FlowProvider = ({ children }) => {
       deviceTo = { ...flag }
     }
 
-    if (!verifConnector({ flows: [...state.flows], deviceFrom, deviceTo })) {
-      deleteLine({
-        id: state.flowTemp.currentLine.id
-      });
-
-      clearFlowTemp();
-      return;
-    }
-
     //Check if the connectors already connect
     const connsAlreadyConnect = findConnectionsBetweenConnector(
       state.flows, deviceFrom.connector, deviceTo.connector
     );
 
+    if (
+      !verifConnector({ flows: state.flows, deviceFrom, deviceTo }) ||
+      connsAlreadyConnect
+    ) {
+      deleteLine({
+        id: state.flowTemp.currentLine.id
+      });
 
-    if (connsAlreadyConnect) {
       clearFlowTemp();
       return;
     }
@@ -528,7 +523,6 @@ export const FlowProvider = ({ children }) => {
       payload: {
         connection,
         callback: (params) => {
-          console.log(params)
           executeFlow(params);
         }
       }
