@@ -20,7 +20,7 @@ import deviceNot from '@/assets/images/devices/conditional/not.svg';
 import devicePickColor from '@/assets/images/devices/event/pickcolor.svg';
 import deviceToggle from '@/assets/images/devices/event/toggle.svg';
 import deviceDelay from '@/assets/images/devices/event/delay.svg';
-import deviceSlider from '@/assets/images/devices/event/eventBase.svg';
+import deviceSlider from '@/assets/images/devices/event/slider.svg';
 
 export const mockDevices = {
   entry: [
