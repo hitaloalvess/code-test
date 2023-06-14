@@ -20,8 +20,8 @@ import {
 } from '../../styles.module.css';
 
 import {
-numberValue,
-rangeSlider
+  numberValue,
+  rangeSlider
 } from './styles.module.css';
 
 import eventBaseImg from '@/assets/images/devices/event/eventBase.svg';
@@ -35,17 +35,17 @@ const Slider = ({
   const { deleteDeviceConnections, flows } = useFlow();
   const { enableModal, disableModal } = useModal();
 
-  const [value, setValue] = useState(0);
-  const [maxValue, setMaxValue] = useState(1023);
-  const [connectionValues, setConnectionValues] = useState([]);
+  const [value, setValue] = useState(device.value);
+  const [limit, setLimit] = useState(1023);
+  const [connectionValue, setConnectionValue] = useState({});
   const [qtdIncomingConn, setQtdIncomingConn] = useState(0);
   const showValueRef = useRef(null);
 
-  const handleSettingUpdate = useCallback((newMaxValue) => {
-    if (newMaxValue !== maxValue) {
-      setMaxValue(newMaxValue);
+  const handleSettingUpdate = useCallback((newLimit) => {
+    if (newLimit !== limit) {
+      setLimit(newLimit);
     }
-  }, [maxValue]);
+  }, [limit]);
 
 
   const connectionReceiver = () => {
@@ -56,38 +56,45 @@ const Slider = ({
     const [flow] = findFlowsByDeviceId(flows, id);
 
     if (!flow) {
-      updateValue(setValue, id, false);
+      updateValue(setValue, id, { value: 0, max: 0 });
 
       return;
     }
 
-    const incomingConns = flow.connections.filter(conn => {
+    const connection = flow.connections.find(conn => {
       return conn.deviceTo.id === id
     });
 
-    const values = incomingConns.reduce((acc, conn) => {
-      const device = devices.find(device => device.id === conn.deviceFrom.id);
-      return [...acc, {
-        idConnection: conn.id,
-        value: [undefined, null].includes(device.value.current) ?
-          device.value :
-          device.value.current
-      }];
-    }, []);
+    const deviceFrom = devices.find(device => device.id === connection.deviceFrom.id);
 
-    setConnectionValues(values);
+    const value = {
+      idConnection: connection.id,
+      value: deviceFrom.value.current,
+      max: deviceFrom.value.max
+    }
+
+    setConnectionValue(value);
 
   }
 
   const calcValues = () => {
-    if (connectionValues.length <= 0) {
-      updateValue(setValue, id, 0);
+    if (!Object.hasOwn(connectionValue, 'idConnection')) {
+      updateValue(setValue, id, { current: 0, max: 0 });
+
+      showValueRef.current.innerHTML = 0;
+
       return;
     }
 
-    let newValue = connectionValues[0].value > maxValue ? maxValue : connectionValues[0].value;
+    const newValue = connectionValue.value > limit ? {
+      current: limit,
+      max: connectionValue.max
+    } : {
+      current: connectionValue.value,
+      max: connectionValue.max
+    };
 
-    showValueRef.current.innerHTML = newValue;
+    showValueRef.current.innerHTML = newValue.current;
 
     updateValue(setValue, id, newValue);
   }
@@ -102,24 +109,17 @@ const Slider = ({
     });
 
     connsOutput.forEach(conn => {
-      conn.deviceTo.defaultBehavior({ value });
-    })
-  }
-
-  const redefineBehavior = (data) => {
-    const { idConnectionDelete } = data;
-
-    setConnectionValues(prevConn => {
-      return prevConn.filter(connValue => {
-        if (connValue.idConnection !== idConnectionDelete) {
-          return connValue
-        }
+      conn.deviceTo.defaultBehavior({
+        value: value.current,
+        max: value.max
       });
     })
-
   }
 
-  const getValue = () => ({ value });
+  const redefineBehavior = () => setConnectionValue({})
+
+
+  const getValue = () => ({ value: value.current, max: value.max });
 
   useEffect(() => {
     if (qtdIncomingConn > 0) {
@@ -133,7 +133,7 @@ const Slider = ({
 
   useEffect(() => {
     calcValues();
-  }, [connectionValues, maxValue])
+  }, [connectionValue, limit])
 
   return (
     <>
@@ -141,7 +141,7 @@ const Slider = ({
         className={deviceBody}
         ref={dragRef}
       >
-          <p
+        <p
           className={numberValue}
           ref={showValueRef}
         >
@@ -152,7 +152,7 @@ const Slider = ({
           type="range"
           min='0'
           className={rangeSlider}
-          max={maxValue}
+          max={limit}
           value={value}
           readOnly={true}
         />
@@ -220,7 +220,7 @@ const Slider = ({
           onClick={() => enableModal({
             typeContent: 'config-slider',
             handleSaveConfig: handleSettingUpdate,
-            defaultMaxValue: maxValue
+            defaultMaxValue: limit
           })}
         >
           <AiFillSetting />

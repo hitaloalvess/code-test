@@ -195,7 +195,10 @@ export const mockDevices = {
       name: 'slider',
       type: 'virtual',
       category: 'event',
-      value: false
+      value: {
+        current: 0,
+        max: 0
+      }
     }
   ]
 };
