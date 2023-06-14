@@ -28,7 +28,7 @@ const Not = ({
   const { enableModal, disableModal } = useModal();
 
   const [value, setValue] = useState(device.value);
-  const [connectionValues, setConnectionValues] = useState([]);
+  const [connectionValue, setConnectionValue] = useState({});
   const [qtdIncomingConn, setQtdIncomingConn] = useState(0);
 
   const connectionReceiver = () => {
@@ -45,30 +45,29 @@ const Not = ({
       return;
     }
 
-    const incomingConns = flow.connections.filter(conn => {
+    const connection = flow.connections.find(conn => {
       return conn.deviceTo.id === id
     });
 
-    const values = incomingConns.reduce((acc, conn) => {
-      const device = devices.find(device => device.id === conn.deviceFrom.id);
-      return [...acc, {
-        idConnection: conn.id,
-        value: [undefined, null].includes(device.value.current) ?
-          device.value :
-          device.value.current
-      }];
-    }, []);
+    const deviceFrom = devices.find(device => device.id === connection.deviceFrom.id);
 
-    setConnectionValues(values);
+    const value = {
+      idConnection: connection.id,
+      value: [undefined, null].includes(deviceFrom.value.current) ?
+        deviceFrom.value :
+        deviceFrom.value.current
+    }
+
+    setConnectionValue(value);
 
   }
 
   const calcValues = () => {
-    if (connectionValues.length <= 0) {
+    if (!Object.hasOwn(connectionValue, 'idConnection')) {
       updateValue(setValue, id, false);
       return;
     }
-    const incomingConnValue = !connectionValues[0].value === false;
+    const incomingConnValue = !connectionValue.value === false;
 
     updateValue(setValue, id, !incomingConnValue);
   }
@@ -87,18 +86,8 @@ const Not = ({
     })
   }
 
-  const redefineBehavior = (data) => {
-    const { idConnectionDelete } = data;
+  const redefineBehavior = () => setConnectionValue({});
 
-    setConnectionValues(prevConn => {
-      return prevConn.filter(connValue => {
-        if (connValue.idConnection !== idConnectionDelete) {
-          return connValue
-        }
-      });
-    })
-
-  }
 
   const getValue = () => ({ value });
 
@@ -114,7 +103,7 @@ const Not = ({
 
   useEffect(() => {
     calcValues();
-  }, [connectionValues])
+  }, [connectionValue])
 
   return (
     <>
