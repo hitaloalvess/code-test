@@ -7,7 +7,9 @@ import { findFlowByConnectorId } from "../utils/flow-functions";
 
 export const DevicesContext = createContext();
 
-
+const MAX_DEVICE_ZOOM = 1.6;
+const MIN_DEVICE_ZOOM = 0.5;
+const STEP_ZOOM = 0.1;
 export const DevicesProvider = ({ children }) => {
   const [devices, setDevices] = useState([]);
   const [deviceScale, setDeviceScale] = useState(1);
@@ -168,7 +170,22 @@ export const DevicesProvider = ({ children }) => {
     })
   }
 
-  const handleUpdateScale = (value) => setDeviceScale(value);
+  const handleIncreaseDeviceScale = () => {
+    setDeviceScale(prevScale => {
+      const value = prevScale + STEP_ZOOM;
+
+      return (value < MAX_DEVICE_ZOOM) ? value : prevScale;
+    })
+  };
+
+  const handleDecreaseDeviceScale = () => {
+    setDeviceScale(prevScale => {
+      const value = prevScale - STEP_ZOOM;
+
+      return (value >= MIN_DEVICE_ZOOM) ? value : prevScale;
+
+    })
+  };
 
   return (
     <DevicesContext.Provider
@@ -180,7 +197,8 @@ export const DevicesProvider = ({ children }) => {
         repositionDevice,
         repositionConnections,
         updateDeviceValue,
-        handleUpdateScale
+        handleIncreaseDeviceScale,
+        handleDecreaseDeviceScale
       }}
     >
       {children}

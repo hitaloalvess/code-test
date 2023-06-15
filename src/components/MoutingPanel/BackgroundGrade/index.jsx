@@ -1,10 +1,15 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import P from 'prop-types';
 
+import { useDevices } from '@/hooks/useDevices';
 import { backgroundGrade } from './styles.module.css';
 
+const STEP_ZOOM = 0.05;
 const BackgroundGrade = ({ moutingPanelRef }) => {
+  const { deviceScale } = useDevices();
   const bgGradeRef = useRef(null);
+  const [oldDeviceScale, setOldDeviceScale] = useState(deviceScale);
+  const [bgScale, setBgScale] = useState(1.25);
 
   function drawBackground() {
     const SPACING = 15;
@@ -31,9 +36,8 @@ const BackgroundGrade = ({ moutingPanelRef }) => {
       }
 
     }
-
-    // bg.style.transform = `scale(${1.5})`;
   }
+
 
   useEffect(() => {
     drawBackground();
@@ -43,12 +47,31 @@ const BackgroundGrade = ({ moutingPanelRef }) => {
     return () => {
       window.removeEventListener('resize', drawBackground);
     }
-  });
+  }, []);
+
+  useEffect(() => {
+    setBgScale(prevScale => {
+
+      if (oldDeviceScale < deviceScale) {
+        return prevScale + STEP_ZOOM;
+      }
+
+      if (oldDeviceScale > deviceScale) {
+        return prevScale - STEP_ZOOM;
+      }
+
+      return prevScale;
+    })
+
+    setOldDeviceScale(deviceScale);
+
+  }, [deviceScale]);
 
   return (
     <canvas
       className={backgroundGrade}
       ref={bgGradeRef}
+      style={{ transform: `scale(${bgScale})` }}
     ></canvas>
   );
 };

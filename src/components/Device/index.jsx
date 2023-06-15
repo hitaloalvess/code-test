@@ -32,7 +32,7 @@ import {
 
 const Device = memo(function Device({ device: { ...device } }) {
 
-  const { updateDeviceValue } = useDevices();
+  const { deviceScale, updateDeviceValue } = useDevices();
 
   // eslint-disable-next-line no-empty-pattern
   const [{ }, drag] = useDrag(() => ({
@@ -78,7 +78,7 @@ const Device = memo(function Device({ device: { ...device } }) {
     <>
       <div
         className={deviceContainer}
-        style={{ left: `${device.posX}px`, top: `${device.posY}px` }}
+        style={{ left: `${device.posX}px`, top: `${device.posY}px`, transform: `scale(${deviceScale})` }}
       >
         <div
           className={deviceContent}

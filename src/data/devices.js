@@ -31,15 +31,9 @@ export const mockDevices = {
       type: 'virtual',
       category: 'entry',
       value: {
-        temperature: {
-          current: 0,
-          max: 1023
-        },
-        humidity: {
-          current: 0,
-          max: 1023
-        }
-      }
+        current: 0,
+        max: 1023
+      },
     },
     {
       id: 8,
