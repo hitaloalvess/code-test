@@ -1,4 +1,3 @@
-
 import { useEffect, useRef, useState } from 'react';
 import { useDrop, useDrag } from 'react-dnd';
 import P from 'prop-types';
@@ -16,7 +15,7 @@ import styles, {
 
 
 const Connector = ({
-  name, type, device, updateConn, onDrop = null
+  name, type, device, updateConn, handleChangeId = null
 }) => {
   const {
     flows,
@@ -28,7 +27,7 @@ const Connector = ({
     updateLines,
     updateFlow
   } = useFlow();
-  const { repositionConnections } = useDevices();
+  const { repositionConnections, deviceScale } = useDevices();
 
   const connRef = useRef(null);
   const [id] = useState(() => {
@@ -59,8 +58,14 @@ const Connector = ({
       updateFlow
     })
 
-  }, [updateConn.posX, updateConn.posY]);
+  }, [updateConn.posX, updateConn.posY, deviceScale]);
 
+
+  useEffect(() => {
+    if (handleChangeId) {
+      handleChangeId(id);
+    }
+  }, [id]);
 
 
   // eslint-disable-next-line no-empty-pattern
@@ -86,10 +91,6 @@ const Connector = ({
         },
         lineId: null
       })
-
-      if (onDrop) {
-        onDrop();
-      }
     }
   }), [flowTemp, position]);
 
@@ -123,7 +124,6 @@ const Connector = ({
 
   const attachRefConn = (el) => {
     connRef.current = el;
-    // refConn.current = el;
   }
 
   const handleConnDown = () => {
@@ -174,10 +174,7 @@ Connector.propTypes = {
     posX: P.number.isRequired,
     posY: P.number.isRequired
   }),
-  onDrop: P.oneOfType([
-    P.func,
-    P.object
-  ])
+  handleChangeId: P.func
 }
 
 export default Connector;

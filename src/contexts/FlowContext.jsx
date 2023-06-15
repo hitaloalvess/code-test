@@ -20,7 +20,7 @@ const reducer = (state, action) => {
       {
         const { deviceFrom, deviceTo } = action.payload.connection;
 
-        const deviceCategoriesTwoConns = ['conditional', 'event'];
+        const deviceCategoriesTwoConns = ['entry', 'conditional', 'event'];
 
         const fromHasFlow = deviceCategoriesTwoConns.includes(deviceFrom.category) ?
           findFlowsByDeviceId(state.flows, deviceFrom.id) :
@@ -42,6 +42,7 @@ const reducer = (state, action) => {
         let newFlows;
 
         if (fromHasFlow && toHasFlow) {
+          console.log('IF 1')
           //device deviceTo and deviceFrom already has flows
           //group all connections in the deviceFrom stream
 
@@ -71,7 +72,7 @@ const reducer = (state, action) => {
           //deviceFrom or to are part of a flow
           //bundle the new connection to the existing flow
 
-          //ARRUMAR AQUI
+          console.log('IF 2')
           const previousConns = fromHasFlow ?
             [...fromHasFlow.connections] :
             [...toHasFlow.connections];
@@ -96,6 +97,7 @@ const reducer = (state, action) => {
         if (!fromHasFlow && !toHasFlow) {
           //create new flow if deviceFrom or to does not participate flow
 
+          console.log('IF 3')
           const newFlowKey = uuid();
 
           const newFlow = {
@@ -111,11 +113,12 @@ const reducer = (state, action) => {
           }
         }
 
+        console.log({ deviceFrom })
         return {
           ...state,
           flows: newFlows,
           exec: {
-            deviceId: deviceFrom.id,
+            connectorId: deviceFrom.connector.id,
             funcDefault: deviceFrom.defaultBehavior
           }
         };
@@ -241,12 +244,15 @@ const reducer = (state, action) => {
       }
     case 'UPDATE-LINES':
       {
-        const { lines } = action.payload;
+        const { lineId, newData } = action.payload;
 
         const newLines = state.connectionLines.map(connectionLine => {
-          const newLine = lines.find(line => line.id === connectionLine.id);
-
-          if (newLine) return newLine;
+          if (connectionLine.id === lineId) {
+            return {
+              ...connectionLine,
+              ...newData
+            }
+          }
 
           return connectionLine;
         })
@@ -286,10 +292,10 @@ export const FlowProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   useEffect(() => {
-    if (!Object.hasOwn(state.exec, 'deviceId')) return;
+    if (!Object.hasOwn(state.exec, 'connectorId')) return;
 
     executeFlow({
-      deviceId: state.exec.deviceId,
+      deviceId: state.exec.connectorId,
       fromBehaviorCallback: state.exec.funcDefault
     });
 
@@ -322,7 +328,7 @@ export const FlowProvider = ({ children }) => {
     dispatch({
       type: 'UPDATE-LINES',
       payload: {
-        lines
+        ...lines
       }
     })
   };
@@ -339,14 +345,15 @@ export const FlowProvider = ({ children }) => {
 
   //FLOWS
 
-  const executeFlow = ({ flows, deviceId, fromBehaviorCallback }) => {
+  const executeFlow = ({ flows, connectorId, fromBehaviorCallback }) => {
     const flowsCurrent = flows ? flows : state.flows;
-    const selectedFlow = findFlowsByDeviceId(flowsCurrent, deviceId);
+    // const selectedFlow = findFlowsByDeviceId(flowsCurrent, connectorId);
+    const selectedFlow = findFlowByConnectorId(flowsCurrent, connectorId)
 
     if (!selectedFlow) return;
 
     const deviceConnections = selectedFlow.connections.filter(conn => {
-      return conn.deviceFrom.id === deviceId;
+      return conn.deviceFrom.connector.id === connectorId;
     })
 
     deviceConnections.forEach(conn => {
@@ -440,8 +447,9 @@ export const FlowProvider = ({ children }) => {
       idLine: state.flowTemp.currentLine.id,
     }
 
-    updateLines([
-      {
+    updateLines({
+      lineId: state.flowTemp.currentLine.id,
+      newData: {
         id: state.flowTemp.currentLine.id,
         idConnection: connection.id,
         fromPos: {
@@ -453,7 +461,7 @@ export const FlowProvider = ({ children }) => {
           y: deviceTo.connector.y
         }
       }
-    ]);
+    });
 
     dispatch({
       type: 'SAVE-FLOW',
@@ -503,8 +511,9 @@ export const FlowProvider = ({ children }) => {
       idLine,
     }
 
-    updateLines([
-      {
+    updateLines({
+      lineId: idLine,
+      newData: {
         id: idLine,
         idConnection: connection.id,
         fromPos: {
@@ -516,7 +525,7 @@ export const FlowProvider = ({ children }) => {
           y: deviceTo.connector.y
         }
       }
-    ]);
+    });
 
     dispatch({
       type: 'SAVE-FLOW',

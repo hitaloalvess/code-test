@@ -1,4 +1,4 @@
-import { memo, useRef } from 'react';
+import { memo, useRef, useState } from 'react';
 import P from 'prop-types';
 import { FaTrashAlt } from 'react-icons/fa';
 
@@ -28,12 +28,25 @@ const Ldr = memo(function Ldr({
   const { executeFlow, deleteDeviceConnections } = useFlow();
   const { enableModal, disableModal } = useModal();
 
+  const [lumenConnectorId, setLumenConnectorId] = useState('');
+  const [lumenConnectorId1, setLumenConnectorId1] = useState('');
+
   const inputRef = useRef(null);
+  const inputRef1 = useRef(null);
+
   const showValueRef = useRef(null);
+  const showValueRef1 = useRef(null);
 
   const getLuminosity = () => {
     return {
       value: Number(inputRef.current.value),
+      max: MAX_VALUE
+    };
+  }
+
+  const getLuminosity1 = () => {
+    return {
+      value: Number(inputRef1.current.value),
       max: MAX_VALUE
     };
   }
@@ -47,7 +60,27 @@ const Ldr = memo(function Ldr({
       max: MAX_VALUE
     });
 
-    executeFlow({ deviceId: id, fromBehaviorCallback: getLuminosity });
+    executeFlow({ connectorId: lumenConnectorId, fromBehaviorCallback: getLuminosity });
+  }
+
+  const handleOnInput1 = () => {
+    const inputValue = Number(inputRef1.current.value);
+    showValueRef1.current.innerHTML = inputValue;
+
+    updateValue(null, id, {
+      current: inputValue,
+      max: MAX_VALUE
+    });
+
+    executeFlow({ connectorId: lumenConnectorId1, fromBehaviorCallback: getLuminosity1 });
+  }
+
+  const handleChangeLumenConnector = (value) => {
+    setLumenConnectorId(value);
+  }
+
+  const handleChangeLumenConnector1 = (value) => {
+    setLumenConnectorId1(value);
   }
 
   return (
@@ -55,6 +88,8 @@ const Ldr = memo(function Ldr({
     <>
 
       <div className={inputRangeDeviceContainer}
+        style={{ top: '-60px' }}
+
       >
         <input
           type="range"
@@ -68,6 +103,25 @@ const Ldr = memo(function Ldr({
         <p
           className={inputValue}
           ref={showValueRef}
+        >0</p>
+      </div>
+
+      <div className={inputRangeDeviceContainer}
+        style={{ top: '-30px' }}
+
+      >
+        <input
+          type="range"
+          min="0"
+          max="1023"
+          step="1"
+          defaultValue={0}
+          onInput={handleOnInput1}
+          ref={inputRef1}
+        />
+        <p
+          className={inputValue}
+          ref={showValueRef1}
         >0</p>
       </div>
 
@@ -94,9 +148,23 @@ const Ldr = memo(function Ldr({
             defaultBehavior: getLuminosity
           }}
           updateConn={{ posX, posY }}
+          handleChangeId={handleChangeLumenConnector}
+        />
+
+        <Connector
+          name={'luminosity1'}
+          type={'exit'}
+          device={{
+            id,
+            defaultBehavior: getLuminosity1
+          }}
+          updateConn={{ posX, posY }}
+          handleChangeId={handleChangeLumenConnector1}
         />
 
       </div>
+
+
 
       <div
         className={
