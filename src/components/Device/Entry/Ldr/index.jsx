@@ -29,13 +29,10 @@ const Ldr = memo(function Ldr({
   const { enableModal, disableModal } = useModal();
 
   const [lumenConnectorId, setLumenConnectorId] = useState('');
-  const [lumenConnectorId1, setLumenConnectorId1] = useState('');
 
   const inputRef = useRef(null);
-  const inputRef1 = useRef(null);
 
   const showValueRef = useRef(null);
-  const showValueRef1 = useRef(null);
 
   const getLuminosity = () => {
     return {
@@ -44,70 +41,28 @@ const Ldr = memo(function Ldr({
     };
   }
 
-  const getLuminosity1 = () => {
-    return {
-      value: Number(inputRef1.current.value),
-      max: MAX_VALUE
-    };
-  }
-
   const handleOnInput = () => {
     const temperatureValue = Number(inputRef.current.value);
-    const humidityValue = Number(inputRef1.current.value);
 
     showValueRef.current.innerHTML = temperatureValue;
 
     updateValue(null, id, {
-      temperature: {
-        current: temperatureValue,
-        max: MAX_VALUE
-      },
-      humidity: {
-        current: humidityValue,
-        max: MAX_VALUE
-      }
+      current: temperatureValue,
+      max: MAX_VALUE
     });
 
     executeFlow({ connectorId: lumenConnectorId, fromBehaviorCallback: getLuminosity });
-  }
-
-  const handleOnInput1 = () => {
-    const temperatureValue = Number(inputRef.current.value);
-    const humidityValue = Number(inputRef1.current.value);
-
-    showValueRef1.current.innerHTML = humidityValue;
-
-    updateValue(null, id, {
-      temperature: {
-        current: temperatureValue,
-        max: MAX_VALUE
-      },
-      humidity: {
-        current: humidityValue,
-        max: MAX_VALUE
-      }
-    });
-
-
-    executeFlow({ connectorId: lumenConnectorId1, fromBehaviorCallback: getLuminosity1 });
   }
 
   const handleChangeLumenConnector = (value) => {
     setLumenConnectorId(value);
   }
 
-  const handleChangeLumenConnector1 = (value) => {
-    setLumenConnectorId1(value);
-  }
-
   return (
 
     <>
 
-      <div className={inputRangeDeviceContainer}
-        style={{ top: '-60px' }}
-
-      >
+      <div className={inputRangeDeviceContainer}>
         <input
           type="range"
           min="0"
@@ -120,25 +75,6 @@ const Ldr = memo(function Ldr({
         <p
           className={inputValue}
           ref={showValueRef}
-        >0</p>
-      </div>
-
-      <div className={inputRangeDeviceContainer}
-        style={{ top: '-30px' }}
-
-      >
-        <input
-          type="range"
-          min="0"
-          max="1023"
-          step="1"
-          defaultValue={0}
-          onInput={handleOnInput1}
-          ref={inputRef1}
-        />
-        <p
-          className={inputValue}
-          ref={showValueRef1}
         >0</p>
       </div>
 
@@ -158,7 +94,7 @@ const Ldr = memo(function Ldr({
         className={`${connectorsContainer} ${connectorsContainerExit}`}
       >
         <Connector
-          name={'temperature'}
+          name={'luminosity'}
           type={'exit'}
           device={{
             id,
@@ -166,17 +102,6 @@ const Ldr = memo(function Ldr({
           }}
           updateConn={{ posX, posY }}
           handleChangeId={handleChangeLumenConnector}
-        />
-
-        <Connector
-          name={'humidity'}
-          type={'exit'}
-          device={{
-            id,
-            defaultBehavior: getLuminosity1
-          }}
-          updateConn={{ posX, posY }}
-          handleChangeId={handleChangeLumenConnector1}
         />
 
       </div>
