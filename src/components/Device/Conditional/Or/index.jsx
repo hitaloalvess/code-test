@@ -51,11 +51,15 @@ const Or = ({
     const values = incomingConns.reduce((acc, conn) => {
       const device = devices.find(device => device.id === conn.deviceFrom.id);
 
+      let value = device.value.current;
+
+      if ([undefined, null].includes(value)) {
+        //If device.value.current undefined or null, structure equal boolean (true or false) or object -> ex: {temperature:{..}, humidity:{...}
+        value = typeof device.value === 'boolean' ? device.value : device.value[conn.deviceFrom.connector.name].current
+      }
       return [...acc, {
         idConnection: conn.id,
-        value: [undefined, null].includes(device.value.current) ?
-          device.value :
-          device.value.current
+        value
       }];
     }, []);
 

@@ -28,6 +28,7 @@ const PushButton = memo(function PushButton({
   const { executeFlow, flows, deleteDeviceConnections } = useFlow();
   const { enableModal, disableModal } = useModal();
   const [click, setClick] = useState(device.value);
+  const [connectorId, setConnectorId] = useState('');
 
   const getBoolean = useCallback(() => {
     return {
@@ -40,13 +41,17 @@ const PushButton = memo(function PushButton({
     const existFlow = findFlowsByDeviceId(flows, id);
 
     if (existFlow) {
-      executeFlow({ deviceId: id, fromBehaviorCallback: getBoolean });
+      executeFlow({ connectorId, fromBehaviorCallback: getBoolean });
     }
   }, [click]);
 
   const handleOnClickUp = () => updateValue(setClick, id, false);
 
   const handleOnClickDown = () => updateValue(setClick, id, true);
+
+  const handleChangeConnector = (value) => {
+    setConnectorId(value);
+  }
 
   return (
     <>
@@ -77,7 +82,7 @@ const PushButton = memo(function PushButton({
             defaultBehavior: getBoolean
           }}
           updateConn={{ posX, posY }}
-
+          handleChangeId={handleChangeConnector}
         />
       </div>
 

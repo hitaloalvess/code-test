@@ -1,4 +1,4 @@
-import { memo, useRef } from 'react';
+import { memo, useRef, useState } from 'react';
 import P from 'prop-types';
 import { FaTrashAlt } from 'react-icons/fa';
 
@@ -27,6 +27,7 @@ const Potentiometer = memo(function Ldr({
   const { deleteDevice } = useDevices();
   const { executeFlow, deleteDeviceConnections } = useFlow();
   const { enableModal, disableModal } = useModal();
+  const [connectorId, setConnectorId] = useState('');
 
   const inputRef = useRef(null);
   const showValueRef = useRef(null);
@@ -47,8 +48,12 @@ const Potentiometer = memo(function Ldr({
       max: MAX_VALUE
     });
 
-    executeFlow({ deviceId: id, fromBehaviorCallback: getResistance });
+    executeFlow({ connectorId, fromBehaviorCallback: getResistance });
 
+  }
+
+  const handleChangeConnector = (value) => {
+    setConnectorId(value);
   }
 
   return (
@@ -87,13 +92,14 @@ const Potentiometer = memo(function Ldr({
         className={`${connectorsContainer} ${connectorsContainerExit}`}
       >
         <Connector
-          name={'luminosity'}
+          name={'resistance'}
           type={'exit'}
           device={{
             id,
             defaultBehavior: getResistance
           }}
           updateConn={{ posX, posY }}
+          handleChangeId={handleChangeConnector}
         />
       </div>
 

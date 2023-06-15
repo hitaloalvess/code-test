@@ -27,6 +27,7 @@ const Switch = memo(function Switch({
   const { executeFlow, flows, deleteDeviceConnections } = useFlow();
   const { enableModal, disableModal } = useModal();
   const [click, setClick] = useState(false);
+  const [connectorId, setConnectorId] = useState('');
 
   const getBoolean = useCallback(() => {
     return {
@@ -34,14 +35,13 @@ const Switch = memo(function Switch({
     };
   }, [click])
 
-
   useEffect(() => {
     updateValue(null, id, click);
 
     const existFlow = findFlowsByDeviceId(flows, id)
 
     if (existFlow) {
-      executeFlow({ flows, deviceId: id, fromBehaviorCallback: getBoolean });
+      executeFlow({ flows, connectorId, fromBehaviorCallback: getBoolean });
 
     }
   }, [click]);
@@ -50,6 +50,9 @@ const Switch = memo(function Switch({
     setClick(prevClick => !prevClick);
   }
 
+  const handleChangeConnector = (value) => {
+    setConnectorId(value);
+  }
   return (
     <>
       <div
@@ -75,7 +78,7 @@ const Switch = memo(function Switch({
             defaultBehavior: getBoolean
           }}
           updateConn={{ posX, posY }}
-
+          handleChangeId={handleChangeConnector}
         />
       </div>
 

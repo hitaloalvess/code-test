@@ -42,7 +42,6 @@ const reducer = (state, action) => {
         let newFlows;
 
         if (fromHasFlow && toHasFlow) {
-          console.log('IF 1')
           //device deviceTo and deviceFrom already has flows
           //group all connections in the deviceFrom stream
 
@@ -72,7 +71,6 @@ const reducer = (state, action) => {
           //deviceFrom or to are part of a flow
           //bundle the new connection to the existing flow
 
-          console.log('IF 2')
           const previousConns = fromHasFlow ?
             [...fromHasFlow.connections] :
             [...toHasFlow.connections];
@@ -97,7 +95,6 @@ const reducer = (state, action) => {
         if (!fromHasFlow && !toHasFlow) {
           //create new flow if deviceFrom or to does not participate flow
 
-          console.log('IF 3')
           const newFlowKey = uuid();
 
           const newFlow = {
@@ -113,7 +110,6 @@ const reducer = (state, action) => {
           }
         }
 
-        console.log({ deviceFrom })
         return {
           ...state,
           flows: newFlows,
@@ -295,7 +291,7 @@ export const FlowProvider = ({ children }) => {
     if (!Object.hasOwn(state.exec, 'connectorId')) return;
 
     executeFlow({
-      deviceId: state.exec.connectorId,
+      connectorId: state.exec.connectorId,
       fromBehaviorCallback: state.exec.funcDefault
     });
 

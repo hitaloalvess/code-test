@@ -52,25 +52,42 @@ const Ldr = memo(function Ldr({
   }
 
   const handleOnInput = () => {
-    const inputValue = Number(inputRef.current.value);
-    showValueRef.current.innerHTML = inputValue;
+    const temperatureValue = Number(inputRef.current.value);
+    const humidityValue = Number(inputRef1.current.value);
+
+    showValueRef.current.innerHTML = temperatureValue;
 
     updateValue(null, id, {
-      current: inputValue,
-      max: MAX_VALUE
+      temperature: {
+        current: temperatureValue,
+        max: MAX_VALUE
+      },
+      humidity: {
+        current: humidityValue,
+        max: MAX_VALUE
+      }
     });
 
     executeFlow({ connectorId: lumenConnectorId, fromBehaviorCallback: getLuminosity });
   }
 
   const handleOnInput1 = () => {
-    const inputValue = Number(inputRef1.current.value);
-    showValueRef1.current.innerHTML = inputValue;
+    const temperatureValue = Number(inputRef.current.value);
+    const humidityValue = Number(inputRef1.current.value);
+
+    showValueRef1.current.innerHTML = humidityValue;
 
     updateValue(null, id, {
-      current: inputValue,
-      max: MAX_VALUE
+      temperature: {
+        current: temperatureValue,
+        max: MAX_VALUE
+      },
+      humidity: {
+        current: humidityValue,
+        max: MAX_VALUE
+      }
     });
+
 
     executeFlow({ connectorId: lumenConnectorId1, fromBehaviorCallback: getLuminosity1 });
   }
@@ -141,7 +158,7 @@ const Ldr = memo(function Ldr({
         className={`${connectorsContainer} ${connectorsContainerExit}`}
       >
         <Connector
-          name={'luminosity'}
+          name={'temperature'}
           type={'exit'}
           device={{
             id,
@@ -152,7 +169,7 @@ const Ldr = memo(function Ldr({
         />
 
         <Connector
-          name={'luminosity1'}
+          name={'humidity'}
           type={'exit'}
           device={{
             id,
