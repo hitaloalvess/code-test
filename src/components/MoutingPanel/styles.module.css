@@ -1,7 +1,34 @@
 .moutingPanelContainer {
-    position: relative;
-    width: 100vw;
-    height: 100vh;
-    z-index: 0;
-    overflow: hidden;
+  position: relative;
+  width: 150vw;
+  height: 150vh;
+  z-index: 0;
+  /* overflow: auto; */
+}
+
+
+.buttonsContainer {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  display: flex;
+  gap: 18px;
+  z-index: 3;
+}
+
+@media (max-width: 769px) {
+  .buttonsContainer {
+    top: 6px;
+    z-index: 3;
+    height: 56px;
+  }
+}
+
+@media (max-width: 480px) or ((max-height:480px) and (orientation:landscape)) {
+  .buttonsContainer {
+    top: 4px;
+    z-index: 3;
+    height: 24px;
+
+  }
 }

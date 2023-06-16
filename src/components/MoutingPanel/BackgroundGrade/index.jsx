@@ -12,8 +12,8 @@ const BackgroundGrade = ({ moutingPanelRef }) => {
   const [bgScale, setBgScale] = useState(1.25);
 
   function drawBackground() {
-    const SPACING = 15;
-    const CIRCLE_RADIUS = 1.5;
+    const SPACING = 15 * bgScale;
+    const CIRCLE_RADIUS = 2 * bgScale;
     const CIRCLE_COLOR = '#d0d0d0';
 
     const bg = bgGradeRef.current;
@@ -23,7 +23,7 @@ const BackgroundGrade = ({ moutingPanelRef }) => {
     bg.width = containerWidth;
     bg.height = containerHeight;
 
-    ctx.clearRect(0, 0, bg.width, bg.height);
+    ctx.clearRect(0, 0, (bg.width), (bg.height));
     ctx.fillStyle = CIRCLE_COLOR;
 
     for (let rowHeight = 0; rowHeight <= bg.height; rowHeight += SPACING) {
@@ -47,7 +47,7 @@ const BackgroundGrade = ({ moutingPanelRef }) => {
     return () => {
       window.removeEventListener('resize', drawBackground);
     }
-  }, []);
+  }, [bgScale]);
 
   useEffect(() => {
     setBgScale(prevScale => {
@@ -71,7 +71,7 @@ const BackgroundGrade = ({ moutingPanelRef }) => {
     <canvas
       className={backgroundGrade}
       ref={bgGradeRef}
-      style={{ transform: `scale(${bgScale})` }}
+    // style={{ transform: `scale(${bgScale})` }}
     ></canvas>
   );
 };

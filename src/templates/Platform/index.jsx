@@ -10,13 +10,11 @@ import { FlowProvider } from '@/contexts/FlowContext';
 
 import Header from '@/components/Header';
 import Sidebar from '@/components/Sidebar';
-import ManualButton from '@/components/ManualButton';
-import ZoomButton from '@/components/ZoomButton';
-import FaqButton from '@/components/FaqButton';
+
 import MoutingPanel from '@/components/MoutingPanel';
 import CustomDragLayer from '@/components/CustomDragLayer';
 
-import { container, buttonsContainer } from './styles.module.css';
+import { container } from './styles.module.css';
 
 
 const Platform = () => {
@@ -33,11 +31,7 @@ const Platform = () => {
 
               <MoutingPanel />
 
-              <div className={buttonsContainer}>
-                <ManualButton />
-                <FaqButton />
-                <ZoomButton />
-              </div>
+
             </main>
           </FlowProvider>
         </DevicesProvider>

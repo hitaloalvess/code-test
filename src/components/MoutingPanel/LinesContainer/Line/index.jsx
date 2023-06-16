@@ -19,6 +19,7 @@ const Line = ({ id, fromPos, toPos, idConnection = '', deleteLine }) => {
   }, []);
 
   const dimensions = useMemo(() => {
+
     const width = calcDistance({
       x1: fromPos.x,
       y1: fromPos.y,
@@ -42,14 +43,15 @@ const Line = ({ id, fromPos, toPos, idConnection = '', deleteLine }) => {
   const handleBtnDelete = () => {
     setDisableBtnDelete(prev => !prev);
   }
-
+  const scrollY = document.documentElement.scrollTop;
+  const scrollX = document.documentElement.scrollLeft;
   return (
     <div
       ref={lineRef}
       className={line}
       style={{
-        top: `${fromPos.y - dimensions.center}px`,
-        left: `${fromPos.x}px`,
+        top: `${(fromPos.y - dimensions.center) + scrollY}px`,
+        left: `${fromPos.x + scrollX}px`,
         width: `${dimensions.width}px`,
         transform: `rotate(${dimensions.angle}deg)`,
         height: `${6 * deviceScale}px`

@@ -7,8 +7,11 @@ import { useFlow } from '@/hooks/useFlow';
 import Device from '@/components/Device/index';
 import BackgroundGrade from './BackgroundGrade';
 import LinesContainer from './LinesContainer';
+import ManualButton from '@/components/ManualButton';
+import ZoomButton from '@/components/ZoomButton';
+import FaqButton from '@/components/FaqButton';
 
-import { moutingPanelContainer } from './styles.module.css';
+import { moutingPanelContainer, buttonsContainer } from './styles.module.css';
 
 const MoutingPanel = () => {
   const { devices, addDevice, repositionDevice } = useDevices();
@@ -21,7 +24,6 @@ const MoutingPanel = () => {
   }
 
   const deviceDrop = (item, monitor) => {
-
     const elementIndex = devices.find(device => device.id === item.id);
 
     if (!elementIndex) {
@@ -43,7 +45,9 @@ const MoutingPanel = () => {
   // eslint-disable-next-line no-unused-vars
   const [_, drop] = useDrop(() => ({
     accept: ['device', 'menu-device'],
-    drop: (item, monitor) => deviceDrop(item, monitor),
+    drop: (item, monitor) => {
+      deviceDrop(item, monitor)
+    },
   }), [devices, flows, connectionLines]);
 
   return (
@@ -64,6 +68,13 @@ const MoutingPanel = () => {
       <BackgroundGrade
         moutingPanelRef={moutingPanelRef}
       />
+
+
+      <div className={buttonsContainer}>
+        <ManualButton />
+        <FaqButton />
+        <ZoomButton />
+      </div>
 
     </div>
   );

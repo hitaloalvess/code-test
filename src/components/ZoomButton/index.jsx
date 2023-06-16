@@ -14,7 +14,6 @@ const ZoomButton = () => {
   const [activeActions, setActiveActions] = useState(false);
 
   const handleClick = () => {
-    // console.log('Habilitando zoom');
     setActiveActions(prevActive => !prevActive);
   }
 
