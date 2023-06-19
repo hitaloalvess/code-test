@@ -3,6 +3,7 @@ import deviceLdr from '@/assets/images/devices/entry/ldr.svg';
 import devicePotentiometer from '@/assets/images/devices/entry/potentiometer.svg';
 import deviceSwitch from '@/assets/images/devices/entry/switchOff.svg';
 import devicePushButton from '@/assets/images/devices/entry/pushButtonOff.svg';
+import deviceDht from '@/assets/images/devices/entry/dht.svg';
 
 //exit
 import deviceLed from '@/assets/images/devices/exit/led.svg';
@@ -25,9 +26,9 @@ import deviceSlider from '@/assets/images/devices/event/slider.svg';
 export const mockDevices = {
   entry: [
     {
-      id: 5,
-      imgSrc: deviceLdr,
-      name: 'ldr',
+      id: 2,
+      imgSrc: deviceDht,
+      name: 'dht',
       type: 'virtual',
       category: 'entry',
       value: {
@@ -40,6 +41,17 @@ export const mockDevices = {
           max: 1023
         }
       }
+    },
+    {
+      id: 5,
+      imgSrc: deviceLdr,
+      name: 'ldr',
+      type: 'virtual',
+      category: 'entry',
+      value: {
+          current: 0,
+          max: 1023
+        }
     },
     {
       id: 8,

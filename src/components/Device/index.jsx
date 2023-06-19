@@ -4,6 +4,7 @@ import { useDrag } from 'react-dnd';
 
 import { useDevices } from '@/hooks/useDevices.js';
 
+import Dht from './Entry/Dht';
 import Ldr from './Entry/Ldr';
 import Potentiometer from './Entry/Potentiometer';
 import Switch from './Entry/Switch';
@@ -51,6 +52,7 @@ const Device = memo(function Device({ device: { ...device } }) {
   }
 
   const devices = {
+    dht: Dht,
     ldr: Ldr,
     potentiometer: Potentiometer,
     pushButton: PushButton,
