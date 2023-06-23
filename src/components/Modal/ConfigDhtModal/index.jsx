@@ -46,7 +46,7 @@ const ConfigDhtModal = ({ closeModal, contentData }) => {
           className={inputArea}
         >
           <label
-            htmlFor='ledColor'
+            htmlFor=' dhtScale'
             className={labelInput}
           >
             Selecione uma escala de temperatura:

@@ -19,6 +19,7 @@ import Buzzer from './Exit/Buzzer';
 import And from './Conditional/And';
 import Or from './Conditional/Or';
 import Not from './Conditional/Not';
+import If from './Conditional/If';
 
 import Toggle from './Event/Toggle';
 import Delay from './Event/Delay';
@@ -65,6 +66,7 @@ const Device = memo(function Device({ device: { ...device } }) {
     and: And,
     or: Or,
     not: Not,
+    if: If,
     toggle: Toggle,
     delay: Delay,
     slider: Slider

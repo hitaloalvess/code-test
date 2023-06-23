@@ -16,6 +16,7 @@ import deviceBuzzer from '@/assets/images/devices/exit/buzzer.svg';
 import deviceAnd from '@/assets/images/devices/conditional/and.svg';
 import deviceOr from '@/assets/images/devices/conditional/or.svg';
 import deviceNot from '@/assets/images/devices/conditional/not.svg';
+import deviceIf from '@/assets/images/devices/conditional/if.svg';
 
 //event
 import devicePickColor from '@/assets/images/devices/event/pickcolor.svg';
@@ -178,6 +179,14 @@ export const mockDevices = {
       id: 102,
       imgSrc: deviceNot,
       name: 'not',
+      type: 'virtual',
+      category: 'conditional',
+      value: false
+    },
+    {
+      id: 103,
+      imgSrc: deviceIf,
+      name: 'if',
       type: 'virtual',
       category: 'conditional',
       value: false
