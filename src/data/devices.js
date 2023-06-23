@@ -3,6 +3,7 @@ import deviceLdr from '@/assets/images/devices/entry/ldr.svg';
 import devicePotentiometer from '@/assets/images/devices/entry/potentiometer.svg';
 import deviceSwitch from '@/assets/images/devices/entry/switchOff.svg';
 import devicePushButton from '@/assets/images/devices/entry/pushButtonOff.svg';
+import deviceDht from '@/assets/images/devices/entry/dht.svg';
 
 //exit
 import deviceLed from '@/assets/images/devices/exit/led.svg';
@@ -15,6 +16,7 @@ import deviceBuzzer from '@/assets/images/devices/exit/buzzer.svg';
 import deviceAnd from '@/assets/images/devices/conditional/and.svg';
 import deviceOr from '@/assets/images/devices/conditional/or.svg';
 import deviceNot from '@/assets/images/devices/conditional/not.svg';
+import deviceIf from '@/assets/images/devices/conditional/if.svg';
 
 //event
 import devicePickColor from '@/assets/images/devices/event/pickcolor.svg';
@@ -25,15 +27,32 @@ import deviceSlider from '@/assets/images/devices/event/slider.svg';
 export const mockDevices = {
   entry: [
     {
+      id: 2,
+      imgSrc: deviceDht,
+      name: 'dht',
+      type: 'virtual',
+      category: 'entry',
+      value: {
+        temperature: {
+          current: 0,
+          max: 1023
+        },
+        humidity: {
+          current: 0,
+          max: 1023
+        }
+      }
+    },
+    {
       id: 5,
       imgSrc: deviceLdr,
       name: 'ldr',
       type: 'virtual',
       category: 'entry',
       value: {
-        current: 0,
-        max: 1023
-      }
+          current: 0,
+          max: 1023
+        }
     },
     {
       id: 8,
@@ -160,6 +179,14 @@ export const mockDevices = {
       id: 102,
       imgSrc: deviceNot,
       name: 'not',
+      type: 'virtual',
+      category: 'conditional',
+      value: false
+    },
+    {
+      id: 103,
+      imgSrc: deviceIf,
+      name: 'if',
       type: 'virtual',
       category: 'conditional',
       value: false

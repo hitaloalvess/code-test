@@ -21,8 +21,9 @@ const LinesContainer = () => {
 
     const { currentLine, from } = flowTemp;
 
-    updateLines([
-      {
+    updateLines({
+      lineId: currentLine.id,
+      newData: {
         id: currentLine.id,
         fromPos: {
           x: from.connector.x,
@@ -33,7 +34,7 @@ const LinesContainer = () => {
           y: mousePosY
         }
       }
-    ]);
+    });
   }, [flowTemp, updateLines]);
 
   // eslint-disable-next-line no-unused-vars

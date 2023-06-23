@@ -10,6 +10,7 @@ export const DevicesContext = createContext();
 
 export const DevicesProvider = ({ children }) => {
   const [devices, setDevices] = useState([]);
+  const [deviceScale, setDeviceScale] = useState(1);
 
   const addDevice = (item, monitor) => {
     const { width, height } = item.draggedDevice.getBoundingClientRect();
@@ -55,7 +56,6 @@ export const DevicesProvider = ({ children }) => {
   }, [devices]);
 
   const repositionConnections = (data) => {
-    //ARRUMAR AQUI -> MELHORAR ESSA FUNÇÃO
 
     const {
       device,
@@ -91,7 +91,6 @@ export const DevicesProvider = ({ children }) => {
       const { deviceFrom, deviceTo } = connection;
       const connectionLine = connectionLines.find(line => line.id === connection.idLine);
 
-      let newLine = {};
       let newConnection = {}
 
       if (deviceFrom.id !== device.id && deviceTo.id !== device.id) {
@@ -122,22 +121,23 @@ export const DevicesProvider = ({ children }) => {
             }
           },
         }
-
-        newLine = {
-          ...connectionLine,
-          [`${connType}Pos`]: {
-            x: posX,
-            y: posY
+        updateLines({
+          lineId: connectionLine.id,
+          newData: {
+            [`${connType}Pos`]: {
+              x: posX,
+              y: posY
+            }
           }
-        }
+        });
+
+
 
         connections.push(newConnection);
-        lines.push(newLine);
       }
 
     });
 
-    updateLines(lines);
     updateFlow({
       ...selectedFlow,
       connections
@@ -168,15 +168,19 @@ export const DevicesProvider = ({ children }) => {
     })
   }
 
+  const handleUpdateScale = (value) => setDeviceScale(value);
+
   return (
     <DevicesContext.Provider
       value={{
         devices,
+        deviceScale,
         addDevice,
         deleteDevice,
         repositionDevice,
         repositionConnections,
-        updateDeviceValue
+        updateDeviceValue,
+        handleUpdateScale
       }}
     >
       {children}

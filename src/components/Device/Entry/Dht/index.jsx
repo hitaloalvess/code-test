@@ -58,7 +58,6 @@ const Dht = memo(function Dht({
   }, [scaleType]);
 
   const getTemperature = () => {
-    console.log(inputRefTemperature.current.value);
     return {
       value: inputRefTemperature.current.value,
       max: maxValueTemperature

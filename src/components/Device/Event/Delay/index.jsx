@@ -73,15 +73,24 @@ const Delay = ({
 
     if (!connection) return;
 
-    const deviceFrom = devices.find(device => device.id === connection.deviceFrom.id);
+    const device = devices.find(device => device.id === connection.deviceFrom.id);
 
-    const value = {
-      idConnection: connection.id,
-      value: deviceFrom.value.current,
-      max: deviceFrom.value.max
+    let value = device.value.current;
+    let max = 0;
+
+    if ([undefined, null].includes(value)) {
+      //If device.value.current undefined or null, structure equal boolean (true or false) or object -> ex: {temperature:{..}, humidity:{...}
+      value = typeof device.value === 'boolean' ? device.value : device.value[connection.deviceFrom.connector.name].current
+      max = typeof device.value === 'boolean' ? device.value.max : device.value[connection.deviceFrom.connector.name].max
     }
 
-    setConnectionValue(value);
+    const objValue = {
+      idConnection: connection.id,
+      value,
+      max
+    }
+
+    setConnectionValue(objValue);
   }
 
   const calcValues = () => {

@@ -49,16 +49,20 @@ const Not = ({
       return conn.deviceTo.id === id
     });
 
-    const deviceFrom = devices.find(device => device.id === connection.deviceFrom.id);
+    const device = devices.find(device => device.id === connection.deviceFrom.id);
+    let value = device.value.current;
 
-    const value = {
-      idConnection: connection.id,
-      value: [undefined, null].includes(deviceFrom.value.current) ?
-        deviceFrom.value :
-        deviceFrom.value.current
+    if ([undefined, null].includes(value)) {
+      //If device.value.current undefined or null, structure equal boolean (true or false) or object -> ex: {temperature:{..}, humidity:{...}
+      value = typeof device.value === 'boolean' ? device.value : device.value[connection.deviceFrom.connector.name].current
     }
 
-    setConnectionValue(value);
+    const objValue = {
+      idConnection: connection.id,
+      value
+    }
+
+    setConnectionValue(objValue);
 
   }
 

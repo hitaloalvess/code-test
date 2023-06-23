@@ -1,7 +1,6 @@
 import { useEffect, useRef, useCallback, useState } from 'react';
 import P from 'prop-types';
 import { FaTrashAlt } from 'react-icons/fa';
-import { AiFillSetting } from 'react-icons/ai';
 
 import { useModal } from '@/hooks/useModal';
 import { useFlow } from '@/hooks/useFlow';
@@ -20,13 +19,14 @@ import {
 } from '../../styles.module.css';
 
 import {
-  numberValue,
-  rangeSlider
+  ifNumber
 } from './styles.module.css';
 
-import eventBaseImg from '@/assets/images/devices/event/eventBase.svg';
 
-const Slider = ({
+import eventBaseImg from '@/assets/images/devices/event/eventBase.svg';
+import { AiFillSetting } from 'react-icons/ai';
+
+const If = ({
   dragRef, device, updateValue
 }) => {
 
@@ -36,21 +36,47 @@ const Slider = ({
   const { enableModal, disableModal } = useModal();
 
   const [value, setValue] = useState(device.value);
-  const [limit, setLimit] = useState(1023);
-  const [connectionValue, setConnectionValue] = useState({});
-  const [qtdIncomingConn, setQtdIncomingConn] = useState(0);
-  const showValueRef = useRef(null);
+  const [connectionValue, setConnectionValue] = useState([]);
+  const [qtdIncomingConn, setQtdIncomingConn] = useState(0)
 
-  const handleSettingUpdate = useCallback((newLimit) => {
-    setLimit(newLimit);
-  }, [limit]);
 
+  const [ numberVariable, setNumberVariable] = useState(0);
+  const [ boolVariable, setBoolVariable] = useState(false);
+  const [ stringVariable, setStringVariable] = useState('');
+  const [ variable, setVariable] = useState(0);
+
+  const [ connectionType, setConnectionType] = useState('number');
+  const [ simbol, setSimbol] = useState('=');
+
+
+  const displayRef = useRef(null);
 
   const connectionReceiver = () => {
     setQtdIncomingConn(prev => prev + 1)
   }
 
+  const handleSettingUpdate = useCallback((newSimbol, newVariable) => {
+    switch (connectionType) {
+      case 'number':
+        setNumberVariable(newVariable);
+        break;
+      case 'boolean':
+        setBoolVariable(newVariable);
+        break;
+      case 'string':
+        setStringVariable(newVariable);
+        break;
+      }
+
+      setVariable(newVariable);
+      setSimbol(newSimbol);
+
+      displayRef.current.innerHTML =  newSimbol + " " + newVariable;
+  }, [variable, simbol, connectionType]);
+
+
   const handleConnections = () => {
+
     const flow = findFlowsByDeviceId(flows, id);
 
     if (!flow) {
@@ -63,16 +89,34 @@ const Slider = ({
       return conn.deviceTo.id === id
     });
 
+    if (!connection) return;
+
     const device = devices.find(device => device.id === connection.deviceFrom.id);
 
     let value = device.value.current;
     let max = 0;
 
+
     if ([undefined, null].includes(value)) {
       //If device.value.current undefined or null, structure equal boolean (true or false) or object -> ex: {temperature:{..}, humidity:{...}
       value = typeof device.value === 'boolean' ? device.value : device.value[connection.deviceFrom.connector.name].current
       max = typeof device.value === 'boolean' ? device.value.max : device.value[connection.deviceFrom.connector.name].max
+
+      if(connectionType != String(typeof value)){
+        setConnectionType(String(typeof value));
+        setVariable(false);
+        setSimbol('=');
+      }
     }
+    else
+    {
+      if(connectionType != String(typeof value)){
+        setConnectionType(String(typeof value));
+        setVariable(0);
+        setSimbol('=');
+      }
+    }
+
 
     const objValue = {
       idConnection: connection.id,
@@ -81,27 +125,27 @@ const Slider = ({
     }
 
     setConnectionValue(objValue);
-
   }
 
   const calcValues = () => {
     if (!Object.hasOwn(connectionValue, 'idConnection')) {
-      updateValue(setValue, id, { current: 0, max: 0 });
-
-      showValueRef.current.innerHTML = 0;
-
+      updateValue(setValue, id, 0);
       return;
     }
 
-    const newValue = connectionValue.value > limit ? {
-      current: limit,
-      max: connectionValue.max
-    } : {
-      current: connectionValue.value,
-      max: connectionValue.max
-    };
+    const operations = {
+      '>': (newValue) => newValue > variable ? true : false,
+      '<': (newValue) => newValue < variable ? true : false,
+      '≥': (newValue) => newValue >= variable ? true : false,
+      '≤': (newValue) => newValue <= variable ? true : false,
+      '=': (newValue) => newValue === variable ? true : false,
+      '≠': (newValue) => newValue != variable ? true : false
+    }
+    const operationType = operations[simbol];
 
-    showValueRef.current.innerHTML = newValue.current;
+    if (!operationType) return;
+
+    const newValue = operationType(connectionValue.value);
 
     updateValue(setValue, id, newValue);
   }
@@ -116,17 +160,13 @@ const Slider = ({
     });
 
     connsOutput.forEach(conn => {
-      conn.deviceTo.defaultBehavior({
-        value: value.current,
-        max: value.max
-      });
+      conn.deviceTo.defaultBehavior({ value });
     })
   }
 
-  const redefineBehavior = () => setConnectionValue({})
+  const redefineBehavior = () => setConnectionValue({});
 
-
-  const getValue = () => ({ value: value.current, max: value.max });
+  const getValue = () => ({ value });
 
   useEffect(() => {
     if (qtdIncomingConn > 0) {
@@ -135,12 +175,19 @@ const Slider = ({
   }, [qtdIncomingConn]);
 
   useEffect(() => {
+    calcValues();
+  }, [connectionValue, variable]);
+
+  useEffect(() => {
+    updateDisplay();
+  }, [variable, simbol]);
+
+  const updateDisplay = () => displayRef.current.innerHTML =  simbol + " " + variable;
+
+  useEffect(() => {
     sendValue();
   }, [value]);
 
-  useEffect(() => {
-    calcValues();
-  }, [connectionValue, limit])
 
   return (
     <>
@@ -148,34 +195,21 @@ const Slider = ({
         className={deviceBody}
         ref={dragRef}
       >
-        <p
-          className={numberValue}
-          ref={showValueRef}
-        >
-          0
-        </p>
-
-        <input
-          type="range"
-          min='0'
-          className={rangeSlider}
-          max={limit}
-          value={value.current}
-          readOnly={true}
-        />
-
         <img
           src={eventBaseImg}
           alt={`Device ${name}`}
           loading='lazy'
         />
+        <p ref={displayRef} className={ifNumber}>
+          = 0
+        </p>
       </div>
 
       <div
         className={`${connectorsContainer} ${connectorsContainerEntry}`}
       >
         <Connector
-          name={'sliderInputData'}
+          name={'ifInputData'}
           type={'entry'}
           device={{
             id,
@@ -191,11 +225,15 @@ const Slider = ({
         className={`${connectorsContainer} ${connectorsContainerExit}`}
       >
         <Connector
-          name={'sliderOutputData'}
+          name={'ifOutputData'}
           type={'exit'}
           device={{
             id,
-            defaultBehavior: getValue,
+            defaultBehavior: () => {
+              connectionReceiver();
+
+              return getValue();
+            },
             redefineBehavior
           }}
           updateConn={{ posX, posY }}
@@ -225,23 +263,27 @@ const Slider = ({
 
         <ActionButton
           onClick={() => enableModal({
-            typeContent: 'config-slider',
+            typeContent: 'config-if',
             handleSaveConfig: handleSettingUpdate,
-            defaultMaxValue: limit
+            defaultSimbol: simbol,
+            defaultNumber: numberVariable,
+            defaultBool: boolVariable,
+            defaultString: stringVariable,
+            connectionType: connectionType,
           })}
         >
           <AiFillSetting />
         </ActionButton>
-      </div>
+      </div >
     </>
   );
 };
 
 
-Slider.propTypes = {
+If.propTypes = {
   device: P.object.isRequired,
   dragRef: P.func.isRequired,
   updateValue: P.func.isRequired
 }
 
-export default Slider;
+export default If;

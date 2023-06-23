@@ -1,4 +1,4 @@
-import { memo, useRef } from 'react';
+import { memo, useRef, useState } from 'react';
 import P from 'prop-types';
 import { FaTrashAlt } from 'react-icons/fa';
 
@@ -28,7 +28,10 @@ const Ldr = memo(function Ldr({
   const { executeFlow, deleteDeviceConnections } = useFlow();
   const { enableModal, disableModal } = useModal();
 
+  const [lumenConnectorId, setLumenConnectorId] = useState('');
+
   const inputRef = useRef(null);
+
   const showValueRef = useRef(null);
 
   const getLuminosity = () => {
@@ -39,23 +42,27 @@ const Ldr = memo(function Ldr({
   }
 
   const handleOnInput = () => {
-    const inputValue = Number(inputRef.current.value);
-    showValueRef.current.innerHTML = inputValue;
+    const temperatureValue = Number(inputRef.current.value);
+
+    showValueRef.current.innerHTML = temperatureValue;
 
     updateValue(null, id, {
-      current: inputValue,
+      current: temperatureValue,
       max: MAX_VALUE
     });
 
-    executeFlow({ deviceId: id, fromBehaviorCallback: getLuminosity });
+    executeFlow({ connectorId: lumenConnectorId, fromBehaviorCallback: getLuminosity });
+  }
+
+  const handleChangeLumenConnector = (value) => {
+    setLumenConnectorId(value);
   }
 
   return (
 
     <>
 
-      <div className={inputRangeDeviceContainer}
-      >
+      <div className={inputRangeDeviceContainer}>
         <input
           type="range"
           min="0"
@@ -94,9 +101,12 @@ const Ldr = memo(function Ldr({
             defaultBehavior: getLuminosity
           }}
           updateConn={{ posX, posY }}
+          handleChangeId={handleChangeLumenConnector}
         />
 
       </div>
+
+
 
       <div
         className={

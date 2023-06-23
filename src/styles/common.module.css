@@ -79,6 +79,18 @@
   background-color: #d9d9d9;
 }
 
+/* INPUTS -- select */
+.selectBox {
+  -webkit-appearance: none;
+  appearance: none;
+  border: none;
+  width: 200px;
+  height: 38px;
+  cursor: pointer;
+  padding: 10px;
+  background-color: #d9d9d9;
+}
+
 /* INPUT --RANGE*/
 
 .inputRangeContainer {

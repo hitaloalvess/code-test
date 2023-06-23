@@ -1,0 +1,94 @@
+.teste{
+  display: flex;
+  position: absolute;
+  top: -28px;
+  left: -6px;
+  flex-direction: column;
+}
+
+
+.teste div{
+  position: relative;
+}
+
+.thermometer {
+  position: absolute;
+  width: 0.8rem;
+  height: 2rem;
+  transform: scale(0.5);
+  border: 0.2rem solid var(--black);
+  border-radius: 2rem;
+  bottom: 3px;
+}
+
+.thermometer:after {
+  content: "";
+  position: absolute;
+  width: 60%;
+  height: 90%;
+  top: 0.5rem;
+  right: 0.1rem;
+  border-radius: 2rem;
+  background-color: var(--red);
+}
+
+.thermometerBottom {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  top: 1.5rem;
+  left: -0.4rem;
+  border-radius: 2rem;
+  border: 0.2rem solid var(--black);
+}
+
+.thermometerBottom:after {
+  content: "";
+  position: absolute;
+  width: 70%;
+  height: 90%;
+  left: 0.1rem;
+  border-radius: 2rem;
+  background-color: var(--red);
+}
+
+.drop {
+  background-color: var(--blue);
+  border-radius: 0 50% 50% 50%;
+  height: 13px;
+  transform: rotate(45deg);
+  width: 13px;
+}
+
+
+.iconContainer {
+  position: relative;
+  margin: 1px 0 0 3px;
+}
+
+.inputDht {
+  opacity: 0;
+  position: absolute;
+  transform: translateX(1.5rem);
+  width: 10px !important;
+  transition: transform 0.2s ease-in-out, width 0.2s ease-in-out;
+}
+
+.inputDht:after {
+  content: "";
+  opacity: 1;
+  position: absolute;
+  transform: translateX(1.5rem);
+  height: 20px;
+  top: -4px;
+  left: -42px;
+  width: 85px;
+}
+
+.inputDht:hover {
+  opacity: 1;
+  position: relative;
+  transform: translateX(0rem);
+  width: 85px !important;
+  height: 0.6rem;
+}
