@@ -1,0 +1,23 @@
+
+.dropPosition {
+  position: absolute;
+  top: 18px;
+  left: 14px;
+  width: 51px;
+  height: 35px;
+  display: block;
+  border-radius: 200px;
+  background: rgba(128, 128, 128, 0);
+}
+
+
+
+@media (((max-height: 481px) and (orientation: landscape)) or ((max-width: 481px) and (orientation: portrait))) {
+
+  .dropPosition {
+    width: 36px;
+    height: 24px;
+    top: 13px;
+    left: 10px;
+  }
+}

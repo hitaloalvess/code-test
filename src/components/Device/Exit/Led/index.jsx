@@ -44,7 +44,10 @@ const Led = memo(function Led({
   }, [value.color, value.brightness]);
 
   const defaultBehavior = (valueReceived) => {
-    const { value: newValue, max } = valueReceived;
+    const { value: newValue, max, color } = valueReceived;
+
+    console.log("valueReceived: ", newValue);
+
 
     const objValue = {
       ...value,
@@ -52,16 +55,20 @@ const Led = memo(function Led({
         (newValue ? value.brightness : 0) : newValue,
       max: typeof newValue === 'boolean' ? 1023 : max,
       type: typeof newValue,
+      color: color === undefined ? value.color : color
     }
+
+    console.log(objValue);
 
     if (objValue?.current !== 0) {
       //enable light
-      const { current, max } = objValue;
+      const { current, max, color } = objValue;
       const brigthnessValue = current < 0 ? current * -1 : current;
 
       updateValue(setValue, id, {
         ...objValue,
         active: true,
+        color: color,
         opacity: brigthnessValue / max
       });
 

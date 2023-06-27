@@ -24,6 +24,7 @@ import If from './Conditional/If';
 import Toggle from './Event/Toggle';
 import Delay from './Event/Delay';
 import Slider from './Event/Slider';
+import PickColor from './Event/PickColor';
 
 import {
   deviceContainer,
@@ -69,7 +70,8 @@ const Device = memo(function Device({ device: { ...device } }) {
     if: If,
     toggle: Toggle,
     delay: Delay,
-    slider: Slider
+    slider: Slider,
+    pickColor: PickColor
   }
 
   const CurrentDevice = devices[device.name];
