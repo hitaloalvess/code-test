@@ -5,11 +5,9 @@ import { useDevices } from '@/hooks/useDevices';
 import { backgroundGrade } from './styles.module.css';
 
 const STEP_ZOOM = 0.05;
-const BackgroundGrade = ({ dropzoneRef }) => {
-
+const BackgroundGrade = ({ moutingPanelRef }) => {
   const { deviceScale } = useDevices();
   const bgGradeRef = useRef(null);
-
   const [oldDeviceScale, setOldDeviceScale] = useState(deviceScale);
   const [bgScale, setBgScale] = useState(1.25);
 
@@ -21,7 +19,7 @@ const BackgroundGrade = ({ dropzoneRef }) => {
     const bg = bgGradeRef.current;
     const ctx = bg.getContext('2d');
 
-    const { width: containerWidth, height: containerHeight } = dropzoneRef.current.getBoundingClientRect();
+    const { width: containerWidth, height: containerHeight } = moutingPanelRef.current.getBoundingClientRect();
     bg.width = containerWidth;
     bg.height = containerHeight;
 
@@ -79,7 +77,7 @@ const BackgroundGrade = ({ dropzoneRef }) => {
 };
 
 BackgroundGrade.propTypes = {
-  dropzoneRef: P.object.isRequired
+  moutingPanelRef: P.object.isRequired
 }
 
 export default BackgroundGrade;

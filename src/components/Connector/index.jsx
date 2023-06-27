@@ -146,11 +146,21 @@ const Connector = ({
     <div
       ref={attachRefConn}
       className={`${connector} ${styles[`${type}Connector`]}`}
-      onTouchStart={handleConnDown}
-      onMouseDown={() => handleConnDown()}
-      onMouseUp={() => deleteLine({
-        id: flowTemp.currentLine.id
-      })}
+      onTouchStart={(event) => {
+        event.stopPropagation();
+        handleConnDown();
+      }}
+      onMouseDown={(event) => {
+        event.stopPropagation();
+        handleConnDown()
+      }}
+      onMouseUp={(event) => {
+        event.stopPropagation();
+
+        deleteLine({
+          id: flowTemp.currentLine.id
+        });
+      }}
       id={id}
     >
       <div

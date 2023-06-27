@@ -4,6 +4,7 @@ import { useDrop } from 'react-dnd';
 import { useDevices } from '@/hooks/useDevices';
 import { useFlow } from '@/hooks/useFlow';
 
+import Device from '@/components/Device/index';
 import BackgroundGrade from './BackgroundGrade';
 import LinesContainer from './LinesContainer';
 import ManualButton from '@/components/ManualButton';
@@ -11,14 +12,13 @@ import ZoomButton from '@/components/ZoomButton';
 import FaqButton from '@/components/FaqButton';
 
 import { moutingPanelContainer, buttonsContainer } from './styles.module.css';
-import Dropzone from './Dropzone';
+
 
 const MoutingPanel = () => {
   const { devices, addDevice, repositionDevice } = useDevices();
   const { flows, connectionLines, updateLines, updateFlow } = useFlow();
 
   const moutingPanelRef = useRef(null);
-  const dropzoneRef = useRef(null);
 
   const [changingScrollPos, setChangingScrollPos] = useState({
     moving: false,
@@ -59,18 +59,17 @@ const MoutingPanel = () => {
   }), [devices, flows, connectionLines]);
 
   const handleMouseDown = (event) => {
-    console.log(event.target);
+    const scrollElement = document.documentElement;
+    const { clientX, clientY } = event;
 
-    console.log(moutingPanelRef.current);
+    setChangingScrollPos({
+      moving: true,
+      posLeft: scrollElement.scrollLeft,
+      posTop: scrollElement.scrollTop,
+      posX: clientX,
+      posY: clientY
+    })
 
-    // const { left, } = moutingPanelRef.current.getBoundingClientRect();
-
-    console.log(moutingPanelRef.current.scrollLeft)
-    // setChangingScrollPos({
-    //   moving: true,
-
-    // })
-    moutingPanelRef.current.scrollLeft += 100
   }
 
   const handleMouseUp = () => {
@@ -82,7 +81,7 @@ const MoutingPanel = () => {
       posLeft: 0
     });
 
-    moutingPanelRef.current.cursor = 'grab';
+    moutingPanelRef.current.style.cursor = 'grab';
   }
 
   const handleMouseMove = (event) => {
@@ -90,13 +89,18 @@ const MoutingPanel = () => {
 
     if (!moving) return;
 
+    const scrollElement = document.documentElement;
+
     const { clientX, clientY } = event;
 
     const distanceX = clientX - posX;
     const distanceY = clientY - posY;
 
-    moutingPanelRef.current.scrollTop = posTop - distanceY;
-    moutingPanelRef.current.scrolLeft = posLeft - distanceX;
+    scrollElement.scrollTop = posTop - distanceY;
+    scrollElement.scrollLeft = posLeft - distanceX;
+
+    moutingPanelRef.current.style.cursor = 'grabbing';
+
   }
 
   return (
@@ -104,16 +108,23 @@ const MoutingPanel = () => {
       className={moutingPanelContainer}
       ref={attachRef}
       onMouseDown={handleMouseDown}
-    // onMouseUp={handleMouseUp}
-    // onMouseMove={handleMouseMove}
+      onMouseUp={handleMouseUp}
+      onMouseMove={handleMouseMove}
     >
 
-      <Dropzone ref={dropzoneRef} />
+      {
+        devices.map(device => (
+          <Device
+            key={device.id}
+            device={device}
+          />
+        ))
+      }
 
       <LinesContainer />
 
       <BackgroundGrade
-        dropzoneRef={dropzoneRef}
+        moutingPanelRef={moutingPanelRef}
       />
 
 

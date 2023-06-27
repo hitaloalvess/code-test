@@ -20,10 +20,9 @@ const Line = ({ id, fromPos, toPos, idConnection = '', deleteLine }) => {
   }, []);
 
   const dimensions = useMemo(() => {
-// const scrollY = document.documentElement.scrollTop;
-  // const scrollX = document.documentElement.scrollLeft;
+
     const width = calcDistance({
-      x1: fromPos.x ,
+      x1: fromPos.x,
       y1: fromPos.y,
       x2: toPos.x,
       y2: toPos.y
