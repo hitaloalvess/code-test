@@ -4,6 +4,7 @@ import { useDrag } from 'react-dnd';
 
 import { useDevices } from '@/hooks/useDevices.js';
 
+import Dht from './Entry/Dht';
 import Ldr from './Entry/Ldr';
 import Potentiometer from './Entry/Potentiometer';
 import Switch from './Entry/Switch';
@@ -18,6 +19,7 @@ import Buzzer from './Exit/Buzzer';
 import And from './Conditional/And';
 import Or from './Conditional/Or';
 import Not from './Conditional/Not';
+import If from './Conditional/If';
 
 import Toggle from './Event/Toggle';
 import Delay from './Event/Delay';
@@ -51,6 +53,7 @@ const Device = memo(function Device({ device: { ...device } }) {
   }
 
   const devices = {
+    dht: Dht,
     ldr: Ldr,
     potentiometer: Potentiometer,
     pushButton: PushButton,
@@ -63,6 +66,7 @@ const Device = memo(function Device({ device: { ...device } }) {
     and: And,
     or: Or,
     not: Not,
+    if: If,
     toggle: Toggle,
     delay: Delay,
     slider: Slider

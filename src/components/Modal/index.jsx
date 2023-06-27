@@ -14,6 +14,8 @@ import {
   header,
   btnClose
 } from './styles.module.css';
+import ConfigDhtModal from './ConfigDhtModal';
+import ConfigIfModal from './ConfigIfModal';
 
 const customStyles = {
   overlay: {
@@ -45,6 +47,14 @@ const ModalContainer = ({ modalIsOpen, closeModal, contentData }) => {
     contentData={contentData}
     />,
     'config-slider': <ConfigSliderModal
+    closeModal={closeModal}
+    contentData={contentData}
+    />,
+    'config-dht': <ConfigDhtModal
+    closeModal={closeModal}
+    contentData={contentData}
+    />,
+    'config-if': <ConfigIfModal
     closeModal={closeModal}
     contentData={contentData}
     />
