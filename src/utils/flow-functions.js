@@ -7,16 +7,25 @@ export const calcPositionConnector = (connector) => {
     bottom: connectorBottom
   } = connector.getBoundingClientRect();
 
-  const x = ((connectorLeft + connectorRight) / 2);
-  const y = ((connectorTop + connectorBottom) / 2);
+  const scrollLeft = document.documentElement.scrollLeft;
+  const scrollTop = document.documentElement.scrollTop;
+
+  const posLeft = connectorLeft + scrollLeft;
+  const posRight = connectorRight + scrollLeft
+  const posTop = connectorTop + scrollTop;
+  const posBottom = connectorBottom + scrollTop;
+
+
+  const x = ((posLeft + posRight) / 2);
+  const y = ((posTop + posBottom) / 2);
 
   return {
     x,
     y,
-    connectorLeft,
-    connectorRight,
-    connectorTop,
-    connectorBottom
+    left: posLeft,
+    right: posRight,
+    top: posTop,
+    bottom: posBottom
   }
 }
 
