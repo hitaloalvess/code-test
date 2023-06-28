@@ -15,21 +15,23 @@ import MoutingPanel from '@/components/MoutingPanel';
 import CustomDragLayer from '@/components/CustomDragLayer';
 
 import { container } from './styles.module.css';
+import { useRef } from 'react';
 
 
 const Platform = () => {
+  const containerRef = useRef(null);
 
   return (
     <DndProvider backend={isMobile ? TouchBackend : HTML5Backend}>
       <ModalProvider>
         <DevicesProvider>
           <FlowProvider>
-            <main className={container}>
+            <main className={container} ref={containerRef}>
               <Header />
 
               <Sidebar />
 
-              <MoutingPanel />
+              <MoutingPanel ref={containerRef} />
 
 
             </main>

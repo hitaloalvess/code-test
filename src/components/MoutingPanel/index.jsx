@@ -12,9 +12,10 @@ import ZoomButton from '@/components/ZoomButton';
 import FaqButton from '@/components/FaqButton';
 
 import { moutingPanelContainer, buttonsContainer } from './styles.module.css';
+import { forwardRef } from 'react';
 
 
-const MoutingPanel = () => {
+const MoutingPanel = forwardRef(function MoutingPanel(props, ref) {
   const { devices, addDevice, repositionDevice } = useDevices();
   const { flows, connectionLines, updateLines, updateFlow } = useFlow();
 
@@ -65,7 +66,7 @@ const MoutingPanel = () => {
 
     if (!isLinesContainer) return;
 
-    const scrollElement = document.documentElement;
+    const scrollElement = ref.current;
     const { clientX, clientY } = event;
 
     setChangingScrollPos({
@@ -95,7 +96,7 @@ const MoutingPanel = () => {
 
     if (!moving) return;
 
-    const scrollElement = document.documentElement;
+    const scrollElement = ref.current;
 
     const { clientX, clientY } = event;
 
@@ -142,6 +143,6 @@ const MoutingPanel = () => {
 
     </div>
   );
-};
+})
 
 export default MoutingPanel;

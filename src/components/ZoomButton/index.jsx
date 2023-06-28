@@ -1,15 +1,13 @@
+import { useState } from 'react';
+
+import CircleButton from '../CircleButton';
 import imgZoomButton from '@/assets/images/buttons/zoom-button.svg';
 
-import { useDevices } from '@/hooks/useDevices';
-import CircleButton from '../CircleButton';
+import { zoomContent } from './styles.module.css';
+import InputRangeZoom from './InputRangeZoom';
 
-import { zoomContent, zoomIncrease, zoomDecrease } from './styles.module.css';
-import { useState } from 'react';
+
 const ZoomButton = () => {
-  const {
-    handleDecreaseDeviceScale,
-    handleIncreaseDeviceScale,
-  } = useDevices();
 
   const [activeActions, setActiveActions] = useState(false);
 
@@ -17,30 +15,15 @@ const ZoomButton = () => {
     setActiveActions(prevActive => !prevActive);
   }
 
-
   return (
     <div className={zoomContent}>
-      {activeActions && (
-        <>
-          <button
-            className={zoomIncrease}
-            onClick={handleIncreaseDeviceScale}
-          >
-            +
-          </button>
-          <button
-            className={zoomDecrease}
-            onClick={handleDecreaseDeviceScale}
-          >
-            -
-          </button>
-        </>
-      )}
+      {activeActions && <InputRangeZoom />}
 
       <CircleButton
         imgSrc={imgZoomButton}
         name={'zoom'}
         handleClick={handleClick}
+        title='Botão de zoom'
       />
     </div>
   );

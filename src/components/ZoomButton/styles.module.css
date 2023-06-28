@@ -1,15 +1,3 @@
 .zoomContent {
   position: relative;
 }
-
-.zoomIncrease {
-  position: absolute;
-  top: -44px;
-  left: 0;
-}
-
-.zoomDecrease {
-  position: absolute;
-  top: -44px;
-  right: 0;
-}

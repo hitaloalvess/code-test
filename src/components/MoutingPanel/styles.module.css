@@ -4,9 +4,7 @@
   height: 150vh;
   z-index: 0;
   cursor: grab;
-  overflow: auto;
 }
-
 
 .buttonsContainer {
   position: fixed;
