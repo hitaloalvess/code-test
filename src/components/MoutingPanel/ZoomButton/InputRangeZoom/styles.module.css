@@ -26,3 +26,10 @@
 .inputZoom::-webkit-slider-thumb:hover {
   transform: scale(1.2);
 }
+
+@media (max-width: 769px) {
+  .inputZoom {
+    top: auto;
+    bottom: -140px;
+  }
+}

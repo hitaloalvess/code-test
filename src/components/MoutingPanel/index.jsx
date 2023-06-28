@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, forwardRef } from 'react';
 import { useDrop } from 'react-dnd';
 
 import { useDevices } from '@/hooks/useDevices';
@@ -7,12 +7,11 @@ import { useFlow } from '@/hooks/useFlow';
 import Device from '@/components/Device/index';
 import BackgroundGrade from './BackgroundGrade';
 import LinesContainer from './LinesContainer';
-import ManualButton from '@/components/ManualButton';
-import ZoomButton from '@/components/ZoomButton';
-import FaqButton from '@/components/FaqButton';
+import ManualButton from './ManualButton';
+import ZoomButton from './ZoomButton';
+import FaqButton from './FaqButton';
 
 import { moutingPanelContainer, buttonsContainer } from './styles.module.css';
-import { forwardRef } from 'react';
 
 
 const MoutingPanel = forwardRef(function MoutingPanel(props, ref) {
@@ -133,7 +132,6 @@ const MoutingPanel = forwardRef(function MoutingPanel(props, ref) {
       <BackgroundGrade
         moutingPanelRef={moutingPanelRef}
       />
-
 
       <div className={buttonsContainer}>
         <ManualButton />

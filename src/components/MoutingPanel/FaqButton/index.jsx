@@ -1,6 +1,6 @@
 import imgFaqButton from '@/assets/images/buttons/faq-button.svg';
+import CircleButton from '@/components/CircleButton';
 
-import CircleButton from '../CircleButton';
 
 const FaqButton = () => {
 
