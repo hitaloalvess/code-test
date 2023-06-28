@@ -10,7 +10,7 @@ import {
 } from './styles.module.css';
 
 import {
-  inputNumber,
+  inputColor,
   btn,
   btnBlue
 } from '@/styles/common.module.css';
@@ -38,7 +38,7 @@ const ConfigPickColorModal = ({ closeModal, contentData }) => {
         <h1
           className={configSliderTitle}
         >
-          Slider
+          Pick Color
         </h1>
       </header>
 
@@ -58,7 +58,7 @@ const ConfigPickColorModal = ({ closeModal, contentData }) => {
           <input
             type="color"
             id='pickColor'
-            className={inputNumber}
+            className={inputColor}
             defaultValue={defaultColor}
             ref={colorRef}
           />

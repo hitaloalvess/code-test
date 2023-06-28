@@ -198,7 +198,12 @@ export const mockDevices = {
       imgSrc: devicePickColor,
       name: 'pickColor',
       type: 'virtual',
-      category: 'event'
+      category: 'event',
+      value: {
+        current: 0,
+        max: 0,
+        color: '#576099'
+      }
     },
     {
       id: 201,
@@ -314,7 +319,7 @@ export const deviceConnectorRules = {
     connectsTo: ['all'],
   },
   pickColor: {
-    acceptedConnections: ['allEntry', 'allExit'],
+    acceptedConnections: ['oneEntry', 'allExit'],
     connectsFrom: ['all'],
     connectsTo: ['led', 'physicalLED'],
   },

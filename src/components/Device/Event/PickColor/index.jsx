@@ -101,7 +101,6 @@ const PickColor = ({
 
   const sendValue = () => {
 
-    console.log("sendValue", value.current);
     const flow = findFlowsByDeviceId(flows, id);
 
     if (!flow) return;
@@ -121,7 +120,7 @@ const PickColor = ({
 
   const redefineBehavior = () => setConnectionValue({});
 
-  const getValue = () => ( { value } );
+  const getValue = () => ( { value: value.current, max: value.max, color: value.color } );
 
   useEffect(() => {
     if (qtdIncomingConn > 0) {
@@ -220,7 +219,7 @@ const PickColor = ({
           onClick={() => enableModal({
             typeContent: 'config-pickColor',
             handleSaveConfig: handleSettingUpdate,
-            deafaultColor: color,
+            defaultColor: color,
           })}
         >
           <AiFillSetting />
