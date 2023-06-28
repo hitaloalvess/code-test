@@ -1,3 +1,4 @@
+/* eslint-disable no-empty-pattern */
 import { useEffect, useRef, useState } from 'react';
 import { useDrop, useDrag } from 'react-dnd';
 import P from 'prop-types';
@@ -11,6 +12,8 @@ import { calcPositionConnector } from '../../utils/flow-functions';
 import styles, {
   connector,
   connectorRange,
+  entryConnectorRange,
+  exitConnectorRange
 } from './styles.module.css';
 
 
@@ -68,13 +71,16 @@ const Connector = ({
   }, [id]);
 
 
-  // eslint-disable-next-line no-empty-pattern
   const [{ }, drop] = useDrop(() => ({
     accept: 'connector',
     drop: (item) => {
 
-      clearFlowTemp();
+      if (item.connector.id === id) {
+        //If the line is dropped within the range of the device connector itself, it will be deleted.
+        deleteLine({ id: flowTemp.currentLine.id })
+      }
 
+      clearFlowTemp();
       createFlow({
         devices: {
           from: { ...item },
@@ -94,7 +100,6 @@ const Connector = ({
     }
   }), [flowTemp, position]);
 
-  // eslint-disable-next-line no-empty-pattern
   const [{ }, drag] = useDrag(() => ({
     type: 'connector',
     item: {
@@ -164,7 +169,7 @@ const Connector = ({
       id={id}
     >
       <div
-        className={`${connectorRange}`}
+        className={`${connectorRange} ${type === 'entry' ? entryConnectorRange : exitConnectorRange}`}
         ref={attachRef}
       >
       </div>

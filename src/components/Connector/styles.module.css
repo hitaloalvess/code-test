@@ -9,7 +9,6 @@
   position: absolute;
   border-radius: 100px;
   top: -12px;
-  left: -2px;
   border: 16px solid transparent;
   opacity: 0;
 }
@@ -26,6 +25,10 @@
   border-color: var(--blue);
 }
 
+.entryConnectorRange {
+  right: -2px;
+}
+
 /* CONNECTOR EXIT */
 
 .exitConnector {
@@ -35,6 +38,10 @@
 
 .exitConnector:hover {
   background-color: var(--blue);
+}
+
+.exitConnectorRange {
+  left: -2px;
 }
 
 
