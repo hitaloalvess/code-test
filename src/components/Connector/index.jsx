@@ -41,7 +41,7 @@ const Connector = ({
   });
 
   useEffect(() => {
-    const { x, y } = calcPositionConnector(connRef.current);
+    const { x, y } = calcPositionConnector(connRef.current, device.containerRef);
     setPosition({ x, y });
 
     repositionConnections({
@@ -183,7 +183,8 @@ Connector.propTypes = {
   type: P.string.isRequired,
   device: P.shape({
     id: P.string.isRequired,
-    defaultBehavior: P.func.isRequired
+    defaultBehavior: P.func.isRequired,
+    containerRef: P.object.isRequired
   }),
   updateConn: P.shape({
     posX: P.number.isRequired,

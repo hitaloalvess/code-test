@@ -96,7 +96,8 @@ const Potentiometer = memo(function Ldr({
           type={'exit'}
           device={{
             id,
-            defaultBehavior: getResistance
+            defaultBehavior: getResistance,
+            containerRef: device.containerRef
           }}
           updateConn={{ posX, posY }}
           handleChangeId={handleChangeConnector}

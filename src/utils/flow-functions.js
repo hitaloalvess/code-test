@@ -1,5 +1,5 @@
 import { deviceConnectorRules } from '@/data/devices.js';
-export const calcPositionConnector = (connector) => {
+export const calcPositionConnector = (connector, containerRef) => {
   const {
     left: connectorLeft,
     right: connectorRight,
@@ -7,8 +7,8 @@ export const calcPositionConnector = (connector) => {
     bottom: connectorBottom
   } = connector.getBoundingClientRect();
 
-  const scrollLeft = document.documentElement.scrollLeft;
-  const scrollTop = document.documentElement.scrollTop;
+  const scrollLeft = containerRef.current.scrollLeft;
+  const scrollTop = containerRef.current.scrollTop;
 
   const posLeft = connectorLeft + scrollLeft;
   const posRight = connectorRight + scrollLeft

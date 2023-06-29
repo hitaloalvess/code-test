@@ -180,7 +180,8 @@ const Slider = ({
           device={{
             id,
             defaultBehavior: connectionReceiver,
-            redefineBehavior
+            redefineBehavior,
+            containerRef: device.containerRef
           }}
           updateConn={{ posX, posY }}
         />
@@ -196,7 +197,8 @@ const Slider = ({
           device={{
             id,
             defaultBehavior: getValue,
-            redefineBehavior
+            redefineBehavior,
+            containerRef: device.containerRef
           }}
           updateConn={{ posX, posY }}
         />

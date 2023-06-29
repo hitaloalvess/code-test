@@ -37,13 +37,19 @@ const MoutingPanel = forwardRef(function MoutingPanel(props, ref) {
     const elementIndex = devices.find(device => device.id === item.id);
 
     if (!elementIndex) {
-      addDevice(item, monitor)
+      addDevice({
+        ...item,
+        containerRef: ref
+      }, monitor)
 
       return;
     }
 
     repositionDevice({
-      device: { ...item },
+      device: {
+        ...item,
+        containerRef: ref
+      },
       screen: monitor,
       flows,
       connectionLines,
@@ -127,7 +133,7 @@ const MoutingPanel = forwardRef(function MoutingPanel(props, ref) {
         ))
       }
 
-      <LinesContainer />
+      <LinesContainer ref={ref} />
 
       <BackgroundGrade
         moutingPanelRef={moutingPanelRef}

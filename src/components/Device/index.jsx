@@ -33,7 +33,7 @@ import {
 
 
 const Device = memo(function Device({ device: { ...device } }) {
-
+  console.log(device)
   const { deviceScale, updateDeviceValue } = useDevices();
 
   // eslint-disable-next-line no-empty-pattern

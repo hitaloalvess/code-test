@@ -40,13 +40,13 @@ const If = ({
   const [qtdIncomingConn, setQtdIncomingConn] = useState(0)
 
 
-  const [ numberVariable, setNumberVariable] = useState(0);
-  const [ boolVariable, setBoolVariable] = useState(false);
-  const [ stringVariable, setStringVariable] = useState('');
-  const [ variable, setVariable] = useState(0);
+  const [numberVariable, setNumberVariable] = useState(0);
+  const [boolVariable, setBoolVariable] = useState(false);
+  const [stringVariable, setStringVariable] = useState('');
+  const [variable, setVariable] = useState(0);
 
-  const [ connectionType, setConnectionType] = useState('number');
-  const [ simbol, setSimbol] = useState('=');
+  const [connectionType, setConnectionType] = useState('number');
+  const [simbol, setSimbol] = useState('=');
 
 
   const displayRef = useRef(null);
@@ -66,12 +66,12 @@ const If = ({
       case 'string':
         setStringVariable(newVariable);
         break;
-      }
+    }
 
-      setVariable(newVariable);
-      setSimbol(newSimbol);
+    setVariable(newVariable);
+    setSimbol(newSimbol);
 
-      displayRef.current.innerHTML =  newSimbol + " " + newVariable;
+    displayRef.current.innerHTML = newSimbol + " " + newVariable;
   }, [variable, simbol, connectionType]);
 
 
@@ -102,15 +102,14 @@ const If = ({
       value = typeof device.value === 'boolean' ? device.value : device.value[connection.deviceFrom.connector.name].current
       max = typeof device.value === 'boolean' ? device.value.max : device.value[connection.deviceFrom.connector.name].max
 
-      if(connectionType != String(typeof value)){
+      if (connectionType != String(typeof value)) {
         setConnectionType(String(typeof value));
         setVariable(false);
         setSimbol('=');
       }
     }
-    else
-    {
-      if(connectionType != String(typeof value)){
+    else {
+      if (connectionType != String(typeof value)) {
         setConnectionType(String(typeof value));
         setVariable(0);
         setSimbol('=');
@@ -182,7 +181,7 @@ const If = ({
     updateDisplay();
   }, [variable, simbol]);
 
-  const updateDisplay = () => displayRef.current.innerHTML =  simbol + " " + variable;
+  const updateDisplay = () => displayRef.current.innerHTML = simbol + " " + variable;
 
   useEffect(() => {
     sendValue();
@@ -214,7 +213,8 @@ const If = ({
           device={{
             id,
             defaultBehavior: connectionReceiver,
-            redefineBehavior
+            redefineBehavior,
+            containerRef: device.containerRef
           }}
           updateConn={{ posX, posY }}
         />
@@ -234,7 +234,8 @@ const If = ({
 
               return getValue();
             },
-            redefineBehavior
+            redefineBehavior,
+            containerRef: device.containerRef
           }}
           updateConn={{ posX, posY }}
         />

@@ -98,7 +98,8 @@ const Ldr = memo(function Ldr({
           type={'exit'}
           device={{
             id,
-            defaultBehavior: getLuminosity
+            defaultBehavior: getLuminosity,
+            containerRef: device.containerRef
           }}
           updateConn={{ posX, posY }}
           handleChangeId={handleChangeLumenConnector}

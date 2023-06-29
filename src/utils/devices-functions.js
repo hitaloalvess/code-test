@@ -1,9 +1,9 @@
-export const calcPositionDevice = ({ x, y, width, height }) => {
+export const calcPositionDevice = ({ x, y, width, height, containerRef }) => {
   const deviceCenterWidth = width / 2;
   const deviceCenterHeight = height / 2;
 
-  const scrollY = document.documentElement.scrollTop;
-  const scrollX = document.documentElement.scrollLeft;
+  const scrollY = containerRef.current.scrollTop;
+  const scrollX = containerRef.current.scrollLeft;
 
   //REALIZAR VALIDACAO PARA NAO POSICIONAR EM AREA INVALIDA
 

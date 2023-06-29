@@ -14,7 +14,13 @@ export const DevicesProvider = ({ children }) => {
   const addDevice = (item, monitor) => {
     const { width, height } = item.draggedDevice.getBoundingClientRect();
     const { x, y } = monitor.getClientOffset();
-    const [posX, posY] = calcPositionDevice({ x, y, width, height });
+    const [posX, posY] = calcPositionDevice({
+      x,
+      y,
+      width,
+      height,
+      containerRef: item.containerRef
+    });
 
     setDevices((devices) => [...devices, {
       ...item,
@@ -37,7 +43,13 @@ export const DevicesProvider = ({ children }) => {
     const { width, height } = draggedDevice.getBoundingClientRect();
 
     const { x, y } = screen.getClientOffset();
-    const [posX, posY] = calcPositionDevice({ x, y, width, height });
+    const [posX, posY] = calcPositionDevice({
+      x,
+      y,
+      width,
+      height,
+      containerRef: device.containerRef
+    });
 
     setDevices(prevDevices => {
       return prevDevices.map(device => {

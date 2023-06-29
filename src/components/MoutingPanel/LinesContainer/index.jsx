@@ -1,11 +1,12 @@
 import { useDrop } from 'react-dnd';
+import { forwardRef } from 'react';
 
 import { useFlow } from '@/hooks/useFlow';
 import Line from './Line';
 
 import { lines } from './styles.module.css';
 
-const LinesContainer = () => {
+const LinesContainer = forwardRef(function LinesContainer(props, ref) {
   const {
     flowTemp,
     connectionLines,
@@ -19,8 +20,8 @@ const LinesContainer = () => {
 
     const { currentLine, from } = flowTemp;
 
-    const scrollLeft = document.documentElement.scrollLeft;
-    const scrollTop = document.documentElement.scrollTop;
+    const scrollLeft = ref.current.scrollLeft;
+    const scrollTop = ref.current.scrollTop;
 
     updateLines({
       lineId: currentLine.id,
@@ -70,6 +71,6 @@ const LinesContainer = () => {
       ))}
     </div>
   );
-};
+});
 
 export default LinesContainer;

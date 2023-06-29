@@ -79,7 +79,8 @@ const PushButton = memo(function PushButton({
           type={'exit'}
           device={{
             id,
-            defaultBehavior: getBoolean
+            defaultBehavior: getBoolean,
+            containerRef: device.containerRef
           }}
           updateConn={{ posX, posY }}
           handleChangeId={handleChangeConnector}

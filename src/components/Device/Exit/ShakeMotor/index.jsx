@@ -98,7 +98,8 @@ const ShakeMotor = memo(function ShakeMotor({
           device={{
             id,
             defaultBehavior,
-            redefineBehavior
+            redefineBehavior,
+            containerRef: device.containerRef
           }}
           updateConn={{ posX, posY }}
         />

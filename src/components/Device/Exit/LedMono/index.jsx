@@ -109,7 +109,8 @@ const LedMono = memo(function Led({
           device={{
             id,
             defaultBehavior,
-            redefineBehavior
+            redefineBehavior,
+            containerRef: device.containerRef
           }}
           updateConn={{ posX, posY }}
         />

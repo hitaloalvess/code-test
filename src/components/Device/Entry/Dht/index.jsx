@@ -42,8 +42,8 @@ const Dht = memo(function Dht({
   const [humidityConnectorId, setHumidityConnectorId] = useState('');
 
   const minValueTemperature = -50;
-  const maxValueTemperature  = 50;
-  const maxValueHumidity= 100;
+  const maxValueTemperature = 50;
+  const maxValueHumidity = 100;
 
   const inputRefTemperature = useRef(null);
   const showValueRefTemperature = useRef(null);
@@ -76,18 +76,18 @@ const Dht = memo(function Dht({
     const humidityValue = Number(inputRefHumidity.current.value);
 
 
-    const formulasForTransformation =  {
+    const formulasForTransformation = {
       celsius: (temp) => {
-          const convertedValue = Number(temp);
-          return `${convertedValue.toFixed(2)} °C`;
+        const convertedValue = Number(temp);
+        return `${convertedValue.toFixed(2)} °C`;
       },
       fahrenheit: (temp) => {
-          const convertedValue = (Number(temp) * (9 / 5)) + 32;
-          return `${convertedValue.toFixed(2)} F`;
+        const convertedValue = (Number(temp) * (9 / 5)) + 32;
+        return `${convertedValue.toFixed(2)} F`;
       },
       kelvin: (temp) => {
-          const convertedValue = Number(temp) + 273.15;
-          return `${(convertedValue).toFixed(2)} K`;
+        const convertedValue = Number(temp) + 273.15;
+        return `${(convertedValue).toFixed(2)} K`;
       }
     }
 
@@ -210,13 +210,14 @@ const Dht = memo(function Dht({
           type={'exit'}
           device={{
             id,
-            defaultBehavior: getTemperature
+            defaultBehavior: getTemperature,
+            containerRef: device.containerRef
           }}
           updateConn={{ posX, posY }}
-          handleChangeId = {handleChangeTempConnector}
+          handleChangeId={handleChangeTempConnector}
         />
 
-    <Connector
+        <Connector
           name={'humidity'}
           type={'exit'}
           device={{
@@ -224,7 +225,7 @@ const Dht = memo(function Dht({
             defaultBehavior: getHumidity
           }}
           updateConn={{ posX, posY }}
-          handleChangeId = {handleChangeHumidityConnector}
+          handleChangeId={handleChangeHumidityConnector}
         />
 
       </div>

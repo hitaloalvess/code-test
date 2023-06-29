@@ -183,7 +183,8 @@ const Buzzer = memo(function Buzzer({
           device={{
             id,
             defaultBehavior,
-            redefineBehavior
+            redefineBehavior,
+            containerRef: device.containerRef
           }}
           updateConn={{ posX, posY }}
         />
