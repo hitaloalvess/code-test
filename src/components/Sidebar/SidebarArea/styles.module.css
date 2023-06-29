@@ -1,81 +1,105 @@
 .container {
-    position: relative;
-    width: 124px;
-    height: 90%;
-    border-radius: 0 24px 24px 0;
-    border-right: 4px solid var(--yellow-900);
-    background-color: var(--yellow-600);
+  position: relative;
+  width: 124px;
+  height: 90%;
+  padding: 0 0 4px 0;
+  border-radius: 0 24px 24px 0;
+  border-right: 4px solid var(--yellow-900);
+  background-color: var(--yellow-600);
 }
 
-.container ul {
-    overflow-y: auto;
-    height: 100%;
+.devicesList {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow-x: auto;
 }
 
-.container ul::-webkit-scrollbar {
-    display: none;
+.devicesList::-webkit-scrollbar {
+  display: none;
+}
+
+.devicesList ul {
+  width: fit-content;
+  height: 100%;
 }
 
 .trashArea {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: inherit;
-    backdrop-filter: blur(10px);
-    background-color: rgba(255, 255, 255, 0.3);
-    transition: all 0.3s ease-in-out;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: inherit;
+  backdrop-filter: blur(10px);
+  background-color: rgba(255, 255, 255, 0.3);
+  transition: all 0.3s ease-in-out;
 }
 
 .trashArea svg {
-    width: 32px;
-    height: 32px;
+  width: 32px;
+  height: 32px;
 }
 
-@media (max-width: 769px) and (orientation: portrait) {
+/* Tablet */
+@media (max-width: 769px) {
 
-    /* TABLET */
-    .container {
-        width: 420px;
-        height: 96px;
-        border-radius: 12px 12px 0 0;
-    }
+  .container {
+    width: 480px;
+    height: 96px;
+    border-radius: 12px 12px 0 0;
+    padding: 0 0 0 0;
+  }
 
-    .container ul {
-        overflow-x: auto;
-        overflow-y: hidden;
-        display: flex;
-        align-items: center;
-        gap: 24px;
-        padding: 0 24px;
-    }
+  .devicesList {
+    justify-content: flex-start;
+  }
+
+  .container ul {
+
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
 }
 
-@media (max-width: 481px) and (orientation: portrait) {
+/* Mobile up to 480px*/
+@media (max-width: 481px) {
 
-    /* MOBILE - RETRATO */
-    .container {
-        max-width: 260px;
-        height: 64px;
+  .container {
+    max-width: 340px;
+    height: 80px;
+  }
 
-    }
-
-    .trashArea svg {
-        width: 18px;
-        height: 18px;
-    }
+  .trashArea svg {
+    width: 18px;
+    height: 18px;
+  }
 }
 
+/* Mobile up to 320px*/
+@media (max-width: 320px) {
+  .container {
+    border-radius: 0 0 0 0;
+    border: none;
+  }
+
+  .devicesList {
+    padding: 0 18px;
+  }
+}
+
+/* Mobile up to 480px and orientation landscape*/
 @media (max-height: 481px) and (orientation: landscape) {
 
-    /* MOBILE - PAISAGEM*/
-    .container {
-        max-width: 84px;
-        border-radius: 0 12px 12px 0;
-        width: 100%;
-    }
+  .container {
+    max-width: 84px;
+    border-radius: 0 12px 12px 0;
+    width: 100%;
+  }
 }

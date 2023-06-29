@@ -222,7 +222,8 @@ const Dht = memo(function Dht({
           type={'exit'}
           device={{
             id,
-            defaultBehavior: getHumidity
+            defaultBehavior: getHumidity,
+            containerRef: device.containerRef
           }}
           updateConn={{ posX, posY }}
           handleChangeId={handleChangeHumidityConnector}

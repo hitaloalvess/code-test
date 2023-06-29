@@ -1,20 +1,46 @@
-import { useDrag } from 'react-dnd';
-import { deviceItemContent, deviceItemContainer } from './styles.module.css';
-import { useState } from 'react';
-import P from 'prop-types';
+/* eslint-disable no-unused-vars */
 
+import { useRef, useState } from 'react';
+import { useDrag } from 'react-dnd';
+import P from 'prop-types';
+import { isMobile } from 'react-device-detect';
+
+import { deviceItemContent, deviceItemContainer } from './styles.module.css';
+
+const PRESSED_BREAK = 0.2; //200 ms
 const MenuDevice = ({ device }) => {
 
   const [refDevice, setRefDevice] = useState(null);
+  const [canDrag, setCanDrag] = useState(() => isMobile ? false : true);
 
-  // eslint-disable-next-line no-unused-vars
+  const intervalPressed = useRef(null);
+
   const [_, drag] = useDrag(() => ({
     type: 'menu-device',
     item: {
       ...device,
       draggedDevice: refDevice
     },
-  }), [refDevice]);
+    canDrag: () => canDrag,
+    end: () => setCanDrag(isMobile ? false : true)
+  }), [refDevice, canDrag]);
+
+
+  const handleTouchStart = () => {
+    intervalPressed.current = setTimeout(() => {
+      setCanDrag(true);
+    }, PRESSED_BREAK * 1000);
+  }
+
+  const handleTouchMove = () => {
+    clearTimeout(intervalPressed.current);
+    intervalPressed.current = null;
+  }
+
+  const handleTouchEnd = () => {
+    clearTimeout(intervalPressed.current);
+    intervalPressed.current = null;
+  }
 
   return (
     <li className={deviceItemContainer}>
@@ -24,6 +50,9 @@ const MenuDevice = ({ device }) => {
           drag(content);
           setRefDevice(content);
         }}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
       >
         <img
           src={device.imgSrc}
