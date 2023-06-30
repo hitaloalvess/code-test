@@ -127,10 +127,6 @@ const Connector = ({
     drop(el);
   }
 
-  const attachRefConn = (el) => {
-    connRef.current = el;
-  }
-
   const handleConnDown = () => {
     createFlow({
       devices: {
@@ -147,30 +143,19 @@ const Connector = ({
       lineId: null
     })
   }
+
   return (
     <div
-      ref={attachRefConn}
+      ref={connRef}
       className={`${connector} ${styles[`${type}Connector`]}`}
-      onTouchStart={(event) => {
-        event.stopPropagation();
-        handleConnDown();
-      }}
-      onMouseDown={(event) => {
-        event.stopPropagation();
-        handleConnDown()
-      }}
-      onMouseUp={(event) => {
-        event.stopPropagation();
 
-        deleteLine({
-          id: flowTemp.currentLine.id
-        });
-      }}
       id={id}
     >
       <div
         className={`${connectorRange} ${type === 'entry' ? entryConnectorRange : exitConnectorRange}`}
         ref={attachRef}
+        onTouchStart={() => handleConnDown()}
+        onMouseDown={() => handleConnDown()}
       >
       </div>
     </div>

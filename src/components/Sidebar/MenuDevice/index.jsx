@@ -7,7 +7,7 @@ import { isMobile } from 'react-device-detect';
 
 import { deviceItemContent, deviceItemContainer } from './styles.module.css';
 
-const PRESSED_BREAK = 0.15; //150 ms
+const PRESSED_BREAK = 0.09; //90 ms
 const MenuDevice = ({ device }) => {
 
   const [refDevice, setRefDevice] = useState(null);

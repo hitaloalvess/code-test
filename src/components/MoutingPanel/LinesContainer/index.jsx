@@ -43,6 +43,7 @@ const LinesContainer = forwardRef(function LinesContainer(props, ref) {
   const [_, drop] = useDrop(() => ({
     accept: ['connector'],
     hover: (_, monitor) => {
+      console.log('Hover lines container')
       const { x: mousePosX, y: mousePosY } = monitor.getClientOffset();
 
       handleMouseMove({
@@ -50,7 +51,10 @@ const LinesContainer = forwardRef(function LinesContainer(props, ref) {
         mousePosY
       });
     },
-    drop: () => deleteLine({ id: flowTemp.currentLine.id })
+    drop: () => {
+      console.log('Caiu no linesContainer');
+      deleteLine({ id: flowTemp.currentLine.id })
+    }
 
   }), [flowTemp]);
 
