@@ -17,6 +17,7 @@ import deviceAnd from '@/assets/images/devices/conditional/and.svg';
 import deviceOr from '@/assets/images/devices/conditional/or.svg';
 import deviceNot from '@/assets/images/devices/conditional/not.svg';
 import deviceIf from '@/assets/images/devices/conditional/if.svg';
+import deviceCounter from '@/assets/images/devices/conditional/counter/counter.svg';
 
 //event
 import devicePickColor from '@/assets/images/devices/event/pickcolor.svg';
@@ -191,6 +192,17 @@ export const mockDevices = {
       category: 'conditional',
       value: false
     },
+    {
+      id: 104,
+      imgSrc: deviceCounter,
+      name: 'counter',
+      type: 'virtual',
+      category: 'conditional',
+      value: {
+        current: 0,
+        max: 0
+      }
+    }
   ],
   event: [
     {
@@ -234,7 +246,7 @@ export const mockDevices = {
         current: 0,
         max: 0
       }
-    }
+    },
   ]
 };
 
