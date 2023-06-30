@@ -36,9 +36,9 @@
 @media (((max-height: 481px) and (orientation: landscape)) or ((max-width: 481px) and (orientation: portrait))) {
 
   .toggleLabel {
-    width: 36px;
+    width: 38px;
     height: 24px;
-    top: 13px;
+    top: 15px;
     left: 10px;
   }
 
@@ -50,6 +50,6 @@
   }
 
   .toggleInput:checked+.toggleLabel:after {
-    transform: translateX(10px);
+    transform: translateX(12px);
   }
 }

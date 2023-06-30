@@ -67,7 +67,6 @@ const MoutingPanel = forwardRef(function MoutingPanel(props, ref) {
   const handleMouseDown = (event) => {
     //Valid if the element to be dragged is the line container,
     //this way the scroll will only be moved when we drag the container
-    console.log(event.target);
     const isLinesContainer = event.target.id.includes('lines');
 
     if (!isLinesContainer) return;
