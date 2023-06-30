@@ -16,7 +16,7 @@
 }
 
 /* Tablet */
-@media (max-width: 769px) {
+@media (max-width: 769px) and (orientation: portrait) {
   .menuButtons {
     width: 100%;
     max-width: 540px;
@@ -41,7 +41,7 @@
 }
 
 /* Mobile up to 320px*/
-@media (max-width: 320px) {
+@media (max-width: 420px) {
   .menuButtons {
     border-radius: 0;
     border-top: 2px solid var(--yellow-800);
@@ -53,6 +53,8 @@
 
   .menuButtons {
     width: 48px;
+    /* height: 90%; */
+    max-height: 300px;
     border-radius: 12px;
   }
 

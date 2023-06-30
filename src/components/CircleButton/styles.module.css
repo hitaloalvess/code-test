@@ -1,6 +1,6 @@
 .circleButtonContainer {
-  width: 56px;
-  height: 56px;
+  width: 44px;
+  height: 44px;
   border-radius: 1000px;
   border: none;
   cursor: pointer;
@@ -21,8 +21,8 @@
 /* Tablets */
 @media (max-width: 769px) {
   .circleButtonContainer {
-    width: 44px;
-    height: 44px;
+    width: 32px;
+    height: 32px;
   }
 }
 
@@ -30,7 +30,7 @@
 /* Mobile devices in landscape mode up to 480px height*/
 @media (max-width: 480px) or ((max-height:480px) and (orientation:landscape)) {
   .circleButtonContainer {
-    width: 32px;
-    height: 32px;
+    width: 28px;
+    height: 28px;
   }
 }

@@ -11,7 +11,7 @@
 }
 
 /* Tablet */
-@media (max-width: 769px) {
+@media (max-width: 769px) and (orientation:portrait) {
   .menu {
     top: auto;
     bottom: 0;
@@ -36,8 +36,8 @@
   }
 }
 
-/* Mobile up to 320px*/
-@media (max-width: 320px) {
+/* Mobile up to 420px*/
+@media (max-width: 420px) {
   .menu {
     padding: 0 0 0 0;
   }

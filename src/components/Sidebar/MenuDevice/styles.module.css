@@ -24,7 +24,7 @@
 }
 
 /* Tablet */
-@media (max-width: 769px) {
+@media (max-width: 769px) and (orientation: portrait) {
 
   .deviceItemContainer {
     width: 112px;

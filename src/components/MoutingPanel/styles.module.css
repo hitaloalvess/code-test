@@ -8,20 +8,12 @@
 
 .buttonsContainer {
   position: fixed;
-  bottom: 24px;
+  top: 80px;
   right: 12px;
   display: flex;
+  flex-direction: column;
   gap: 18px;
   z-index: 3;
-}
-
-/* Tablets */
-@media (max-width: 769px) {
-  .buttonsContainer {
-    top: 80px;
-    flex-direction: column;
-    height: 56px;
-  }
 }
 
 /* Mobile devices up to 480px width */
@@ -29,6 +21,6 @@
 @media (max-width: 480px) or ((max-height:480px) and (orientation:landscape)) {
   .buttonsContainer {
     top: 48px;
-    height: 24px;
+    /* height: 24px; */
   }
 }
