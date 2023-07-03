@@ -1,94 +1,70 @@
-.teste{
+.inputsContainer {
+  position: absolute;
+  top: -64px;
+  left: 2px;
   display: flex;
-  position: absolute;
-  top: -28px;
-  left: -6px;
   flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 }
 
-
-.teste div{
-  position: relative;
+.thermometerIcon,
+.dropIcon {
+  font-size: 20px;
 }
 
-.thermometer {
-  position: absolute;
-  width: 0.8rem;
-  height: 2rem;
-  transform: scale(0.5);
-  border: 0.2rem solid var(--black);
-  border-radius: 2rem;
-  bottom: 3px;
+.thermometerIcon {
+  fill: var(--red);
 }
 
-.thermometer:after {
-  content: "";
-  position: absolute;
-  width: 60%;
-  height: 90%;
-  top: 0.5rem;
-  right: 0.1rem;
-  border-radius: 2rem;
-  background-color: var(--red);
-}
-
-.thermometerBottom {
-  position: absolute;
-  width: 20px;
-  height: 20px;
-  top: 1.5rem;
-  left: -0.4rem;
-  border-radius: 2rem;
-  border: 0.2rem solid var(--black);
-}
-
-.thermometerBottom:after {
-  content: "";
-  position: absolute;
-  width: 70%;
-  height: 90%;
-  left: 0.1rem;
-  border-radius: 2rem;
-  background-color: var(--red);
-}
-
-.drop {
-  background-color: var(--blue);
-  border-radius: 0 50% 50% 50%;
-  height: 13px;
-  transform: rotate(45deg);
-  width: 13px;
-}
-
-
-.iconContainer {
-  position: relative;
-  margin: 1px 0 0 3px;
+.dropIcon {
+  fill: var(--blue);
 }
 
 .inputDht {
-  opacity: 0;
-  position: absolute;
-  transform: translateX(1.5rem);
-  width: 10px !important;
+  opacity: 1;
   transition: transform 0.2s ease-in-out, width 0.2s ease-in-out;
 }
 
-.inputDht:after {
-  content: "";
-  opacity: 1;
-  position: absolute;
-  transform: translateX(1.5rem);
-  height: 20px;
-  top: -4px;
-  left: -42px;
-  width: 85px;
-}
 
 .inputDht:hover {
   opacity: 1;
   position: relative;
-  transform: translateX(0rem);
+  transform: translateX(0);
   width: 85px !important;
-  height: 0.6rem;
+  height: 6px;
+}
+
+.showValue {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.inputContainerDht {
+  position: relative;
+  top: 0;
+  display: flex;
+  justify-content: center;
+}
+
+.inputContainerDht input {
+  width: 0px !important;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.inputContainerDht:hover input {
+  width: 80px !important;
+  opacity: 1;
+  pointer-events: all;
+}
+
+
+@media(max-width: 768px) {
+  .inputContainerDht:hover input {
+    width: 60px !important;
+  }
 }
