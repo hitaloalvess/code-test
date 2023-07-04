@@ -8,14 +8,15 @@ import ConfigDelayModal from './ConfigDelayModal';
 import ConfigBuzzerModal from './ConfigBuzzerModal';
 import ConfigSliderModal from './ConfigSliderModal';
 import ConfirmationModal from './ConfirmationModal';
+import ConfigDhtModal from './ConfigDhtModal';
+import ConfigIfModal from './ConfigIfModal';
+import ConfigPickColorModal from './ConfigPickColorModal';
 
 import {
   container,
   header,
   btnClose
 } from './styles.module.css';
-import ConfigDhtModal from './ConfigDhtModal';
-import ConfigIfModal from './ConfigIfModal';
 
 const customStyles = {
   overlay: {
@@ -55,6 +56,10 @@ const ModalContainer = ({ modalIsOpen, closeModal, contentData }) => {
     contentData={contentData}
     />,
     'config-if': <ConfigIfModal
+    closeModal={closeModal}
+    contentData={contentData}
+    />,
+    'config-pickColor': <ConfigPickColorModal
     closeModal={closeModal}
     contentData={contentData}
     />

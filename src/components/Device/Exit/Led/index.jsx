@@ -81,7 +81,7 @@ const Led = memo(function Led({
 
     if (!lightUpdateData) return;
 
-    const { value: newValue, max } = lightUpdateData;
+    const { value: newValue, max, color } = lightUpdateData;
 
     const objValue = {
       current: typeof newValue === 'boolean' ?
@@ -100,6 +100,7 @@ const Led = memo(function Led({
       {
         ...value,
         ...objValue,
+        color: color === undefined ? value.color : color,
         active,
         opacity
       }

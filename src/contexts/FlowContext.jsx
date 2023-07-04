@@ -359,7 +359,7 @@ export const FlowProvider = ({ children }) => {
 
     deviceConnections.forEach(conn => {
       const valueFrom = fromBehaviorCallback();
-      conn.deviceTo.defaultBehavior(valueFrom);
+      conn.deviceTo.defaultBehavior({ ...valueFrom});
     })
   }
 
