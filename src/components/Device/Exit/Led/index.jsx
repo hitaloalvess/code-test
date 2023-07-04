@@ -1,5 +1,5 @@
 
-import { memo, useCallback, useState } from 'react';
+import { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { AiFillSetting } from 'react-icons/ai';
 import { FaTrashAlt } from 'react-icons/fa';
 import P from 'prop-types';
@@ -31,50 +31,33 @@ const Led = memo(function Led({
   const { deleteDevice } = useDevices();
   const { deleteDeviceConnections } = useFlow();
   const { enableModal, disableModal } = useModal();
+  const isFirstRender = useRef(true);
 
   const [value, setValue] = useState(device.value);
+  const [updateLight, setUpdateLight] = useState(null);
 
   const handleSettingUpdate = useCallback((newColor, newBrightness) => {
-
     updateValue(setValue, id, {
       ...value,
       color: newColor,
       brightness: newBrightness
     })
-  }, [value.color, value.brightness]);
+  }, [value]);
+
 
   const defaultBehavior = (valueReceived) => {
     const { value: newValue, max } = valueReceived;
 
     const objValue = {
-      ...value,
       current: typeof newValue === 'boolean' ?
         (newValue ? value.brightness : 0) : newValue,
       max: typeof newValue === 'boolean' ? 1023 : max,
       type: typeof newValue,
     }
 
-    if (objValue?.current !== 0) {
-      //enable light
-      const { current, max } = objValue;
-      const brigthnessValue = current < 0 ? current * -1 : current;
-
-      updateValue(setValue, id, {
-        ...objValue,
-        active: true,
-        opacity: brigthnessValue / max
-      });
-
-    } else {
-      //disable light
-      updateValue(setValue, id, {
-        ...objValue,
-        opacity: 0,
-        active: false
-      });
-    }
-
+    setUpdateLight(objValue);
   }
+
 
   const redefineBehavior = () => {
     updateValue(setValue, id, {
@@ -88,6 +71,56 @@ const Led = memo(function Led({
     });
 
   }
+
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+
+      return;
+    }
+
+    if (!updateLight) return;
+
+    if (updateLight?.current !== 0) {
+      //enable light
+      const { current, max } = updateLight;
+      const brigthnessValue = current < 0 ? current * -1 : current;
+
+      console.log({
+        ...value,
+        ...updateLight,
+        active: true,
+        opacity: brigthnessValue / max
+      })
+
+      updateValue(
+        setValue,
+        id,
+        {
+          ...value,
+          ...updateLight,
+          active: true,
+          opacity: brigthnessValue / max
+        }
+      );
+
+    } else {
+      //disable light
+      updateValue(
+        setValue,
+        id,
+        {
+          ...value,
+          ...updateLight,
+          opacity: 0,
+          active: false
+        }
+      );
+    }
+
+    setUpdateLight(null);
+
+  }, [updateLight])
 
   return (
     <>
