@@ -4,7 +4,12 @@ import { v4 as uuid } from 'uuid';
 
 import { findFlowsByDeviceId, verifConnector } from "@/utils/flow-functions";
 import { useDevices } from '@/hooks/useDevices';
-import { concatConnections, findConnectionsBetweenConnector, findFlowByConnectionId, findFlowByConnectorId } from "../utils/flow-functions";
+import {
+  concatConnections,
+  findConnectionsBetweenConnector,
+  findFlowByConnectionId,
+  findFlowByConnectorId
+} from "../utils/flow-functions";
 
 
 const initialState = {

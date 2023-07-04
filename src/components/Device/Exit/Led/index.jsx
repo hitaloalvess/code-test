@@ -9,6 +9,7 @@ import { useFlow } from '@/hooks/useFlow';
 import { useModal } from '@/hooks/useModal';
 import ActionButton from '@/components/ActionButton';
 import Connector from '@/components/Connector';
+import { findFlowsByDeviceId } from '@/utils/flow-functions';
 
 import {
   deviceBody,
@@ -26,37 +27,35 @@ import {
 const Led = memo(function Led({
   device, dragRef, updateValue
 }) {
-
   const { id, imgSrc, name, posX, posY } = device;
+
   const { deleteDevice } = useDevices();
-  const { deleteDeviceConnections } = useFlow();
+  const { deleteDeviceConnections, flows } = useFlow();
   const { enableModal, disableModal } = useModal();
+
   const isFirstRender = useRef(true);
 
   const [value, setValue] = useState(device.value);
-  const [updateLight, setUpdateLight] = useState(null);
+  const [lightUpdateData, setLightUpdateData] = useState(null);
 
   const handleSettingUpdate = useCallback((newColor, newBrightness) => {
+
+    const hasFlow = findFlowsByDeviceId(flows, id);
+
+    if (hasFlow && newBrightness !== value.brightness) {
+      defaultBehavior({ value: newBrightness, max: value.max });
+    }
+
     updateValue(setValue, id, {
       ...value,
       color: newColor,
       brightness: newBrightness
     })
-  }, [value]);
+
+  }, [value, flows]);
 
 
-  const defaultBehavior = (valueReceived) => {
-    const { value: newValue, max } = valueReceived;
-
-    const objValue = {
-      current: typeof newValue === 'boolean' ?
-        (newValue ? value.brightness : 0) : newValue,
-      max: typeof newValue === 'boolean' ? 1023 : max,
-      type: typeof newValue,
-    }
-
-    setUpdateLight(objValue);
-  }
+  const defaultBehavior = (valueReceived) => setLightUpdateData(valueReceived);
 
 
   const redefineBehavior = () => {
@@ -72,6 +71,7 @@ const Led = memo(function Led({
 
   }
 
+
   useEffect(() => {
     if (isFirstRender.current) {
       isFirstRender.current = false;
@@ -79,48 +79,36 @@ const Led = memo(function Led({
       return;
     }
 
-    if (!updateLight) return;
+    if (!lightUpdateData) return;
 
-    if (updateLight?.current !== 0) {
-      //enable light
-      const { current, max } = updateLight;
-      const brigthnessValue = current < 0 ? current * -1 : current;
+    const { value: newValue, max } = lightUpdateData;
 
-      console.log({
-        ...value,
-        ...updateLight,
-        active: true,
-        opacity: brigthnessValue / max
-      })
-
-      updateValue(
-        setValue,
-        id,
-        {
-          ...value,
-          ...updateLight,
-          active: true,
-          opacity: brigthnessValue / max
-        }
-      );
-
-    } else {
-      //disable light
-      updateValue(
-        setValue,
-        id,
-        {
-          ...value,
-          ...updateLight,
-          opacity: 0,
-          active: false
-        }
-      );
+    const objValue = {
+      current: typeof newValue === 'boolean' ?
+        (newValue ? value.brightness : 0) : newValue,
+      max: typeof newValue === 'boolean' ? 1023 : max,
+      type: typeof newValue,
     }
 
-    setUpdateLight(null);
+    const active = objValue.current !== 0 ? true : false;
+    const brigthnessValue = objValue.current < 0 ? objValue.current * -1 : objValue.current;
+    const opacity = objValue.current !== 0 ? (brigthnessValue / objValue.max) : 0
 
-  }, [updateLight])
+    updateValue(
+      setValue,
+      id,
+      {
+        ...value,
+        ...objValue,
+        active,
+        opacity
+      }
+    );
+
+
+    setLightUpdateData(null);
+
+  }, [lightUpdateData])
 
   return (
     <>
