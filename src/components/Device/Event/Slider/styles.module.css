@@ -19,6 +19,7 @@
   border-radius: 15px;
   background: #282832;
   cursor: pointer;
+  pointer-events: none;
 }
 
 .rangeSlider::-webkit-slider-thumb {

@@ -1,6 +1,7 @@
 .deviceContainer {
   position: absolute;
   width: 80px;
+  height: 80px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -11,6 +12,8 @@
 
 .deviceContent {
   position: relative;
+  width: 100%;
+  height: 100%;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -128,7 +131,7 @@
 .actionButtonsContainerBottom {
   flex-direction: row;
   top: auto;
-  bottom: -25px;
+  bottom: -32px;
   min-height: 16px;
   width: 112px;
 }

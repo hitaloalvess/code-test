@@ -44,9 +44,9 @@ export const mockDevices = {
       type: 'virtual',
       category: 'entry',
       value: {
-          current: 0,
-          max: 1023
-        }
+        current: 0,
+        max: 1023
+      }
     },
     {
       id: 8,
@@ -314,7 +314,7 @@ export const deviceConnectorRules = {
   },
   slider: {
     acceptedConnections: ['oneEntry', 'allExit'],
-    connectsFrom: ['potentiometer', 'ldr', 'counter', 'slider', 'physicalPotentiometer', 'physicalLDR', 'physicalDHT'],
+    connectsFrom: ['potentiometer', 'dht', 'ldr', 'counter', 'slider', 'physicalPotentiometer', 'physicalLDR', 'physicalDHT'],
     connectsTo: ['all'],
   },
 }

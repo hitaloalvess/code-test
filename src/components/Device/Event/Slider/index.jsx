@@ -1,14 +1,16 @@
-import { useEffect, useRef, useCallback, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import P from 'prop-types';
 import { FaTrashAlt } from 'react-icons/fa';
 import { AiFillSetting } from 'react-icons/ai';
 
+import eventBaseImg from '@/assets/images/devices/event/eventBase.svg';
+
 import { useModal } from '@/hooks/useModal';
 import { useFlow } from '@/hooks/useFlow';
 import { useDevices } from '@/hooks/useDevices';
+import { findFlowsByDeviceId } from '@/utils/flow-functions';
 import Connector from '@/components/Connector';
 import ActionButton from '@/components/ActionButton';
-import { findFlowsByDeviceId } from '@/utils/flow-functions';
 
 import {
   deviceBody,
@@ -24,7 +26,6 @@ import {
   rangeSlider
 } from './styles.module.css';
 
-import eventBaseImg from '@/assets/images/devices/event/eventBase.svg';
 
 const Slider = ({
   dragRef, device, updateValue
@@ -41,9 +42,9 @@ const Slider = ({
   const [qtdIncomingConn, setQtdIncomingConn] = useState(0);
   const showValueRef = useRef(null);
 
-  const handleSettingUpdate = useCallback((newLimit) => {
+  const handleSettingUpdate = (newLimit) => {
     setLimit(newLimit);
-  }, [limit]);
+  };
 
 
   const connectionReceiver = () => {
@@ -65,14 +66,8 @@ const Slider = ({
 
     const device = devices.find(device => device.id === connection.deviceFrom.id);
 
-    let value = device.value.current;
-    let max = 0;
-
-    if ([undefined, null].includes(value)) {
-      //If device.value.current undefined or null, structure equal boolean (true or false) or object -> ex: {temperature:{..}, humidity:{...}
-      value = typeof device.value === 'boolean' ? device.value : device.value[connection.deviceFrom.connector.name].current
-      max = typeof device.value === 'boolean' ? device.value.max : device.value[connection.deviceFrom.connector.name].max
-    }
+    const value = Object.hasOwn(device.value, 'current') ? device.value.current : device.value[connection.deviceFrom.connector.name].current;
+    const max = Object.hasOwn(device.value, 'max') ? device.value.max : device.value[connection.deviceFrom.connector.name].max;
 
     const objValue = {
       idConnection: connection.id,
@@ -81,7 +76,6 @@ const Slider = ({
     }
 
     setConnectionValue(objValue);
-
   }
 
   const calcValues = () => {
@@ -167,7 +161,6 @@ const Slider = ({
         <img
           src={eventBaseImg}
           alt={`Device ${name}`}
-          loading='lazy'
         />
       </div>
 
