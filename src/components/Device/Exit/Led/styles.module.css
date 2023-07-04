@@ -1,6 +1,6 @@
 .ledLight {
   position: absolute;
-  top: -79px;
+  top: -68px;
   left: 8px;
   z-index: 2;
 }
@@ -10,10 +10,11 @@
 }
 
 
+
 @media (((max-height: 481px) and (orientation: landscape)) or ((max-width: 481px) and (orientation: portrait))) {
 
   .ledLight {
-    top: -58px;
+    top: -52px;
     left: 4px;
   }
 
