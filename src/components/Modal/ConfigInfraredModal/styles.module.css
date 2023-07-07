@@ -1,10 +1,10 @@
 .infraredControl {
   position: absolute;
-  left: -300px;
-  width: 240px;
+  left: -250px;
+  width: 200px;
   display: flex;
   flex-direction: column;
-  gap: 30px 0;
+  gap: 20px 0;
   padding: 40px;
   border-radius: 24px;
   border: 3px solid var(--gray-100);
@@ -39,6 +39,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 0 10px;
 }
 
 .controlNumbers,
@@ -70,16 +71,16 @@
 }
 
 .controlDirectionals::before {
-  top: 50px;
+  top: 38px;
   left: -8px;
   width: calc(100% + 16px);
-  height: 60px;
+  height: 40px;
 }
 
 .controlDirectionals::after {
   top: -5px;
-  left: 48px;
-  width: 60px;
+  left: 37px;
+  width: 40px;
   height: calc(100% + 16px);
 }
 

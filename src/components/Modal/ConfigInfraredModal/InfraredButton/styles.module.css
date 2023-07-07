@@ -1,7 +1,7 @@
 .controlButton {
   position: relative;
-  height: 45px;
-  width: 45px;
+  height: 32px;
+  width: 32px;
   border: 3px solid var(--black);
   display: flex;
   justify-content: center;
@@ -23,8 +23,8 @@
 .controlButton:before {
   content: "";
   position: absolute;
-  width: 45px;
-  height: 45px;
+  width: 120%;
+  height: 120%;
   border-radius: 100px;
   z-index: 0;
   border: 3px solid var(--white);
