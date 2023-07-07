@@ -1,6 +1,7 @@
 .deviceContainer {
   position: absolute;
-  width: 100px;
+  width: 80px;
+  height: 80px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -11,6 +12,8 @@
 
 .deviceContent {
   position: relative;
+  width: 100%;
+  height: 100%;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -19,8 +22,8 @@
 
 
 .deviceBody {
-  width: 80px;
-  height: 80px;
+  width: 100%;
+  height: 100%;
   position: relative;
   transition: transform .3s ease-in-out;
 }
@@ -84,11 +87,11 @@
 .connectorsContainer {
   height: 50px;
   position: absolute;
-  top: 6px;
+  top: 0;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 12px;
+  gap: 20px;
 }
 
 .connectorsContainerExit {
@@ -128,7 +131,7 @@
 .actionButtonsContainerBottom {
   flex-direction: row;
   top: auto;
-  bottom: -25px;
+  bottom: -32px;
   min-height: 16px;
   width: 112px;
 }
@@ -143,47 +146,28 @@
   opacity: 1;
 }
 
-@media (max-width: 769px) and ((orientation: portrait) or (orientation: landscape)) {
-  /* TABLET - LANDSCAPE OR PORTRAIT*/
+/* RESPONSIVENESS */
 
-  /* ACTION BUTTONS CONTAINER */
-
-  .actionButtonsContainerRight {
-    right: -36px;
-    align-items: flex-end;
+@media ((max-height: 481px) and (orientation: landscape)) or ((max-width: 481px) and (orientation: portrait)) {
+  .deviceContainer {
+    width: 58px;
+    height: 58px;
   }
-
-  .deviceContent:hover .actionButtonsContainer {
-    opacity: 1;
-  }
-
-}
-
-@media (((max-height: 481px) and (orientation: landscape)) or ((max-width: 481px) and (orientation: portrait))) {
-  /* MOBILE */
-
-  .deviceBody {
-    width: 56px;
-    height: 56px;
-  }
-
-  /* COMMON */
 
   /* DEVICE INPUT RANGE*/
   .inputRangeDeviceContainer {
-    width: 80px;
     top: -24px;
-    width: 52px;
+    width: 100%;
   }
 
   .inputRangeDeviceContainer input[type="range"] {
-    width: 52px;
+    width: 56px;
     height: 4px;
   }
 
   .inputRangeDeviceContainer input[type="range"]::-webkit-slider-thumb {
-    width: 8px;
-    height: 8px;
+    width: 10px;
+    height: 10px;
   }
 
   .inputValue {
@@ -201,5 +185,11 @@
     opacity: 1;
   }
 
+  .connectorsContainerExit {
+    right: -24px;
+  }
 
+  .connectorsContainerEntry {
+    left: -24px;
+  }
 }

@@ -10,34 +10,30 @@ import { FlowProvider } from '@/contexts/FlowContext';
 
 import Header from '@/components/Header';
 import Sidebar from '@/components/Sidebar';
-import ManualButton from '@/components/ManualButton';
-import ZoomButton from '@/components/ZoomButton';
-import FaqButton from '@/components/FaqButton';
+
 import MoutingPanel from '@/components/MoutingPanel';
 import CustomDragLayer from '@/components/CustomDragLayer';
 
-import { container, buttonsContainer } from './styles.module.css';
+import { container } from './styles.module.css';
+import { useRef } from 'react';
 
 
 const Platform = () => {
+  const containerRef = useRef(null);
 
   return (
     <DndProvider backend={isMobile ? TouchBackend : HTML5Backend}>
       <ModalProvider>
         <DevicesProvider>
           <FlowProvider>
-            <main className={container}>
+            <main className={container} ref={containerRef}>
               <Header />
 
               <Sidebar />
 
-              <MoutingPanel />
+              <MoutingPanel ref={containerRef} />
 
-              <div className={buttonsContainer}>
-                <ManualButton />
-                <FaqButton />
-                <ZoomButton />
-              </div>
+
             </main>
           </FlowProvider>
         </DevicesProvider>

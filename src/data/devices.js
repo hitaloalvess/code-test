@@ -35,15 +35,9 @@ export const mockDevices = {
       type: 'virtual',
       category: 'entry',
       value: {
-        temperature: {
-          current: 0,
-          max: 1023
-        },
-        humidity: {
-          current: 0,
-          max: 1023
-        }
-      }
+        current: 0,
+        max: 1023
+      },
     },
     {
       id: 3,
@@ -60,9 +54,9 @@ export const mockDevices = {
       type: 'virtual',
       category: 'entry',
       value: {
-          current: 0,
-          max: 1023
-        }
+        current: 0,
+        max: 1023
+      }
     },
     {
       id: 8,
@@ -223,7 +217,7 @@ export const mockDevices = {
       value: {
         current: 0,
         max: 0,
-        color: '#576099'
+        color: '#39394E'
       }
     },
     {
@@ -346,7 +340,7 @@ export const deviceConnectorRules = {
   },
   slider: {
     acceptedConnections: ['oneEntry', 'allExit'],
-    connectsFrom: ['potentiometer', 'ldr', 'counter', 'slider', 'physicalPotentiometer', 'physicalLDR', 'physicalDHT'],
+    connectsFrom: ['potentiometer', 'dht', 'ldr', 'counter', 'slider', 'physicalPotentiometer', 'physicalLDR', 'physicalDHT'],
     connectsTo: ['all'],
   },
 }

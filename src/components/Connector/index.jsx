@@ -1,3 +1,4 @@
+/* eslint-disable no-empty-pattern */
 import { useEffect, useRef, useState } from 'react';
 import { useDrop, useDrag } from 'react-dnd';
 import P from 'prop-types';
@@ -11,6 +12,8 @@ import { calcPositionConnector } from '../../utils/flow-functions';
 import styles, {
   connector,
   connectorRange,
+  entryConnectorRange,
+  exitConnectorRange
 } from './styles.module.css';
 
 
@@ -38,7 +41,7 @@ const Connector = ({
   });
 
   useEffect(() => {
-    const { x, y } = calcPositionConnector(connRef.current);
+    const { x, y } = calcPositionConnector(connRef.current, device.containerRef);
     setPosition({ x, y });
 
     repositionConnections({
@@ -68,13 +71,16 @@ const Connector = ({
   }, [id]);
 
 
-  // eslint-disable-next-line no-empty-pattern
   const [{ }, drop] = useDrop(() => ({
     accept: 'connector',
     drop: (item) => {
 
-      clearFlowTemp();
+      if (item.connector.id === id) {
+        //If the line is dropped within the range of the device connector itself, it will be deleted.
+        deleteLine({ id: flowTemp.currentLine.id })
+      }
 
+      clearFlowTemp();
       createFlow({
         devices: {
           from: { ...item },
@@ -94,7 +100,6 @@ const Connector = ({
     }
   }), [flowTemp, position]);
 
-  // eslint-disable-next-line no-empty-pattern
   const [{ }, drag] = useDrag(() => ({
     type: 'connector',
     item: {
@@ -122,10 +127,6 @@ const Connector = ({
     drop(el);
   }
 
-  const attachRefConn = (el) => {
-    connRef.current = el;
-  }
-
   const handleConnDown = () => {
     createFlow({
       devices: {
@@ -142,20 +143,19 @@ const Connector = ({
       lineId: null
     })
   }
+
   return (
     <div
-      ref={attachRefConn}
+      ref={connRef}
       className={`${connector} ${styles[`${type}Connector`]}`}
-      onTouchStart={handleConnDown}
-      onMouseDown={() => handleConnDown()}
-      onMouseUp={() => deleteLine({
-        id: flowTemp.currentLine.id
-      })}
+
       id={id}
     >
       <div
-        className={`${connectorRange}`}
+        className={`${connectorRange} ${type === 'entry' ? entryConnectorRange : exitConnectorRange}`}
         ref={attachRef}
+        onTouchStart={() => handleConnDown()}
+        onMouseDown={() => handleConnDown()}
       >
       </div>
     </div>
@@ -168,7 +168,8 @@ Connector.propTypes = {
   type: P.string.isRequired,
   device: P.shape({
     id: P.string.isRequired,
-    defaultBehavior: P.func.isRequired
+    defaultBehavior: P.func.isRequired,
+    containerRef: P.object.isRequired
   }),
   updateConn: P.shape({
     posX: P.number.isRequired,

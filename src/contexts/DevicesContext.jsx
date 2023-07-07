@@ -7,7 +7,6 @@ import { findFlowByConnectorId } from "../utils/flow-functions";
 
 export const DevicesContext = createContext();
 
-
 export const DevicesProvider = ({ children }) => {
   const [devices, setDevices] = useState([]);
   const [deviceScale, setDeviceScale] = useState(1);
@@ -15,7 +14,13 @@ export const DevicesProvider = ({ children }) => {
   const addDevice = (item, monitor) => {
     const { width, height } = item.draggedDevice.getBoundingClientRect();
     const { x, y } = monitor.getClientOffset();
-    const [posX, posY] = calcPositionDevice({ x, y, width, height });
+    const [posX, posY] = calcPositionDevice({
+      x,
+      y,
+      width,
+      height,
+      containerRef: item.containerRef
+    });
 
     setDevices((devices) => [...devices, {
       ...item,
@@ -38,7 +43,13 @@ export const DevicesProvider = ({ children }) => {
     const { width, height } = draggedDevice.getBoundingClientRect();
 
     const { x, y } = screen.getClientOffset();
-    const [posX, posY] = calcPositionDevice({ x, y, width, height });
+    const [posX, posY] = calcPositionDevice({
+      x,
+      y,
+      width,
+      height,
+      containerRef: device.containerRef
+    });
 
     setDevices(prevDevices => {
       return prevDevices.map(device => {
@@ -168,7 +179,9 @@ export const DevicesProvider = ({ children }) => {
     })
   }
 
-  const handleUpdateScale = (value) => setDeviceScale(value);
+  const handleZoomChange = (value) => {
+    setDeviceScale(value);
+  } //VER SE COMPENSA UTILIZAR USECALLBACK
 
   return (
     <DevicesContext.Provider
@@ -180,7 +193,7 @@ export const DevicesProvider = ({ children }) => {
         repositionDevice,
         repositionConnections,
         updateDeviceValue,
-        handleUpdateScale
+        handleZoomChange
       }}
     >
       {children}

@@ -15,7 +15,7 @@ import {
 } from '@/styles/common.module.css';
 
 const ConfigDhtModal = ({ closeModal, contentData }) => {
-  const { handleSaveConfig } = contentData;
+  const { handleSaveConfig, scaleTypeDefault } = contentData;
 
   const scaleTypeRef = useRef(null);
 
@@ -52,10 +52,14 @@ const ConfigDhtModal = ({ closeModal, contentData }) => {
             Selecione uma escala de temperatura:
           </label>
 
-          <select ref={scaleTypeRef} className="dhtSelect">
-              <option value="celsius">Celsius</option>
-              <option value="fahrenheit">Fahrenheit</option>
-              <option value="kelvin">Kelvin</option>
+          <select
+            ref={scaleTypeRef}
+            className="dhtSelect"
+            defaultValue={scaleTypeDefault}
+          >
+            <option value="celsius">Celsius</option>
+            <option value="fahrenheit">Fahrenheit</option>
+            <option value="kelvin">Kelvin</option>
           </select>
         </div>
       </div>
@@ -77,7 +81,7 @@ ConfigDhtModal.propTypes = {
   closeModal: P.func.isRequired,
   contentData: P.shape({
     handleSaveConfig: P.func,
-    defaultScaleType: P.string
+    scaleTypeDefault: P.string
   }).isRequired
 }
 

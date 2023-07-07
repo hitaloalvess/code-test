@@ -145,7 +145,8 @@ const Or = ({
           device={{
             id,
             defaultBehavior: connectionReceiver,
-            redefineBehavior
+            redefineBehavior,
+            containerRef: device.containerRef
           }}
           updateConn={{ posX, posY }}
         />
@@ -161,7 +162,8 @@ const Or = ({
           device={{
             id,
             defaultBehavior: getValue,
-            redefineBehavior
+            redefineBehavior,
+            containerRef: device.containerRef
           }}
           updateConn={{ posX, posY }}
         />

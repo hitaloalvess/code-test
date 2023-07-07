@@ -110,7 +110,8 @@ const Laser = memo(function Laser({
           device={{
             id,
             defaultBehavior,
-            redefineBehavior
+            redefineBehavior,
+            containerRef: device.containerRef
           }}
           updateConn={{ posX, posY }}
         />

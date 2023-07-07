@@ -10,11 +10,12 @@
 }
 
 
+
 @media (((max-height: 481px) and (orientation: landscape)) or ((max-width: 481px) and (orientation: portrait))) {
 
   .ledLight {
-    top: -53px;
-    left: 3px;
+    top: -52px;
+    left: 4px;
   }
 
   .ledLightElement {

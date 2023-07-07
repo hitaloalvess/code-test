@@ -4,13 +4,15 @@ import P from 'prop-types';
 
 import MenuDevice from '../MenuDevice';
 
-import { container, trashArea } from './styles.module.css';
+import { container, trashArea, devicesList } from './styles.module.css';
 
 const SidebarArea = ({ area, activeTrashArea }) => {
   return (
     <div className={container}>
-      {
-        <ul>
+
+      <div className={devicesList}>
+        <ul
+        >
           {
             mockDevices[area]
               .map((device) => (
@@ -21,7 +23,7 @@ const SidebarArea = ({ area, activeTrashArea }) => {
               ))
           }
         </ul>
-      }
+      </div>
       {activeTrashArea && (
         <div
           className={trashArea}

@@ -40,13 +40,13 @@ const If = ({
   const [qtdIncomingConn, setQtdIncomingConn] = useState(0)
 
 
-  const [ numberVariable, setNumberVariable] = useState(0);
-  const [ boolVariable, setBoolVariable] = useState(false);
-  const [ stringVariable, setStringVariable] = useState('');
-  const [ variable, setVariable] = useState(0);
+  const [numberVariable, setNumberVariable] = useState(0);
+  const [boolVariable, setBoolVariable] = useState(false);
+  const [stringVariable, setStringVariable] = useState('');
+  const [variable, setVariable] = useState(0);
 
-  const [ connectionType, setConnectionType] = useState('number');
-  const [ simbol, setSimbol] = useState('=');
+  const [connectionType, setConnectionType] = useState('number');
+  const [simbol, setSimbol] = useState('=');
 
 
   const displayRef = useRef(null);
@@ -66,7 +66,7 @@ const If = ({
       case 'string':
         setStringVariable(newVariable);
         break;
-      }
+    }
 
       setVariable(newVariable);
       setSimbol(newSimbol);
@@ -182,7 +182,7 @@ const If = ({
     updateDisplay();
   }, [variable, simbol]);
 
-  const updateDisplay = () => displayRef.current.innerHTML =  simbol + " " + variable;
+  const updateDisplay = () => displayRef.current.innerHTML = simbol + " " + variable;
 
   useEffect(() => {
     sendValue();
@@ -214,7 +214,8 @@ const If = ({
           device={{
             id,
             defaultBehavior: connectionReceiver,
-            redefineBehavior
+            redefineBehavior,
+            containerRef: device.containerRef
           }}
           updateConn={{ posX, posY }}
         />
@@ -234,7 +235,8 @@ const If = ({
 
               return getValue();
             },
-            redefineBehavior
+            redefineBehavior,
+            containerRef: device.containerRef
           }}
           updateConn={{ posX, posY }}
         />

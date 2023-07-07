@@ -103,7 +103,7 @@ const Counter = ({
     } else {
       newValue = connectionValue.value || connectionValue.value === 0 ? connectionValue.value : value;
     }
-    updateValue(setValue, id, {current: newValue, max: connectionValue.max});
+    updateValue(setValue, id, { current: newValue, max: connectionValue.max });
   }
 
   const displayNumbers = () => {
@@ -118,20 +118,20 @@ const Counter = ({
     const newValue = value.current.toString().split('');
 
     if (value.current > 9 && value.current <= 99) {
-        numberThousand.current.innerHTML = 0;
-        numberHundred.current.innerHTML = 0;
-        numberTen.current.innerHTML = newValue[0];
-        numberUnity.current.innerHTML = newValue[1];
+      numberThousand.current.innerHTML = 0;
+      numberHundred.current.innerHTML = 0;
+      numberTen.current.innerHTML = newValue[0];
+      numberUnity.current.innerHTML = newValue[1];
     } else if (value.current > 99 && value.current <= 999) {
-        numberThousand.current.innerHTML = 0;
-        numberHundred.current.innerHTML = newValue[0];
-        numberTen.current.innerHTML = newValue[1];
-        numberUnity.current.innerHTML = newValue[2];
+      numberThousand.current.innerHTML = 0;
+      numberHundred.current.innerHTML = newValue[0];
+      numberTen.current.innerHTML = newValue[1];
+      numberUnity.current.innerHTML = newValue[2];
     } else if (value.current > 999) {
-        numberThousand.current.innerHTML = newValue[0];
-        numberHundred.current.innerHTML = newValue[1];
-        numberTen.current.innerHTML = newValue[2];
-        numberUnity.current.innerHTML = newValue[3];
+      numberThousand.current.innerHTML = newValue[0];
+      numberHundred.current.innerHTML = newValue[1];
+      numberTen.current.innerHTML = newValue[2];
+      numberUnity.current.innerHTML = newValue[3];
     }
   }
 
@@ -162,12 +162,12 @@ const Counter = ({
 
   const handleIncreaseClick = () => {
     const newValue = value.current + 1;
-    updateValue(setValue, id, {current: newValue, max: value.max});
+    updateValue(setValue, id, { current: newValue, max: value.max });
   };
 
   const handleDecreaseClick = () => {
     const newValue = value.current - 1;
-    updateValue(setValue, id, {current: newValue, max: value.max});
+    updateValue(setValue, id, { current: newValue, max: value.max });
   };
 
 
@@ -200,21 +200,21 @@ const Counter = ({
           loading='lazy'
         />
         <div className={BodyCounterNumbers}>
-            <div ref={numberThousand} >0</div>
-            <div ref={numberHundred} >0</div>
-            <div ref={numberTen} >0</div>
-            <div ref={numberUnity} >0</div>
+          <div ref={numberThousand} >0</div>
+          <div ref={numberHundred} >0</div>
+          <div ref={numberTen} >0</div>
+          <div ref={numberUnity} >0</div>
         </div>
         <div className={BodyCounterButtons}>
-            <button className={counterButton} onClick={handleIncreaseClick}>
-                <img src={buttonImage}
-                    alt="botao de incrementar" draggable="false"/>
-            </button>
-            <button className={counterButtonDecrease} onClick={handleDecreaseClick}>
-                <img src={buttonImage}
-                    alt="botao de decrementar" draggable="false"/>
-            </button>
-          </div>
+          <button className={counterButton} onClick={handleIncreaseClick}>
+            <img src={buttonImage}
+              alt="botao de incrementar" draggable="false" />
+          </button>
+          <button className={counterButtonDecrease} onClick={handleDecreaseClick}>
+            <img src={buttonImage}
+              alt="botao de decrementar" draggable="false" />
+          </button>
+        </div>
       </div>
 
       <div
@@ -226,7 +226,8 @@ const Counter = ({
           device={{
             id,
             defaultBehavior: connectionReceiver,
-            redefineBehavior
+            redefineBehavior,
+            containerRef: device.containerRef
           }}
           updateConn={{ posX, posY }}
         />
@@ -246,7 +247,8 @@ const Counter = ({
 
               return getValue();
             },
-            redefineBehavior
+            redefineBehavior,
+            containerRef: device.containerRef
           }}
           updateConn={{ posX, posY }}
         />

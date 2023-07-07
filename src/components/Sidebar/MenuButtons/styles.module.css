@@ -1,52 +1,61 @@
 .menuButtons {
-    position: relative;
-    width: 84px;
-    height: 100%;
-    padding: 44px 0;
-    border-radius: 24px;
-    border-right: 4px solid var(--yellow-800);
-    background-color: var(--yellow);
-    z-index: 1;
+  position: relative;
+  width: 84px;
+  height: 100%;
+  padding: 44px 0;
+  border-radius: 24px;
+  border-right: 4px solid var(--yellow-800);
+  background-color: var(--yellow);
+  z-index: 1;
 }
 
 .menuButtons ul {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
+/* Tablet */
 @media (max-width: 769px) and (orientation: portrait) {
-    .menuButtons {
-        width: 100%;
-        max-width: 480px;
-        height: 56px;
-        padding: 0;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        border-radius: 12px;
-        border-right: none;
+  .menuButtons {
+    width: 100%;
+    max-width: 540px;
+    height: 56px;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 12px;
+    border-right: none;
+  }
 
-    }
-
-    .menuButtons ul {
-        width: 100%;
-        flex-direction: row;
-        justify-content: center;
-        align-items: center;
-        gap: 32px;
-    }
+  .menuButtons ul {
+    width: 100%;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 32px;
+  }
 
 
 }
 
-/* HEIGHT */
+/* Mobile up to 320px*/
+@media (max-width: 420px) {
+  .menuButtons {
+    border-radius: 0;
+    border-top: 2px solid var(--yellow-800);
+  }
+}
 
+/* Mobile up to 480px and orientation landscape*/
 @media (max-height: 481px) and (orientation: landscape) {
 
-    .menuButtons {
-        width: 48px;
-        border-radius: 12px;
-    }
+  .menuButtons {
+    width: 48px;
+    /* height: 90%; */
+    max-height: 300px;
+    border-radius: 12px;
+  }
 
 }

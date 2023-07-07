@@ -75,7 +75,8 @@ const Switch = memo(function Switch({
           type={'exit'}
           device={{
             id,
-            defaultBehavior: getBoolean
+            defaultBehavior: getBoolean,
+            containerRef: device.containerRef
           }}
           updateConn={{ posX, posY }}
           handleChangeId={handleChangeConnector}

@@ -1,5 +1,5 @@
 
-import { memo, useCallback, useState } from 'react';
+import { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { AiFillSetting } from 'react-icons/ai';
 import { FaTrashAlt } from 'react-icons/fa';
 import P from 'prop-types';
@@ -9,6 +9,7 @@ import { useFlow } from '@/hooks/useFlow';
 import { useModal } from '@/hooks/useModal';
 import ActionButton from '@/components/ActionButton';
 import Connector from '@/components/Connector';
+import { findFlowsByDeviceId } from '@/utils/flow-functions';
 
 import {
   deviceBody,
@@ -26,57 +27,36 @@ import {
 const Led = memo(function Led({
   device, dragRef, updateValue
 }) {
-
   const { id, imgSrc, name, posX, posY } = device;
+
   const { deleteDevice } = useDevices();
-  const { deleteDeviceConnections } = useFlow();
+  const { deleteDeviceConnections, flows } = useFlow();
   const { enableModal, disableModal } = useModal();
 
+  const isFirstRender = useRef(true);
+
   const [value, setValue] = useState(device.value);
+  const [lightUpdateData, setLightUpdateData] = useState(null);
 
   const handleSettingUpdate = useCallback((newColor, newBrightness) => {
+
+    const hasFlow = findFlowsByDeviceId(flows, id);
+
+    if (hasFlow && newBrightness !== value.brightness) {
+      defaultBehavior({ value: newBrightness, max: value.max });
+    }
 
     updateValue(setValue, id, {
       ...value,
       color: newColor,
       brightness: newBrightness
     })
-  }, [value.color, value.brightness]);
 
-  const defaultBehavior = (valueReceived) => {
-    const { value: newValue, max, color } = valueReceived;
+  }, [value, flows]);
 
-    const objValue = {
-      ...value,
-      current: typeof newValue === 'boolean' ?
-        (newValue ? value.brightness : 0) : newValue,
-      max: typeof newValue === 'boolean' ? 1023 : max,
-      type: typeof newValue,
-      color: color === undefined ? value.color : color
-    }
 
-    if (objValue?.current !== 0) {
-      //enable light
-      const { current, max, color } = objValue;
-      const brigthnessValue = current < 0 ? current * -1 : current;
+  const defaultBehavior = (valueReceived) => setLightUpdateData(valueReceived);
 
-      updateValue(setValue, id, {
-        ...objValue,
-        active: true,
-        color: color,
-        opacity: brigthnessValue / max
-      });
-
-    } else {
-      //disable light
-      updateValue(setValue, id, {
-        ...objValue,
-        opacity: 0,
-        active: false
-      });
-    }
-
-  }
 
   const redefineBehavior = () => {
     updateValue(setValue, id, {
@@ -90,6 +70,46 @@ const Led = memo(function Led({
     });
 
   }
+
+
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+
+      return;
+    }
+
+    if (!lightUpdateData) return;
+
+    const { value: newValue, max, color } = lightUpdateData;
+
+    const objValue = {
+      current: typeof newValue === 'boolean' ?
+        (newValue ? value.brightness : 0) : newValue,
+      max: typeof newValue === 'boolean' ? 1023 : max,
+      type: typeof newValue,
+    }
+
+    const active = objValue.current !== 0 ? true : false;
+    const brigthnessValue = objValue.current < 0 ? objValue.current * -1 : objValue.current;
+    const opacity = objValue.current !== 0 ? (brigthnessValue / objValue.max) : 0
+
+    updateValue(
+      setValue,
+      id,
+      {
+        ...value,
+        ...objValue,
+        color: color === undefined ? value.color : color,
+        active,
+        opacity
+      }
+    );
+
+
+    setLightUpdateData(null);
+
+  }, [lightUpdateData])
 
   return (
     <>
@@ -124,7 +144,8 @@ const Led = memo(function Led({
           device={{
             id,
             defaultBehavior,
-            redefineBehavior
+            redefineBehavior,
+            containerRef: device.containerRef
           }}
           updateConn={{ posX, posY }}
         />

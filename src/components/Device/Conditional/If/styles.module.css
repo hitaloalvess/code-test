@@ -1,19 +1,19 @@
-.ifNumber
-{
-  color: var(--black);
-  font-size: 15px;
-  font-weight: 900;
+.ifNumber {
+  position: absolute;
+  width: 64px;
+  top: 24px;
+  left: 8px;
+  font-size: 18px;
+  font-weight: bold;
   text-align: center;
-  margin: -57px auto 0 auto;
+  color: var(--black);
+  /* margin: -57px auto 0 auto; */
 }
 
 @media (((max-height: 481px) and (orientation: landscape)) or ((max-width: 481px) and (orientation: portrait))) {
-  .ifNumber
-  {
-    color: var(--black);
-    font-size: 1.3rem;
-    font-weight: 900;
-    text-align: center;
-    margin: -48px auto 0 auto;
+  .ifNumber {
+    top: 18px;
+    left: -2px;
+    font-size: 14px;
   }
 }
