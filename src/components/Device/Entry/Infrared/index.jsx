@@ -62,6 +62,12 @@ const Infrared = memo(function Infrared({
 
   return (
     <>
+      <ConfigInfraredModal
+        isOpen = {isModalOpen}
+        closeModal = {closeModal}
+        handleUpdateCode = {handleSettingUpdate}
+      />
+
       <div className={inputRangeDeviceContainer}
       >
         <p
@@ -69,12 +75,6 @@ const Infrared = memo(function Infrared({
           ref={showValueRef}
         >{code}</p>
       </div>
-
-      <ConfigInfraredModal
-        isOpen = {isModalOpen}
-        closeModal = {closeModal}
-        handleUpdateCode = {handleSettingUpdate}
-      />
 
       <div
         className={deviceBody}

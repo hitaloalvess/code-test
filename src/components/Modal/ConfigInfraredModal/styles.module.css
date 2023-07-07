@@ -102,5 +102,47 @@
 }
 
 @media (((max-height: 481px) and (orientation: landscape)) or ((max-width: 481px) and (orientation: portrait))) {
+  .infraredControl {
+    position: absolute;
+    left: -200px;
+    width: 145px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px 0;
+    padding: 25px;
+    border-radius: 24px;
+    border: 3px solid var(--gray-100);
+    background-color: var(--black);
+  }
+
+  .controlNumbers,
+.controlDirectionals {
+    display: flex;
+    flex-direction: column;
+    gap: 5px 0;
+  }
+
+.controlDirectionals::before {
+    top: 25px;
+    left: -8px;
+    width: calc(100% + 16px);
+    height: 30px;
+  }
+
+.controlDirectionals::after {
+    top: -5px;
+    left: 30px;
+    width: 30px;
+    height: calc(100% + 16px);
+  }
+
+.controlGeneratorCode input {
+  width: 100%;
+  border: none;
+  padding: 8px 10px;
+  border-radius: 4px;
+  background-color: var(--white);
+  font-size: 10px;
+  }
 
 }

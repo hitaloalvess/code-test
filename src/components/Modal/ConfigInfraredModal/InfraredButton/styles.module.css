@@ -31,5 +31,20 @@
 }
 
 @media (((max-height: 481px) and (orientation: landscape)) or ((max-width: 481px) and (orientation: portrait))) {
-
+  .controlButton {
+    position: relative;
+    height: 23px;
+    width: 23px;
+    border: 3px solid var(--black);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 100px;
+    border: 3px solid black;
+    z-index: 1;
+    transition: all 0.3s ease-in-out;
+  }
 }
