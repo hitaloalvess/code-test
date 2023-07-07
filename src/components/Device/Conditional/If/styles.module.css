@@ -1,9 +1,9 @@
 .ifNumber {
   position: absolute;
   width: 64px;
-  top: 24px;
+  top: 28px;
   left: 8px;
-  font-size: 18px;
+  font-size: 14px;
   font-weight: bold;
   text-align: center;
   color: var(--black);
