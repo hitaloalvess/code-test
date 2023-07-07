@@ -70,9 +70,8 @@ const If = ({
 
       setVariable(newVariable);
       setSimbol(newSimbol);
-
-      displayRef.current.innerHTML =  newSimbol + " " + newVariable;
   }, [variable, simbol, connectionType]);
+
 
 
   const handleConnections = () => {
@@ -94,27 +93,28 @@ const If = ({
     const device = devices.find(device => device.id === connection.deviceFrom.id);
 
     let value = device.value.current;
-    let max = 0;
-
+    let max = device.value.max;
 
     if ([undefined, null].includes(value)) {
       //If device.value.current undefined or null, structure equal boolean (true or false) or object -> ex: {temperature:{..}, humidity:{...}
-      value = typeof device.value === 'boolean' ? device.value : device.value[connection.deviceFrom.connector.name].current
-      max = typeof device.value === 'boolean' ? device.value.max : device.value[connection.deviceFrom.connector.name].max
-
-      if(connectionType != String(typeof value)){
-        setConnectionType(String(typeof value));
-        setVariable(false);
-        setSimbol('=');
-      }
+      value = typeof device.value === 'boolean' || typeof device.value === 'string' ? device.value : device.value[connection.deviceFrom.connector.name].current
+      max = typeof device.value === 'boolean' || typeof device.value === 'string' ? device.value : device.value[connection.deviceFrom.connector.name].max
     }
-    else
-    {
-      if(connectionType != String(typeof value)){
-        setConnectionType(String(typeof value));
-        setVariable(0);
-        setSimbol('=');
-      }
+
+    if(connectionType != String(typeof value)){
+      setConnectionType(String(typeof value));
+      switch (String(typeof value)) {
+        case 'number':
+          setVariable(0);
+          break;
+        case 'boolean':
+          setVariable(false);
+          break;
+        case 'string':
+          setVariable('FF12F3');
+          break;
+        }
+      setSimbol('=');
     }
 
 

@@ -17,7 +17,7 @@ import {
 } from '@/styles/common.module.css';
 
 const ConfigIfModal = ({ closeModal, contentData }) => {
-  const { handleSaveConfig, defaultSimbol, defaultNumber, defaultBool, connectionType } = contentData;
+  const { handleSaveConfig, defaultSimbol, defaultNumber, defaultBool, defaultString, connectionType } = contentData;
 
     const refDefaultSimbol = useRef(null);
     const refDefaultNumber = useRef(null);
@@ -36,7 +36,7 @@ const ConfigIfModal = ({ closeModal, contentData }) => {
       newVariable = refDefaultBool.current.value === "true" ? true : false;
     }
     else if (connectionType === 'string'){
-      newVariable = Text(refDefaultString.current.value);
+      newVariable = String(refDefaultString.current.value).toUpperCase();
     }
 
     handleSaveConfig(newSimbol, newVariable);
@@ -90,12 +90,12 @@ const ConfigIfModal = ({ closeModal, contentData }) => {
 
 
         {/* STRING  ----------------------------------------------------------------------------- */}
-          {/* <input
+          <input
             type="text"
             ref={refDefaultString}
             defaultValue={defaultString}
-            className=''
-          /> */}
+            className={connectionType === 'string' ? inputNumber : disabled}
+          />
         </div>
       </div>
 
