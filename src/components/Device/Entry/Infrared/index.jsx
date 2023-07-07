@@ -95,7 +95,8 @@ const Infrared = memo(function Infrared({
           type={'exit'}
           device={{
             id,
-            defaultBehavior: getCode
+            defaultBehavior: getCode,
+            containerRef: device.containerRef
           }}
           updateConn={{ posX, posY }}
           handleChangeId={handleChangeConnector}
