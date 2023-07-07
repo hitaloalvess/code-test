@@ -4,6 +4,7 @@ import devicePotentiometer from '@/assets/images/devices/entry/potentiometer.svg
 import deviceSwitch from '@/assets/images/devices/entry/switchOff.svg';
 import devicePushButton from '@/assets/images/devices/entry/pushButtonOff.svg';
 import deviceDht from '@/assets/images/devices/entry/dht.svg';
+import deviceInfrared from '@/assets/images/devices/entry/infrared.svg';
 
 //exit
 import deviceLed from '@/assets/images/devices/exit/led.svg';
@@ -43,6 +44,14 @@ export const mockDevices = {
           max: 1023
         }
       }
+    },
+    {
+      id: 3,
+      imgSrc: deviceInfrared,
+      name: 'infrared',
+      type: 'virtual',
+      category: 'entry',
+      value: 'FF12F3'
     },
     {
       id: 5,

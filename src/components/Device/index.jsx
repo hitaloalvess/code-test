@@ -9,6 +9,7 @@ import Ldr from './Entry/Ldr';
 import Potentiometer from './Entry/Potentiometer';
 import Switch from './Entry/Switch';
 import PushButton from './Entry/PushButton';
+import Infrared from './Entry/Infrared';
 
 import Led from './Exit/Led';
 import LedMono from './Exit/LedMono';
@@ -60,6 +61,7 @@ const Device = memo(function Device({ device: { ...device } }) {
     potentiometer: Potentiometer,
     pushButton: PushButton,
     switch: Switch,
+    infrared: Infrared,
     led: Led,
     ledMono: LedMono,
     laser: Laser,
