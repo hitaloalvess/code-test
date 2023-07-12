@@ -1,7 +1,15 @@
+import Banner from '@/components/Banner';
+
+import { container, content } from './styles.module.css';
+
 const SignIn = () => {
   return (
-    <div>
-      <h1>Signin</h1>
+    <div className={container}>
+      <div className={content}>
+        Content
+      </div>
+
+      <Banner />
     </div>
   );
 };

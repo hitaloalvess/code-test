@@ -1,3 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;500;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 * {
   margin: 0;
   padding: 0;
@@ -19,6 +25,7 @@
   --yellow: #ffbe00;
   --black: #282832;
   --white: #ffffff;
+  --white-100: #f2f2f2;
   --gray-50: #d9d9d9;
   --gray-100: #929292;
   --green: #14ae5c;

@@ -4,7 +4,7 @@ import Modal from 'react-modal';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 import Platform from './templates/Platform';
-import SignIn from './templates/Signin';
+import SignIn from './templates/SignIn';
 
 import './styles/global.css';
 
