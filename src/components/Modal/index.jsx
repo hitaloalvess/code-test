@@ -4,7 +4,13 @@ import { FaTimes } from 'react-icons/fa';
 import P from 'prop-types';
 
 import ConfigLedModal from './ConfigLedModal';
+import ConfigDelayModal from './ConfigDelayModal';
+import ConfigBuzzerModal from './ConfigBuzzerModal';
+import ConfigSliderModal from './ConfigSliderModal';
 import ConfirmationModal from './ConfirmationModal';
+import ConfigDhtModal from './ConfigDhtModal';
+import ConfigIfModal from './ConfigIfModal';
+import ConfigPickColorModal from './ConfigPickColorModal';
 
 import {
   container,
@@ -32,6 +38,30 @@ const ModalContainer = ({ modalIsOpen, closeModal, contentData }) => {
     'config-led': <ConfigLedModal
       closeModal={closeModal}
       contentData={contentData}
+    />,
+    'config-buzzer': <ConfigBuzzerModal
+    closeModal={closeModal}
+    contentData={contentData}
+    />,
+    'config-delay': <ConfigDelayModal
+    closeModal={closeModal}
+    contentData={contentData}
+    />,
+    'config-slider': <ConfigSliderModal
+    closeModal={closeModal}
+    contentData={contentData}
+    />,
+    'config-dht': <ConfigDhtModal
+    closeModal={closeModal}
+    contentData={contentData}
+    />,
+    'config-if': <ConfigIfModal
+    closeModal={closeModal}
+    contentData={contentData}
+    />,
+    'config-pickColor': <ConfigPickColorModal
+    closeModal={closeModal}
+    contentData={contentData}
     />
   }
 

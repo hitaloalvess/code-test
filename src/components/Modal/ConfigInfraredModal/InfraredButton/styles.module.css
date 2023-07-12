@@ -1,0 +1,50 @@
+.controlButton {
+  position: relative;
+  height: 32px;
+  width: 32px;
+  border: 3px solid var(--black);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 100px;
+  border: 3px solid black;
+  z-index: 1;
+  transition: all 0.3s ease-in-out;
+}
+
+.controlButton:hover {
+  transform: scale(1.1);
+  filter: brightness(0.9);
+}
+
+.controlButton:before {
+  content: "";
+  position: absolute;
+  width: 120%;
+  height: 120%;
+  border-radius: 100px;
+  z-index: 0;
+  border: 3px solid var(--white);
+}
+
+@media (((max-height: 481px) and (orientation: landscape)) or ((max-width: 481px) and (orientation: portrait))) {
+  .controlButton {
+    position: relative;
+    height: 23px;
+    width: 23px;
+    border: 3px solid var(--black);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 100px;
+    border: 3px solid black;
+    z-index: 1;
+    transition: all 0.3s ease-in-out;
+  }
+}

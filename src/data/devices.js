@@ -1,52 +1,255 @@
 //entry
 import deviceLdr from '@/assets/images/devices/entry/ldr.svg';
+import devicePotentiometer from '@/assets/images/devices/entry/potentiometer.svg';
+import deviceSwitch from '@/assets/images/devices/entry/switchOff.svg';
+import devicePushButton from '@/assets/images/devices/entry/pushButtonOff.svg';
+import deviceDht from '@/assets/images/devices/entry/dht.svg';
+import deviceInfrared from '@/assets/images/devices/entry/infrared.svg';
 
 //exit
 import deviceLed from '@/assets/images/devices/exit/led.svg';
+import deviceLedMono from '@/assets/images/devices/exit/ledMono.svg';
+import deviceLaser from '@/assets/images/devices/exit/laser.svg';
+import deviceShakeMotor from '@/assets/images/devices/exit/shakeMotor.svg';
+import deviceBuzzer from '@/assets/images/devices/exit/buzzer.svg';
 
 //conditional
 import deviceAnd from '@/assets/images/devices/conditional/and.svg';
+import deviceOr from '@/assets/images/devices/conditional/or.svg';
+import deviceNot from '@/assets/images/devices/conditional/not.svg';
+import deviceIf from '@/assets/images/devices/conditional/if.svg';
+import deviceCounter from '@/assets/images/devices/conditional/counter/counter.svg';
 
 //event
 import devicePickColor from '@/assets/images/devices/event/pickcolor.svg';
-
+import deviceToggle from '@/assets/images/devices/event/toggle.svg';
+import deviceDelay from '@/assets/images/devices/event/delay.svg';
+import deviceSlider from '@/assets/images/devices/event/slider.svg';
 
 export const mockDevices = {
   entry: [
     {
-      id: 1,
+      id: 2,
+      imgSrc: deviceDht,
+      name: 'dht',
+      type: 'virtual',
+      category: 'entry',
+      value: {
+        current: 0,
+        max: 1023
+      },
+    },
+    {
+      id: 3,
+      imgSrc: deviceInfrared,
+      name: 'infrared',
+      type: 'virtual',
+      category: 'entry',
+      value: 'FF12F3'
+    },
+    {
+      id: 5,
       imgSrc: deviceLdr,
       name: 'ldr',
       type: 'virtual',
-      category: 'entry'
+      category: 'entry',
+      value: {
+        current: 0,
+        max: 1023
+      }
+    },
+    {
+      id: 8,
+      imgSrc: devicePotentiometer,
+      name: 'potentiometer',
+      type: 'virtual',
+      category: 'entry',
+      value: {
+        current: 0,
+        max: 1023
+      }
+    },
+    {
+      id: 9,
+      imgSrc: devicePushButton,
+      name: 'pushButton',
+      type: 'virtual',
+      category: 'entry',
+      value: false
+    },
+    {
+      id: 10,
+      imgSrc: deviceSwitch,
+      name: 'switch',
+      type: 'virtual',
+      category: 'entry',
+      value: false
     },
   ],
   exit: [
     {
-      id: 2,
+      id: 6,
       imgSrc: deviceLed,
       name: 'led',
       type: 'virtual',
-      category: 'exit'
+      category: 'exit',
+      value: {
+        active: false,
+        current: 0,
+        max: 0,
+        type: null,
+        color: '#ff1450',
+        opacity: 0,
+        brightness: 1023
+      }
+    },
+    {
+      id: 7,
+      imgSrc: deviceLedMono,
+      name: 'ledMono',
+      type: 'virtual',
+      category: 'exit',
+      value: {
+        active: false,
+        current: 0,
+        max: 0,
+        type: null,
+        opacity: 0,
+        brightness: 1023
+      }
+    },
+    {
+      id: 4,
+      imgSrc: deviceLaser,
+      name: 'laser',
+      type: 'virtual',
+      category: 'exit',
+      value: {
+        active: false,
+        current: 0,
+        max: 0,
+        type: null,
+        opacity: 0,
+        brightness: 1023
+      }
+    },
+    {
+      id: 11,
+      imgSrc: deviceShakeMotor,
+      name: 'shakeMotor',
+      type: 'virtual',
+      category: 'exit',
+      value: {
+        active: false,
+        current: 0,
+        max: 0,
+        type: null
+      }
+    },
+    {
+      id: 1,
+      imgSrc: deviceBuzzer,
+      name: 'buzzer',
+      type: 'virtual',
+      category: 'exit',
+      value: {
+        active: false,
+        current: 0,
+        max: 0,
+        type: null,
+        duration: 4,
+        volume: 0.5,
+      }
     },
   ],
   conditional: [
     {
-      id: 3,
+      id: 100,
       imgSrc: deviceAnd,
       name: 'and',
       type: 'virtual',
-      category: 'conditional'
+      category: 'conditional',
+      value: false
     },
+    {
+      id: 101,
+      imgSrc: deviceOr,
+      name: 'or',
+      type: 'virtual',
+      category: 'conditional',
+      value: false
+    },
+    {
+      id: 102,
+      imgSrc: deviceNot,
+      name: 'not',
+      type: 'virtual',
+      category: 'conditional',
+      value: false
+    },
+    {
+      id: 103,
+      imgSrc: deviceIf,
+      name: 'if',
+      type: 'virtual',
+      category: 'conditional',
+      value: false
+    },
+    {
+      id: 104,
+      imgSrc: deviceCounter,
+      name: 'counter',
+      type: 'virtual',
+      category: 'conditional',
+      value: {
+        current: 0,
+        max: 0
+      }
+    }
   ],
   event: [
     {
-      id: 4,
+      id: 200,
       imgSrc: devicePickColor,
       name: 'pickColor',
       type: 'virtual',
-      category: 'event'
-    }
+      category: 'event',
+      value: {
+        current: 0,
+        max: 0,
+        color: '#39394E'
+      }
+    },
+    {
+      id: 201,
+      imgSrc: deviceToggle,
+      name: 'toggle',
+      type: 'virtual',
+      category: 'event',
+      value: false
+    },
+    {
+      id: 202,
+      imgSrc: deviceDelay,
+      name: 'delay',
+      type: 'virtual',
+      category: 'event',
+      value: {
+        current: 0,
+        max: 0
+      }
+    },
+    {
+      id: 203,
+      imgSrc: deviceSlider,
+      name: 'slider',
+      type: 'virtual',
+      category: 'event',
+      value: {
+        current: 0,
+        max: 0
+      }
+    },
   ]
 };
 
@@ -111,7 +314,7 @@ export const deviceConnectorRules = {
     connectsTo: ['all'],
   },
   not: {
-    acceptedConnections: ['oneEntry', 'oneExit'],
+    acceptedConnections: ['oneEntry', 'allExit'],
     connectsFrom: ['all'],
     connectsTo: ['all'],
   },
@@ -131,13 +334,13 @@ export const deviceConnectorRules = {
     connectsTo: ['all'],
   },
   pickColor: {
-    acceptedConnections: ['allEntry', 'allExit'],
+    acceptedConnections: ['oneEntry', 'allExit'],
     connectsFrom: ['all'],
     connectsTo: ['led', 'physicalLED'],
   },
   slider: {
     acceptedConnections: ['oneEntry', 'allExit'],
-    connectsFrom: ['potentiometer', 'ldr', 'counter', 'slider', 'physicalPotentiometer', 'physicalLDR', 'physicalDHT'],
+    connectsFrom: ['potentiometer', 'dht', 'ldr', 'counter', 'slider', 'physicalPotentiometer', 'physicalLDR', 'physicalDHT'],
     connectsTo: ['all'],
   },
 }

@@ -1,0 +1,24 @@
+.ledLight {
+  position: absolute;
+  top: -68px;
+  left: 8px;
+  z-index: 2;
+}
+
+.ledLightElement {
+  width: 68px;
+}
+
+
+
+@media (((max-height: 481px) and (orientation: landscape)) or ((max-width: 481px) and (orientation: portrait))) {
+
+  .ledLight {
+    top: -52px;
+    left: 4px;
+  }
+
+  .ledLightElement {
+    width: 52px;
+  }
+}

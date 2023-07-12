@@ -1,0 +1,54 @@
+.numberValue {
+  position: absolute;
+  top: -14px;
+  width: 100%;
+  font-size: 16px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.rangeSlider {
+  -webkit-appearance: none;
+  appearance: none;
+  position: absolute;
+  top: 29px;
+  left: 10px;
+  width: 60px;
+  height: 16px;
+  padding: 0.2rem;
+  border-radius: 15px;
+  background: #282832;
+  cursor: pointer;
+  pointer-events: none;
+}
+
+.rangeSlider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  position: relative;
+  width: 12px;
+  height: 12px;
+  border-radius: 100%;
+  background: #d9d9d9;
+}
+
+
+@media (((max-height: 481px) and (orientation: landscape)) or ((max-width: 481px) and (orientation: portrait))) {
+
+  .numberValue {
+    bottom: 58px;
+    width: 100%;
+  }
+
+  .rangeSlider {
+    width: 40px;
+    height: 12px;
+    top: 20px;
+    left: 8px;
+  }
+
+  .rangeSlider::-webkit-slider-thumb {
+    width: 8px;
+    height: 8px;
+  }
+}

@@ -1,5 +1,5 @@
 import { deviceConnectorRules } from '@/data/devices.js';
-export const calcPositionConnector = (connector) => {
+export const calcPositionConnector = (connector, containerRef) => {
   const {
     left: connectorLeft,
     right: connectorRight,
@@ -7,17 +7,102 @@ export const calcPositionConnector = (connector) => {
     bottom: connectorBottom
   } = connector.getBoundingClientRect();
 
-  const x = ((connectorLeft + connectorRight) / 2);
-  const y = ((connectorTop + connectorBottom) / 2);
+  const scrollLeft = containerRef.current.scrollLeft;
+  const scrollTop = containerRef.current.scrollTop;
+
+  const posLeft = connectorLeft + scrollLeft;
+  const posRight = connectorRight + scrollLeft
+  const posTop = connectorTop + scrollTop;
+  const posBottom = connectorBottom + scrollTop;
+
+
+  const x = ((posLeft + posRight) / 2);
+  const y = ((posTop + posBottom) / 2);
 
   return {
     x,
     y,
-    connectorLeft,
-    connectorRight,
-    connectorTop,
-    connectorBottom
+    left: posLeft,
+    right: posRight,
+    top: posTop,
+    bottom: posBottom
   }
+}
+
+export const findFlowsByDeviceId = (flows, deviceId) => {
+  const listFlows = Object.values(flows);
+
+  if (listFlows.length <= 0) return;
+
+  const isConn = conn => {
+    return (conn.deviceFrom.id === deviceId ||
+      conn.deviceTo.id === deviceId);
+  }
+
+  const getByDevice = flow => {
+    return flow.connections.find(isConn);
+  }
+
+  const foundFlow = listFlows.find(getByDevice);
+
+  return foundFlow;
+}
+
+export const findFlowByConnectorId = (flows, connectorId) => {
+  const listFlows = Object.values(flows);
+
+  if (listFlows.length <= 0) return;
+
+  const isConnector = (conn) => {
+    return (conn.deviceFrom.connector.id === connectorId ||
+      conn.deviceTo.connector.id === connectorId);
+  }
+
+  const getByConn = flow => {
+    return flow.connections.find(isConnector);
+  }
+
+  const foundFlow = listFlows.find(getByConn);
+
+  return foundFlow;
+}
+
+export const findFlowByConnectionId = (flows, connectionId) => {
+  const listFlows = Object.values(flows);
+
+  if (listFlows.length <= 0) return;
+
+  const isConnection = conn => {
+    return conn.id === connectionId;
+  }
+
+  const getByConn = flow => {
+    return flow.connections.find(isConnection);
+  }
+
+  const foundFlow = listFlows.find(getByConn);
+
+  return foundFlow;
+}
+
+export const findConnectionsBetweenConnector = (flows, connFrom, connTo) => {
+  const listFlows = Object.values(flows);
+
+  if (listFlows.length <= 0) return;
+
+  const matchConnections = conn => {
+    return (conn.deviceFrom.connector.id === connFrom.id &&
+      conn.deviceTo.connector.id === connTo.id
+    );
+  }
+
+  const getBetweenConn = flow => {
+    return flow.connections.find(matchConnections);
+  };
+
+  const flow = listFlows.find(getBetweenConn);
+
+  return flow;
 }
 
 const getQtdConnections = (flows, connector) => {
@@ -26,29 +111,27 @@ const getQtdConnections = (flows, connector) => {
   const { id, type } = connector;
   const connectorType = type === 'exit' ? 'deviceFrom' : 'deviceTo';
 
-  const flow = flows.find(flow => {
-    return flow.connections.find(connection => {
-      return connection[`${connectorType}`].connector.id === id;
-    })
-  });
+  const flow = findFlowByConnectorId(flows, connector.id);
 
   if (!flow) return 0;
 
-  const qtd = flow.connections.reduce((acc, connection) => {
+  const addConnection = (acc, connection) => {
     if (connection[`${connectorType}`].connector.id === id) {
       return acc + 1;
     }
 
     return acc;
-  }, 0)
+  };
+
+  const qtd = flow.connections.reduce(addConnection, 0);
 
   return qtd;
 }
 
 export const verifConnector = ({ flows, deviceFrom, deviceTo }) => {
-
   if (deviceFrom && !deviceTo) {
     const { name, category } = deviceFrom;
+
 
     const qtdFromOutputConnections = getQtdConnections(flows, deviceFrom.connector);
 
@@ -65,39 +148,31 @@ export const verifConnector = ({ flows, deviceFrom, deviceTo }) => {
     return true;
   }
 
-  const { name: fromName, category: fromCategory } = deviceFrom;
-  const { name: toName, category: toCategory } = deviceTo;
+  const { name: fromName, connector: { type: fromConnCategory } } = deviceFrom;
+  const { name: toName, connector: { type: toConnCategory } } = deviceTo;
 
   const qtdFromOutputConnections = getQtdConnections(flows, deviceFrom.connector);
   const qtdToInputConnections = getQtdConnections(flows, deviceTo.connector);
 
-  console.log({ qtdFromOutputConnections, qtdToInputConnections })
   const deviceFromIsInvalid = (
     deviceConnectorRules[fromName].acceptedConnections.includes('oneExit') &&
-    fromCategory === 'entry' &&
+    fromConnCategory === 'exit' &&
     qtdFromOutputConnections > 0
   );
 
   const deviceToIsInvalid = (
     deviceConnectorRules[toName].acceptedConnections.includes('oneEntry') &&
-    toCategory === 'exit' &&
+    toConnCategory === 'entry' &&
     qtdToInputConnections > 0
   );
-
-  console.log({
-    name: deviceConnectorRules[toName],
-    test1: deviceConnectorRules[toName].acceptedConnections.includes('oneEntry'),
-    test2: toCategory === 'exit',
-    test3: qtdToInputConnections > 0
-  })
 
   const connectionBetweenFromAndToIsValid = deviceConnectorRules[fromName]?.connectsTo.some(item => ['all', toName].includes(item))
   const connectionBetweenToAndFromIsValid = deviceConnectorRules[toName].connectsFrom.some(item => ['all', fromName].includes(item));
 
 
-  if (fromCategory === 'exit' && toCategory === 'exit') return false;
+  if (fromConnCategory === 'exit' && deviceConnectorRules === 'exit') return false;
 
-  if (fromCategory === 'entry' && toCategory === 'entry') return false;
+  if (fromConnCategory === 'entry' && deviceConnectorRules === 'entry') return false;
 
   if (deviceFromIsInvalid || deviceToIsInvalid) return false;
 
@@ -108,35 +183,16 @@ export const verifConnector = ({ flows, deviceFrom, deviceTo }) => {
   return true;
 }
 
-export const findFlowByDeviceId = (flows, deviceId) => {
-  const foundFlow = flows.find(flow => {
-    return flow.connections.find(conn => {
-      return (conn.deviceFrom.id === deviceId ||
-        conn.deviceTo.id === deviceId);
-    });
-  });
+export const concatConnections = (conns1, conns2) => {
 
-  return foundFlow;
-}
+  const newConns = [...conns1];
 
-export const findFlowByConnectionId = (flows, connectionId) => {
-  const foundFlow = flows.find(flow => {
-    return flow.connections.find(conn => {
-      return conn.id === connectionId;
-    });
-  });
+  for (const connection of conns2) {
+    if (!newConns.find(conn => conn.id === connection.id)) {
+      newConns.push(connection);
+    }
+  }
 
-  return foundFlow;
-}
+  return newConns;
 
-export const findConnectionsBetweenConnector = (flows, connFrom, connTo) => {
-  const flow = flows.find(flow => {
-    return flow.connections.find(conn => {
-      return (conn.deviceFrom.connector.id === connFrom.id &&
-        conn.deviceTo.connector.id === connTo.id
-      );
-    });
-  });
-
-  return flow;
 }

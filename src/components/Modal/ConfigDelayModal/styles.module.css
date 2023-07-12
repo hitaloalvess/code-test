@@ -1,0 +1,45 @@
+.configDelayContent {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+    overflow-y: auto;
+    padding: 24px 64px;
+}
+
+.configDelayTitle {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.inputsArea,
+.inputArea {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.inputsArea {
+    gap: 24px;
+}
+
+.inputArea {
+    gap: 12px;
+}
+
+.labelInput {
+    font-size: 16px;
+}
+
+
+@media (((max-height: 481px) and (orientation: landscape)) or ((max-width: 481px) and (orientation: portrait))) {
+    /* MOBILE */
+
+    .configLedContent {
+        justify-content: flex-start;
+        gap: 16px;
+        max-height: 320px;
+        overflow-y: auto;
+        padding: 8px 24px;
+    }
+}

@@ -65,7 +65,8 @@ const CustomDragLayer = () => {
 
   const renderItem = ({ name, imgSrc }) => {
     const types = {
-      'menu-device': <DevicePreview name={name} imgSrc={imgSrc} />
+      'menu-device': <DevicePreview name={name} imgSrc={imgSrc} />,
+      'device': <DevicePreview name={name} imgSrc={imgSrc} />
     }
 
     const currentType = types[itemType];

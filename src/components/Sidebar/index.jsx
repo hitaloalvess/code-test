@@ -11,7 +11,7 @@ import { menu } from './styles.module.css';
 
 const Sidebar = () => {
   const { enableModal, disableModal } = useModal();
-  const { deleteDeviceConnections } = useFlow();
+  const { deleteDeviceConnections, flows } = useFlow();
   const { devices, deleteDevice } = useDevices();
 
   const [currentArea, setCurrentArea] = useState('entry');
@@ -33,7 +33,7 @@ const Sidebar = () => {
     collect: (monitor) => ({
       isOver: !!monitor.isOver()
     })
-  }), [devices]);
+  }), [devices, flows]);
 
   const handleSelectArea = (currentArea) => {
     setCurrentArea(currentArea);

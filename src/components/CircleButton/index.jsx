@@ -2,7 +2,7 @@ import P from 'prop-types';
 
 import { circleButtonContainer } from './styles.module.css';
 
-const CircleButton = ({ name, imgSrc, handleClick }) => {
+const CircleButton = ({ name, imgSrc, handleClick, title }) => {
   return (
     <button className={circleButtonContainer}>
       <img
@@ -10,6 +10,7 @@ const CircleButton = ({ name, imgSrc, handleClick }) => {
         alt={`Imagem do botão de ${name}`}
         loading='lazy'
         onClick={() => handleClick()}
+        title={title}
       />
     </button>
   );
@@ -18,7 +19,8 @@ const CircleButton = ({ name, imgSrc, handleClick }) => {
 CircleButton.propTypes = {
   name: P.string.isRequired,
   imgSrc: P.string.isRequired,
-  handleClick: P.func.isRequired
+  handleClick: P.func.isRequired,
+  title: P.string.isRequired
 }
 
 export default CircleButton;

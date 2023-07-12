@@ -1,13 +1,12 @@
-import { useCallback } from 'react';
 import { useDrop } from 'react-dnd';
+import { forwardRef } from 'react';
 
 import { useFlow } from '@/hooks/useFlow';
-
 import Line from './Line';
 
 import { lines } from './styles.module.css';
 
-const LinesContainer = () => {
+const LinesContainer = forwardRef(function LinesContainer(props, ref) {
   const {
     flowTemp,
     connectionLines,
@@ -16,30 +15,34 @@ const LinesContainer = () => {
     deleteConnection
   } = useFlow();
 
-  const handleMouseMove = useCallback(({ mousePosX, mousePosY }) => {
+  const handleMouseMove = ({ mousePosX, mousePosY }) => {
     if (!flowTemp.connectorClicked) return;
 
     const { currentLine, from } = flowTemp;
 
-    updateLines([
-      {
+    const scrollLeft = ref.current.scrollLeft;
+    const scrollTop = ref.current.scrollTop;
+
+    updateLines({
+      lineId: currentLine.id,
+      newData: {
         id: currentLine.id,
         fromPos: {
           x: from.connector.x,
           y: from.connector.y
         },
         toPos: {
-          x: mousePosX,
-          y: mousePosY
+          x: mousePosX + scrollLeft,
+          y: mousePosY + scrollTop
         }
       }
-    ]);
-  }, [flowTemp, updateLines]);
+    });
+  };
 
   // eslint-disable-next-line no-unused-vars
   const [_, drop] = useDrop(() => ({
     accept: ['connector'],
-    hover: (item, monitor) => {
+    hover: (_, monitor) => {
       const { x: mousePosX, y: mousePosY } = monitor.getClientOffset();
 
       handleMouseMove({
@@ -47,13 +50,9 @@ const LinesContainer = () => {
         mousePosY
       });
     },
-    drop: () => {
-      deleteLine({
-        id: flowTemp.currentLine.id
-      });
-    }
-  }), [flowTemp]);
+    drop: () => deleteLine({ id: flowTemp.currentLine.id })
 
+  }), [flowTemp]);
 
   return (
     <div
@@ -72,6 +71,6 @@ const LinesContainer = () => {
       ))}
     </div>
   );
-};
+});
 
 export default LinesContainer;

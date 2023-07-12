@@ -1,29 +1,9 @@
 .container {
-    width: 100vw;
-    min-height: 100vh;
+  width: 100vw;
+  height: 100vh;
+  overflow: auto;
 }
 
-.buttonsContainer {
-    position: absolute;
-    bottom: 24px;
-    right: 24px;
-    display: flex;
-    gap: 18px;
-}
-
-@media (max-width: 769px) {
-    .buttonsContainer {
-        top: 6px;
-        z-index: 3;
-        height: 56px;
-    }
-}
-
-@media (max-width: 480px) or ((max-height:480px) and (orientation:landscape)) {
-    .buttonsContainer {
-        top: 4px;
-        z-index: 3;
-        height: 24px;
-
-    }
+.container::-webkit-scrollbar {
+  display: none;
 }

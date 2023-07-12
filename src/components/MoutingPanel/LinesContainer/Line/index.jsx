@@ -1,6 +1,7 @@
 import P from 'prop-types';
 import { useEffect, useMemo, useRef, useState } from 'react';
 
+import { useDevices } from '@/hooks/useDevices';
 import { calcDistance, calcAngle } from '@/utils/line-functions';
 import { line, lineRange } from './styles.module.css';
 import ButtonDeleteLine from '../ButtonDeleteLine';
@@ -10,6 +11,8 @@ const Line = ({ id, fromPos, toPos, idConnection = '', deleteLine }) => {
   const [height, setHeight] = useState(0);
   const [disableBtnDelete, setDisableBtnDelete] = useState(true);
 
+  const { deviceScale } = useDevices();
+
   useEffect(() => {
     if (lineRef.current) {
       setHeight(lineRef.current.offsetHeight);
@@ -17,6 +20,7 @@ const Line = ({ id, fromPos, toPos, idConnection = '', deleteLine }) => {
   }, []);
 
   const dimensions = useMemo(() => {
+
     const width = calcDistance({
       x1: fromPos.x,
       y1: fromPos.y,
@@ -50,6 +54,7 @@ const Line = ({ id, fromPos, toPos, idConnection = '', deleteLine }) => {
         left: `${fromPos.x}px`,
         width: `${dimensions.width}px`,
         transform: `rotate(${dimensions.angle}deg)`,
+        height: `${6 * deviceScale}px`
       }}
       onClick={() => handleBtnDelete()}
     >

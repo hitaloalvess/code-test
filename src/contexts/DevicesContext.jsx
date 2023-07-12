@@ -3,19 +3,24 @@ import P from 'prop-types';
 import { v4 } from 'uuid';
 
 import { calcPositionDevice } from '@/utils/devices-functions';
-import { calcPositionConnector } from '@/utils/flow-functions';
-import { findFlowByDeviceId } from "../utils/flow-functions";
+import { findFlowByConnectorId } from "../utils/flow-functions";
 
 export const DevicesContext = createContext();
 
-
 export const DevicesProvider = ({ children }) => {
   const [devices, setDevices] = useState([]);
+  const [deviceScale, setDeviceScale] = useState(1);
 
   const addDevice = (item, monitor) => {
     const { width, height } = item.draggedDevice.getBoundingClientRect();
     const { x, y } = monitor.getClientOffset();
-    const [posX, posY] = calcPositionDevice({ x, y, width, height });
+    const [posX, posY] = calcPositionDevice({
+      x,
+      y,
+      width,
+      height,
+      containerRef: item.containerRef
+    });
 
     setDevices((devices) => [...devices, {
       ...item,
@@ -32,95 +37,123 @@ export const DevicesProvider = ({ children }) => {
     const {
       device,
       screen,
+    } = data;
+    const { id, draggedDevice } = device;
+
+    const { width, height } = draggedDevice.getBoundingClientRect();
+
+    const { x, y } = screen.getClientOffset();
+    const [posX, posY] = calcPositionDevice({
+      x,
+      y,
+      width,
+      height,
+      containerRef: device.containerRef
+    });
+
+    setDevices(prevDevices => {
+      return prevDevices.map(device => {
+        if (device.id === id) {
+          return {
+            ...device,
+            posX,
+            posY
+          }
+        }
+        return device
+      });
+    });
+
+  }, [devices]);
+
+  const repositionConnections = (data) => {
+
+    const {
+      device,
+      connector,
       flows,
       connectionLines,
       updateLines,
       updateFlow
     } = data;
-    const { id, draggedDevice, connRef } = device;
 
-    const { width, height } = draggedDevice.getBoundingClientRect();
-    const { x, y } = screen.getClientOffset();
-    const [posX, posY] = calcPositionDevice({ x, y, width, height });
+    const { id, posX, posY } = connector;
 
-    const newListDevices = devices.map(device => {
-      if (device.id === id) {
-        return {
-          ...device,
-          posX,
-          posY
-        }
+    const selectedFlow = findFlowByConnectorId(flows, id);
+
+    if (!selectedFlow) return;
+
+    let lines = [];
+    let connections = [];
+
+    const connectorConnections = selectedFlow.connections.filter((connection) => {
+      if (connection.deviceFrom.connector.id === id ||
+        connection.deviceTo.connector.id === id
+      ) {
+        return true;
       }
-      return device
+
+      connections.push(connection);
+      return false;
+
     });
 
-    const deviceFlow = findFlowByDeviceId(flows, id);
+    connectorConnections.forEach(connection => {
+      const { deviceFrom, deviceTo } = connection;
+      const connectionLine = connectionLines.find(line => line.id === connection.idLine);
 
-    if (deviceFlow) {
+      let newConnection = {}
 
-      const { x: connPosX, y: connPosY } = calcPositionConnector(connRef.current);
-      let lines = [];
-      let connections = [];
+      if (deviceFrom.id !== device.id && deviceTo.id !== device.id) {
 
-      deviceFlow.connections.forEach(connection => {
-        const { deviceFrom, deviceTo } = connection;
-        const connectionLine = connectionLines.find(line => line.id === connection.idLine);
+        connections.push(connection);
+        lines.push(connectionLine);
 
-        let newLine = {};
-        let newConnection = {}
+      } else {
 
-        if (deviceFrom.id !== id && deviceTo.id !== id) {
+        const { deviceType, connType } = deviceFrom.id === device.id ? {
+          deviceType: 'deviceFrom',
+          connType: 'from'
+        } : {
+          deviceType: 'deviceTo',
+          connType: 'to'
+        };
 
-          connections.push(connection);
-          lines.push(connectionLine);
-
-        } else {
-
-          const { deviceType, connType } = deviceFrom.id === id ? {
-            deviceType: 'deviceFrom',
-            connType: 'from'
-          } : {
-            deviceType: 'deviceTo',
-            connType: 'to'
-          };
-
-          newConnection = {
-            ...connection,
-            [`${deviceType}`]: {
-              ...connection[`${deviceType}`],
-              posX, posY,
-              connector: {
-                ...connection[`${deviceType}`].connector,
-                x: connPosX,
-                y: connPosY
-              }
-            },
-          }
-
-          newLine = {
-            ...connectionLine,
+        newConnection = {
+          ...connection,
+          [`${deviceType}`]: {
+            ...connection[`${deviceType}`],
+            posX: device.posX,
+            posY: device.posY,
+            connector: {
+              ...connection[`${deviceType}`].connector,
+              x: posX,
+              y: posY
+            }
+          },
+        }
+        updateLines({
+          lineId: connectionLine.id,
+          newData: {
             [`${connType}Pos`]: {
-              x: connPosX,
-              y: connPosY
+              x: posX,
+              y: posY
             }
           }
+        });
 
-          connections.push(newConnection);
-          lines.push(newLine);
-        }
 
-      });
 
-      updateLines(lines);
-      updateFlow({
-        ...deviceFlow,
-        connections
-      });
-    }
+        connections.push(newConnection);
+      }
 
-    setDevices(newListDevices);
+    });
 
-  }, [devices]);
+    updateFlow({
+      ...selectedFlow,
+      connections
+    });
+  }
 
   const deleteDevice = useCallback((id) => {
     const newDevices = devices.filter(device => {
@@ -130,9 +163,38 @@ export const DevicesProvider = ({ children }) => {
     setDevices(newDevices);
   }, [devices]);
 
+  const updateDeviceValue = (deviceId, newValues) => {
+
+    setDevices(prevDevices => {
+      return prevDevices.map(device => {
+        if (device.id === deviceId) {
+          return {
+            ...device,
+            ...newValues
+          }
+        }
+
+        return device;
+      })
+    })
+  }
+
+  const handleZoomChange = (value) => {
+    setDeviceScale(value);
+  } //VER SE COMPENSA UTILIZAR USECALLBACK
+
   return (
     <DevicesContext.Provider
-      value={{ devices, addDevice, deleteDevice, repositionDevice }}
+      value={{
+        devices,
+        deviceScale,
+        addDevice,
+        deleteDevice,
+        repositionDevice,
+        repositionConnections,
+        updateDeviceValue,
+        handleZoomChange
+      }}
     >
       {children}
     </DevicesContext.Provider>
