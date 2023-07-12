@@ -9,10 +9,10 @@ import { DevicesProvider } from '@/contexts/DevicesContext';
 import { FlowProvider } from '@/contexts/FlowContext';
 
 import Header from '@/components/Header';
-import Sidebar from '@/components/Sidebar';
+import Sidebar from '@/components/Platform/Sidebar';
 
-import MoutingPanel from '@/components/MoutingPanel';
-import CustomDragLayer from '@/components/CustomDragLayer';
+import MoutingPanel from '@/components/Platform/MoutingPanel';
+import CustomDragLayer from '@/components/Platform/CustomDragLayer';
 
 import { container } from './styles.module.css';
 import { useRef } from 'react';

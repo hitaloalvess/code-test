@@ -1,5 +1,5 @@
 import { createContext, useState } from "react"
-import ModalContainer from "@/components/Modal";
+import ModalContainer from "@/components/Platform/Modal";
 import P from 'prop-types';
 
 export const ModalContext = createContext();
