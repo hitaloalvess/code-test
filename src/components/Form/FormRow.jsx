@@ -1,17 +1,24 @@
 
 import P from 'prop-types';
+import { twMerge } from 'tailwind-merge';
 
-const FormRow = ({ columns = 1, children }) => {
+const FormRow = ({ children, ...rest }) => {
   return (
-    <div className={`grid grid-cols-${columns}`}>
+    <div
+      {...rest}
+      className={twMerge(`grid grid-cols-1`, rest.className)}
+    >
       {children}
     </div>
   );
 };
 
 FormRow.propTypes = {
-  columns: P.number,
-  children: P.element.isRequired
+  children: P.oneOfType([
+    P.element,
+    P.arrayOf(P.element),
+    P.object
+  ])
 }
 
 export default FormRow;

@@ -1,11 +1,13 @@
 
 import P from 'prop-types';
+import { twMerge } from 'tailwind-merge';
 
-const FormRoot = ({ onSubmit, children }) => {
+const FormRoot = ({ onSubmit, children, ...rest }) => {
   return (
     <form
+      {...rest}
       onSubmit={onSubmit}
-      className='w-[420px] flex flex-col gap-[32px]'
+      className={twMerge('w-[420px] flex flex-col gap-[32px]', rest.className)}
     >
       {children}
     </form>
@@ -14,7 +16,11 @@ const FormRoot = ({ onSubmit, children }) => {
 
 FormRoot.propTypes = {
   onSubmit: P.func.isRequired,
-  children: P.element.isRequired
+  children: P.oneOfType([
+    P.element,
+    P.arrayOf(P.element),
+    P.object
+  ])
 }
 
 export default FormRoot;
