@@ -9,7 +9,7 @@ const InputRoot = ({ error, children }) => {
 
       {error && (
         <span
-          className=' text-red'
+          className=' text-red text-xs'
         >
           {error.message}
         </span>

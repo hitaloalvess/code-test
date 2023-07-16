@@ -1,5 +1,5 @@
 
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import {
   ArrowLeft,
   Envelope,
@@ -12,28 +12,37 @@ import {
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { api } from '@/services/api';
 
 import LogoMicrodigo from '@/assets/images/logo-microdigo.svg';
 import Banner from '@/components/Banner';
 
 import { Form } from '@/components/Form';
 import { Input } from '@/components/Input';
-import { isValidCPF, isValidPhoneNumber } from '@/utils/form-validation-functions';
+import { isValidCPF, isValidPhoneNumber, removeSpaces, removeSpecialCharacters } from '@/utils/form-validation-functions';
+import { toast } from 'react-toastify';
 
 
 const signUpSchema = z.object({
   name: z.string().nonempty('Nome é obrigatório'),
   email: z.string().email('Por favor, informe um email válido.'),
-  password: z.string().min(8, { message: 'Por favor, insira uma senha válida.' }),
-  confirm_password: z.string().min(8, { message: 'Por favor, insira uma senha válida' }),
+  password: z.string().min(8, { message: 'Senha deve ter no mínimo 8 caracteres' }),
+  confirm_password: z.string().min(8, { message: 'Senhas não conferem' }),
   cpf: z.string().nonempty('Cpf é obrigatório'),
   phone: z.string().nonempty('Telefone é obrigatório'),
   genre: z.string().nonempty('Campo gênero é obrigatório'),
-  date: z.string().nonempty('Data é obrigatório').pipe(z.coerce.date()),
+  nasc: z.string().nonempty('Data é obrigatório').pipe(z.coerce.date()),
   country: z.string().nonempty('País é obrigatório'),
   state: z.string().nonempty('Estado é obrigatório'),
   city: z.string().nonempty('Cidade é obrigatório'),
 })
+  .refine(({ password }) => {
+    const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$%^&+=!_])[A-Za-z\d@#$%^&+=!_]+$/
+    return regex.test(password)
+  }, {
+    message: 'Senha deve conter caracteres especiais, números, letras maiúsculas e minúsculas',
+    path: ['password']
+  })
   .refine(({ password, confirm_password }) => password === confirm_password, {
     message: 'Senhas não conferem',
     path: ['confirm_password']
@@ -49,6 +58,7 @@ const signUpSchema = z.object({
 
 const SignUp = () => {
 
+  const navigate = useNavigate();
   const { handleSubmit, register, setValue, formState: { errors } } = useForm({
     resolver: zodResolver(signUpSchema),
     shouldFocusError: false
@@ -56,8 +66,30 @@ const SignUp = () => {
 
   const handleChangeValue = (nameField, value) => setValue(nameField, value, { shouldValidate: true })
 
-  const handleSubmitForm = (data) => {
-    console.log(data);
+  const handleSubmitForm = async (formData) => {
+
+    const transformCPF = removeSpecialCharacters(formData.cpf);
+    const transformPhone = removeSpaces(removeSpecialCharacters(formData.phone));
+    const transformNasc = new Date(formData.nasc)
+
+    const data = {
+      ...formData,
+      cpf: transformCPF,
+      phone: transformPhone,
+      nasc: transformNasc
+    }
+    delete data.confirm_password;
+
+    try {
+
+      await api.post('users', data);
+      toast.success('Usuário cadastrado com sucesso!');
+
+      return navigate('/');
+
+    } catch (error) {
+      toast.error(error.response.data.message);
+    }
   }
 
   return (
@@ -177,7 +209,7 @@ const SignUp = () => {
                 </Input.Root>
 
                 <Input.Root
-                  error={errors.date}
+                  error={errors.nasc}
                 >
                   <Input.Icon
                     icon={<Cake fontSize={20}
@@ -185,7 +217,7 @@ const SignUp = () => {
                     />}
                   />
                   <Input.DateType
-                    {...register('date')}
+                    {...register('nasc')}
                   />
                 </Input.Root>
 

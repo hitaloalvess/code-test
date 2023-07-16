@@ -9,6 +9,10 @@ export const isValidCPF = (cpf) => {
   return cpfRegex.test(cpf);
 }
 
+export const formatCPF = (cpf) => cpf.replace(/^(\d{3})(\d{3})(\d{3})(\d{2})$/, '$1.$2.$3-$4');
+
+export const formatPhone = (phone) => phone.replace(/^(\d{2})(\d{2})(\d{5})(\d{4})$/, '+$1 ($2) $3-$4');
+
 export const applyMask = (typeMask, value) => {
   const masks = {
     cpf: (value) => value.replace(/\D/g, '')
@@ -26,3 +30,7 @@ export const applyMask = (typeMask, value) => {
 
   return maskSeleted(value);
 }
+
+export const removeSpecialCharacters = (text) => text.replace(/[^\w\s]/gi, '')
+
+export const removeSpaces = (text) => text.replace(/\s/g, '');
