@@ -9,6 +9,7 @@ import { Input } from '@/components/Input';
 import Banner from '@/components/Banner';
 import { Form } from '@/components/Form'
 import { useEffect, useRef, useState } from 'react';
+import { useContextAuth } from '../../hooks/useAuth';
 
 const signInSchema = z.object({
   email: z.string().email('Por favor, informe um email válido.'),
@@ -18,6 +19,8 @@ const signInSchema = z.object({
 const SignIn = () => {
   const isFirstRender = useRef(true);
   const [hasCompletedFields, setHasCompletedFields] = useState(true);
+
+  const { handleSignIn } = useContextAuth();
 
   const {
     handleSubmit,
@@ -43,9 +46,8 @@ const SignIn = () => {
   }, [watch('email'), watch('password')])
 
 
-  const handleSubmitForm = (data) => {
-    console.log('Enviando formulário');
-    console.log(data);
+  const handleSubmitForm = async ({ email, password }) => {
+    await handleSignIn({ email, password });
   }
 
   return (
