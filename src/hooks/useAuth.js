@@ -1,27 +1,27 @@
 
 import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import jwtDecode from 'jwt-decode';
+// import jwtDecode from 'jwt-decode';
 
 import { api } from '@/services/api';
 import { toast } from "react-toastify";
 import { AuthContext } from '../contexts/AuthContext';
 
-const isTokenValid = (token) => {
-  if (!token) return false;
+// const isTokenValid = (token) => {
+//   if (!token) return false;
 
-  try {
-    const decodedToken = jwtDecode(token);
+//   try {
+//     const decodedToken = jwtDecode(token);
 
-    console.log(decodedToken);
+//     console.log(decodedToken);
 
-    return true;
-  } catch (error) {
-    return false;
-  }
+//     return true;
+//   } catch (error) {
+//     return false;
+//   }
 
 
-}
+// }
 
 export const useAuth = () => {
   const navigate = useNavigate();
@@ -33,14 +33,19 @@ export const useAuth = () => {
 
   useEffect(() => {
     async function getUserData() {
-      const { data: user } = await api.get('/users/me');
+      try {
+        const { data: user } = await api.get('/users/me');
 
-      return user;
+        return user;
+      }catch{
+        return null
+      }
     }
 
     const token = localStorage.getItem('@Microdigo:token');
 
-    if (token && isTokenValid(token)) {
+    if (token /*&& isTokenValid(token)*/) {
+      console.log('ENTREI AQUI');
       api.defaults.headers.Authorization = `Bearer ${JSON.parse(token)}`;
 
       getUserData().then(data => setUser(data))
