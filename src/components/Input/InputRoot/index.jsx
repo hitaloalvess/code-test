@@ -1,15 +1,17 @@
 import P from 'prop-types';
 
+import * as I from './styles.module.css';
+
 const InputRoot = ({ error, children }) => {
   return (
-    <div className='flex flex-col gap-y-1'>
-      <div className="relative  w-full h-[48px] flex gap-3 items-center px-6 rounded bg-white-200">
+    <div className={I.container}>
+      <div className={I.content}>
         {children}
       </div>
 
       {error && (
         <span
-          className=' text-red text-xs'
+          className={I.messageError}
         >
           {error.message}
         </span>

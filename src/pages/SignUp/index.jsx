@@ -12,16 +12,17 @@ import {
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { api } from '@/services/api';
+import { toast } from 'react-toastify';
 
+import { api } from '@/services/api';
 import LogoMicrodigo from '@/assets/images/logo-microdigo.svg';
 import Banner from '@/components/Banner';
-
 import { Form } from '@/components/Form';
 import { Input } from '@/components/Input';
 import { isValidCPF, isValidPhoneNumber, removeSpaces, removeSpecialCharacters } from '@/utils/form-validation-functions';
-import { toast } from 'react-toastify';
 
+
+import * as S from './styles.module.css';
 
 const signUpSchema = z.object({
   name: z.string().nonempty('Nome é obrigatório'),
@@ -93,29 +94,29 @@ const SignUp = () => {
   }
 
   return (
-    <main className='w-screen h-screen grid grid-cols-[1fr_420px] overflow-hidden'>
+    <main className={S.container}>
 
-      <div className='w-full flex items-center flex-col py-[44px] px-[80px] gap-[44px] overflow-y-auto no-scrollbar'>
+      <div className={S.content}>
 
-        <header className='relative w-full flex justify-center items-center'>
+        <header className={S.header}>
 
-          <Link to={'/'} className='absolute left-0'>
+          <Link to={'/'} className={S.backButton}>
             <ArrowLeft fontSize={24} className='text-gray-100 transition-all duration-[450ms] hover:text-blue hover:scale-110' />
           </Link>
 
-          <div className="max-w-[200px]">
+          <div className={S.logo}>
             <img src={LogoMicrodigo} alt="Logo microdigo" />
           </div>
 
         </header>
 
 
-        <div className='w-full'>
-          <Form.Root className='w-full' onSubmit={handleSubmit(handleSubmitForm)}>
+        <div className={S.formContainer}>
+          <Form.Root onSubmit={handleSubmit(handleSubmitForm)}>
             <Form.Title text={'Crie sua conta'} />
 
             <Form.Content>
-              <Form.Row>
+              <Form.Row >
                 <Input.Root
                   error={errors.name}
                 >
@@ -144,7 +145,7 @@ const SignUp = () => {
               </Form.Row>
 
 
-              <Form.Row className='grid-cols-2 gap-x-6'>
+              <Form.Row columns={2}>
                 <Input.Root
                   error={errors.password}
                 >
@@ -166,7 +167,7 @@ const SignUp = () => {
                 </Input.Root>
               </Form.Row>
 
-              <Form.Row className='grid-cols-2 gap-6'>
+              <Form.Row columns={2}>
                 <Input.Root
                   error={errors.cpf}
                 >
@@ -195,7 +196,7 @@ const SignUp = () => {
               </Form.Row>
 
 
-              <Form.Row className='grid-cols-2 gap-6'>
+              <Form.Row columns={2}>
                 <Input.Root
                   error={errors.genre}
                 >
@@ -224,7 +225,7 @@ const SignUp = () => {
               </Form.Row>
 
 
-              <Form.Row className='grid-cols-3 gap-6'>
+              <Form.Row columns={3}>
                 <Input.Root
                   error={errors.country}
                 >

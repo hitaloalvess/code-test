@@ -1,8 +1,10 @@
 
 import P from 'prop-types';
 import { CaretDown } from '@phosphor-icons/react';
-import { twMerge } from 'tailwind-merge';
 import { forwardRef, useMemo } from 'react';
+
+import * as C from '@/styles/common.module.css';
+import * as I from './styles.module.css';
 
 const InputSelectType = forwardRef(function InputSelectType(
   { options, defaultOptTxt, hasIconSibling = true, ...rest }, ref
@@ -17,14 +19,14 @@ const InputSelectType = forwardRef(function InputSelectType(
       <select
         ref={ref}
         {...rest}
-        className={twMerge(`appearance-none absolute top-0 left-0 w-full h-full ${hasIconSibling ? 'px-[56px]' : 'px-[24px]'} bg-transparent uppercase outline-none rounded cursor-pointer focus:outline focus:outline-blue transition-[outline] duration-[450ms]`, rest.className)}
+        className={`${C.inputForm} ${I.selectInput} ${!hasIconSibling ? C.hasNoInputIcon : ''}`}
       >
         {
           optListTransform.map((option, index) => (
             <option
               key={index}
               value={index !== 0 ? option : ''}
-              className={`appearance-none bg-gray-200`}
+              className={I.selectOpt}
             >
               {option}
             </option>
@@ -34,7 +36,7 @@ const InputSelectType = forwardRef(function InputSelectType(
       </select>
 
       <CaretDown
-        className='text-gray-100 ml-auto cursor-pointer transition-all duration-[450ms] hover:text-blue z-[1]'
+        className={I.selectIcon}
       />
     </>
   );

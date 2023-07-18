@@ -11,6 +11,8 @@ import { Form } from '@/components/Form'
 import { useEffect, useRef, useState } from 'react';
 import { useContextAuth } from '../../hooks/useAuth';
 
+import * as S from './styles.module.css';
+
 const signInSchema = z.object({
   email: z.string().email('Por favor, informe um email válido.'),
   password: z.string().min(4, { message: 'Por favor, insira uma senha válida.' })
@@ -51,14 +53,14 @@ const SignIn = () => {
   }
 
   return (
-    <main className='w-screen h-screen grid grid-cols-[1fr_420px]'>
-      <div className='w-full flex items-center flex-col py-[44px] gap-[80px]'>
+    <main className={S.container}>
+      <div className={S.content}>
 
-        <div className="max-w-[200px]">
+        <header className={S.header}>
           <img src={LogoMicrodigo} alt="Logo microdigo" />
-        </div>
+        </header>
 
-        <div className='flex flex-col items-center gap-6'>
+        <div className={S.formContainer}>
           <Form.Root onSubmit={handleSubmit(handleSubmitForm)}>
             <>
               <Form.Title text={'Login'} />
@@ -71,7 +73,7 @@ const SignIn = () => {
                     >
                       <>
                         <Input.Icon
-                          icon={<Envelope fontSize={20} className={'text-gray-100'} />}
+                          icon={<Envelope fontSize={20} color='var(--gray-100)' />}
                         />
                         <Input.TextType
                           placeholder={"Email"}
@@ -101,16 +103,17 @@ const SignIn = () => {
             </>
           </Form.Root>
 
-          <div className='flex items-baseline gap-2'>
-            <p className='text-xs'>Não tem uma conta?</p>
+          <div className={S.linkSignupContainer}>
+
+            <p>Não tem uma conta?</p>
+
             <Link to={'/signup'}>
-              <span
-                className='font-bold transition-all duration-300  hover:text-blue'
-              >
+              <span className={S.linkSignup}>
                 Cadastre-se
               </span>
             </Link>
           </div>
+
         </div>
       </div>
 

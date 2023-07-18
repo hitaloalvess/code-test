@@ -1,7 +1,8 @@
 import P from 'prop-types';
 import { forwardRef } from 'react';
 
-import { twMerge } from "tailwind-merge";
+import * as C from '@/styles/common.module.css';
+import * as I from './styles.module.css';
 
 const InputDateType = forwardRef(function InputDateType(
   { hasIconSibling = true, ...rest }, ref
@@ -12,7 +13,7 @@ const InputDateType = forwardRef(function InputDateType(
       ref={ref}
       {...rest}
       type="date"
-      className={twMerge(`absolute text-gray-100 top-0 left-0 w-full h-full ${hasIconSibling ? 'px-[56px]' : 'px-[24px]'} bg-transparent outline-none rounded focus:outline focus:outline-blue transition-[outline] duration-[450ms]`, rest.className)}
+      className={`${C.inputForm} ${!hasIconSibling ? C.hasNoInputIcon : ''} ${I.inputDate}`}
     />
   );
 });

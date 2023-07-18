@@ -1,6 +1,7 @@
 import P from 'prop-types';
 import { forwardRef } from 'react';
-import { twMerge } from 'tailwind-merge';
+
+import * as C from '@/styles/common.module.css';
 
 const InputTextType = forwardRef(function InputTextType({
   hasIconSibling = true,
@@ -14,7 +15,7 @@ const InputTextType = forwardRef(function InputTextType({
       placeholder={placeholder}
       ref={ref}
       {...rest}
-      className={twMerge(`absolute top-0 left-0 w-full h-full ${hasIconSibling ? 'px-[56px]' : 'px-[24px]'} bg-transparent outline-none rounded focus:outline focus:outline-blue transition-[outline] duration-[450ms]`, rest.className)}
+      className={`${C.inputForm} ${!hasIconSibling ? C.hasNoInputIcon : ''}`}
     />
   )
 });

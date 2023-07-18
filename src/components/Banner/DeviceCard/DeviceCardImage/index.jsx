@@ -1,9 +1,11 @@
 import P from 'prop-types';
 
+import * as DC from './styles.module.css';
+
 const DeviceCardImage = ({ imgSrc }) => {
   return (
     <img
-      className='w-full h-full'
+      className={DC.cardImage}
       src={imgSrc}
       alt="Imagem de um dispositivo microdigo"
     />

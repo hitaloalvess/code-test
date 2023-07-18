@@ -1,0 +1,12 @@
+.inputPasswordIcon {
+  font-size: 20px;
+  color: var(--gray-100);
+  margin-left: auto;
+  cursor: pointer;
+  transition: color 0.3s ease-in-out;
+  z-index: 1;
+}
+
+.inputPasswordIcon:hover {
+  color: var(--blue);
+}

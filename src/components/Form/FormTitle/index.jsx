@@ -1,10 +1,10 @@
 import P from 'prop-types';
 
+import * as F from './styles.module.css';
+
 const FormTitle = ({ text }) => {
   return (
-    <h1
-      className='text-3xl'
-    >
+    <h1 className={F.title}>
       {text}
     </h1>
   );

@@ -1,9 +1,10 @@
 import P from 'prop-types';
-import { twMerge } from 'tailwind-merge';
+
+import * as F from './styles.module.css';
 
 const FormContent = ({ children, ...rest }) => {
   return (
-    <div className={twMerge(`flex flex-col gap-[12px]`, rest.className)}>
+    <div {...rest} className={F.content}>
       {children}
     </div>
   );

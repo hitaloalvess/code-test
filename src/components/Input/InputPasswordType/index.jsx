@@ -1,8 +1,9 @@
 import P from 'prop-types';
 import { Eye, EyeSlash } from "@phosphor-icons/react";
 import { forwardRef, useState } from "react";
-import { twMerge } from "tailwind-merge";
 
+import * as C from '@/styles/common.module.css';
+import * as I from './styles.module.css';
 
 const InputPasswordType = forwardRef(function InputPasswordType({
   hasIconSibling = true,
@@ -23,21 +24,19 @@ const InputPasswordType = forwardRef(function InputPasswordType({
         placeholder={placeholder}
         ref={ref}
         {...rest}
-        className={twMerge(`absolute top-0 left-0 w-full h-full ${hasIconSibling ? 'px-[56px]' : 'px-[24px]'} bg-transparent outline-none rounded focus:outline focus:outline-blue transition-[outline] duration-[450ms]`, rest.className)}
+        className={`${C.inputForm} ${!hasIconSibling ? C.hasNoInputIcon : ''}`}
       />
 
       {passwordIsVisible ?
         (
           <EyeSlash
-            fontSize={20}
-            className='text-gray-100 ml-auto cursor-pointer transition-all duration-[450ms] hover:text-blue z-[1]'
+            className={I.inputPasswordIcon}
             onClick={handleVisiblePassword}
           />
         ) :
         (
           <Eye
-            fontSize={20}
-            className='text-gray-100 ml-auto cursor-pointer transition-all duration-[450ms] hover:text-blue z-[1]'
+            className={I.inputPasswordIcon}
             onClick={handleVisiblePassword}
           />
         )}

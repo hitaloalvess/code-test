@@ -2,33 +2,28 @@ import BannerImg from '@/assets/images/banner.webp';
 import DeviceImageLDR from '@/assets/images/devices/entry/ldr.svg';
 import DeviceImagePotentiometer from '@/assets/images/devices/entry/potentiometer.svg';
 import DeviceImageLED from '@/assets/images/devices/exit/led.svg';
-
 import { DeviceCard } from './DeviceCard';
+
+import * as B from './styles.module.css';
 
 const Banner = () => {
   return (
-    <section className='flex justify-end items-center bg-white-100'>
+    <section className={B.container}>
 
-      <div className='fixed w-[380px]'>
+      <div className={B.hero}>
         <img src={BannerImg} alt="Imagem da plataforma microdigo" />
       </div>
 
-      <div className="relative w-full h-full">
-        <DeviceCard.Root
-          className="top-[60px] right-[48px] bg-red"
-        >
+      <div className={B.content}>
+        <DeviceCard.Root color='red'>
           <DeviceCard.Image imgSrc={DeviceImageLED} />
         </DeviceCard.Root>
 
-        <DeviceCard.Root
-          className="top-[40px] left-[82px] bg-yellow"
-        >
+        <DeviceCard.Root color='yellow'>
           <DeviceCard.Image imgSrc={DeviceImagePotentiometer} />
         </DeviceCard.Root>
 
-        <DeviceCard.Root
-          className="bottom-14 right-[135px] bg-blue"
-        >
+        <DeviceCard.Root color='blue'>
           <DeviceCard.Image imgSrc={DeviceImageLDR} />
         </DeviceCard.Root>
       </div>

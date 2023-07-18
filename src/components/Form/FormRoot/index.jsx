@@ -1,13 +1,14 @@
 
 import P from 'prop-types';
-import { twMerge } from 'tailwind-merge';
+
+import * as F from './styles.module.css';
 
 const FormRoot = ({ onSubmit, children, ...rest }) => {
   return (
     <form
       {...rest}
       onSubmit={onSubmit}
-      className={twMerge('w-[420px] flex flex-col gap-[32px]', rest.className)}
+      className={F.container}
     >
       {children}
     </form>
