@@ -19,7 +19,7 @@ import {
 } from '../../styles.module.css';
 
 const MAX_VALUE = 1023;
-const Potentiometer = memo(function Potentiometer({
+const SoilHumidity = memo(function SoilHumidity({
   dragRef, device, updateValue
 }) {
 
@@ -32,7 +32,7 @@ const Potentiometer = memo(function Potentiometer({
   const inputRef = useRef(null);
   const showValueRef = useRef(null);
 
-  const getResistance = () => {
+  const getValue = () => {
     return {
       value: Number(inputRef.current.value),
       max: MAX_VALUE
@@ -48,7 +48,7 @@ const Potentiometer = memo(function Potentiometer({
       max: MAX_VALUE
     });
 
-    executeFlow({ connectorId, fromBehaviorCallback: getResistance });
+    executeFlow({ connectorId, fromBehaviorCallback: getValue });
 
   }
 
@@ -92,11 +92,11 @@ const Potentiometer = memo(function Potentiometer({
         className={`${connectorsContainer} ${connectorsContainerExit}`}
       >
         <Connector
-          name={'resistance'}
+          name={'humidity'}
           type={'exit'}
           device={{
             id,
-            defaultBehavior: getResistance,
+            defaultBehavior: getValue,
             containerRef: device.containerRef
           }}
           updateConn={{ posX, posY }}
@@ -129,10 +129,10 @@ const Potentiometer = memo(function Potentiometer({
   );
 });
 
-Potentiometer.propTypes = {
+SoilHumidity.propTypes = {
   dragRef: P.func.isRequired,
   device: P.object.isRequired,
   updateValue: P.func.isRequired
 }
 
-export default Potentiometer;
+export default SoilHumidity;

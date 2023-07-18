@@ -5,6 +5,7 @@ import deviceSwitch from '@/assets/images/devices/entry/switchOff.svg';
 import devicePushButton from '@/assets/images/devices/entry/pushButtonOff.svg';
 import deviceDht from '@/assets/images/devices/entry/dht.svg';
 import deviceInfrared from '@/assets/images/devices/entry/infrared.svg';
+import deviceSoilHumidity from '@/assets/images/devices/entry/potentiometer.svg';
 
 //exit
 import deviceLed from '@/assets/images/devices/exit/led.svg';
@@ -84,6 +85,17 @@ export const mockDevices = {
       type: 'virtual',
       category: 'entry',
       value: false
+    },
+    {
+      id: 12,
+      imgSrc: deviceSoilHumidity,
+      name: 'soilHumidity',
+      type: 'virtual',
+      category: 'entry',
+      value: {
+        current: 0,
+        max: 1023
+      },
     },
   ],
   exit: [
@@ -267,6 +279,10 @@ export const deviceConnectorRules = {
     connectsTo: ['all']
   },
   pushButton: {
+    acceptedConnections: ['allExit'],
+    connectsTo: ['all']
+  },
+  soilHumidity: {
     acceptedConnections: ['allExit'],
     connectsTo: ['all']
   },

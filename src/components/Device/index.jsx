@@ -10,6 +10,7 @@ import Potentiometer from './Entry/Potentiometer';
 import Switch from './Entry/Switch';
 import PushButton from './Entry/PushButton';
 import Infrared from './Entry/Infrared';
+import SoilHumidity from './Entry/SoilHumidity';
 
 import Led from './Exit/Led';
 import LedMono from './Exit/LedMono';
@@ -74,7 +75,8 @@ const Device = memo(function Device({ device: { ...device } }) {
     delay: Delay,
     slider: Slider,
     pickColor: PickColor,
-    counter: Counter
+    counter: Counter,
+    soilHumidity: SoilHumidity
   }
 
   const CurrentDevice = devices[device.name];
