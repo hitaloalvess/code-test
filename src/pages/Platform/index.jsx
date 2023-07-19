@@ -4,7 +4,6 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 import { TouchBackend } from 'react-dnd-touch-backend';
 import { isMobile } from 'react-device-detect';
 
-import { ModalProvider } from '@/contexts/ModalContext';
 import { DevicesProvider } from '@/contexts/DevicesContext';
 import { FlowProvider } from '@/contexts/FlowContext';
 
@@ -23,21 +22,19 @@ const Platform = () => {
 
   return (
     <DndProvider backend={isMobile ? TouchBackend : HTML5Backend}>
-      <ModalProvider>
-        <DevicesProvider>
-          <FlowProvider>
-            <main className={container} ref={containerRef}>
-              <Header />
+      <DevicesProvider>
+        <FlowProvider>
+          <main className={container} ref={containerRef}>
+            <Header />
 
-              <Sidebar />
+            <Sidebar />
 
-              <MoutingPanel ref={containerRef} />
+            <MoutingPanel ref={containerRef} />
 
 
-            </main>
-          </FlowProvider>
-        </DevicesProvider>
-      </ModalProvider>
+          </main>
+        </FlowProvider>
+      </DevicesProvider>
 
       {isMobile && <CustomDragLayer />}
     </DndProvider>

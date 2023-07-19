@@ -4,19 +4,24 @@ export const api = axios.create({
   baseURL: "http://localhost:3000"
 })
 
-api.interceptors.response.use(
-  response => response,
-  error => {
-    if(error.response?.status === 401){
+export const setupInterceptors = navigate => {
 
-      if(error.response.data?.message === 'Token inválido'){
-        localStorage.removeItem('@Microdigo:token');
-        api.defaults.headers.Authorization = undefined;
+  api.interceptors.response.use(
+    response => response,
+    error => {
+      if (error.response?.status === 401) {
 
-        window.location.replace('/');
+        if (error.response.data?.message === 'Token inválido') {
+
+          console.log('RECEPTOR -> TOKEN INVALIDO')
+          localStorage.removeItem('@Microdigo:token');
+          api.defaults.headers.common.Authorization = undefined;
+
+          return navigate('/')
+        }
       }
-    }
 
-    return Promise.reject(error);
-  }
-)
+      return Promise.reject(error);
+    }
+  )
+}

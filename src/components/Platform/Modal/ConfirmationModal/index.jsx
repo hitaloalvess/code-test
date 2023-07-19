@@ -18,7 +18,7 @@ import {
 const ConfirmationModal = ({
   closeModal, contentData
 }) => {
-  const { title, subtitle, handleConfirm } = contentData;
+  const { title, subtitle, handleConfirm, notRenderCancel } = contentData;
   return (
 
     <section
@@ -52,12 +52,16 @@ const ConfirmationModal = ({
         >
           Confirmar
         </button>
-        <button
-          className={`${btn} ${btnCancel}`}
-          onClick={closeModal}
-        >
-          Cancel
-        </button>
+        {
+          !notRenderCancel && (
+            <button
+              className={`${btn} ${btnCancel}`}
+              onClick={closeModal}
+            >
+              Cancel
+            </button>
+          )
+        }
       </div>
     </section>
   );
@@ -68,7 +72,8 @@ ConfirmationModal.propTypes = {
   contentData: P.shape({
     title: P.string,
     subtitle: P.string,
-    handleConfirm: P.func
+    handleConfirm: P.func,
+    notRenderCancel: P.bool
   }).isRequired
 }
 

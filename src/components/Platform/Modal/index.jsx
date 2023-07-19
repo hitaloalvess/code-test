@@ -40,28 +40,28 @@ const ModalContainer = ({ modalIsOpen, closeModal, contentData }) => {
       contentData={contentData}
     />,
     'config-buzzer': <ConfigBuzzerModal
-    closeModal={closeModal}
-    contentData={contentData}
+      closeModal={closeModal}
+      contentData={contentData}
     />,
     'config-delay': <ConfigDelayModal
-    closeModal={closeModal}
-    contentData={contentData}
+      closeModal={closeModal}
+      contentData={contentData}
     />,
     'config-slider': <ConfigSliderModal
-    closeModal={closeModal}
-    contentData={contentData}
+      closeModal={closeModal}
+      contentData={contentData}
     />,
     'config-dht': <ConfigDhtModal
-    closeModal={closeModal}
-    contentData={contentData}
+      closeModal={closeModal}
+      contentData={contentData}
     />,
     'config-if': <ConfigIfModal
-    closeModal={closeModal}
-    contentData={contentData}
+      closeModal={closeModal}
+      contentData={contentData}
     />,
     'config-pickColor': <ConfigPickColorModal
-    closeModal={closeModal}
-    contentData={contentData}
+      closeModal={closeModal}
+      contentData={contentData}
     />
   }
 
@@ -74,6 +74,7 @@ const ModalContainer = ({ modalIsOpen, closeModal, contentData }) => {
       onRequestClose={closeModal}
       contentLabel='Example Modal'
       className={container}
+      shouldCloseOnOverlayClick={false}
     >
       <header className={header}>
         <img

@@ -1,30 +1,17 @@
 
 import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-// import jwtDecode from 'jwt-decode';
 
+import { useModal } from '@/hooks/useModal';
 import { api } from '@/services/api';
 import { toast } from "react-toastify";
-import { AuthContext } from '../contexts/AuthContext';
-
-// const isTokenValid = (token) => {
-//   if (!token) return false;
-
-//   try {
-//     const decodedToken = jwtDecode(token);
-
-//     console.log(decodedToken);
-
-//     return true;
-//   } catch (error) {
-//     return false;
-//   }
-
-
-// }
+import { AuthContext } from '@/contexts/AuthContext';
+import { isTokenValid } from '@/utils/token-validation';
 
 export const useAuth = () => {
   const navigate = useNavigate();
+
+  const { enableModal, disableModal } = useModal();
 
   const [user, setUser] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -37,27 +24,47 @@ export const useAuth = () => {
         const { data: user } = await api.get('/users/me');
 
         return user;
-      }catch{
+      } catch {
         return null
       }
     }
 
     const token = localStorage.getItem('@Microdigo:token');
 
-    if (token /*&& isTokenValid(token)*/) {
-      console.log('ENTREI AQUI');
-      api.defaults.headers.Authorization = `Bearer ${JSON.parse(token)}`;
-
-      getUserData().then(data => setUser(data))
-      setIsAuthenticated(true);
-
-      return navigate('/platform');
-
-    } else {
-      localStorage.removeItem('@Microdigo:token');
+    if (!token) {
+      return;
     }
 
-    setIsLoading(false);
+    if (!isTokenValid(token)) {
+      localStorage.removeItem('@Microdigo:token');
+      setIsAuthenticated(false);
+      setIsLoading(false);
+
+      enableModal({
+        typeContent: 'confirmation',
+        title: 'Sessão expirada',
+        subtitle: 'Sua sessão foi expirada, por favor faça o login novamente!!',
+        handleConfirm: () => {
+          disableModal();
+          navigate('/');
+        },
+        notRenderCancel: true
+      });
+
+      return;
+    }
+
+    api.defaults.headers.common.Authorization = `Bearer ${JSON.parse(token)}`;
+
+    getUserData()
+      .then(data => {
+        setUser(data);
+        setIsAuthenticated(true);
+        setIsLoading(false);
+      })
+
+    return navigate('/platform');
+
 
   }, []);
 

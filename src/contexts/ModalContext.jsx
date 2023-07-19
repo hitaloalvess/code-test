@@ -33,5 +33,9 @@ export const ModalProvider = ({ children }) => {
 }
 
 ModalProvider.propTypes = {
-  children: P.element.isRequired
+  children: P.oneOfType([
+    P.element,
+    P.arrayOf(P.element),
+    P.object
+  ])
 }
