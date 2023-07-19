@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Envelope, Lock } from '@phosphor-icons/react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -19,10 +19,12 @@ const signInSchema = z.object({
 }).required();
 
 const SignIn = () => {
-  const isFirstRender = useRef(true);
+  const navigate = useNavigate();
+  const { handleSignIn, isAuthenticated } = useContextAuth();
+
   const [hasCompletedFields, setHasCompletedFields] = useState(true);
 
-  const { handleSignIn } = useContextAuth();
+  const isFirstRender = useRef(true);
 
   const {
     handleSubmit,
@@ -33,6 +35,12 @@ const SignIn = () => {
     shouldFocusError: false,
     resolver: zodResolver(signInSchema)
   });
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/platform');
+    }
+  }, []);
 
   useEffect(() => {
     if (isFirstRender.current) {
