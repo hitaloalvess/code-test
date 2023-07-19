@@ -34,3 +34,8 @@ export const applyMask = (typeMask, value) => {
 export const removeSpecialCharacters = (text) => text.replace(/[^\w\s]/gi, '')
 
 export const removeSpaces = (text) => text.replace(/\s/g, '');
+
+
+export const formatInputDateDefaultValue = (date) => {
+  return new Date(date).toISOString().split('T')[0];
+}

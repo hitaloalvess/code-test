@@ -7,6 +7,7 @@ import * as I from './styles.module.css';
 
 const InputPasswordType = forwardRef(function InputPasswordType({
   hasIconSibling = true,
+  defaultValue = '',
   placeholder,
   ...rest
 }, ref) {
@@ -22,6 +23,7 @@ const InputPasswordType = forwardRef(function InputPasswordType({
       <input
         type={passwordIsVisible ? 'text' : 'password'}
         placeholder={placeholder}
+        defaultValue={defaultValue}
         ref={ref}
         {...rest}
         className={`${C.inputForm} ${!hasIconSibling ? C.hasNoInputIcon : ''}`}
@@ -45,6 +47,7 @@ const InputPasswordType = forwardRef(function InputPasswordType({
 });
 
 InputPasswordType.propTypes = {
+  defaultValue: P.string,
   placeholder: P.string.isRequired,
   type: P.string,
   hasIconSibling: P.bool

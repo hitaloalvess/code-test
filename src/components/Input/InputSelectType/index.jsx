@@ -7,7 +7,14 @@ import * as C from '@/styles/common.module.css';
 import * as I from './styles.module.css';
 
 const InputSelectType = forwardRef(function InputSelectType(
-  { options, defaultOptTxt, hasIconSibling = true, ...rest }, ref
+  {
+    options,
+    defaultOptTxt,
+    defaultValue = '',
+    hasIconSibling = true,
+    ...rest
+  },
+  ref
 ) {
 
   const optListTransform = useMemo(() => {
@@ -18,6 +25,7 @@ const InputSelectType = forwardRef(function InputSelectType(
     <>
       <select
         ref={ref}
+        defaultValue={defaultValue}
         {...rest}
         className={`${C.inputForm} ${I.selectInput} ${!hasIconSibling ? C.hasNoInputIcon : ''}`}
       >
@@ -43,6 +51,7 @@ const InputSelectType = forwardRef(function InputSelectType(
 });
 
 InputSelectType.propTypes = {
+  defaultValue: P.string,
   options: P.array.isRequired,
   defaultOptTxt: P.string.isRequired,
   hasIconSibling: P.bool

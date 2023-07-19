@@ -6,6 +6,7 @@ import * as C from '@/styles/common.module.css';
 const InputTextType = forwardRef(function InputTextType({
   hasIconSibling = true,
   placeholder,
+  defaultValue = '',
   ...rest
 }, ref) {
 
@@ -13,6 +14,7 @@ const InputTextType = forwardRef(function InputTextType({
     <input
       type={'text'}
       placeholder={placeholder}
+      defaultValue={defaultValue}
       ref={ref}
       {...rest}
       className={`${C.inputForm} ${!hasIconSibling ? C.hasNoInputIcon : ''}`}
@@ -21,6 +23,7 @@ const InputTextType = forwardRef(function InputTextType({
 });
 
 InputTextType.propTypes = {
+  defaultValue: P.string,
   placeholder: P.string.isRequired,
   type: P.string,
   hasIconSibling: P.bool

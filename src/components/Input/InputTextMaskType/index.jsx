@@ -8,6 +8,7 @@ import * as C from '@/styles/common.module.css';
 const InputTextMaskType = forwardRef(function InputTextType({
   name,
   hasIconSibling = true,
+  defaultValue = '',
   placeholder,
   maskChange,
   ...rest
@@ -25,6 +26,7 @@ const InputTextMaskType = forwardRef(function InputTextType({
     <input
       type={'text'}
       placeholder={placeholder}
+      defaultValue={defaultValue ? applyMask(name, defaultValue) : ''}
       ref={ref}
       {...rest}
       className={`${C.inputForm} ${!hasIconSibling ? C.hasNoInputIcon : ''}`}
@@ -35,6 +37,7 @@ const InputTextMaskType = forwardRef(function InputTextType({
 
 InputTextMaskType.propTypes = {
   name: P.string.isRequired,
+  defaultValue: P.string,
   placeholder: P.string.isRequired,
   type: P.string,
   maskChange: P.func.isRequired,

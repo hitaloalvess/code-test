@@ -177,6 +177,7 @@ const SignUp = () => {
                   <Input.TextMaskType
                     placeholder={"Digite seu cpf"}
                     maskChange={handleChangeValue}
+                    defaultValue={'419.560.068-50'}
                     {...register('cpf')}
                   />
                 </Input.Root>
@@ -189,6 +190,7 @@ const SignUp = () => {
                   />
                   <Input.TextMaskType
                     placeholder={"+55 (00) 00000-0000"}
+                    defaultValue={'+55 (17) 99679-0426'}
                     maskChange={handleChangeValue}
                     {...register('phone')}
                   />
