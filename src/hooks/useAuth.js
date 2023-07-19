@@ -32,6 +32,8 @@ export const useAuth = () => {
     const token = localStorage.getItem('@Microdigo:token');
 
     if (!token) {
+      setIsAuthenticated(false);
+      setIsLoading(false);
       return;
     }
 
@@ -59,9 +61,10 @@ export const useAuth = () => {
     getUserData()
       .then(data => {
         setUser(data);
-        setIsAuthenticated(true);
-        setIsLoading(false);
       })
+
+    setIsAuthenticated(true);
+    setIsLoading(false);
 
     return navigate('/platform');
 

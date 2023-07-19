@@ -1,4 +1,3 @@
-import React from 'react'
 import Modal from 'react-modal';
 import { BrowserRouter } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
@@ -15,39 +14,37 @@ Modal.setAppElement('#root');
 const App = () => {
 
   return (
-    <React.StrictMode>
-      <BrowserRouter>
+    <BrowserRouter>
 
-        <ModalProvider>
+      <ModalProvider>
 
-          <AuthProvider>
+        <AuthProvider>
 
-            <ToastContainer
-              position="bottom-center"
-              autoClose={3000}
-              hideProgressBar={false}
-              newestOnTop={false}
-              closeOnClick
-              rtl={false}
-              pauseOnFocusLoss
-              draggable
-              pauseOnHover
-              theme="colored"
-              style={{
-                zIndex: 9999999999,
-              }}
-            />
+          <ToastContainer
+            position="bottom-center"
+            autoClose={3000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="colored"
+            style={{
+              zIndex: 9999999999,
+            }}
+          />
 
-            <RoutesApp />
+          <RoutesApp />
 
 
-          </AuthProvider>
+        </AuthProvider>
 
-        </ModalProvider>
+      </ModalProvider>
 
-      </BrowserRouter>
+    </BrowserRouter>
 
-    </React.StrictMode>
   )
 }
 

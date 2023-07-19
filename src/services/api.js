@@ -13,7 +13,6 @@ export const setupInterceptors = navigate => {
 
         if (error.response.data?.message === 'Token inválido') {
 
-          console.log('RECEPTOR -> TOKEN INVALIDO')
           localStorage.removeItem('@Microdigo:token');
           api.defaults.headers.common.Authorization = undefined;
 

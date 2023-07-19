@@ -5,6 +5,7 @@ import SignIn from '@/pages/SignIn';
 import SignUp from '@/pages/SignUp';
 import { setupInterceptors } from '../services/api';
 import { useEffect } from 'react';
+import PrivateRoutes from './PrivateRoutes';
 
 const RoutesApp = () => {
   const navigate = useNavigate();
@@ -17,7 +18,12 @@ const RoutesApp = () => {
     <Routes>
       <Route path='/' element={<SignIn />} />
       <Route path='/signup' element={<SignUp />} />
-      <Route path='/platform' element={<Platform />} />
+
+      <Route element={<PrivateRoutes />}>
+        <Route path='/platform' element={<Platform />} />
+
+      </Route>
+
     </Routes>
   )
 }
