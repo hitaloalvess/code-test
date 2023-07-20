@@ -1,15 +1,16 @@
+import { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Envelope, Lock } from '@phosphor-icons/react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 
+import { useContextAuth } from '@/hooks/useAuth';
 import LogoMicrodigo from '@/assets/images/logo-microdigo.svg';
 import { Input } from '@/components/Input';
+import { InputPassword } from '@/components/Input/InputPasswordType';
 import Banner from '@/components/Banner';
 import { Form } from '@/components/Form'
-import { useEffect, useRef, useState } from 'react';
-import { useContextAuth } from '../../hooks/useAuth';
 
 import * as S from './styles.module.css';
 
@@ -95,13 +96,13 @@ const SignIn = () => {
                     <Input.Root
                       error={errors.password}
                     >
-                      <>
-                        <Input.Icon icon={<Lock fontSize={20} className='text-gray-100' />} />
-                        <Input.PasswordType
-                          placeholder={"Senha"}
-                          {...register('password')}
-                        />
-                      </>
+                      <Input.Icon icon={<Lock fontSize={20} className='text-gray-100' />} />
+                      <Input.PasswordType
+                        placeholder={"Senha"}
+                        {...register('password')}
+                      >
+                        <InputPassword.Icon />
+                      </Input.PasswordType>
                     </Input.Root>
                   </Form.Row>
                 </>

@@ -3,7 +3,7 @@ import { forwardRef } from 'react';
 
 import { formatInputDateDefaultValue } from '@/utils/form-validation-functions';
 
-import * as C from '@/styles/common.module.css';
+import * as C from '../styles.module.css';
 import * as I from './styles.module.css';
 
 const InputDateType = forwardRef(function InputDateType(

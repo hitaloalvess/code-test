@@ -1,6 +1,6 @@
 import InputDateType from "./InputDateType";
 import InputIcon from "./InputIcon";
-import InputPasswordType from "./InputPasswordType";
+import InputPasswordRoot from "./InputPasswordType/InputPasswordRoot";
 import InputRoot from "./InputRoot";
 import InputSelectType from "./InputSelectType";
 import InputTextMaskType from "./InputTextMaskType";
@@ -11,7 +11,7 @@ export const Input = {
   Root: InputRoot,
   Icon: InputIcon,
   TextType: InputTextType,
-  PasswordType: InputPasswordType,
+  PasswordType: InputPasswordRoot,
   SelectType: InputSelectType,
   DateType: InputDateType,
   TextMaskType: InputTextMaskType

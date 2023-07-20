@@ -3,7 +3,7 @@ import { forwardRef } from 'react';
 
 import { applyMask } from '@/utils/form-validation-functions';
 
-import * as C from '@/styles/common.module.css';
+import * as C from '../styles.module.css';
 
 const InputTextMaskType = forwardRef(function InputTextType({
   name,

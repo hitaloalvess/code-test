@@ -3,7 +3,7 @@ import P from 'prop-types';
 import { CaretDown } from '@phosphor-icons/react';
 import { forwardRef, useMemo } from 'react';
 
-import * as C from '@/styles/common.module.css';
+import * as C from '../styles.module.css';
 import * as I from './styles.module.css';
 
 const InputSelectType = forwardRef(function InputSelectType(

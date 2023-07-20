@@ -1,5 +1,4 @@
 .buttonSubmit {
-  width: 100%;
   padding: 12px 0;
   display: flex;
   justify-content: center;
@@ -9,6 +8,14 @@
   cursor: pointer;
   background-color: var(--blue);
   transition: background-color 0.3s ease-in-out;
+}
+
+.buttonSubmitLarge {
+  width: 100%;
+}
+
+.buttonSubmitSmall {
+  width: 180px;
 }
 
 .buttonSubmit p {

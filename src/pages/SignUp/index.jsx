@@ -19,8 +19,8 @@ import LogoMicrodigo from '@/assets/images/logo-microdigo.svg';
 import Banner from '@/components/Banner';
 import { Form } from '@/components/Form';
 import { Input } from '@/components/Input';
+import { InputPassword } from '@/components/Input/InputPasswordType';
 import { isValidCPF, isValidPhoneNumber, removeSpaces, removeSpecialCharacters } from '@/utils/form-validation-functions';
-
 
 import * as S from './styles.module.css';
 
@@ -153,7 +153,9 @@ const SignUp = () => {
                   <Input.PasswordType
                     placeholder={"Senha"}
                     {...register('password')}
-                  />
+                  >
+                    <InputPassword.Icon />
+                  </Input.PasswordType>
                 </Input.Root>
 
                 <Input.Root
@@ -163,7 +165,9 @@ const SignUp = () => {
                   <Input.PasswordType
                     placeholder={"Confirmar Senha"}
                     {...register('confirm_password')}
-                  />
+                  >
+                    <InputPassword.Icon />
+                  </Input.PasswordType>
                 </Input.Root>
               </Form.Row>
 
@@ -177,7 +181,6 @@ const SignUp = () => {
                   <Input.TextMaskType
                     placeholder={"Digite seu cpf"}
                     maskChange={handleChangeValue}
-                    defaultValue={'419.560.068-50'}
                     {...register('cpf')}
                   />
                 </Input.Root>
@@ -190,7 +193,6 @@ const SignUp = () => {
                   />
                   <Input.TextMaskType
                     placeholder={"+55 (00) 00000-0000"}
-                    defaultValue={'+55 (17) 99679-0426'}
                     maskChange={handleChangeValue}
                     {...register('phone')}
                   />

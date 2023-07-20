@@ -1,10 +1,11 @@
+import { useEffect } from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
 
+import { setupInterceptors } from '../services/api';
 import Platform from '@/pages/Platform';
 import SignIn from '@/pages/SignIn';
 import SignUp from '@/pages/SignUp';
-import { setupInterceptors } from '../services/api';
-import { useEffect } from 'react';
+import AccountManagement from '@/pages/AccountManagement';
 import PrivateRoutes from './PrivateRoutes';
 
 const RoutesApp = () => {
@@ -21,7 +22,7 @@ const RoutesApp = () => {
 
       <Route element={<PrivateRoutes />}>
         <Route path='/platform' element={<Platform />} />
-
+        <Route path='/account' element={<AccountManagement />} />
       </Route>
 
     </Routes>

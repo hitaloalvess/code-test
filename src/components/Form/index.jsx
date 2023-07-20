@@ -3,6 +3,8 @@ import FormContent from "./FormContent";
 import FormRoot from "./FormRoot";
 import FormRow from "./FormRow";
 import FormTitle from "./FormTitle";
+import FormLabel from './FormLabel';
+import FormColumn from "./FormColumn";
 
 
 export const Form = {
@@ -10,5 +12,7 @@ export const Form = {
   Content: FormContent,
   Title: FormTitle,
   Row: FormRow,
-  ButtonSubmit: FormButtonSubmit
+  Column: FormColumn,
+  ButtonSubmit: FormButtonSubmit,
+  Label: FormLabel
 }

@@ -1,7 +1,7 @@
 import P from 'prop-types';
 import { forwardRef } from 'react';
 
-import * as C from '@/styles/common.module.css';
+import * as C from '../styles.module.css';
 
 const InputTextType = forwardRef(function InputTextType({
   hasIconSibling = true,
