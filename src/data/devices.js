@@ -97,6 +97,17 @@ export const mockDevices = {
         max: 1023
       },
     },
+    {
+      id: 13,
+      imgSrc: deviceSoilHumidity,
+      name: 'rainSensor',
+      type: 'virtual',
+      category: 'entry',
+      value: {
+        current: 0,
+        max: 1023
+      },
+    },
   ],
   exit: [
     {
@@ -283,6 +294,10 @@ export const deviceConnectorRules = {
     connectsTo: ['all']
   },
   soilHumidity: {
+    acceptedConnections: ['allExit'],
+    connectsTo: ['all']
+  },
+  rainSensor: {
     acceptedConnections: ['allExit'],
     connectsTo: ['all']
   },

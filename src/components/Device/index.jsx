@@ -11,6 +11,7 @@ import Switch from './Entry/Switch';
 import PushButton from './Entry/PushButton';
 import Infrared from './Entry/Infrared';
 import SoilHumidity from './Entry/SoilHumidity';
+import RainSensor from './Entry/RainSensor';
 
 import Led from './Exit/Led';
 import LedMono from './Exit/LedMono';
@@ -76,7 +77,8 @@ const Device = memo(function Device({ device: { ...device } }) {
     slider: Slider,
     pickColor: PickColor,
     counter: Counter,
-    soilHumidity: SoilHumidity
+    soilHumidity: SoilHumidity,
+    rainSensor: RainSensor
   }
 
   const CurrentDevice = devices[device.name];
