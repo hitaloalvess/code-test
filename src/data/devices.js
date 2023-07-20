@@ -30,7 +30,7 @@ import deviceSlider from '@/assets/images/devices/event/slider.svg';
 export const mockDevices = {
   entry: [
     {
-      id: 2,
+      id: 10,
       imgSrc: deviceDht,
       name: 'dht',
       type: 'virtual',
@@ -41,7 +41,7 @@ export const mockDevices = {
       },
     },
     {
-      id: 3,
+      id: 11,
       imgSrc: deviceInfrared,
       name: 'infrared',
       type: 'virtual',
@@ -49,7 +49,7 @@ export const mockDevices = {
       value: 'FF12F3'
     },
     {
-      id: 5,
+      id: 12,
       imgSrc: deviceLdr,
       name: 'ldr',
       type: 'virtual',
@@ -60,7 +60,7 @@ export const mockDevices = {
       }
     },
     {
-      id: 8,
+      id: 13,
       imgSrc: devicePotentiometer,
       name: 'potentiometer',
       type: 'virtual',
@@ -71,7 +71,7 @@ export const mockDevices = {
       }
     },
     {
-      id: 9,
+      id: 14,
       imgSrc: devicePushButton,
       name: 'pushButton',
       type: 'virtual',
@@ -79,7 +79,7 @@ export const mockDevices = {
       value: false
     },
     {
-      id: 10,
+      id: 15,
       imgSrc: deviceSwitch,
       name: 'switch',
       type: 'virtual',
@@ -87,18 +87,7 @@ export const mockDevices = {
       value: false
     },
     {
-      id: 12,
-      imgSrc: deviceSoilHumidity,
-      name: 'soilHumidity',
-      type: 'virtual',
-      category: 'entry',
-      value: {
-        current: 0,
-        max: 1023
-      },
-    },
-    {
-      id: 13,
+      id: 16,
       imgSrc: deviceSoilHumidity,
       name: 'rainSensor',
       type: 'virtual',
@@ -108,10 +97,21 @@ export const mockDevices = {
         max: 1023
       },
     },
+    {
+      id: 17,
+      imgSrc: deviceSoilHumidity,
+      name: 'soilHumidity',
+      type: 'virtual',
+      category: 'entry',
+      value: {
+        current: 0,
+        max: 1023
+      },
+    }
   ],
   exit: [
     {
-      id: 6,
+      id: 20,
       imgSrc: deviceLed,
       name: 'led',
       type: 'virtual',
@@ -127,7 +127,7 @@ export const mockDevices = {
       }
     },
     {
-      id: 7,
+      id: 21,
       imgSrc: deviceLedMono,
       name: 'ledMono',
       type: 'virtual',
@@ -142,7 +142,7 @@ export const mockDevices = {
       }
     },
     {
-      id: 4,
+      id: 22,
       imgSrc: deviceLaser,
       name: 'laser',
       type: 'virtual',
@@ -157,7 +157,7 @@ export const mockDevices = {
       }
     },
     {
-      id: 11,
+      id: 23,
       imgSrc: deviceShakeMotor,
       name: 'shakeMotor',
       type: 'virtual',
@@ -170,7 +170,7 @@ export const mockDevices = {
       }
     },
     {
-      id: 1,
+      id: 24,
       imgSrc: deviceBuzzer,
       name: 'buzzer',
       type: 'virtual',
@@ -185,54 +185,9 @@ export const mockDevices = {
       }
     },
   ],
-  conditional: [
-    {
-      id: 100,
-      imgSrc: deviceAnd,
-      name: 'and',
-      type: 'virtual',
-      category: 'conditional',
-      value: false
-    },
-    {
-      id: 101,
-      imgSrc: deviceOr,
-      name: 'or',
-      type: 'virtual',
-      category: 'conditional',
-      value: false
-    },
-    {
-      id: 102,
-      imgSrc: deviceNot,
-      name: 'not',
-      type: 'virtual',
-      category: 'conditional',
-      value: false
-    },
-    {
-      id: 103,
-      imgSrc: deviceIf,
-      name: 'if',
-      type: 'virtual',
-      category: 'conditional',
-      value: false
-    },
-    {
-      id: 104,
-      imgSrc: deviceCounter,
-      name: 'counter',
-      type: 'virtual',
-      category: 'conditional',
-      value: {
-        current: 0,
-        max: 0
-      }
-    }
-  ],
   event: [
     {
-      id: 200,
+      id: 30,
       imgSrc: devicePickColor,
       name: 'pickColor',
       type: 'virtual',
@@ -244,7 +199,7 @@ export const mockDevices = {
       }
     },
     {
-      id: 201,
+      id: 31,
       imgSrc: deviceToggle,
       name: 'toggle',
       type: 'virtual',
@@ -252,7 +207,7 @@ export const mockDevices = {
       value: false
     },
     {
-      id: 202,
+      id: 32,
       imgSrc: deviceDelay,
       name: 'delay',
       type: 'virtual',
@@ -263,7 +218,7 @@ export const mockDevices = {
       }
     },
     {
-      id: 203,
+      id: 33,
       imgSrc: deviceSlider,
       name: 'slider',
       type: 'virtual',
@@ -273,6 +228,51 @@ export const mockDevices = {
         max: 0
       }
     },
+  ],
+  conditional: [
+    {
+      id: 40,
+      imgSrc: deviceAnd,
+      name: 'and',
+      type: 'virtual',
+      category: 'conditional',
+      value: false
+    },
+    {
+      id: 41,
+      imgSrc: deviceOr,
+      name: 'or',
+      type: 'virtual',
+      category: 'conditional',
+      value: false
+    },
+    {
+      id: 42,
+      imgSrc: deviceNot,
+      name: 'not',
+      type: 'virtual',
+      category: 'conditional',
+      value: false
+    },
+    {
+      id: 43,
+      imgSrc: deviceIf,
+      name: 'if',
+      type: 'virtual',
+      category: 'conditional',
+      value: false
+    },
+    {
+      id: 44,
+      imgSrc: deviceCounter,
+      name: 'counter',
+      type: 'virtual',
+      category: 'conditional',
+      value: {
+        current: 0,
+        max: 0
+      }
+    }
   ]
 };
 
