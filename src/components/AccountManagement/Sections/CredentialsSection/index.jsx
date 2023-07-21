@@ -1,5 +1,6 @@
 import { Envelope, Lock } from '@phosphor-icons/react';
 
+import { api } from '@/services/api'
 import { useContextAuth } from '@/hooks/useAuth';
 import { useModal } from '@/hooks/useModal';
 import { Form } from '@/components/Form';
@@ -8,10 +9,11 @@ import { InputPassword } from '@/components/Input/InputPasswordType';
 
 import * as A from '../styles.module.css';
 import * as C from './styles.module.css';
+import { toast } from 'react-toastify';
 
 const CredentialsSection = () => {
 
-  const { user } = useContextAuth();
+  const { user, handleSignOut } = useContextAuth();
   const { enableModal, disableModal } = useModal();
 
   const handleUpdatePassword = () => {
@@ -24,6 +26,31 @@ const CredentialsSection = () => {
     })
   }
 
+  const handleDeleteAccount = async () => {
+    try {
+
+      await api.delete(`/users/${user.id}`);
+      toast.success('Conta deletada com sucesso');
+
+      handleSignOut();
+    } catch (error) {
+      toast.error(error.response.data.message);
+    }
+  }
+
+  const handleClickBtnDeleteAccount = () => {
+    enableModal({
+      typeContent: 'confirmation',
+      title: 'Tem certeza que deseja excluir sua conta?',
+      handleConfirm: async () => {
+
+        await handleDeleteAccount();
+        disableModal();
+
+      }
+    })
+  }
+
   return (
     <section id='credentials' className={A.sectionItem}>
 
@@ -31,7 +58,10 @@ const CredentialsSection = () => {
 
         <h2>Minhas credenciais</h2>
 
-        <button className={C.btnDeleteAccount}>
+        <button
+          className={C.btnDeleteAccount}
+          onClick={handleClickBtnDeleteAccount}
+        >
           Excluir conta
         </button>
 
