@@ -42,14 +42,14 @@ export const useAuth = () => {
   const handleSignOut = () => {
     setUser(null);
     localStorage.removeItem('@Microdigo:token');
-    api.defaults.headers.Authorization = undefined;
+    api.defaults.headers.common.Authorization = undefined;
 
     return navigate('/');
   }
 
   useEffect(() => {
     const token = localStorage.getItem('@Microdigo:token');
-    api.defaults.headers.Authorization = `Bearer ${JSON.parse(token)}`;
+    api.defaults.headers.common.Authorization = `Bearer ${JSON.parse(token)}`;
   }, [isAuthenticated])
 
   return {
