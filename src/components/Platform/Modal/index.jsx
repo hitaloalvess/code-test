@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import imgLogoMicrodigo from '@/assets/images/logo-microdigo.svg';
 import Modal from 'react-modal';
 import { FaTimes } from 'react-icons/fa';
@@ -11,6 +12,7 @@ import ConfirmationModal from './ConfirmationModal';
 import ConfigDhtModal from './ConfigDhtModal';
 import ConfigIfModal from './ConfigIfModal';
 import ConfigPickColorModal from './ConfigPickColorModal';
+import UpdatePasswordModal from './UpdatePasswordModal';
 
 import {
   container,
@@ -31,41 +33,24 @@ const customStyles = {
 
 const ModalContainer = ({ modalIsOpen, closeModal, contentData }) => {
   const contents = {
-    'confirmation': <ConfirmationModal
-      closeModal={closeModal}
-      contentData={contentData}
-    />,
-    'config-led': <ConfigLedModal
-      closeModal={closeModal}
-      contentData={contentData}
-    />,
-    'config-buzzer': <ConfigBuzzerModal
-      closeModal={closeModal}
-      contentData={contentData}
-    />,
-    'config-delay': <ConfigDelayModal
-      closeModal={closeModal}
-      contentData={contentData}
-    />,
-    'config-slider': <ConfigSliderModal
-      closeModal={closeModal}
-      contentData={contentData}
-    />,
-    'config-dht': <ConfigDhtModal
-      closeModal={closeModal}
-      contentData={contentData}
-    />,
-    'config-if': <ConfigIfModal
-      closeModal={closeModal}
-      contentData={contentData}
-    />,
-    'config-pickColor': <ConfigPickColorModal
-      closeModal={closeModal}
-      contentData={contentData}
-    />
+    'confirmation': ConfirmationModal,
+    'config-led': ConfigLedModal,
+    'config-buzzer': ConfigBuzzerModal,
+    'config-delay': ConfigDelayModal,
+    'config-slider': ConfigSliderModal,
+    'config-dht': ConfigDhtModal,
+    'config-if': ConfigIfModal,
+    'config-pickColor': ConfigPickColorModal,
+    'update-password': UpdatePasswordModal
   }
 
-  const currentContent = contents[contentData.typeContent];
+  const CurrentContent = useMemo(() => {
+    return contents[contentData.typeContent];
+  }, [contentData.typeContent]);
+
+  if (!CurrentContent) {
+    return;
+  }
 
   return (
     <Modal
@@ -90,7 +75,13 @@ const ModalContainer = ({ modalIsOpen, closeModal, contentData }) => {
           <FaTimes />
         </button>
       </header>
-      {currentContent}
+      {/* {currentContent} */}
+      {
+        <CurrentContent
+          closeModal={closeModal}
+          contentData={contentData}
+        />
+      }
     </Modal>
   );
 };

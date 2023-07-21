@@ -1,6 +1,7 @@
 import { Envelope, Lock } from '@phosphor-icons/react';
 
 import { useContextAuth } from '@/hooks/useAuth';
+import { useModal } from '@/hooks/useModal';
 import { Form } from '@/components/Form';
 import { Input } from '@/components/Input';
 import { InputPassword } from '@/components/Input/InputPasswordType';
@@ -11,6 +12,17 @@ import * as C from './styles.module.css';
 const CredentialsSection = () => {
 
   const { user } = useContextAuth();
+  const { enableModal, disableModal } = useModal();
+
+  const handleUpdatePassword = () => {
+    enableModal({
+      typeContent: 'update-password',
+      title: 'Alterar senha',
+      handleConfirm: () => {
+        disableModal();
+      }
+    })
+  }
 
   return (
     <section id='credentials' className={A.sectionItem}>
@@ -26,12 +38,15 @@ const CredentialsSection = () => {
       </div>
 
       <Form.Row>
+        <Form.Label text='Email' id='email' />
+
         <Input.Root
         >
           <Input.Icon
             icon={<Envelope />}
           />
           <Input.TextType
+            id='email'
             placeholder={"Email"}
             disabled={true}
             defaultValue={user.email}
@@ -41,17 +56,21 @@ const CredentialsSection = () => {
 
 
       <Form.Row >
+
+        <Form.Label text='Senha' id='senha' />
+
         <Input.Root
         >
           <Input.Icon icon={<Lock />} />
           <Input.PasswordType
+            id='senha'
             placeholder={"Senha"}
             defaultValue={"xxxxxxxxx"}
             disabled
           >
             <InputPassword.Button
               text="Alterar"
-              handleClick={() => console.log('Alterar senha')}
+              handleClick={handleUpdatePassword}
             />
           </Input.PasswordType>
         </Input.Root>

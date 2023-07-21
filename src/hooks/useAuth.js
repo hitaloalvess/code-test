@@ -1,5 +1,5 @@
 
-import { useContext, useMemo, useState } from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { api } from '@/services/api';
@@ -8,7 +8,6 @@ import { AuthContext } from '@/contexts/AuthContext';
 
 export const useAuth = () => {
   const navigate = useNavigate();
-
 
   const [user, setUser] = useState(() => {
     const user = localStorage.getItem('@Microdigo:user');
@@ -48,6 +47,10 @@ export const useAuth = () => {
     return navigate('/');
   }
 
+  useEffect(() => {
+    const token = localStorage.getItem('@Microdigo:token');
+    api.defaults.headers.Authorization = `Bearer ${JSON.parse(token)}`;
+  }, [isAuthenticated])
 
   return {
     user,
