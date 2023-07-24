@@ -10,14 +10,15 @@ import Potentiometer from './Entry/Potentiometer';
 import Switch from './Entry/Switch';
 import PushButton from './Entry/PushButton';
 import Infrared from './Entry/Infrared';
-import SoilHumidity from './Entry/SoilHumidity';
-import RainSensor from './Entry/RainSensor';
+import SoilMoisture from './Entry/SoilMoisture';
+import RainDetector from './Entry/RainDetector';
 
 import Led from './Exit/Led';
 import LedMono from './Exit/LedMono';
 import Laser from './Exit/Laser';
 import ShakeMotor from './Exit/ShakeMotor';
 import Buzzer from './Exit/Buzzer';
+import Bargraph from './Exit/Bargraph';
 
 import And from './Conditional/And';
 import Or from './Conditional/Or';
@@ -68,6 +69,7 @@ const Device = memo(function Device({ device: { ...device } }) {
     laser: Laser,
     shakeMotor: ShakeMotor,
     buzzer: Buzzer,
+    bargraph: Bargraph,
     and: And,
     or: Or,
     not: Not,
@@ -77,8 +79,8 @@ const Device = memo(function Device({ device: { ...device } }) {
     slider: Slider,
     pickColor: PickColor,
     counter: Counter,
-    soilHumidity: SoilHumidity,
-    rainSensor: RainSensor
+    soilMoisture: SoilMoisture,
+    rainDetector: RainDetector
   }
 
   const CurrentDevice = devices[device.name];

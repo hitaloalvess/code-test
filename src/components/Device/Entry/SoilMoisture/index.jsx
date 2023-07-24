@@ -19,7 +19,7 @@ import {
 } from '../../styles.module.css';
 
 const MAX_VALUE = 1023;
-const RainSensor = memo(function RainSensor({
+const SoilMoisture = memo(function SoilMoisture({
   dragRef, device, updateValue
 }) {
 
@@ -57,7 +57,6 @@ const RainSensor = memo(function RainSensor({
   }
 
   return (
-
     <>
       <div className={inputRangeDeviceContainer}
       >
@@ -92,7 +91,7 @@ const RainSensor = memo(function RainSensor({
         className={`${connectorsContainer} ${connectorsContainerExit}`}
       >
         <Connector
-          name={'value'}
+          name={'moisture'}
           type={'exit'}
           device={{
             id,
@@ -129,10 +128,10 @@ const RainSensor = memo(function RainSensor({
   );
 });
 
-RainSensor.propTypes = {
+SoilMoisture.propTypes = {
   dragRef: P.func.isRequired,
   device: P.object.isRequired,
   updateValue: P.func.isRequired
 }
 
-export default RainSensor;
+export default SoilMoisture;

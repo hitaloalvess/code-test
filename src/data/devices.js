@@ -5,7 +5,8 @@ import deviceSwitch from '@/assets/images/devices/entry/switchOff.svg';
 import devicePushButton from '@/assets/images/devices/entry/pushButtonOff.svg';
 import deviceDht from '@/assets/images/devices/entry/dht.svg';
 import deviceInfrared from '@/assets/images/devices/entry/infrared.svg';
-import deviceSoilHumidity from '@/assets/images/devices/entry/potentiometer.svg';
+import deviceSoilMoisture from '@/assets/images/devices/event/eventBase.svg';
+import deviceRainDetector from '@/assets/images/devices/event/eventBase.svg';
 
 //exit
 import deviceLed from '@/assets/images/devices/exit/led.svg';
@@ -13,6 +14,7 @@ import deviceLedMono from '@/assets/images/devices/exit/ledMono.svg';
 import deviceLaser from '@/assets/images/devices/exit/laser.svg';
 import deviceShakeMotor from '@/assets/images/devices/exit/shakeMotor.svg';
 import deviceBuzzer from '@/assets/images/devices/exit/buzzer.svg';
+import deviceBargraph from '@/assets/images/devices/event/eventBase.svg';
 
 //conditional
 import deviceAnd from '@/assets/images/devices/conditional/and.svg';
@@ -88,8 +90,8 @@ export const mockDevices = {
     },
     {
       id: 16,
-      imgSrc: deviceSoilHumidity,
-      name: 'rainSensor',
+      imgSrc: deviceRainDetector,
+      name: 'rainDetector',
       type: 'virtual',
       category: 'entry',
       value: {
@@ -99,8 +101,8 @@ export const mockDevices = {
     },
     {
       id: 17,
-      imgSrc: deviceSoilHumidity,
-      name: 'soilHumidity',
+      imgSrc: deviceSoilMoisture,
+      name: 'soilMoisture',
       type: 'virtual',
       category: 'entry',
       value: {
@@ -182,6 +184,21 @@ export const mockDevices = {
         type: null,
         duration: 4,
         volume: 0.5,
+      }
+    },
+    {
+      id: 25,
+      imgSrc: deviceBargraph,
+      name: 'bargraph',
+      type: 'virtual',
+      category: 'exit',
+      value: {
+        active: false,
+        current: 0,
+        max: 0,
+        type: null,
+        opacity: 0,
+        brightness: 1023
       }
     },
   ],
@@ -293,11 +310,11 @@ export const deviceConnectorRules = {
     acceptedConnections: ['allExit'],
     connectsTo: ['all']
   },
-  soilHumidity: {
+  soilMoisture: {
     acceptedConnections: ['allExit'],
     connectsTo: ['all']
   },
-  rainSensor: {
+  rainDetector: {
     acceptedConnections: ['allExit'],
     connectsTo: ['all']
   },
@@ -326,6 +343,10 @@ export const deviceConnectorRules = {
     connectsFrom: ['all']
   },
   laser: {
+    acceptedConnections: ['allEntry'],
+    connectsFrom: ['all']
+  },
+  bargraph: {
     acceptedConnections: ['allEntry'],
     connectsFrom: ['all']
   },
