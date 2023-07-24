@@ -61,7 +61,6 @@ const Bargraph = memo(function Bargraph({
 
       setLightsActive(numberLights);
 
-      console.log (lightsActive);
       updateValue(setValue, id, {
         ...objValue,
         active: true,

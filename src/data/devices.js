@@ -347,8 +347,8 @@ export const deviceConnectorRules = {
     connectsFrom: ['all']
   },
   bargraph: {
-    acceptedConnections: ['allEntry'],
-    connectsFrom: ['all']
+    acceptedConnections: ['oneEntry'],
+    connectsFrom: ['potentiometer', 'dht', 'ldr', 'counter', 'slider', 'physicalPotentiometer', 'physicalLDR', 'physicalDHT'],
   },
   counter: {
     acceptedConnections: ['oneEntry', 'allExit'],
