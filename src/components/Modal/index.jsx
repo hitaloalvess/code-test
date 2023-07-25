@@ -13,13 +13,15 @@ import ConfigDhtModal from './ConfigDhtModal';
 import ConfigIfModal from './ConfigIfModal';
 import ConfigPickColorModal from './ConfigPickColorModal';
 import UpdatePasswordModal from './UpdatePasswordModal';
+import SearchFormModal from './SearchFormModal';
+import FaqModal from './FaqModal';
 
 import {
   container,
   header,
   btnClose
 } from './styles.module.css';
-import SearchFormModal from './SearchFormModal';
+
 
 const customStyles = {
   overlay: {
@@ -43,7 +45,8 @@ const ModalContainer = ({ modalIsOpen, closeModal, contentData }) => {
     'config-if': ConfigIfModal,
     'config-pickColor': ConfigPickColorModal,
     'update-password': UpdatePasswordModal,
-    'search-form': SearchFormModal
+    'search-form': SearchFormModal,
+    'faq': FaqModal
   }
 
   const CurrentContent = useMemo(() => {

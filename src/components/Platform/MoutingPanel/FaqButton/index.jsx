@@ -1,11 +1,19 @@
 import imgFaqButton from '@/assets/images/buttons/faq-button.svg';
 import CircleButton from '@/components/Platform/CircleButton';
 
+import { useModal } from '@/hooks/useModal';
 
 const FaqButton = () => {
+  const { enableModal, disableModal } = useModal();
 
   const handleClick = () => {
-    console.log('Habilitando faq');
+    enableModal({
+      typeContent: 'faq',
+      title: 'As pessoas também perguntam',
+      handleConfirm: () => {
+        disableModal();
+      }
+    })
   }
 
   return <CircleButton
