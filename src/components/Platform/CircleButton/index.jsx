@@ -9,7 +9,7 @@ const CircleButton = ({ name, imgSrc, handleClick, title }) => {
         src={imgSrc}
         alt={`Imagem do botão de ${name}`}
         loading='lazy'
-        onClick={() => handleClick()}
+        onClick={handleClick ? () => handleClick() : null}
         title={title}
       />
     </button>
@@ -19,7 +19,7 @@ const CircleButton = ({ name, imgSrc, handleClick, title }) => {
 CircleButton.propTypes = {
   name: P.string.isRequired,
   imgSrc: P.string.isRequired,
-  handleClick: P.func.isRequired,
+  handleClick: P.func,
   title: P.string.isRequired
 }
 

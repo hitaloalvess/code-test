@@ -12,11 +12,14 @@ import ZoomButton from './ZoomButton';
 import FaqButton from './FaqButton';
 
 import { moutingPanelContainer, buttonsContainer } from './styles.module.css';
+import SearchFormButton from './SearchFormButton';
+import { useContextAuth } from '@/hooks/useAuth';
 
 
 const MoutingPanel = forwardRef(function MoutingPanel(props, ref) {
   const { devices, addDevice, repositionDevice } = useDevices();
   const { flows, connectionLines, updateLines, updateFlow } = useFlow();
+  const { searchFormHasEnabled } = useContextAuth();
 
   const moutingPanelRef = useRef(null);
 
@@ -142,6 +145,7 @@ const MoutingPanel = forwardRef(function MoutingPanel(props, ref) {
       <div className={buttonsContainer}>
         <ManualButton />
         <FaqButton />
+        {searchFormHasEnabled && (<SearchFormButton />)}
         <ZoomButton />
       </div>
 

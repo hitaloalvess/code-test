@@ -19,6 +19,7 @@ import {
   header,
   btnClose
 } from './styles.module.css';
+import SearchFormModal from './SearchFormModal';
 
 const customStyles = {
   overlay: {
@@ -41,7 +42,8 @@ const ModalContainer = ({ modalIsOpen, closeModal, contentData }) => {
     'config-dht': ConfigDhtModal,
     'config-if': ConfigIfModal,
     'config-pickColor': ConfigPickColorModal,
-    'update-password': UpdatePasswordModal
+    'update-password': UpdatePasswordModal,
+    'search-form': SearchFormModal
   }
 
   const CurrentContent = useMemo(() => {
