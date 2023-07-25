@@ -1,4 +1,5 @@
 
+import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import {
   ArrowLeft,
@@ -14,47 +15,48 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'react-toastify';
 
+import { isValidCPF, isValidPhoneNumber, removeSpaces, removeSpecialCharacters } from '@/utils/form-validation-functions';
 import { api } from '@/services/api';
 import LogoMicrodigo from '@/assets/images/logo-microdigo.svg';
 import Banner from '@/components/Banner';
+import ButtonAcceptsTerms from '@/components/SignUp/ButtonAcceptsTerms';
 import { Form } from '@/components/Form';
 import { Input } from '@/components/Input';
 import { InputPassword } from '@/components/Input/InputPasswordType';
-import { isValidCPF, isValidPhoneNumber, removeSpaces, removeSpecialCharacters } from '@/utils/form-validation-functions';
 
 import * as S from './styles.module.css';
 
 const signUpSchema = z.object({
   name: z.string().nonempty('Nome é obrigatório'),
   email: z.string().email('Por favor, informe um email válido.'),
-  password: z.string().min(8, { message: 'Senha deve ter no mínimo 8 caracteres' }),
+  password: z.string().min(8, { message: 'Senha deve ter no mínimo 8 caracteres' })
+    .refine(({ password }) => {
+      const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$%^&+=!_])[A-Za-z\d@#$%^&+=!_]+$/
+      return regex.test(password)
+    }, {
+      message: 'Senha deve conter caracteres especiais, números, letras maiúsculas e minúsculas',
+      path: ['password']
+    }),
   confirm_password: z.string().min(8, { message: 'Senhas não conferem' }),
-  cpf: z.string().nonempty('Cpf é obrigatório'),
-  phone: z.string().nonempty('Telefone é obrigatório'),
+  cpf: z.string().nonempty('Cpf é obrigatório')
+    .refine(({ cpf }) => isValidCPF(cpf), {
+      message: 'CPF inválido',
+      path: ['cpf']
+    }),
+  phone: z.string().nonempty('Telefone é obrigatório')
+    .refine(({ phone }) => isValidPhoneNumber(phone), {
+      message: 'Telefone inválido',
+      path: ['phone']
+    }),
   genre: z.string().nonempty('Campo gênero é obrigatório'),
   nasc: z.string().nonempty('Data é obrigatório').pipe(z.coerce.date()),
   country: z.string().nonempty('País é obrigatório'),
   state: z.string().nonempty('Estado é obrigatório'),
   city: z.string().nonempty('Cidade é obrigatório'),
 })
-  .refine(({ password }) => {
-    const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$%^&+=!_])[A-Za-z\d@#$%^&+=!_]+$/
-    return regex.test(password)
-  }, {
-    message: 'Senha deve conter caracteres especiais, números, letras maiúsculas e minúsculas',
-    path: ['password']
-  })
   .refine(({ password, confirm_password }) => password === confirm_password, {
     message: 'Senhas não conferem',
     path: ['confirm_password']
-  })
-  .refine(({ cpf }) => isValidCPF(cpf), {
-    message: 'CPF inválido',
-    path: ['cpf']
-  })
-  .refine(({ phone }) => isValidPhoneNumber(phone), {
-    message: 'Telefone inválido',
-    path: ['phone']
   });
 
 const SignUp = () => {
@@ -64,6 +66,7 @@ const SignUp = () => {
     resolver: zodResolver(signUpSchema),
     shouldFocusError: false
   });
+  const [activeBtnSubmitForm, setActiveBtnSubmitForm] = useState(true);
 
   const handleChangeValue = (nameField, value) => setValue(nameField, value, { shouldValidate: true })
 
@@ -91,6 +94,10 @@ const SignUp = () => {
     } catch (error) {
       toast.error(error.response.data.message);
     }
+  }
+
+  const handleActiveBtnSubmit = () => {
+    setActiveBtnSubmitForm(prev => !prev);
   }
 
   return (
@@ -269,10 +276,16 @@ const SignUp = () => {
 
               </Form.Row>
 
+              <Form.Row>
+                <ButtonAcceptsTerms
+                  checkboxChange={handleActiveBtnSubmit}
+                />
+              </Form.Row>
+
             </Form.Content>
 
 
-            <Form.ButtonSubmit text="Cadastrar" />
+            <Form.ButtonSubmit text="Cadastrar" disabled={activeBtnSubmitForm} />
 
 
           </Form.Root>

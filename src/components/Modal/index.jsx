@@ -15,6 +15,7 @@ import ConfigPickColorModal from './ConfigPickColorModal';
 import UpdatePasswordModal from './UpdatePasswordModal';
 import SearchFormModal from './SearchFormModal';
 import FaqModal from './FaqModal';
+import TermsOfUseModal from './TermsOfUseModal';
 
 import {
   container,
@@ -46,7 +47,8 @@ const ModalContainer = ({ modalIsOpen, closeModal, contentData }) => {
     'config-pickColor': ConfigPickColorModal,
     'update-password': UpdatePasswordModal,
     'search-form': SearchFormModal,
-    'faq': FaqModal
+    'faq': FaqModal,
+    'terms-of-use': TermsOfUseModal
   }
 
   const CurrentContent = useMemo(() => {
