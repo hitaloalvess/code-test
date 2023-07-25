@@ -7,7 +7,7 @@ import { useFlow } from '@/hooks/useFlow';
 import { useModal } from '@/hooks/useModal';
 import ActionButton from '@/components/Platform/ActionButton';
 import Connector from '@/components/Platform/Connector';
-import ConfigInfraredModal from '../../../Modal/ConfigInfraredModal';
+import ConfigInfraredModal from '@/components/Modal/ConfigInfraredModal';
 
 import {
   deviceBody,
@@ -63,9 +63,9 @@ const Infrared = memo(function Infrared({
   return (
     <>
       <ConfigInfraredModal
-        isOpen = {isModalOpen}
-        closeModal = {closeModal}
-        handleUpdateCode = {handleSettingUpdate}
+        isOpen={isModalOpen}
+        closeModal={closeModal}
+        handleUpdateCode={handleSettingUpdate}
       />
 
       <div className={inputRangeDeviceContainer}
