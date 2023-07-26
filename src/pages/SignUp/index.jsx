@@ -30,23 +30,20 @@ const signUpSchema = z.object({
   name: z.string().nonempty('Nome é obrigatório'),
   email: z.string().email('Por favor, informe um email válido.'),
   password: z.string().min(8, { message: 'Senha deve ter no mínimo 8 caracteres' })
-    .refine(({ password }) => {
+    .refine((value) => {
       const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$%^&+=!_])[A-Za-z\d@#$%^&+=!_]+$/
-      return regex.test(password)
+      return regex.test(value)
     }, {
-      message: 'Senha deve conter caracteres especiais, números, letras maiúsculas e minúsculas',
-      path: ['password']
+      message: 'Senha deve conter caracteres especiais, números, letras maiúsculas e minúsculas'
     }),
   confirm_password: z.string().min(8, { message: 'Senhas não conferem' }),
   cpf: z.string().nonempty('Cpf é obrigatório')
-    .refine(({ cpf }) => isValidCPF(cpf), {
-      message: 'CPF inválido',
-      path: ['cpf']
+    .refine((value) => isValidCPF(value), {
+      message: 'CPF inválido'
     }),
   phone: z.string().nonempty('Telefone é obrigatório')
-    .refine(({ phone }) => isValidPhoneNumber(phone), {
-      message: 'Telefone inválido',
-      path: ['phone']
+    .refine((value) => isValidPhoneNumber(value), {
+      message: 'Telefone inválido'
     }),
   genre: z.string().nonempty('Campo gênero é obrigatório'),
   nasc: z.string().nonempty('Data é obrigatório').pipe(z.coerce.date()),
@@ -71,7 +68,7 @@ const SignUp = () => {
   const handleChangeValue = (nameField, value) => setValue(nameField, value, { shouldValidate: true })
 
   const handleSubmitForm = async (formData) => {
-
+    console.log(formData);
     const transformCPF = removeSpecialCharacters(formData.cpf);
     const transformPhone = removeSpaces(removeSpecialCharacters(formData.phone));
     const transformNasc = new Date(formData.nasc)
