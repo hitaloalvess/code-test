@@ -13,6 +13,7 @@ import Banner from '@/components/Banner';
 import { Form } from '@/components/Form'
 
 import * as S from './styles.module.css';
+import SpinnerLoader from '../../components/SpinnerLoader';
 
 const signInSchema = z.object({
   email: z.string().email('Por favor, informe um email válido.'),
@@ -21,7 +22,7 @@ const signInSchema = z.object({
 
 const SignIn = () => {
   const navigate = useNavigate();
-  const { handleSignIn, isAuthenticated } = useContextAuth();
+  const { handleSignIn, isAuthenticated, isLoading } = useContextAuth();
 
   const [hasCompletedFields, setHasCompletedFields] = useState(true);
 
@@ -108,7 +109,12 @@ const SignIn = () => {
                 </>
               </Form.Content>
 
-              <Form.ButtonSubmit text="Entrar" disabled={hasCompletedFields} />
+              <Form.ButtonSubmit disabled={hasCompletedFields} >
+                {isLoading ?
+                  (<SpinnerLoader />) :
+                  <p>Entrar</p>
+                }
+              </Form.ButtonSubmit>
             </>
           </Form.Root>
 

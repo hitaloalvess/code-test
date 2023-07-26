@@ -282,7 +282,9 @@ const SignUp = () => {
             </Form.Content>
 
 
-            <Form.ButtonSubmit text="Cadastrar" disabled={activeBtnSubmitForm} />
+            <Form.ButtonSubmit disabled={activeBtnSubmitForm}>
+              <p>Cadastrar</p>
+            </Form.ButtonSubmit>
 
 
           </Form.Root>

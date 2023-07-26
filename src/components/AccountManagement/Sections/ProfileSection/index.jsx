@@ -256,9 +256,10 @@ const ProfileSection = () => {
 
 
         <Form.ButtonSubmit
-          text="Salvar"
           sizeW="small"
-        />
+        >
+          <p>Salvar</p>
+        </Form.ButtonSubmit>
 
 
       </Form.Root>

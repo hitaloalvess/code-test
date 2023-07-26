@@ -18,12 +18,15 @@ export const useAuth = () => {
 
     return JSON.parse(user);
   });
+  const [isLoading, setIsLoading] = useState(false);
   const [searchFormHasEnabled, setSearchFormHasEnabled] = useState(false);
 
   const isAuthenticated = useMemo(() => !!user, [user]);
 
   const handleSignIn = async ({ email, password }) => {
     try {
+
+      setIsLoading(true);
 
       const { data: { acessToken: token, user } } = await api.post('/auth/signin', {
         email, password
@@ -33,6 +36,7 @@ export const useAuth = () => {
       localStorage.setItem('@Microdigo:user', JSON.stringify(user));
 
       setUser(user);
+      setIsLoading(false);
 
       api.defaults.headers.Authorization = `Bearer ${token}`;
 
@@ -77,6 +81,7 @@ export const useAuth = () => {
     user,
     isAuthenticated,
     searchFormHasEnabled,
+    isLoading,
     handleSignIn,
     handleSignOut,
   }

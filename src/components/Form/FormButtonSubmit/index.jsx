@@ -2,7 +2,7 @@ import P from 'prop-types';
 
 import * as F from './styles.module.css';
 
-const FormButtonSubmit = ({ text, sizeW = 'large', ...rest }) => {
+const FormButtonSubmit = ({ sizeW = 'large', children, ...rest }) => {
   const sizesW = (sizeW) => {
     const availableSizes = {
       'large': F.buttonSubmitLarge,
@@ -18,15 +18,16 @@ const FormButtonSubmit = ({ text, sizeW = 'large', ...rest }) => {
       className={`${F.buttonSubmit} ${sizesW(sizeW)}`}
       {...rest}
     >
-      <p>
-        {text}
-      </p>
+      {children}
     </button>
   );
 };
 
 FormButtonSubmit.propTypes = {
-  text: P.string.isRequired,
+  children: P.oneOfType([
+    P.string,
+    P.element
+  ]),
   sizeW: P.oneOf(['large', 'small'])
 }
 

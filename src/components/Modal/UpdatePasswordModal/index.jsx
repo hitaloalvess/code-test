@@ -156,7 +156,9 @@ const UpdatePasswordModal = ({
 
           </Form.Row>
 
-          <Form.ButtonSubmit text="Entrar" disabled={hasCompletedFields} />
+          <Form.ButtonSubmit disabled={hasCompletedFields}>
+            <p>Atualizar</p>
+          </Form.ButtonSubmit>
 
         </Form.Content>
 
