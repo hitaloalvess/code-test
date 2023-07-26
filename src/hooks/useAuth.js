@@ -1,5 +1,5 @@
 
-import { useContext, useEffect, useMemo, useState } from 'react';
+import { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { api } from '@/services/api';
@@ -12,6 +12,9 @@ const TIME_ACTIVATE_SEARCH_FORM = 7 * 60 * 1000; //7m
 export const useAuth = () => {
   const navigate = useNavigate();
   const { enableModal, disableModal } = useModal();
+
+  const isFirstRender = useRef(true);
+  const idSearchFormTimeout = useRef(null);
 
   const [user, setUser] = useState(() => {
     const user = localStorage.getItem('@Microdigo:user');
@@ -55,6 +58,8 @@ export const useAuth = () => {
 
     api.defaults.headers.common.Authorization = undefined;
 
+    clearTimeout(idSearchFormTimeout.current);
+
     return navigate('/');
   }
 
@@ -70,11 +75,19 @@ export const useAuth = () => {
   }
 
   useEffect(() => {
-    const token = localStorage.getItem('@Microdigo:token');
-    api.defaults.headers.common.Authorization = `Bearer ${JSON.parse(token)}`;
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
 
-    setTimeout(handleSearchForm, TIME_ACTIVATE_SEARCH_FORM);
+      return;
+    }
 
+    if (isAuthenticated) {
+      const token = localStorage.getItem('@Microdigo:token');
+      api.defaults.headers.common.Authorization = `Bearer ${JSON.parse(token)}`;
+
+      idSearchFormTimeout.current = setTimeout(handleSearchForm, TIME_ACTIVATE_SEARCH_FORM);
+
+    }
   }, [isAuthenticated]);
 
   return {

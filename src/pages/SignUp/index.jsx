@@ -68,7 +68,6 @@ const SignUp = () => {
   const handleChangeValue = (nameField, value) => setValue(nameField, value, { shouldValidate: true })
 
   const handleSubmitForm = async (formData) => {
-    console.log(formData);
     const transformCPF = removeSpecialCharacters(formData.cpf);
     const transformPhone = removeSpaces(removeSpecialCharacters(formData.phone));
     const transformNasc = new Date(formData.nasc)

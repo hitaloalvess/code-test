@@ -42,7 +42,6 @@ const ProfileSection = () => {
   const handleChangeValue = (nameField, value) => setValue(nameField, value, { shouldValidate: true })
 
   const handleSubmitForm = async (formData) => {
-    console.log('HANDLE SUBMIT FORM')
     const transformPhone = removeSpaces(removeSpecialCharacters(formData.phone));
     const transformNasc = new Date(formData.nasc);
 
