@@ -1,11 +1,14 @@
+import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { HardDrives, XCircle, House } from '@phosphor-icons/react';
+import { HardDrives, XCircle, GameController } from '@phosphor-icons/react';
 
 import { useContextAuth } from '@/hooks/useAuth';
-import logoMicrodigo from '../../assets/images/logo-microdigo.svg';
+import logoMicrodigo from '@/assets/images/logo-microdigo.svg';
+import { Dropdown } from '@/components/Dropdown';
+import { AvatarIcon } from '@/components/AvatarIcon';
+import MenuBurguerIcon from '@/MenuBurguerIcon';
 
 import * as H from './styles.module.css';
-import { useMemo, useState } from 'react';
 
 const Header = () => {
 
@@ -44,66 +47,57 @@ const Header = () => {
         />
       </Link>
 
-      <button
-        className={H.menuBurguer}
-        onClick={handleActivePagesMenu}
-      >
-        <div className={`${H.burguerIcon}  ${pagesMenuIsActive ? H.isActive : ''}`}></div>
+      <div className={H.menuPagesContainer}>
+
+        <MenuBurguerIcon onClick={handleActivePagesMenu} />
 
         {pagesMenuIsActive &&
-          (<div className={H.dropDown}>
-            <ul>
-              <li className={H.dropDownItem}>
-                <Link to={'/platform'}>
-                  <p
-                    className={H.dropDownLink}
-                  >
-                    <House />
-                    <span>Home</span>
-                  </p>
-                </Link>
-              </li>
-            </ul>
-          </div>)
+
+          (
+            <Dropdown.Root>
+              <Dropdown.Item>
+                <Dropdown.ItemLink src={'/platform'}>
+                  <GameController />
+                  <span>Plataforma</span>
+                </Dropdown.ItemLink>
+              </Dropdown.Item>
+
+            </Dropdown.Root>
+          )
         }
-      </button>
+      </div>
 
       <div
         className={H.menuConfigContainer}
       >
-        <div
-          className={H.avatar}
-          onClick={handleActiveAccountsMenu}
-        >
-          <p className={H.avatarText} >{userNameTransform}</p>
-        </div>
 
+        <AvatarIcon.Root
+          handleClick={handleActiveAccountsMenu}
+        >
+          <AvatarIcon.ContentText text={userNameTransform} />
+        </AvatarIcon.Root>
 
         {
-          accountsMenuIsActive && (
-            <div className={`${H.dropDown} ${H.dropDownRight}`}>
-              <ul>
-                <li className={H.dropDownItem}>
-                  <Link to={'/account'}>
-                    <p
-                      className={H.dropDownLink}
-                    >
-                      <HardDrives />
-                      <span>Meus dados</span>
-                    </p>
-                  </Link>
-                </li>
-                <li className={H.dropDownItem}>
-                  <button
-                    className={H.dropDownButton}
-                    onClick={handleSignOut}
-                  >
-                    <XCircle />
-                    <span>Sair</span>
-                  </button>
-                </li>
-              </ul>
-            </div>
+          accountsMenuIsActive &&
+          (
+            <Dropdown.Root orientation='right'>
+              <Dropdown.Item>
+                <Dropdown.ItemLink src={'/account'}>
+                  <HardDrives />
+                  <span>Meus dados</span>
+                </Dropdown.ItemLink>
+              </Dropdown.Item>
+
+              <Dropdown.Item>
+                <Dropdown.ItemButton
+                  handleClick={handleSignOut}
+                >
+                  <XCircle />
+                  <span>Sair</span>
+                </Dropdown.ItemButton>
+              </Dropdown.Item>
+
+            </Dropdown.Root>
           )
         }
       </div>
