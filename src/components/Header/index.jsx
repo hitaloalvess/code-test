@@ -6,7 +6,7 @@ import { useContextAuth } from '@/hooks/useAuth';
 import logoMicrodigo from '@/assets/images/logo-microdigo.svg';
 import { Dropdown } from '@/components/Dropdown';
 import { AvatarIcon } from '@/components/AvatarIcon';
-import MenuBurguerIcon from '@/MenuBurguerIcon';
+import MenuBurguerIcon from '@/components/MenuBurguerIcon';
 
 import * as H from './styles.module.css';
 
