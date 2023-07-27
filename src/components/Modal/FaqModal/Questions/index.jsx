@@ -17,12 +17,6 @@ const Questions = () => {
               <Question.Text
                 text={question.description}
               />
-              <Question.Video
-                url={question.url}
-                width={'100%'}
-                height={'400px'}
-                allowFullScreen={true}
-              />
             </Question.Content>
           </Question.Root>
         ))
