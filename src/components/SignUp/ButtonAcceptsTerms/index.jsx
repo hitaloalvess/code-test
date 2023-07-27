@@ -18,7 +18,8 @@ const ButtonAcceptsTerms = forwardRef(function ButtonAcceptsTerms(
       typeContent: 'terms-of-use',
       handleConfirm: () => {
         disableModal();
-      }
+      },
+      closeModal: disableModal
     })
   }
 

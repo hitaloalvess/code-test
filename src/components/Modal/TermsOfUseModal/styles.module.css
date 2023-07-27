@@ -1,0 +1,33 @@
+.content {
+  display: flex;
+  flex-direction: column;
+  max-width: 600px;
+  height: 480px;
+  gap: 32px;
+  padding: 32px 44px;
+  outline: none;
+  border: none;
+  overflow-y: auto;
+}
+
+.title {
+  font-size: 24px;
+}
+
+.textsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.imgIconText {
+  margin: 0 8px;
+  width: 28px;
+  height: 28px;
+}
+
+.actionsContainer {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
