@@ -1,7 +1,6 @@
 
 import { memo, useCallback, useEffect, useRef, useState } from 'react';
-import { AiFillSetting } from 'react-icons/ai';
-import { FaTrashAlt } from 'react-icons/fa';
+import { Trash, Gear } from '@phosphor-icons/react';
 import P from 'prop-types';
 
 import { useDevices } from '@/hooks/useDevices';
@@ -168,7 +167,7 @@ const Led = memo(function Led({
             }
           })}
         >
-          <FaTrashAlt />
+          <Trash />
         </ActionButton>
 
         <ActionButton
@@ -179,7 +178,7 @@ const Led = memo(function Led({
             defaultBrightness: value.brightness
           })}
         >
-          <AiFillSetting />
+          <Gear />
         </ActionButton>
       </div >
     </>

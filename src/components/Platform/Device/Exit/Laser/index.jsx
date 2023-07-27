@@ -1,5 +1,5 @@
 import { memo, useState } from 'react';
-import { FaTrashAlt } from 'react-icons/fa';
+import { Trash } from '@phosphor-icons/react';
 import P from 'prop-types';
 
 import { useDevices } from '@/hooks/useDevices';
@@ -134,7 +134,7 @@ const Laser = memo(function Laser({
             }
           })}
         >
-          <FaTrashAlt />
+          <Trash />
         </ActionButton>
       </div >
     </>

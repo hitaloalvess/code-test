@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import P from 'prop-types';
-import { FaTrashAlt } from 'react-icons/fa';
+import { Trash, Gear } from '@phosphor-icons/react';
 
 import { useModal } from '@/hooks/useModal';
 import { useFlow } from '@/hooks/useFlow';
@@ -23,8 +23,6 @@ import {
 } from './styles.module.css';
 
 import eventBaseImg from '@/assets/images/devices/event/eventBase.svg';
-import { AiFillSetting } from 'react-icons/ai';
-import { useCallback } from 'react';
 
 const PickColor = ({
   dragRef, device, updateValue
@@ -214,7 +212,7 @@ const PickColor = ({
             }
           })}
         >
-          <FaTrashAlt />
+          <Trash />
         </ActionButton>
 
         <ActionButton
@@ -224,7 +222,7 @@ const PickColor = ({
             defaultColor: color,
           })}
         >
-          <AiFillSetting />
+          <Gear />
         </ActionButton>
 
       </div>

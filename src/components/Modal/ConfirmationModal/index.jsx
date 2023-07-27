@@ -1,4 +1,4 @@
-import { FaExclamationTriangle } from 'react-icons/fa';
+import { Warning } from '@phosphor-icons/react';
 import P from 'prop-types';
 
 import {
@@ -28,7 +28,7 @@ const ConfirmationModal = ({
         className={confirmationModalHeader}
       >
 
-        <FaExclamationTriangle />
+        <Warning />
 
         <h1
           className={confirmationModalTitle}

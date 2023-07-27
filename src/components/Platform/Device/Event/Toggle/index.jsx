@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import P from 'prop-types';
-import { FaTrashAlt } from 'react-icons/fa';
+import { Trash } from '@phosphor-icons/react';
 
 import { useModal } from '@/hooks/useModal';
 import { useFlow } from '@/hooks/useFlow';
@@ -215,7 +215,7 @@ const Toggle = ({
             }
           })}
         >
-          <FaTrashAlt />
+          <Trash />
         </ActionButton>
 
       </div>

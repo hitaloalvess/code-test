@@ -1,6 +1,6 @@
 import { useEffect, useRef, useCallback, useState } from 'react';
 import P from 'prop-types';
-import { FaTrashAlt } from 'react-icons/fa';
+import { Trash, Gear } from '@phosphor-icons/react';
 
 import { useModal } from '@/hooks/useModal';
 import { useFlow } from '@/hooks/useFlow';
@@ -24,7 +24,6 @@ import {
 
 
 import eventBaseImg from '@/assets/images/devices/event/eventBase.svg';
-import { AiFillSetting } from 'react-icons/ai';
 
 const If = ({
   dragRef, device, updateValue
@@ -68,8 +67,8 @@ const If = ({
         break;
     }
 
-      setVariable(newVariable);
-      setSimbol(newSimbol);
+    setVariable(newVariable);
+    setSimbol(newSimbol);
   }, [variable, simbol, connectionType]);
 
 
@@ -101,7 +100,7 @@ const If = ({
       max = typeof device.value === 'boolean' || typeof device.value === 'string' ? device.value : device.value[connection.deviceFrom.connector.name].max
     }
 
-    if(connectionType != String(typeof value)){
+    if (connectionType != String(typeof value)) {
       setConnectionType(String(typeof value));
       switch (String(typeof value)) {
         case 'number':
@@ -113,7 +112,7 @@ const If = ({
         case 'string':
           setVariable('FF12F3');
           break;
-        }
+      }
       setSimbol('=');
     }
 
@@ -260,7 +259,7 @@ const If = ({
             }
           })}
         >
-          <FaTrashAlt />
+          <Trash />
         </ActionButton>
 
         <ActionButton
@@ -274,7 +273,7 @@ const If = ({
             connectionType: connectionType,
           })}
         >
-          <AiFillSetting />
+          <Gear />
         </ActionButton>
       </div >
     </>

@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import imgLogoMicrodigo from '@/assets/images/logo-microdigo.svg';
 import Modal from 'react-modal';
-import { FaTimes } from 'react-icons/fa';
+import { X } from '@phosphor-icons/react'
 import P from 'prop-types';
 
 import ConfigLedModal from './ConfigLedModal';
@@ -79,10 +79,9 @@ const ModalContainer = ({ modalIsOpen, closeModal, contentData }) => {
           className={btnClose}
           onClick={closeModal}
         >
-          <FaTimes />
+          <X />
         </button>
       </header>
-      {/* {currentContent} */}
       {
         <CurrentContent
           closeModal={closeModal}

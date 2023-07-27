@@ -1,6 +1,6 @@
 import { useEffect, useRef, useCallback, useState } from 'react';
 import P from 'prop-types';
-import { FaTrashAlt } from 'react-icons/fa';
+import { Trash, Gear } from '@phosphor-icons/react';
 
 import { useModal } from '@/hooks/useModal';
 import { useFlow } from '@/hooks/useFlow';
@@ -23,7 +23,6 @@ import {
 } from './styles.module.css';
 
 import eventBaseImg from '@/assets/images/devices/event/eventBase.svg';
-import { AiFillSetting } from 'react-icons/ai';
 
 const INITIAL_DURATION = 5;
 const Delay = ({
@@ -239,7 +238,7 @@ const Delay = ({
             }
           })}
         >
-          <FaTrashAlt />
+          <Trash />
         </ActionButton>
 
         <ActionButton
@@ -250,7 +249,7 @@ const Delay = ({
             defaultDuration: duration,
           })}
         >
-          <AiFillSetting />
+          <Gear />
         </ActionButton>
       </div >
     </>

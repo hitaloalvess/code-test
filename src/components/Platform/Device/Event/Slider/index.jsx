@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import P from 'prop-types';
-import { FaTrashAlt } from 'react-icons/fa';
-import { AiFillSetting } from 'react-icons/ai';
+import { Trash, Gear } from '@phosphor-icons/react';
 
 import eventBaseImg from '@/assets/images/devices/event/eventBase.svg';
 
@@ -215,7 +214,7 @@ const Slider = ({
             }
           })}
         >
-          <FaTrashAlt />
+          <Trash />
         </ActionButton>
 
         <ActionButton
@@ -225,7 +224,7 @@ const Slider = ({
             defaultMaxValue: limit
           })}
         >
-          <AiFillSetting />
+          <Gear />
         </ActionButton>
       </div>
     </>

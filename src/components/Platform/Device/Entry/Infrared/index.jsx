@@ -1,7 +1,7 @@
 import { memo, useRef, useState, useCallback } from 'react';
 import P from 'prop-types';
-import { FaTrashAlt } from 'react-icons/fa';
-import { AiFillSetting } from 'react-icons/ai';
+import { Trash, Gear } from '@phosphor-icons/react';
+
 import { useDevices } from '@/hooks/useDevices';
 import { useFlow } from '@/hooks/useFlow';
 import { useModal } from '@/hooks/useModal';
@@ -120,13 +120,13 @@ const Infrared = memo(function Infrared({
             }
           })}
         >
-          <FaTrashAlt />
+          <Trash />
         </ActionButton>
 
         <ActionButton
           onClick={() => setIsModalOpen(!isModalOpen)}
         >
-          <AiFillSetting />
+          <Gear />
         </ActionButton>
 
       </div>

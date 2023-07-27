@@ -1,7 +1,6 @@
 
 import { memo, useCallback, useEffect, useRef, useState } from 'react';
-import { FaTrashAlt } from 'react-icons/fa';
-import { AiFillSetting } from 'react-icons/ai';
+import { Trash, Gear } from '@phosphor-icons/react';
 import P from 'prop-types';
 
 import { useDevices } from '@/hooks/useDevices';
@@ -207,7 +206,7 @@ const Buzzer = memo(function Buzzer({
             }
           })}
         >
-          <FaTrashAlt />
+          <Trash />
         </ActionButton>
 
         <ActionButton
@@ -218,7 +217,7 @@ const Buzzer = memo(function Buzzer({
             defaultVolume: value.volume
           })}
         >
-          <AiFillSetting />
+          <Gear />
         </ActionButton>
       </div >
     </>

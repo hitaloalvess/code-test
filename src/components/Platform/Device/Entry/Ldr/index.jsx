@@ -1,6 +1,6 @@
 import { memo, useRef, useState } from 'react';
 import P from 'prop-types';
-import { FaTrashAlt } from 'react-icons/fa';
+import { Trash } from '@phosphor-icons/react';
 
 import { useDevices } from '@/hooks/useDevices';
 import { useFlow } from '@/hooks/useFlow';
@@ -126,7 +126,7 @@ const Ldr = memo(function Ldr({
             }
           })}
         >
-          <FaTrashAlt />
+          <Trash />
         </ActionButton>
 
       </div>

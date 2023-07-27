@@ -1,5 +1,5 @@
 import P from 'prop-types';
-import { FaTrashAlt } from 'react-icons/fa';
+import { Trash } from '@phosphor-icons/react';
 
 import { btnDeleteLine } from './styles.module.css';
 
@@ -17,7 +17,7 @@ const ButtonDeleteLine = ({
       onClick={handleDeleteLine}
       disabled={isActive}
     >
-      <FaTrashAlt />
+      <Trash />
     </button>
   );
 };

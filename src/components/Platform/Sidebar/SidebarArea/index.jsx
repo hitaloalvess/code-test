@@ -1,4 +1,4 @@
-import { FaTrashAlt } from 'react-icons/fa';
+import { Trash } from '@phosphor-icons/react';
 import { mockDevices } from '@/data/devices.js';
 import P from 'prop-types';
 
@@ -28,7 +28,7 @@ const SidebarArea = ({ area, activeTrashArea }) => {
         <div
           className={trashArea}
         >
-          <FaTrashAlt />
+          <Trash />
         </div>
       )}
     </div>
