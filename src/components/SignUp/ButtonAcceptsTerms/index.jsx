@@ -43,7 +43,7 @@ const ButtonAcceptsTerms = forwardRef(function ButtonAcceptsTerms(
         <p>Li e estou de acordo com os </p>
         <button
           type='button'
-          className={AT.actionEnabledModal}
+          className={AT.btnEnabledModal}
           onClick={handleTermsOfUse}
         >
           Termos de Uso.

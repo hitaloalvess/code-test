@@ -32,3 +32,19 @@
   justify-content: space-between;
   align-items: center;
 }
+
+@media (max-width:1024px) {
+  .listSections {
+    width: 100%;
+  }
+
+  .sectionItem {
+    width: 100%;
+  }
+}
+
+@media(max-width: 480px) {
+  .sectionItem h2 {
+    font-size: 20px;
+  }
+}

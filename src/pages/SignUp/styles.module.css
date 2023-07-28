@@ -53,3 +53,27 @@
 .formContainer {
   width: 100%;
 }
+
+
+@media (max-width: 1024px) {
+  .container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .content {
+    gap: 32px;
+  }
+}
+
+@media (max-width: 480px) {
+  .content {
+    padding: 44px 32px;
+
+  }
+
+  .logo {
+    max-width: 120px;
+  }
+}

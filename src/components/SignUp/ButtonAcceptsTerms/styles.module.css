@@ -7,11 +7,12 @@
 .texts {
   display: flex;
   align-items: baseline;
-  font-size: 14px;
   gap: 2px;
+  flex-wrap: wrap;
+
 }
 
-.actionEnabledModal {
+.btnEnabledModal {
   font-size: 14px;
   border: none;
   font-weight: bold;
@@ -20,7 +21,7 @@
   transition: color 0.3s ease-in-out;
 }
 
-.actionEnabledModal:hover {
+.btnEnabledModal:hover {
   color: var(--blue);
 }
 
@@ -53,4 +54,17 @@
 
 .btnCheck:checked+label svg {
   opacity: 1;
+}
+
+@media(max-width: 480px) {
+
+  .btnEnabledModal,
+  .texts {
+    font-size: 12px;
+  }
+
+  .labelBtnCheck {
+    width: 14px;
+    height: 14px;
+  }
 }

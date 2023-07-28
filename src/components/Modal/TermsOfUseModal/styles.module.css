@@ -31,3 +31,29 @@
   display: flex;
   justify-content: center;
 }
+
+@media (max-width: 768px) {
+  .content {
+    max-width: 480px;
+    padding: 24px 32px;
+
+  }
+}
+
+@media (max-width: 480px) {
+
+  .content {
+    max-width: 320px;
+    padding: 18px 32px;
+    gap: 18px;
+
+  }
+
+  .title {
+    font-size: 20px;
+  }
+
+  .textsContainer {
+    gap: 12px;
+  }
+}

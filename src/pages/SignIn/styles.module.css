@@ -54,3 +54,26 @@
 .linkSignup:hover {
   color: var(--blue);
 }
+
+
+@media (max-width: 1024px) {
+  .container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .content {
+    gap: 32px;
+  }
+}
+
+@media (max-width: 480px) {
+  .content {
+    max-width: 280px;
+  }
+
+  .header {
+    max-width: 160px;
+  }
+}

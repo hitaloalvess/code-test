@@ -16,3 +16,11 @@
 .left {
   left: 44px;
 }
+
+
+@media (max-width: 480px) {
+
+  .left {
+    left: -60px;
+  }
+}

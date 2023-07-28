@@ -59,11 +59,11 @@
 */
 @media ((max-width: 480px) or ((max-height:480px) and (orientation:landscape))) {
   .container {
-    height: 36px;
+    height: 52px;
   }
 
   .container img {
-    max-height: 24px;
+    max-height: 28px;
     margin-right: auto;
     margin-left: 0;
   }

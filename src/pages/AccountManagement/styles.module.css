@@ -86,20 +86,26 @@
   margin-bottom: 24px;
 }
 
-.sectionItem {
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-  padding: 28px 24px;
-  border-radius: 6px;
-  backdrop-filter: blur(10px);
-  border-radius: 8px;
-  border: 1px solid var(--gray-50);
-  box-shadow: 0px 0px 4px 0px rgba(40, 40, 50, 0.40);
-  background-color: var(--white);
 
+@media (max-width: 1268px) {
+  .container {
+    padding: 60px 12px 0 12px;
+  }
+
+  .content {
+    gap: 24px;
+
+  }
 }
 
-.sectionItem h2 {
-  font-size: 24px;
+@media (max-width:1024px) {
+  .content {
+    display: flex;
+    justify-content: center;
+  }
+
+  .sidebar {
+    display: none;
+  }
+
 }
