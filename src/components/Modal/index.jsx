@@ -16,6 +16,7 @@ import UpdatePasswordModal from './UpdatePasswordModal';
 import SearchFormModal from './SearchFormModal';
 import FaqModal from './FaqModal';
 import TermsOfUseModal from './TermsOfUseModal';
+import InitialIntroPlatformModal from './InitialIntroPlatformModal';
 
 import {
   container,
@@ -48,7 +49,8 @@ const ModalContainer = ({ modalIsOpen, closeModal, contentData }) => {
     'update-password': UpdatePasswordModal,
     'search-form': SearchFormModal,
     'faq': FaqModal,
-    'terms-of-use': TermsOfUseModal
+    'terms-of-use': TermsOfUseModal,
+    'initial-intro-platform': InitialIntroPlatformModal
   }
 
   const CurrentContent = useMemo(() => {
