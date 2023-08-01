@@ -80,8 +80,8 @@ const Delay = ({
 
     if ([undefined, null].includes(value)) {
       //If device.value.current undefined or null, structure equal boolean (true or false) or object -> ex: {temperature:{..}, humidity:{...}
-      value = typeof device.value === 'boolean' ? device.value : device.value[connection.deviceFrom.connector.name].current
-      max = typeof device.value === 'boolean' ? device.value.max : device.value[connection.deviceFrom.connector.name].max
+      value = typeof device.value === 'boolean' ? device.value : device.value[connection.deviceFrom.connector.name]?.current
+      max = typeof device.value === 'boolean' ? device.value : device.value[connection.deviceFrom.connector.name]?.max
     }
 
     const objValue = {

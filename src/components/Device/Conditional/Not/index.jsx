@@ -54,7 +54,7 @@ const Not = ({
 
     if ([undefined, null].includes(value)) {
       //If device.value.current undefined or null, structure equal boolean (true or false) or object -> ex: {temperature:{..}, humidity:{...}
-      value = typeof device.value === 'boolean' ? device.value : device.value[connection.deviceFrom.connector.name].current
+      value = typeof device.value === 'boolean' || typeof device.value === 'string' ? device.value : device.value[connection.deviceFrom.connector.name]?.current
     }
 
     const objValue = {

@@ -8,6 +8,7 @@ import { useDevices } from '@/hooks/useDevices';
 import Connector from '@/components/Connector';
 import ActionButton from '@/components/ActionButton';
 import { findFlowsByDeviceId } from '@/utils/flow-functions';
+import { AiFillSetting } from 'react-icons/ai';
 
 import {
   deviceBody,
@@ -24,7 +25,7 @@ import {
 
 
 import eventBaseImg from '@/assets/images/devices/event/eventBase.svg';
-import { AiFillSetting } from 'react-icons/ai';
+
 
 const If = ({
   dragRef, device, updateValue
@@ -78,6 +79,7 @@ const If = ({
 
     const flow = findFlowsByDeviceId(flows, id);
 
+
     if (!flow) {
       updateValue(setValue, id, { value: 0, max: 0 });
 
@@ -97,8 +99,8 @@ const If = ({
 
     if ([undefined, null].includes(value)) {
       //If device.value.current undefined or null, structure equal boolean (true or false) or object -> ex: {temperature:{..}, humidity:{...}
-      value = typeof device.value === 'boolean' || typeof device.value === 'string' ? device.value : device.value[connection.deviceFrom.connector.name].current
-      max = typeof device.value === 'boolean' || typeof device.value === 'string' ? device.value : device.value[connection.deviceFrom.connector.name].max
+      value = typeof device.value === 'boolean' || typeof device.value === 'string' ? device.value : device.value[connection.deviceFrom.connector.name]?.current
+      max = typeof device.value === 'boolean' || typeof device.value === 'string' ? device.value : device.value[connection.deviceFrom.connector.name]?.max
     }
 
     if(connectionType != String(typeof value)){

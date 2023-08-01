@@ -64,7 +64,7 @@ const Toggle = ({
 
       if ([undefined, null].includes(value)) {
         //If device.value.current undefined or null, structure equal boolean (true or false) or object -> ex: {temperature:{..}, humidity:{...}
-        value = typeof device.value === 'boolean' ? device.value : device.value[conn.deviceFrom.connector.name].current
+        value = typeof device.value === 'boolean' ? device.value : device.value[conn.deviceFrom.connector.name]?.current
       }
       return {
         idConnection: conn.id,

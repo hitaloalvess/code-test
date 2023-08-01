@@ -371,7 +371,7 @@ export const deviceConnectorRules = {
     connectsTo: ['all'],
   },
   if: {
-    acceptedConnections: ['oneEntry', 'oneExit'],
+    acceptedConnections: ['oneEntry', 'allExit'],
     connectsFrom: ['all'],
     connectsTo: ['all'],
   },
