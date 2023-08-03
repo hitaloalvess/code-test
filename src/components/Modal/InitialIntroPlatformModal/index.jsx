@@ -15,7 +15,7 @@ const InitialIntroPlatformModal = ({ contentData }) => {
       <h1>{title}</h1>
 
       <iframe
-        src="https://www.youtube.com/embed/KwnIp1YjPz0"
+        src="https://www.youtube.com/embed/7Oa2LK9CFyc"
         allowFullScreen
         width={'100%'}
         height={420}
@@ -25,7 +25,7 @@ const InitialIntroPlatformModal = ({ contentData }) => {
       <div
         className={I.subtitle}
       >
-        <p>Caso não queira ver o tutorial completo, a qualquer momento você poderá acessar o botão FAQ
+        <p>Caso não queira ver o tutorial completo agora, a qualquer momento você poderá acessar o botão FAQ
           <span>
             <img
               className={I.subtitleImgIcon}
@@ -36,7 +36,7 @@ const InitialIntroPlatformModal = ({ contentData }) => {
         </p>
 
         <p>
-          ou o manual completo da plataforma
+          ou o manual da plataforma
           <span>
             <img
               className={I.subtitleImgIcon}
@@ -45,7 +45,7 @@ const InitialIntroPlatformModal = ({ contentData }) => {
             />
           </span>
 
-          e tirar dúvidas específicas
+          e tirar dúvidas específicas.
         </p>
 
       </div>
