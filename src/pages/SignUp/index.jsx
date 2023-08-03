@@ -23,6 +23,7 @@ import ButtonAcceptsTerms from '@/components/SignUp/ButtonAcceptsTerms';
 import { Form } from '@/components/Form';
 import { Input } from '@/components/Input';
 import { InputPassword } from '@/components/Input/InputPasswordType';
+import { SpinnerLoader } from '@/components/SpinnerLoader';
 
 import * as S from './styles.module.css';
 
@@ -63,7 +64,10 @@ const SignUp = () => {
     resolver: zodResolver(signUpSchema),
     shouldFocusError: false
   });
+
   const [activeBtnSubmitForm, setActiveBtnSubmitForm] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
+
 
   const handleChangeValue = (nameField, value) => setValue(nameField, value, { shouldValidate: true })
 
@@ -81,13 +85,16 @@ const SignUp = () => {
     delete data.confirm_password;
 
     try {
-
+      setIsLoading(true);
       await api.post('users', data);
       toast.success('Usuário cadastrado com sucesso!');
+
+      setIsLoading(false);
 
       return navigate('/');
 
     } catch (error) {
+      setIsLoading(false);
       toast.error(error.response.data.message);
     }
   }
@@ -282,7 +289,11 @@ const SignUp = () => {
 
 
             <Form.ButtonSubmit disabled={activeBtnSubmitForm}>
-              <p>Cadastrar</p>
+              {
+                isLoading ?
+                  <SpinnerLoader.Icon /> :
+                  <p>Cadastrar</p>
+              }
             </Form.ButtonSubmit>
 
 
