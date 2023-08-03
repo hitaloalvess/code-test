@@ -13,27 +13,41 @@ import * as H from './styles.module.css';
 const Header = () => {
 
   const { handleSignOut, user } = useContextAuth();
-  const [accountsMenuIsActive, setAccountMenuIsActive] = useState(false);
-  const [pagesMenuIsActive, setPagesMenuIsActive] = useState(false);
+  const [enabledMenu, setEnabledMenu] = useState('');
 
+  const handleShortenName = (name) => {
+    const partitionedName = name.split(' ');
+
+    if (partitionedName <= 0) return;
+
+    if (partitionedName.length > 1) {
+      const firstLetterName = `${(partitionedName[0])}`
+      const firstLetterSurname = `${(partitionedName[partitionedName.length - 1])}`
+
+      const shortName = `${firstLetterName.charAt(0)}${firstLetterSurname.charAt(0)}`
+      return shortName.toLocaleUpperCase();
+    }
+
+    const firstLetterName = `${(partitionedName[0])}`;
+
+    return `${firstLetterName.charAt(0)}`.toLocaleUpperCase();
+
+  }
   const userNameTransform = useMemo(() => {
     const name = user.name;
 
-    const partitionedName = name.split(' ');
-    const firstLetterName = `${(partitionedName[0])}`
-    const firstLetterSurname = `${(partitionedName[partitionedName.length - 1])}`
+    const shortedName = handleShortenName(name);
 
-    const shortName = `${firstLetterName.charAt(0)}${firstLetterSurname.charAt(0)}`
-    return shortName.toLocaleUpperCase();
-
+    return shortedName;
   }, [user.name]);
 
-  const handleActiveAccountsMenu = () => {
-    setAccountMenuIsActive(prev => !prev);
-  }
 
-  const handleActivePagesMenu = () => {
-    setPagesMenuIsActive(prev => !prev);
+  const handleEnableMenu = (typeMenu) => {
+    setEnabledMenu(prev => {
+      if (prev === typeMenu) return '';
+
+      return typeMenu;
+    })
   }
 
   return (
@@ -49,9 +63,12 @@ const Header = () => {
 
       <div className={H.menuPagesContainer}>
 
-        <MenuBurguerIcon onClick={handleActivePagesMenu} />
+        <MenuBurguerIcon
+          onClick={() => handleEnableMenu('pages')}
+          isActive={enabledMenu === 'pages'}
+        />
 
-        {pagesMenuIsActive &&
+        {enabledMenu === 'pages' &&
 
           (
             <Dropdown.Root>
@@ -72,13 +89,13 @@ const Header = () => {
       >
 
         <AvatarIcon.Root
-          handleClick={handleActiveAccountsMenu}
+          handleClick={() => handleEnableMenu('accounts')}
         >
           <AvatarIcon.ContentText text={userNameTransform} />
         </AvatarIcon.Root>
 
         {
-          accountsMenuIsActive &&
+          enabledMenu === 'accounts' &&
           (
             <Dropdown.Root orientation='right'>
               <Dropdown.Item>
