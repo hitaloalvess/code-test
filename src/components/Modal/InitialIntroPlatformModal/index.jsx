@@ -1,7 +1,9 @@
+import { useState } from 'react';
 import P from 'prop-types';
 
 import FaqBtnImage from '@/assets/images/buttons/faq-button.svg';
 import ManualBtnImage from '@/assets/images/buttons/manual-button.svg';
+import { SpinnerLoader } from '@/components/SpinnerLoader';
 
 import * as I from './styles.module.css';
 
@@ -9,18 +11,34 @@ const InitialIntroPlatformModal = ({ contentData }) => {
 
   const { title } = contentData;
 
+  const [isLoading, setIsLoading] = useState(true);
+
+  const handleLoading = () => {
+    setIsLoading(false);
+  }
+
   return (
     <section className={I.content}>
 
       <h1>{title}</h1>
 
-      <iframe
-        src="https://www.youtube.com/embed/7Oa2LK9CFyc"
-        allowFullScreen
-        width={'100%'}
-        height={420}
-        frameBorder='0'
-      ></iframe>
+      <div className={I.videoContainer}>
+
+        {isLoading && (
+          <SpinnerLoader.Root>
+            <SpinnerLoader.IconText text='Carregando...' />
+          </SpinnerLoader.Root>
+        )}
+
+        <iframe
+          src="https://www.youtube.com/embed/7Oa2LK9CFyc"
+          allowFullScreen
+          width={'100%'}
+          height={420}
+          frameBorder='0'
+          onLoad={handleLoading}
+        ></iframe>
+      </div>
 
       <div
         className={I.subtitle}

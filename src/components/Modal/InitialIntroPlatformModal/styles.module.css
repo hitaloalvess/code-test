@@ -5,7 +5,7 @@
   width: 90vw;
   max-width: 800px;
   max-height: 85vh;
-  gap: 24px;
+  gap: 12px;
   padding: 24px 44px;
   outline: none;
   border: none;
@@ -21,6 +21,10 @@
   width: 20px;
   height: 20px;
   margin: 0 8px;
+}
+
+.videoContainer {
+  position: relative;
 }
 
 @media (max-width: 480px) {

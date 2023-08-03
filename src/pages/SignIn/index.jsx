@@ -11,9 +11,9 @@ import { Input } from '@/components/Input';
 import { InputPassword } from '@/components/Input/InputPasswordType';
 import Banner from '@/components/Banner';
 import { Form } from '@/components/Form'
+import { SpinnerLoader } from '@/components/SpinnerLoader';
 
 import * as S from './styles.module.css';
-import SpinnerLoader from '../../components/SpinnerLoader';
 
 const signInSchema = z.object({
   email: z.string().email('Por favor, informe um email válido.'),
@@ -111,7 +111,7 @@ const SignIn = () => {
 
               <Form.ButtonSubmit disabled={hasCompletedFields} >
                 {isLoading ?
-                  (<SpinnerLoader />) :
+                  (<SpinnerLoader.Icon />) :
                   <p>Entrar</p>
                 }
               </Form.ButtonSubmit>

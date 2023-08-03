@@ -1,10 +1,10 @@
+import SpinnerLoaderIcon from "./SpinnerLoaderIcon";
+import SpinnerLoaderIconText from "./SpinnerLoaderIconText";
+import SpinnerLoaderRoot from "./SpinnerLoaderRoot";
 
-import * as SL from './styles.module.css';
 
-const SpinnerLoader = () => {
-  return (
-    <span className={SL.loader}></span>
-  );
-};
-
-export default SpinnerLoader;
+export const SpinnerLoader = {
+  Root: SpinnerLoaderRoot,
+  Icon: SpinnerLoaderIcon,
+  IconText: SpinnerLoaderIconText
+}
