@@ -186,7 +186,7 @@ const And = ({
             handleConfirm: () => {
               deleteDeviceConnections(id);
               deleteDevice(id);
-              disableModal();
+              disableModal('confirmation');
             }
           })}
         >

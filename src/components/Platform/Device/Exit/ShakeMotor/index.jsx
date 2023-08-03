@@ -118,7 +118,7 @@ const ShakeMotor = memo(function ShakeMotor({
             handleConfirm: () => {
               deleteDeviceConnections(id);
               deleteDevice(id);
-              disableModal();
+              disableModal('confirmation');
             }
           })}
         >

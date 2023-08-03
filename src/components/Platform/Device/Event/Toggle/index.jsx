@@ -211,7 +211,7 @@ const Toggle = ({
             handleConfirm: () => {
               deleteDeviceConnections(id);
               deleteDevice(id);
-              disableModal();
+              disableModal('confirmation');
             }
           })}
         >

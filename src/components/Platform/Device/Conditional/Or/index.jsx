@@ -183,7 +183,7 @@ const Or = ({
             handleConfirm: () => {
               deleteDeviceConnections(id);
               deleteDevice(id);
-              disableModal();
+              disableModal('confirmation');
             }
           })}
         >

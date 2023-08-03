@@ -202,7 +202,7 @@ const Buzzer = memo(function Buzzer({
             handleConfirm: () => {
               deleteDeviceConnections(id);
               deleteDevice(id);
-              disableModal();
+              disableModal('confirmation');
             }
           })}
         >

@@ -116,7 +116,7 @@ const Infrared = memo(function Infrared({
             handleConfirm: () => {
               deleteDeviceConnections(id);
               deleteDevice(id);
-              disableModal();
+              disableModal('confirmation');
             }
           })}
         >

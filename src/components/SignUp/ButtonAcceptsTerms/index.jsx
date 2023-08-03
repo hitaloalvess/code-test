@@ -17,7 +17,7 @@ const ButtonAcceptsTerms = forwardRef(function ButtonAcceptsTerms(
     enableModal({
       typeContent: 'terms-of-use',
       handleConfirm: () => {
-        disableModal();
+        disableModal('terms-of-use');
       },
       closeModal: disableModal
     })

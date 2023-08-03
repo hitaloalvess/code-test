@@ -122,7 +122,7 @@ const Ldr = memo(function Ldr({
             handleConfirm: () => {
               deleteDeviceConnections(id);
               deleteDevice(id);
-              disableModal();
+              disableModal('confirmation');
             }
           })}
         >

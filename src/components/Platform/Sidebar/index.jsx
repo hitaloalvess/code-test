@@ -26,7 +26,7 @@ const Sidebar = () => {
         handleConfirm: () => {
           deleteDeviceConnections(item.id);
           deleteDevice(item.id);
-          disableModal();
+          disableModal('confirmation');
         }
       })
     },

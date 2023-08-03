@@ -69,7 +69,7 @@ export const useAuth = () => {
     enableModal({
       typeContent: 'search-form',
       handleConfirm: () => {
-        disableModal();
+        disableModal('search-form');
       }
     });
 

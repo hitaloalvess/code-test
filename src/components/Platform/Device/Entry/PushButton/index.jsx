@@ -100,7 +100,7 @@ const PushButton = memo(function PushButton({
             handleConfirm: () => {
               deleteDeviceConnections(id);
               deleteDevice(id);
-              disableModal();
+              disableModal('confirmation');
             }
           })}
         >

@@ -11,7 +11,7 @@ const FaqButton = () => {
       typeContent: 'faq',
       title: 'As pessoas também perguntam',
       handleConfirm: () => {
-        disableModal();
+        disableModal('faq');
       }
     })
   }

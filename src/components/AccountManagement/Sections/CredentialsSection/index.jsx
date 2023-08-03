@@ -21,7 +21,7 @@ const CredentialsSection = () => {
       typeContent: 'update-password',
       title: 'Alterar senha',
       handleConfirm: () => {
-        disableModal();
+        disableModal('update-password');
       }
     })
   }
@@ -45,7 +45,7 @@ const CredentialsSection = () => {
       handleConfirm: async () => {
 
         await handleDeleteAccount();
-        disableModal();
+        disableModal('confirmation');
 
       }
     })

@@ -117,7 +117,7 @@ const Potentiometer = memo(function Ldr({
             handleConfirm: () => {
               deleteDeviceConnections(id);
               deleteDevice(id);
-              disableModal();
+              disableModal('confirmation');
             }
           })}
         >
