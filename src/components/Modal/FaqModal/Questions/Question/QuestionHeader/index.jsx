@@ -1,8 +1,8 @@
-import { Plus, Minus } from '@phosphor-icons/react';
+import { useState } from 'react';
 import P from 'prop-types';
+import { CaretDown } from '@phosphor-icons/react';
 
 import * as QH from './styles.module.css';
-import { useState } from 'react';
 
 const QuestionHeader = ({ title }) => {
 
@@ -14,15 +14,11 @@ const QuestionHeader = ({ title }) => {
 
   return (
     <summary
-      className={QH.summary}
+      className={`${QH.summary} ${active ? QH.summaryIsActive : ''}`}
       onClick={handleActive}
     >
       <p>{title}</p>
-      {
-        active ?
-          <Minus /> :
-          <Plus />
-      }
+      <CaretDown />
     </summary>
   );
 };

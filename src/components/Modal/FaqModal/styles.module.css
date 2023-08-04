@@ -2,8 +2,32 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
+  max-height: 90vh;
   gap: 24px;
   padding: 32px 44px;
   outline: none;
   border: none;
+}
+
+@media (max-width: 768px) {
+  .content {
+    max-width: 480px;
+    padding: 24px 32px;
+
+  }
+}
+
+@media (max-width: 480px) {
+
+  .content {
+    max-width: 320px;
+    padding: 18px 32px;
+    gap: 18px;
+
+  }
+
+  .title {
+    font-size: 20px;
+  }
+
 }

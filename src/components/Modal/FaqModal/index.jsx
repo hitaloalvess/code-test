@@ -10,9 +10,7 @@ const FaqModal = ({ contentData }) => {
   return (
     <section className={F.content}>
 
-      <header>
-        <h1>{title}</h1>
-      </header>
+      <h1 className={F.title}>{title}</h1>
 
       <Questions />
 

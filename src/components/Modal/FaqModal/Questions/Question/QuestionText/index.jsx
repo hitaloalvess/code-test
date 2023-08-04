@@ -1,8 +1,10 @@
 import P from 'prop-types';
 
+import * as QT from './styles.module.css';
+
 const QuestionText = ({ text }) => {
   return (
-    <p>
+    <p className={QT.text}>
       {text}
     </p>
   );
