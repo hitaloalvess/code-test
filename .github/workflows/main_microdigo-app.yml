@@ -58,5 +58,5 @@ jobs:
         with:
           app-name: 'microdigo-app'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_E5A6BA4AD6AD4C2582006432608C078D }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_8175640063884D1A85B7BFC19405F946 }}
           package: .
