@@ -9,6 +9,10 @@ on:
     branches:
       - main
 
+env:
+  VITE_BASE_URL: ${{ secrets.VITE_BASE_URL }}
+  VITE_MANUAL_URL: ${{ secrets.VITE_MANUAL_URL }}
+
 jobs:
   build_and_deploy_job:
     if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
