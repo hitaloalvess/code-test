@@ -1,0 +1,10 @@
+.avatarIconText {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+@media (max-width: 480px) {
+  .avatarIconText {
+    font-size: 14px;
+  }
+}

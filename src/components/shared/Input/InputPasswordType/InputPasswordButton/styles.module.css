@@ -1,0 +1,18 @@
+.inputPasswordButton {
+  margin-left: auto;
+  font-size: 16px;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-weight: bold;
+  color: var(--blue);
+  cursor: pointer;
+  z-index: 1;
+  transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+}
+
+.inputPasswordButton:hover {
+  color: var(--blue-900);
+  background-color: rgba(0, 120, 255, 0.2);
+
+}

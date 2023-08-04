@@ -1,0 +1,10 @@
+.itemContainer {
+  width: 100%;
+  padding: 12px 24px;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.itemContainer:hover {
+  background-color: rgba(0, 120, 255, 0.2);
+}

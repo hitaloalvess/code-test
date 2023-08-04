@@ -5,6 +5,8 @@ import deviceSwitch from '@/assets/images/devices/entry/switchOff.svg';
 import devicePushButton from '@/assets/images/devices/entry/pushButtonOff.svg';
 import deviceDht from '@/assets/images/devices/entry/dht.svg';
 import deviceInfrared from '@/assets/images/devices/entry/infrared.svg';
+// import deviceSoilMoisture from '@/assets/images/devices/event/eventBase.svg';
+// import deviceRainDetector from '@/assets/images/devices/event/eventBase.svg';
 
 //exit
 import deviceLed from '@/assets/images/devices/exit/led.svg';
@@ -12,6 +14,7 @@ import deviceLedMono from '@/assets/images/devices/exit/ledMono.svg';
 import deviceLaser from '@/assets/images/devices/exit/laser.svg';
 import deviceShakeMotor from '@/assets/images/devices/exit/shakeMotor.svg';
 import deviceBuzzer from '@/assets/images/devices/exit/buzzer.svg';
+// import deviceBargraph from '@/assets/images/devices/event/eventBase.svg';
 
 //conditional
 import deviceAnd from '@/assets/images/devices/conditional/and.svg';
@@ -29,7 +32,7 @@ import deviceSlider from '@/assets/images/devices/event/slider.svg';
 export const mockDevices = {
   entry: [
     {
-      id: 2,
+      id: 10,
       imgSrc: deviceDht,
       name: 'dht',
       type: 'virtual',
@@ -40,7 +43,7 @@ export const mockDevices = {
       },
     },
     {
-      id: 3,
+      id: 11,
       imgSrc: deviceInfrared,
       name: 'infrared',
       type: 'virtual',
@@ -48,7 +51,7 @@ export const mockDevices = {
       value: 'FF12F3'
     },
     {
-      id: 5,
+      id: 12,
       imgSrc: deviceLdr,
       name: 'ldr',
       type: 'virtual',
@@ -59,7 +62,7 @@ export const mockDevices = {
       }
     },
     {
-      id: 8,
+      id: 13,
       imgSrc: devicePotentiometer,
       name: 'potentiometer',
       type: 'virtual',
@@ -70,7 +73,7 @@ export const mockDevices = {
       }
     },
     {
-      id: 9,
+      id: 14,
       imgSrc: devicePushButton,
       name: 'pushButton',
       type: 'virtual',
@@ -78,17 +81,39 @@ export const mockDevices = {
       value: false
     },
     {
-      id: 10,
+      id: 15,
       imgSrc: deviceSwitch,
       name: 'switch',
       type: 'virtual',
       category: 'entry',
       value: false
     },
+    // {
+    //   id: 16,
+    //   imgSrc: deviceRainDetector,
+    //   name: 'rainDetector',
+    //   type: 'virtual',
+    //   category: 'entry',
+    //   value: {
+    //     current: 0,
+    //     max: 1023
+    //   },
+    // },
+    // {
+    //   id: 17,
+    //   imgSrc: deviceSoilMoisture,
+    //   name: 'soilMoisture',
+    //   type: 'virtual',
+    //   category: 'entry',
+    //   value: {
+    //     current: 0,
+    //     max: 1023
+    //   },
+    // }
   ],
   exit: [
     {
-      id: 6,
+      id: 20,
       imgSrc: deviceLed,
       name: 'led',
       type: 'virtual',
@@ -104,7 +129,7 @@ export const mockDevices = {
       }
     },
     {
-      id: 7,
+      id: 21,
       imgSrc: deviceLedMono,
       name: 'ledMono',
       type: 'virtual',
@@ -119,7 +144,7 @@ export const mockDevices = {
       }
     },
     {
-      id: 4,
+      id: 22,
       imgSrc: deviceLaser,
       name: 'laser',
       type: 'virtual',
@@ -134,7 +159,7 @@ export const mockDevices = {
       }
     },
     {
-      id: 11,
+      id: 23,
       imgSrc: deviceShakeMotor,
       name: 'shakeMotor',
       type: 'virtual',
@@ -147,7 +172,7 @@ export const mockDevices = {
       }
     },
     {
-      id: 1,
+      id: 24,
       imgSrc: deviceBuzzer,
       name: 'buzzer',
       type: 'virtual',
@@ -161,55 +186,25 @@ export const mockDevices = {
         volume: 0.5,
       }
     },
-  ],
-  conditional: [
-    {
-      id: 100,
-      imgSrc: deviceAnd,
-      name: 'and',
-      type: 'virtual',
-      category: 'conditional',
-      value: false
-    },
-    {
-      id: 101,
-      imgSrc: deviceOr,
-      name: 'or',
-      type: 'virtual',
-      category: 'conditional',
-      value: false
-    },
-    {
-      id: 102,
-      imgSrc: deviceNot,
-      name: 'not',
-      type: 'virtual',
-      category: 'conditional',
-      value: false
-    },
-    {
-      id: 103,
-      imgSrc: deviceIf,
-      name: 'if',
-      type: 'virtual',
-      category: 'conditional',
-      value: false
-    },
-    {
-      id: 104,
-      imgSrc: deviceCounter,
-      name: 'counter',
-      type: 'virtual',
-      category: 'conditional',
-      value: {
-        current: 0,
-        max: 0
-      }
-    }
+    // {
+    //   id: 25,
+    //   imgSrc: deviceBargraph,
+    //   name: 'bargraph',
+    //   type: 'virtual',
+    //   category: 'exit',
+    //   value: {
+    //     active: false,
+    //     current: 0,
+    //     max: 0,
+    //     type: null,
+    //     opacity: 0,
+    //     brightness: 1023
+    //   }
+    // },
   ],
   event: [
     {
-      id: 200,
+      id: 30,
       imgSrc: devicePickColor,
       name: 'pickColor',
       type: 'virtual',
@@ -221,7 +216,7 @@ export const mockDevices = {
       }
     },
     {
-      id: 201,
+      id: 31,
       imgSrc: deviceToggle,
       name: 'toggle',
       type: 'virtual',
@@ -229,7 +224,7 @@ export const mockDevices = {
       value: false
     },
     {
-      id: 202,
+      id: 32,
       imgSrc: deviceDelay,
       name: 'delay',
       type: 'virtual',
@@ -240,7 +235,7 @@ export const mockDevices = {
       }
     },
     {
-      id: 203,
+      id: 33,
       imgSrc: deviceSlider,
       name: 'slider',
       type: 'virtual',
@@ -250,6 +245,51 @@ export const mockDevices = {
         max: 0
       }
     },
+  ],
+  conditional: [
+    {
+      id: 40,
+      imgSrc: deviceAnd,
+      name: 'and',
+      type: 'virtual',
+      category: 'conditional',
+      value: false
+    },
+    {
+      id: 41,
+      imgSrc: deviceOr,
+      name: 'or',
+      type: 'virtual',
+      category: 'conditional',
+      value: false
+    },
+    {
+      id: 42,
+      imgSrc: deviceNot,
+      name: 'not',
+      type: 'virtual',
+      category: 'conditional',
+      value: false
+    },
+    {
+      id: 43,
+      imgSrc: deviceIf,
+      name: 'if',
+      type: 'virtual',
+      category: 'conditional',
+      value: false
+    },
+    {
+      id: 44,
+      imgSrc: deviceCounter,
+      name: 'counter',
+      type: 'virtual',
+      category: 'conditional',
+      value: {
+        current: 0,
+        max: 0
+      }
+    }
   ]
 };
 
@@ -267,6 +307,14 @@ export const deviceConnectorRules = {
     connectsTo: ['all']
   },
   pushButton: {
+    acceptedConnections: ['allExit'],
+    connectsTo: ['all']
+  },
+  soilMoisture: {
+    acceptedConnections: ['allExit'],
+    connectsTo: ['all']
+  },
+  rainDetector: {
     acceptedConnections: ['allExit'],
     connectsTo: ['all']
   },
@@ -298,6 +346,10 @@ export const deviceConnectorRules = {
     acceptedConnections: ['allEntry'],
     connectsFrom: ['all']
   },
+  bargraph: {
+    acceptedConnections: ['oneEntry'],
+    connectsFrom: ['potentiometer', 'dht', 'ldr', 'counter', 'slider', 'physicalPotentiometer', 'physicalLDR', 'physicalDHT'],
+  },
   counter: {
     acceptedConnections: ['oneEntry', 'allExit'],
     connectsFrom: ['potentiometer', 'ldr', 'pushButton', 'slider', 'delay', 'toggle', 'and', 'or', 'physicalPotentiometer', 'physicalLDR'],
@@ -319,7 +371,7 @@ export const deviceConnectorRules = {
     connectsTo: ['all'],
   },
   if: {
-    acceptedConnections: ['oneEntry', 'oneExit'],
+    acceptedConnections: ['oneEntry', 'allExit'],
     connectsFrom: ['all'],
     connectsTo: ['all'],
   },
