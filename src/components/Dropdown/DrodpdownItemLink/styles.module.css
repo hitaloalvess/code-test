@@ -1,0 +1,12 @@
+.itemLink {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-weight: bold;
+  color: var(--black);
+}
+
+.itemLink svg {
+  font-size: 20px;
+  color: var(--blue-900);
+}

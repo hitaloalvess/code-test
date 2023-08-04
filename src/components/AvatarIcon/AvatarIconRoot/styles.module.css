@@ -1,0 +1,45 @@
+.avatarIconContainer {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 9999999px;
+  border: 5px solid transparent;
+  cursor: pointer;
+  background-color: var(--white-100);
+}
+
+.avatarIconContainer::before {
+  content: '';
+  position: absolute;
+  top: -9px;
+  left: -9px;
+  width: 40px;
+  height: 40px;
+  border: 4px solid transparent;
+  border-radius: 99999px;
+  transition: border 0.3s ease-in-out;
+}
+
+.avatarIconContainer:hover::before {
+  border: 4px solid rgba(217, 217, 217, 0.5);
+
+}
+
+
+@media (max-width: 480px) {
+  .avatarIconContainer {
+    width: 36px;
+    height: 36px;
+  }
+
+  .avatarIconContainer::before {
+
+    top: -8px;
+    left: -8px;
+    width: 34px;
+    height: 34px;
+  }
+}

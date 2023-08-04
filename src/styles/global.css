@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;500;700&display=swap');
+
 * {
   margin: 0;
   padding: 0;
@@ -5,6 +7,7 @@
   font-family: "Exo 2", sans-serif;
   text-transform: uppercase;
   user-select: none;
+  text-decoration: none;
   list-style: none;
 }
 
@@ -19,6 +22,9 @@
   --yellow: #ffbe00;
   --black: #282832;
   --white: #ffffff;
+  --white-150: #f0f0f0;
+  --white-100: #f2f2f2;
+  --white-200: #efefef;
   --gray-50: #d9d9d9;
   --gray-100: #929292;
   --green: #14ae5c;
@@ -29,4 +35,8 @@ body {
   font-weight: 400;
   color: var(--black);
   background-color: var(--background);
+}
+
+html {
+  scroll-behavior: smooth;
 }

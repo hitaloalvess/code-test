@@ -1,0 +1,39 @@
+.content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 90vw;
+  max-width: 800px;
+  max-height: 85vh;
+  gap: 12px;
+  padding: 24px 44px;
+  outline: none;
+  border: none;
+}
+
+.subtitle p {
+  display: inline;
+  line-height: 24px;
+}
+
+
+.subtitleImgIcon {
+  width: 20px;
+  height: 20px;
+  margin: 0 8px;
+}
+
+.videoContainer {
+  position: relative;
+}
+
+@media (max-width: 480px) {
+  .content {
+    padding: 18px;
+  }
+
+  .subtitle p {
+    font-size: 12px;
+    line-height: 18px;
+  }
+}

@@ -1,22 +1,10 @@
 import imgLogoMicrodigo from '@/assets/images/logo-microdigo.svg';
 import Modal from 'react-modal';
-import { FaTimes } from 'react-icons/fa';
+import { X } from '@phosphor-icons/react'
 import P from 'prop-types';
 
-import ConfigLedModal from './ConfigLedModal';
-import ConfigDelayModal from './ConfigDelayModal';
-import ConfigBuzzerModal from './ConfigBuzzerModal';
-import ConfigSliderModal from './ConfigSliderModal';
-import ConfirmationModal from './ConfirmationModal';
-import ConfigDhtModal from './ConfigDhtModal';
-import ConfigIfModal from './ConfigIfModal';
-import ConfigPickColorModal from './ConfigPickColorModal';
+import * as M from './styles.module.css';
 
-import {
-  container,
-  header,
-  btnClose
-} from './styles.module.css';
 
 const customStyles = {
   overlay: {
@@ -29,75 +17,55 @@ const customStyles = {
   }
 };
 
-const ModalContainer = ({ modalIsOpen, closeModal, contentData }) => {
-  const contents = {
-    'confirmation': <ConfirmationModal
-      closeModal={closeModal}
-      contentData={contentData}
-    />,
-    'config-led': <ConfigLedModal
-      closeModal={closeModal}
-      contentData={contentData}
-    />,
-    'config-buzzer': <ConfigBuzzerModal
-    closeModal={closeModal}
-    contentData={contentData}
-    />,
-    'config-delay': <ConfigDelayModal
-    closeModal={closeModal}
-    contentData={contentData}
-    />,
-    'config-slider': <ConfigSliderModal
-    closeModal={closeModal}
-    contentData={contentData}
-    />,
-    'config-dht': <ConfigDhtModal
-    closeModal={closeModal}
-    contentData={contentData}
-    />,
-    'config-if': <ConfigIfModal
-    closeModal={closeModal}
-    contentData={contentData}
-    />,
-    'config-pickColor': <ConfigPickColorModal
-    closeModal={closeModal}
-    contentData={contentData}
-    />
-  }
-
-  const currentContent = contents[contentData.typeContent];
+const ModalContainer = ({ modalIsOpen, onClose, enabledModals }) => {
 
   return (
-    <Modal
-      style={customStyles}
-      isOpen={modalIsOpen}
-      onRequestClose={closeModal}
-      contentLabel='Example Modal'
-      className={container}
-    >
-      <header className={header}>
-        <img
-          src={imgLogoMicrodigo}
-          alt="logo microdigo"
-          loading='lazy'
-        />
+    <>
+      {
+        enabledModals.map(({ Component, ...modal }, index) => (
+          <Modal
+            style={customStyles}
+            isOpen={modalIsOpen}
+            onRequestClose={() => onClose(modal.typeContent)}
+            contentLabel='Example Modal'
+            className={M.container}
+            shouldCloseOnOverlayClick={false}
+            key={index}
+          >
+            <>
+              <header className={M.header}>
+                <img
+                  src={imgLogoMicrodigo}
+                  alt="logo microdigo"
+                  loading='lazy'
+                />
 
-        <button
-          className={btnClose}
-          onClick={closeModal}
-        >
-          <FaTimes />
-        </button>
-      </header>
-      {currentContent}
-    </Modal>
+                <button
+                  className={M.btnClose}
+                  onClick={() => onClose(modal.typeContent)}
+                >
+                  <X />
+                </button>
+              </header>
+
+              <Component
+                closeModal={() => onClose(modal.typeContent)}
+                contentData={modal}
+              />
+
+            </>
+          </Modal >
+        ))
+      }
+    </>
+
   );
 };
 
 ModalContainer.propTypes = {
   modalIsOpen: P.bool.isRequired,
-  closeModal: P.func.isRequired,
-  contentData: P.object.isRequired
+  onClose: P.func.isRequired,
+  enabledModals: P.array.isRequired
 }
 
 export default ModalContainer;

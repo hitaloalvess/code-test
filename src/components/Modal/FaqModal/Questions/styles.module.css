@@ -1,0 +1,13 @@
+.questionList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  max-width: 600px;
+  max-height: 420px;
+  overflow-y: auto;
+}
+
+.questionList::-webkit-scrollbar {
+  display: none;
+}
