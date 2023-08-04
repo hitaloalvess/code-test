@@ -5,7 +5,7 @@ import CircleButton from '@/components/Platform/CircleButton';
 const ManualButton = () => {
 
   const handleClick = () => {
-    window.open('https://microdigo-manual.vercel.app/', "_blank");
+    window.open(`${import.meta.env.VITE_MANUAL_URL}`, "_blank");
   }
 
   return <CircleButton
