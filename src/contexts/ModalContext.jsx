@@ -1,20 +1,20 @@
 import { createContext, useState } from "react"
-import ModalContainer from "@/components/Modal";
+import ModalContainer from "@/components/shared/Modal";
 import P from 'prop-types';
 
-import ConfigLedModal from '@/components/Modal/ConfigLedModal';
-import ConfigDelayModal from '@/components/Modal/ConfigDelayModal';
-import ConfigBuzzerModal from '@/components/Modal/ConfigBuzzerModal';
-import ConfigSliderModal from '@/components/Modal/ConfigSliderModal';
-import ConfirmationModal from '@/components/Modal/ConfirmationModal';
-import ConfigDhtModal from '@/components/Modal/ConfigDhtModal';
-import ConfigIfModal from '@/components/Modal/ConfigIfModal';
-import ConfigPickColorModal from '@/components/Modal/ConfigPickColorModal';
-import UpdatePasswordModal from '@/components/Modal/UpdatePasswordModal';
-import SearchFormModal from '@/components/Modal/SearchFormModal';
-import FaqModal from '@/components/Modal/FaqModal';
-import TermsOfUseModal from '@/components/Modal/TermsOfUseModal';
-import InitialIntroPlatformModal from '@/components/Modal/InitialIntroPlatformModal';
+import ConfigLedModal from '@/components/shared/Modal/ConfigLedModal';
+import ConfigDelayModal from '@/components/shared/Modal/ConfigDelayModal';
+import ConfigBuzzerModal from '@/components/shared/Modal/ConfigBuzzerModal';
+import ConfigSliderModal from '@/components/shared/Modal/ConfigSliderModal';
+import ConfirmationModal from '@/components/shared/Modal/ConfirmationModal';
+import ConfigDhtModal from '@/components/shared/Modal/ConfigDhtModal';
+import ConfigIfModal from '@/components/shared/Modal/ConfigIfModal';
+import ConfigPickColorModal from '@/components/shared/Modal/ConfigPickColorModal';
+import UpdatePasswordModal from '@/components/shared/Modal/UpdatePasswordModal';
+import SearchFormModal from '@/components/shared/Modal/SearchFormModal';
+import FaqModal from '@/components/shared/Modal/FaqModal';
+import TermsOfUseModal from '@/components/shared/Modal/TermsOfUseModal';
+import InitialIntroPlatformModal from '@/components/shared/Modal/InitialIntroPlatformModal';
 import { useMemo } from "react";
 
 export const ModalContext = createContext();

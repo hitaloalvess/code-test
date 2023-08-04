@@ -8,8 +8,8 @@ import { Cake, Flag, PhoneCall, User } from '@phosphor-icons/react';
 import { api } from '@/services/api';
 import { useContextAuth } from '@/hooks/useAuth';
 import { isValidPhoneNumber, removeSpaces, removeSpecialCharacters } from '@/utils/form-validation-functions';
-import { Form } from '@/components/Form';
-import { Input } from '@/components/Input';
+import { Form } from '@/components/shared/Form';
+import { Input } from '@/components/shared/Input';
 
 import * as S from '../styles.module.css';
 

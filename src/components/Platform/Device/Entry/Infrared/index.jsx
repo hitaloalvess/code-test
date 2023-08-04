@@ -7,7 +7,7 @@ import { useFlow } from '@/hooks/useFlow';
 import { useModal } from '@/hooks/useModal';
 import ActionButton from '@/components/Platform/ActionButton';
 import Connector from '@/components/Platform/Connector';
-import ConfigInfraredModal from '@/components/Modal/ConfigInfraredModal';
+import ConfigInfraredModal from '@/components/shared/Modal/ConfigInfraredModal';
 
 import {
   deviceBody,

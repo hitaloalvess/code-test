@@ -7,11 +7,11 @@ import { z } from 'zod';
 
 import { useContextAuth } from '@/hooks/useAuth';
 import LogoMicrodigo from '@/assets/images/logo-microdigo.svg';
-import { Input } from '@/components/Input';
-import { InputPassword } from '@/components/Input/InputPasswordType';
-import Banner from '@/components/Banner';
-import { Form } from '@/components/Form'
-import { SpinnerLoader } from '@/components/SpinnerLoader';
+import { Input } from '@/components/shared/Input';
+import { InputPassword } from '@/components/shared/Input/InputPasswordType';
+import Banner from '@/components/shared/Banner';
+import { Form } from '@/components/shared/Form'
+import { SpinnerLoader } from '@/components/shared/SpinnerLoader';
 
 import * as S from './styles.module.css';
 

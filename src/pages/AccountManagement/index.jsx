@@ -4,7 +4,7 @@ import {
   IdentificationCard,
 } from '@phosphor-icons/react';
 
-import Header from '@/components/Header';
+import Header from '@/components/shared/Header';
 
 import { Section } from '@/components/AccountManagement/Sections';
 

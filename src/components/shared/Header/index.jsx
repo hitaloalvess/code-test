@@ -4,9 +4,9 @@ import { HardDrives, XCircle, GameController } from '@phosphor-icons/react';
 
 import { useContextAuth } from '@/hooks/useAuth';
 import logoMicrodigo from '@/assets/images/logo-microdigo.svg';
-import { Dropdown } from '@/components/Dropdown';
-import { AvatarIcon } from '@/components/AvatarIcon';
-import MenuBurguerIcon from '@/components/MenuBurguerIcon';
+import { Dropdown } from '@/components/shared/Dropdown';
+import { AvatarIcon } from '@/components/shared/AvatarIcon';
+import MenuBurguerIcon from '@/components/shared/MenuBurguerIcon';
 
 import * as H from './styles.module.css';
 

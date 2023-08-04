@@ -6,9 +6,9 @@ import { toast } from 'react-toastify';
 import P from 'prop-types';
 
 import { api } from '@/services/api';
-import { Form } from '@/components/Form';
-import { Input } from '@/components/Input';
-import { InputPassword } from '@/components/Input/InputPasswordType';
+import { Form } from '@/components/shared/Form';
+import { Input } from '@/components/shared/Input';
+import { InputPassword } from '@/components/shared/Input/InputPasswordType';
 
 import * as UP from './styles.module.css';
 import { Lock } from '@phosphor-icons/react';

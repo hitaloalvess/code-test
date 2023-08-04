@@ -18,12 +18,12 @@ import { toast } from 'react-toastify';
 import { isValidCPF, isValidPhoneNumber, removeSpaces, removeSpecialCharacters } from '@/utils/form-validation-functions';
 import { api } from '@/services/api';
 import LogoMicrodigo from '@/assets/images/logo-microdigo.svg';
-import Banner from '@/components/Banner';
+import Banner from '@/components/shared/Banner';
 import ButtonAcceptsTerms from '@/components/SignUp/ButtonAcceptsTerms';
-import { Form } from '@/components/Form';
-import { Input } from '@/components/Input';
-import { InputPassword } from '@/components/Input/InputPasswordType';
-import { SpinnerLoader } from '@/components/SpinnerLoader';
+import { Form } from '@/components/shared/Form';
+import { Input } from '@/components/shared/Input';
+import { InputPassword } from '@/components/shared/Input/InputPasswordType';
+import { SpinnerLoader } from '@/components/shared/SpinnerLoader';
 
 import * as S from './styles.module.css';
 

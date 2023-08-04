@@ -3,7 +3,7 @@ import P from 'prop-types';
 
 import FaqBtnImage from '@/assets/images/buttons/faq-button.svg';
 import ManualBtnImage from '@/assets/images/buttons/manual-button.svg';
-import { SpinnerLoader } from '@/components/SpinnerLoader';
+import { SpinnerLoader } from '@/components/shared/SpinnerLoader';
 
 import * as I from './styles.module.css';
 
