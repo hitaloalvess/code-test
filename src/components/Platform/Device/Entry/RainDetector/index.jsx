@@ -1,12 +1,13 @@
 import { memo, useRef, useState } from 'react';
 import P from 'prop-types';
-import { FaTrashAlt } from 'react-icons/fa';
+import { Trash } from '@phosphor-icons/react';
+
 
 import { useDevices } from '@/hooks/useDevices';
 import { useFlow } from '@/hooks/useFlow';
 import { useModal } from '@/hooks/useModal';
-import ActionButton from '@/components/ActionButton';
-import Connector from '@/components/Connector';
+import ActionButton from '@/components/Platform/ActionButton';
+import Connector from '@/components/Platform/Connector';
 
 import {
   deviceBody,
@@ -120,7 +121,7 @@ const RainDetector = memo(function RainDetector({
             }
           })}
         >
-          <FaTrashAlt />
+          <Trash />
         </ActionButton>
 
       </div>

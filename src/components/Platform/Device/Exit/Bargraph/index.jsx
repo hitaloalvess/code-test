@@ -1,13 +1,14 @@
 
 import { memo, useState } from 'react';
-import { FaTrashAlt } from 'react-icons/fa';
 import P from 'prop-types';
+import { Trash } from '@phosphor-icons/react';
+
 
 import { useDevices } from '@/hooks/useDevices';
 import { useFlow } from '@/hooks/useFlow';
 import { useModal } from '@/hooks/useModal';
-import ActionButton from '@/components/ActionButton';
-import Connector from '@/components/Connector';
+import ActionButton from '@/components/Platform/ActionButton';
+import Connector from '@/components/Platform/Connector';
 
 import {
   deviceBody,
@@ -50,7 +51,7 @@ const Bargraph = memo(function Bargraph({
       //enable light
       const { current, max } = objValue;
 
-      const stepValue = max/8;
+      const stepValue = max / 8;
       let numberLights = 8;
 
       for (let i = 0; i < 9; i++) {
@@ -78,13 +79,13 @@ const Bargraph = memo(function Bargraph({
 
   const redefineBehavior = () => {
     setLightsActive(0),
-    updateValue(setValue, id, {
-      active: false,
-      current: 0,
-      max: 0,
-      type: null,
-      brightness: 1023
-    });
+      updateValue(setValue, id, {
+        active: false,
+        current: 0,
+        max: 0,
+        type: null,
+        brightness: 1023
+      });
   }
 
   return (
@@ -93,63 +94,63 @@ const Bargraph = memo(function Bargraph({
         className={deviceBody}
         ref={dragRef}
       >
-          <ul className = {lights}>
-            <li className={ledLight}>
-                {lightsActive  > 0 && (
-                <svg className={ledLightElement}>
-                  <circle cx="5" cy="5" r="5"/>
-                </svg>
-                )}
-            </li>
-            <li className={ledLight}>
-              {lightsActive  > 1 && (
-                <svg className={ledLightElement}>
-                  <circle cx="5" cy="5" r="5"/>
-                </svg>
-              )}
-            </li>
-            <li className={ledLight}>
-                {lightsActive  > 2 && (
-                  <svg className={ledLightElement}>
-                    <circle cx="5" cy="5" r="5"/>
-                  </svg>
-                )}
-            </li>
-            <li className={ledLight}>
-                {lightsActive  > 3 && (
-                  <svg className={ledLightElement}>
-                    <circle cx="5" cy="5" r="5"/>
-                  </svg>
-                )}
-            </li>
-            <li className={ledLight}>
-                {lightsActive  > 4 && (
-                  <svg className={ledLightElement}>
-                    <circle cx="5" cy="5" r="5"/>
-                  </svg>
-                )}
-            </li>
-            <li className={ledLight}>
-                {lightsActive > 5 && (
-                  <svg className={ledLightElement}>
-                      <circle cx="5" cy="5" r="5"/>
-                  </svg>
-                )}
-            </li>
-            <li className={ledLight}>
-                {lightsActive > 6 && (
-                  <svg className={ledLightElement}>
-                    <circle cx="5" cy="5" r="5"/>
-                  </svg>
-                )}
-            </li>
-            <li className={ledLight}>
-                {lightsActive > 7 && (
-                  <svg className={ledLightElement}>
-                    <circle cx="5" cy="5" r="5"/>
-                  </svg>
-                )}
-            </li>
+        <ul className={lights}>
+          <li className={ledLight}>
+            {lightsActive > 0 && (
+              <svg className={ledLightElement}>
+                <circle cx="5" cy="5" r="5" />
+              </svg>
+            )}
+          </li>
+          <li className={ledLight}>
+            {lightsActive > 1 && (
+              <svg className={ledLightElement}>
+                <circle cx="5" cy="5" r="5" />
+              </svg>
+            )}
+          </li>
+          <li className={ledLight}>
+            {lightsActive > 2 && (
+              <svg className={ledLightElement}>
+                <circle cx="5" cy="5" r="5" />
+              </svg>
+            )}
+          </li>
+          <li className={ledLight}>
+            {lightsActive > 3 && (
+              <svg className={ledLightElement}>
+                <circle cx="5" cy="5" r="5" />
+              </svg>
+            )}
+          </li>
+          <li className={ledLight}>
+            {lightsActive > 4 && (
+              <svg className={ledLightElement}>
+                <circle cx="5" cy="5" r="5" />
+              </svg>
+            )}
+          </li>
+          <li className={ledLight}>
+            {lightsActive > 5 && (
+              <svg className={ledLightElement}>
+                <circle cx="5" cy="5" r="5" />
+              </svg>
+            )}
+          </li>
+          <li className={ledLight}>
+            {lightsActive > 6 && (
+              <svg className={ledLightElement}>
+                <circle cx="5" cy="5" r="5" />
+              </svg>
+            )}
+          </li>
+          <li className={ledLight}>
+            {lightsActive > 7 && (
+              <svg className={ledLightElement}>
+                <circle cx="5" cy="5" r="5" />
+              </svg>
+            )}
+          </li>
         </ul>
         <img
           src={imgSrc}
@@ -190,7 +191,7 @@ const Bargraph = memo(function Bargraph({
             }
           })}
         >
-          <FaTrashAlt />
+          <Trash />
         </ActionButton>
       </div >
     </>
