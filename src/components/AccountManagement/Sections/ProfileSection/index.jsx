@@ -154,7 +154,7 @@ const ProfileSection = () => {
                 <Input.SelectType
                   id={'genre'}
                   defaultOptTxt='Selecione seu gênero'
-                  options={['MASCULINO', 'FEMININO', 'OUTRO']}
+                  options={['masculino', 'feminino', 'outro']}
                   defaultValue={user.genre}
                   hasIconSibling={false}
                   {...register('genre')}

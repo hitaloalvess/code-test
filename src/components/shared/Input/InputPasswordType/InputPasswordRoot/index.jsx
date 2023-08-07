@@ -2,6 +2,7 @@ import P from 'prop-types';
 import { forwardRef } from "react";
 
 import * as C from '../../styles.module.css';
+import * as IP from './styles.module.css';
 
 const InputPasswordRoot = forwardRef(function InputPasswordRoot({
   hasIconSibling = true,
@@ -21,7 +22,7 @@ const InputPasswordRoot = forwardRef(function InputPasswordRoot({
         defaultValue={defaultValue}
         ref={ref}
         {...rest}
-        className={`${C.inputForm} ${!hasIconSibling ? C.hasNoInputIcon : ''}`}
+        className={`${C.inputForm} ${IP.inputPassword} ${!hasIconSibling ? C.hasNoInputIcon : ''}`}
       />
 
       {children}
