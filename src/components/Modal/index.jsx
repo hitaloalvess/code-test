@@ -11,6 +11,7 @@ import ConfirmationModal from './ConfirmationModal';
 import ConfigDhtModal from './ConfigDhtModal';
 import ConfigIfModal from './ConfigIfModal';
 import ConfigPickColorModal from './ConfigPickColorModal';
+import ConfigCounterModal from './ConfigCounterModal';
 
 import {
   container,
@@ -56,6 +57,10 @@ const ModalContainer = ({ modalIsOpen, closeModal, contentData }) => {
     contentData={contentData}
     />,
     'config-if': <ConfigIfModal
+    closeModal={closeModal}
+    contentData={contentData}
+    />,
+    'config-counter': <ConfigCounterModal
     closeModal={closeModal}
     contentData={contentData}
     />,

@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useCallback } from 'react';
 import P from 'prop-types';
 import { FaTrashAlt } from 'react-icons/fa';
 
@@ -8,6 +8,7 @@ import { useDevices } from '@/hooks/useDevices';
 import Connector from '@/components/Connector';
 import ActionButton from '@/components/ActionButton';
 import { findFlowsByDeviceId } from '@/utils/flow-functions';
+import { AiFillSetting } from 'react-icons/ai';
 
 import {
   deviceBody,
@@ -40,6 +41,8 @@ const Counter = ({
   const [value, setValue] = useState(device.value);
   const [connectionValue, setConnectionValue] = useState([]);
   const [qtdIncomingConn, setQtdIncomingConn] = useState(0)
+  const [loopActive, setLoopActive] = useState(false);
+  const [loopLimit, setLoopLimit] = useState(9999);
 
   const numberThousand = useRef(null);
   const numberHundred = useRef(null);
@@ -50,8 +53,12 @@ const Counter = ({
     setQtdIncomingConn(prev => prev + 1)
   }
 
-  const handleConnections = () => {
+  const handleSettingUpdate = useCallback((newLoopActive, newLoopLimit) => {
+    setLoopActive(newLoopActive);
+    setLoopLimit(newLoopLimit);
+  }, [loopActive, loopLimit]);
 
+  const handleConnections = () => {
     const flow = findFlowsByDeviceId(flows, id);
 
     if (!flow) {
@@ -73,8 +80,8 @@ const Counter = ({
 
     if ([undefined, null].includes(value)) {
       //If device.value.current undefined or null, structure equal boolean (true or false) or object -> ex: {temperature:{..}, humidity:{...}
-      value = typeof device.value === 'boolean' ? device.value : device.value[connection.deviceFrom.connector.name].current
-      max = typeof device.value === 'boolean' ? device.value.max : device.value[connection.deviceFrom.connector.name].max
+      value = typeof device.value === 'boolean' || typeof device.value === 'string' ? device.value : device.value[connection.deviceFrom.connector.name]?.current
+      max = typeof device.value === 'boolean' || typeof device.value === 'string' ? device.value : device.value[connection.deviceFrom.connector.name]?.max
     }
 
     const objValue = {
@@ -103,6 +110,11 @@ const Counter = ({
     } else {
       newValue = connectionValue.value || connectionValue.value === 0 ? connectionValue.value : value;
     }
+
+    if(loopActive && newValue >= loopLimit) {
+      newValue = 0;
+    }
+
     updateValue(setValue, id, { current: newValue, max: connectionValue.max });
   }
 
@@ -161,7 +173,11 @@ const Counter = ({
   }
 
   const handleIncreaseClick = () => {
-    const newValue = value.current + 1;
+    let newValue = value.current + 1;
+    if(loopActive && newValue >= loopLimit) {
+      newValue = 0;
+    }
+
     updateValue(setValue, id, { current: newValue, max: value.max });
   };
 
@@ -186,7 +202,7 @@ const Counter = ({
 
   useEffect(() => {
     calcValues();
-  }, [connectionValue]);
+  }, [connectionValue, loopActive, loopLimit]);
 
   return (
     <>
@@ -275,7 +291,16 @@ const Counter = ({
           <FaTrashAlt />
         </ActionButton>
 
-
+        <ActionButton
+          onClick={() => enableModal({
+            typeContent: 'config-counter',
+            handleSaveConfig: handleSettingUpdate,
+            defaultLoopActive: loopActive,
+            defaultLoopLimit: loopLimit
+          })}
+        >
+          <AiFillSetting />
+        </ActionButton>
       </div >
     </>
   );
