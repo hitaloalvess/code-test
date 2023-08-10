@@ -56,6 +56,11 @@ const Counter = ({
   const handleSettingUpdate = useCallback((newLoopActive, newLoopLimit) => {
     setLoopActive(newLoopActive);
     setLoopLimit(newLoopLimit);
+
+    if (newLoopActive)
+    {
+      updateValue(setValue, id, { current: 1, max: 0 });
+    }
   }, [loopActive, loopLimit]);
 
   const handleConnections = () => {
@@ -111,8 +116,8 @@ const Counter = ({
       newValue = connectionValue.value || connectionValue.value === 0 ? connectionValue.value : value;
     }
 
-    if(loopActive && newValue >= loopLimit) {
-      newValue = 0;
+    if(loopActive && newValue > loopLimit) {
+      newValue = 1;
     }
 
     updateValue(setValue, id, { current: newValue, max: connectionValue.max });
@@ -174,15 +179,26 @@ const Counter = ({
 
   const handleIncreaseClick = () => {
     let newValue = value.current + 1;
-    if(loopActive && newValue >= loopLimit) {
-      newValue = 0;
+    if(loopActive && newValue > loopLimit) {
+      newValue = 1;
     }
 
     updateValue(setValue, id, { current: newValue, max: value.max });
   };
 
   const handleDecreaseClick = () => {
-    const newValue = value.current - 1;
+    let newValue = value.current - 1;
+
+    if(newValue <= 0) {
+      if(loopActive) {
+        newValue = loopLimit;
+      }
+      else
+      {
+        newValue = 0;
+      }
+    }
+
     updateValue(setValue, id, { current: newValue, max: value.max });
   };
 
