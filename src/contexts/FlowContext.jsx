@@ -347,6 +347,7 @@ export const FlowProvider = ({ children }) => {
   //FLOWS
 
   const executeFlow = ({ flows, connectorId, fromBehaviorCallback }) => {
+
     const flowsCurrent = flows ? flows : state.flows;
     // const selectedFlow = findFlowsByDeviceId(flowsCurrent, connectorId);
     const selectedFlow = findFlowByConnectorId(flowsCurrent, connectorId)
@@ -359,7 +360,7 @@ export const FlowProvider = ({ children }) => {
 
     deviceConnections.forEach(conn => {
       const valueFrom = fromBehaviorCallback();
-      conn.deviceTo.defaultBehavior({ ...valueFrom});
+      conn.deviceTo.defaultBehavior({ ...valueFrom });
     })
   }
 
@@ -367,6 +368,8 @@ export const FlowProvider = ({ children }) => {
     devices: devicesParam
   }) => {
     const { from, to } = devicesParam;
+
+    console.log({ devicesParam })
 
     if (from.connector && !to?.connector && !state.flowTemp.connectorClicked) {
       const deviceFrom = devices.find(device => device.id === from.id);
@@ -441,17 +444,32 @@ export const FlowProvider = ({ children }) => {
       return;
     }
 
+    let line = state.flowTemp.currentLine;
+
+    if (!line) {
+      line = createLine({
+        fromPos: {
+          x: from.connector.x,
+          y: from.connector.y
+        },
+        toPos: {
+          x: from.connector.x,
+          y: from.connector.y
+        }
+      });
+    }
+
     const connection = {
       id: uuid(),
       deviceFrom: { ...deviceFrom },
       deviceTo: { ...deviceTo },
-      idLine: state.flowTemp.currentLine.id,
+      idLine: line.id,
     }
 
     updateLines({
-      lineId: state.flowTemp.currentLine.id,
+      lineId: line.id,
       newData: {
-        id: state.flowTemp.currentLine.id,
+        id: line.id,
         idConnection: connection.id,
         fromPos: {
           x: deviceFrom.connector.x,

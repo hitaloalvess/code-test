@@ -22,6 +22,9 @@ export const DevicesProvider = ({ children }) => {
       containerRef: item.containerRef
     });
 
+    delete item.draggedDevice;
+
+    console.log({ item })
     setDevices((devices) => [...devices, {
       ...item,
       id: v4(),
@@ -38,9 +41,9 @@ export const DevicesProvider = ({ children }) => {
       device,
       screen,
     } = data;
-    const { id, draggedDevice } = device;
+    const { id, deviceRef } = device;
 
-    const { width, height } = draggedDevice.getBoundingClientRect();
+    const { width, height } = deviceRef.current.getBoundingClientRect();
 
     const { x, y } = screen.getClientOffset();
     const [posX, posY] = calcPositionDevice({
@@ -54,10 +57,12 @@ export const DevicesProvider = ({ children }) => {
     setDevices(prevDevices => {
       return prevDevices.map(device => {
         if (device.id === id) {
+
           return {
             ...device,
             posX,
-            posY
+            posY,
+            deviceRef
           }
         }
         return device
@@ -181,7 +186,11 @@ export const DevicesProvider = ({ children }) => {
 
   const handleZoomChange = (value) => {
     setDeviceScale(value);
-  } //VER SE COMPENSA UTILIZAR USECALLBACK
+  }
+
+  const handleSetDevice = (device) => {
+    setDevices(prevDevices => [...prevDevices, device])
+  }
 
   return (
     <DevicesContext.Provider
@@ -193,7 +202,8 @@ export const DevicesProvider = ({ children }) => {
         repositionDevice,
         repositionConnections,
         updateDeviceValue,
-        handleZoomChange
+        handleZoomChange,
+        handleSetDevice
       }}
     >
       {children}

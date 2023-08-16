@@ -33,6 +33,8 @@ const Potentiometer = memo(function Potentiometer({
   const showValueRef = useRef(null);
 
   const getResistance = () => {
+    console.log('AQUI NO GET RESISTANCE');
+
     return {
       value: Number(inputRef.current.value),
       max: MAX_VALUE

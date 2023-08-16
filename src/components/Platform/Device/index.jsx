@@ -1,4 +1,4 @@
-import { memo } from 'react';
+import { memo, useRef } from 'react';
 import P from 'prop-types';
 import { useDrag } from 'react-dnd';
 
@@ -41,13 +41,19 @@ import {
 const Device = memo(function Device({ device: { ...device } }) {
   const { deviceScale, updateDeviceValue } = useDevices();
 
+  const deviceRef = useRef(null);
+
+  console.log(device)
   // eslint-disable-next-line no-empty-pattern
-  const [{ }, drag] = useDrag(() => ({
-    type: 'device',
-    item: {
-      ...device,
-    },
-  }), []);
+  const [{ }, drag] = useDrag(() => {
+    return {
+      type: 'device',
+      item: {
+        ...device,
+        deviceRef
+      },
+    }
+  }, []);
 
   const updateValue = (callbackUpdate, deviceId, value) => {
     if (callbackUpdate) callbackUpdate(value);
@@ -94,6 +100,7 @@ const Device = memo(function Device({ device: { ...device } }) {
       <div
         className={deviceContainer}
         style={{ left: `${device.posX}px`, top: `${device.posY}px`, transform: `scale(${deviceScale})` }}
+        ref={deviceRef}
       >
         <div
           className={deviceContent}

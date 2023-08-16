@@ -91,7 +91,7 @@ const Connector = ({
               id,
               name,
               type,
-              ref: connRef
+              // ref: connRef
             }
           }
         },
@@ -109,7 +109,7 @@ const Connector = ({
         id,
         name,
         type,
-        ref: connRef
+        // ref: connRef
       },
     },
     end: (item, monitor) => {
@@ -140,7 +140,6 @@ const Connector = ({
         },
         to: null
       },
-      lineId: null
     })
   }
 
