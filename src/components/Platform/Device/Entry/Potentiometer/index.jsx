@@ -1,4 +1,4 @@
-import { memo, useRef, useState } from 'react';
+import { memo, useEffect, useState } from 'react';
 import P from 'prop-types';
 import { Trash } from '@phosphor-icons/react';
 
@@ -20,43 +20,52 @@ import {
 
 const MAX_VALUE = 1023;
 const Potentiometer = memo(function Potentiometer({
-  dragRef, device, updateValue
+  dragRef, device
 }) {
 
+
   const { id, imgSrc, name, posX, posY } = device;
-  const { deleteDevice } = useDevices();
+  const { deleteDevice, updateDeviceValue } = useDevices();
   const { executeFlow, deleteDeviceConnections } = useFlow();
   const { enableModal, disableModal } = useModal();
+
+  const [value, setValue] = useState(device.value);
   const [connectorId, setConnectorId] = useState('');
 
-  const inputRef = useRef(null);
-  const showValueRef = useRef(null);
 
   const getResistance = () => {
-    console.log('AQUI NO GET RESISTANCE');
 
     return {
-      value: Number(inputRef.current.value),
+      value: value.current,
       max: MAX_VALUE
     };
   }
 
-  const handleOnInput = () => {
-    const inputValue = Number(inputRef.current.value);
-    showValueRef.current.innerHTML = inputValue;
+  const handleOnInput = (event) => {
+    const value = event.target.value;
 
-    updateValue(null, id, {
-      current: inputValue,
+
+    setValue({
+      current: Number(value),
       max: MAX_VALUE
-    });
+    })
 
-    executeFlow({ connectorId, fromBehaviorCallback: getResistance });
-
+    updateDeviceValue(id, {
+      value: {
+        current: Number(value),
+        max: MAX_VALUE
+      }
+    })
   }
 
   const handleChangeConnector = (value) => {
     setConnectorId(value);
   }
+
+  useEffect(() => {
+    executeFlow({ connectorId, fromBehaviorCallback: getResistance });
+
+  }, [value]);
 
   return (
 
@@ -68,14 +77,12 @@ const Potentiometer = memo(function Potentiometer({
           min="0"
           max="1023"
           step="1"
-          defaultValue={0}
+          defaultValue={value.current}
           onInput={handleOnInput}
-          ref={inputRef}
         />
         <p
           className={inputValue}
-          ref={showValueRef}
-        >0</p>
+        >{value.current}</p>
       </div>
 
       <div
@@ -94,8 +101,11 @@ const Potentiometer = memo(function Potentiometer({
         className={`${connectorsContainer} ${connectorsContainerExit}`}
       >
         <Connector
-          name={'resistance'}
-          type={'exit'}
+          data={{
+            id: '',
+            name: 'resistance',
+            type: 'exit'
+          }}
           device={{
             id,
             defaultBehavior: getResistance,
@@ -134,7 +144,6 @@ const Potentiometer = memo(function Potentiometer({
 Potentiometer.propTypes = {
   dragRef: P.func.isRequired,
   device: P.object.isRequired,
-  updateValue: P.func.isRequired
 }
 
 export default Potentiometer;

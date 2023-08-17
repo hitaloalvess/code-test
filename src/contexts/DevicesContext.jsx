@@ -8,7 +8,7 @@ import { findFlowByConnectorId } from "../utils/flow-functions";
 export const DevicesContext = createContext();
 
 export const DevicesProvider = ({ children }) => {
-  const [devices, setDevices] = useState([]);
+  const [devices, setDevices] = useState({});
   const [deviceScale, setDeviceScale] = useState(1);
 
   const addDevice = (item, monitor) => {
@@ -24,13 +24,20 @@ export const DevicesProvider = ({ children }) => {
 
     delete item.draggedDevice;
 
-    console.log({ item })
-    setDevices((devices) => [...devices, {
-      ...item,
-      id: v4(),
-      posX,
-      posY
-    }]);
+    const deviceId = v4();
+
+    setDevices(prevDevices => {
+
+      return {
+        ...prevDevices,
+        [`${deviceId}`]: {
+          ...item,
+          id: deviceId,
+          posX,
+          posY
+        }
+      }
+    });
 
     return;
 
@@ -41,6 +48,7 @@ export const DevicesProvider = ({ children }) => {
       device,
       screen,
     } = data;
+
     const { id, deviceRef } = device;
 
     const { width, height } = deviceRef.current.getBoundingClientRect();
@@ -55,18 +63,15 @@ export const DevicesProvider = ({ children }) => {
     });
 
     setDevices(prevDevices => {
-      return prevDevices.map(device => {
-        if (device.id === id) {
-
-          return {
-            ...device,
-            posX,
-            posY,
-            deviceRef
-          }
+      return {
+        ...prevDevices,
+        [`${id}`]: {
+          ...prevDevices[`${id}`],
+          posX,
+          posY,
+          deviceRef
         }
-        return device
-      });
+      }
     });
 
   }, [devices]);
@@ -161,9 +166,9 @@ export const DevicesProvider = ({ children }) => {
   }
 
   const deleteDevice = useCallback((id) => {
-    const newDevices = devices.filter(device => {
-      return device.id !== id
-    });
+    const newDevices = { ...devices };
+
+    delete newDevices[`${id}`];
 
     setDevices(newDevices);
   }, [devices]);
@@ -171,16 +176,13 @@ export const DevicesProvider = ({ children }) => {
   const updateDeviceValue = (deviceId, newValues) => {
 
     setDevices(prevDevices => {
-      return prevDevices.map(device => {
-        if (device.id === deviceId) {
-          return {
-            ...device,
-            ...newValues
-          }
+      return {
+        ...prevDevices,
+        [`${deviceId}`]: {
+          ...prevDevices[`${deviceId}`],
+          ...newValues
         }
-
-        return device;
-      })
+      }
     })
   }
 
@@ -188,8 +190,16 @@ export const DevicesProvider = ({ children }) => {
     setDeviceScale(value);
   }
 
+  //SOMENTE TESTE
   const handleSetDevice = (device) => {
-    setDevices(prevDevices => [...prevDevices, device])
+    setDevices(prevDevices => {
+      return {
+        ...prevDevices,
+        [`${device.id}`]: {
+          ...device
+        }
+      }
+    })
   }
 
   return (

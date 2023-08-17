@@ -23,12 +23,11 @@ import {
   ledLightElement
 } from './styles.module.css';
 
-const Led = memo(function Led({
-  device, dragRef, updateValue
-}) {
+const Led = memo(function Led({ device, dragRef }) {
+
   const { id, imgSrc, name, posX, posY } = device;
 
-  const { deleteDevice } = useDevices();
+  const { deleteDevice, updateDeviceValue } = useDevices();
   const { deleteDeviceConnections, flows } = useFlow();
   const { enableModal, disableModal } = useModal();
 
@@ -36,6 +35,7 @@ const Led = memo(function Led({
 
   const [value, setValue] = useState(device.value);
   const [lightUpdateData, setLightUpdateData] = useState(null);
+
 
   const handleSettingUpdate = useCallback((newColor, newBrightness) => {
 
@@ -45,11 +45,19 @@ const Led = memo(function Led({
       defaultBehavior({ value: newBrightness, max: value.max });
     }
 
-    updateValue(setValue, id, {
+    setValue({
       ...value,
       color: newColor,
       brightness: newBrightness
-    })
+    });
+
+    updateDeviceValue(id, {
+      value: {
+        ...value,
+        color: newColor,
+        brightness: newBrightness
+      }
+    });
 
   }, [value, flows]);
 
@@ -58,7 +66,7 @@ const Led = memo(function Led({
 
 
   const redefineBehavior = () => {
-    updateValue(setValue, id, {
+    const newValue = {
       active: false,
       current: 0,
       max: 0,
@@ -66,6 +74,12 @@ const Led = memo(function Led({
       color: '#ff1450',
       opacity: 0,
       brightness: 1023
+    }
+
+    setValue(newValue);
+
+    updateDeviceValue(id, {
+      value: newValue
     });
 
   }
@@ -93,17 +107,23 @@ const Led = memo(function Led({
     const brigthnessValue = objValue.current < 0 ? objValue.current * -1 : objValue.current;
     const opacity = objValue.current !== 0 ? (brigthnessValue / objValue.max) : 0
 
-    updateValue(
-      setValue,
-      id,
-      {
+    setValue({
+      ...value,
+      ...objValue,
+      color: color === undefined ? value.color : color,
+      active,
+      opacity
+    });
+
+    updateDeviceValue(id, {
+      value: {
         ...value,
         ...objValue,
         color: color === undefined ? value.color : color,
         active,
         opacity
       }
-    );
+    });
 
 
     setLightUpdateData(null);
@@ -138,8 +158,11 @@ const Led = memo(function Led({
         className={`${connectorsContainer} ${connectorsContainerEntry}`}
       >
         <Connector
-          name={'brightness'}
-          type={'entry'}
+          data={{
+            id: '',
+            name: 'brightness',
+            type: 'entry',
+          }}
           device={{
             id,
             defaultBehavior,
@@ -188,7 +211,6 @@ const Led = memo(function Led({
 Led.propTypes = {
   device: P.object.isRequired,
   dragRef: P.func.isRequired,
-  updateValue: P.func.isRequired
 }
 
 export default Led;

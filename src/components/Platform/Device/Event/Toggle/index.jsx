@@ -58,7 +58,8 @@ const Toggle = ({
     });
 
     const value = incomingConns.reduce((acc, conn) => {
-      const device = devices.find(device => device.id === conn.deviceFrom.id);
+
+      const device = devices[`${conn.deviceFrom.id}`];
 
       let value = device.value.current;
 

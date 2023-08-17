@@ -49,7 +49,8 @@ const Not = ({
       return conn.deviceTo.id === id
     });
 
-    const device = devices.find(device => device.id === connection.deviceFrom.id);
+    const device = devices[`${connection.deviceFrom.id}`];
+
     let value = device.value.current;
 
     if ([undefined, null].includes(value)) {

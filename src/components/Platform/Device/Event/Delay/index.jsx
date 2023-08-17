@@ -72,7 +72,8 @@ const Delay = ({
 
     if (!connection) return;
 
-    const device = devices.find(device => device.id === connection.deviceFrom.id);
+
+    const device = devices[`${connection.deviceFrom.id}`];
 
     let value = device.value.current;
     let max = 0;

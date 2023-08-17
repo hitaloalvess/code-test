@@ -39,11 +39,10 @@ import {
 
 
 const Device = memo(function Device({ device: { ...device } }) {
-  const { deviceScale, updateDeviceValue } = useDevices();
+  const { deviceScale } = useDevices();
 
   const deviceRef = useRef(null);
 
-  console.log(device)
   // eslint-disable-next-line no-empty-pattern
   const [{ }, drag] = useDrag(() => {
     return {
@@ -55,13 +54,13 @@ const Device = memo(function Device({ device: { ...device } }) {
     }
   }, []);
 
-  const updateValue = (callbackUpdate, deviceId, value) => {
-    if (callbackUpdate) callbackUpdate(value);
+  // const updateValue = (callbackUpdate, deviceId, value) => {
+  //   if (callbackUpdate) callbackUpdate(value);
 
-    updateDeviceValue(deviceId, {
-      value
-    });
-  }
+  //   updateDeviceValue(deviceId, {
+  //     value
+  //   });
+  // }
 
   const devices = {
     dht: Dht,
@@ -109,7 +108,7 @@ const Device = memo(function Device({ device: { ...device } }) {
             <CurrentDevice
               device={device}
               dragRef={drag}
-              updateValue={updateValue}
+            // updateValue={updateValue}
             />
           }
         </div>

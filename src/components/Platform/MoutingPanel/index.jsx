@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { useRef, useState, forwardRef /*, useEffect */ } from 'react';
 import { useDrop } from 'react-dnd';
 
@@ -40,7 +41,7 @@ const MoutingPanel = forwardRef(function MoutingPanel(props, ref) {
 
   const deviceDrop = (item, monitor) => {
 
-    const elementIndex = devices.find(device => device.id === item.id);
+    const elementIndex = devices[`${item.id}`];
 
     if (!elementIndex) {
       addDevice({
@@ -64,7 +65,6 @@ const MoutingPanel = forwardRef(function MoutingPanel(props, ref) {
     });
   }
 
-  // eslint-disable-next-line no-unused-vars
   const [_, drop] = useDrop(() => ({
     accept: ['device', 'menu-device'],
     drop: (item, monitor) => deviceDrop(item, monitor),
@@ -120,6 +120,8 @@ const MoutingPanel = forwardRef(function MoutingPanel(props, ref) {
     moutingPanelRef.current.style.cursor = 'grabbing';
 
   }
+
+  //SOMENTE TESTES
 
   const handleLoadDevices = (devicesTest) => {
     // const devicesTest = [{
@@ -330,6 +332,7 @@ const MoutingPanel = forwardRef(function MoutingPanel(props, ref) {
     //   getValueFrom
     // })
   }
+
   return (
     <div
       className={moutingPanelContainer}
@@ -340,7 +343,7 @@ const MoutingPanel = forwardRef(function MoutingPanel(props, ref) {
     >
 
       {
-        devices.map(device => (
+        Object.values(devices).map(device => (
           <Device
             key={device.id}
             device={device}

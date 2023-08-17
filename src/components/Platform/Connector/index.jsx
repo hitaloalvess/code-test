@@ -18,8 +18,9 @@ import styles, {
 
 
 const Connector = ({
-  name, type, device, updateConn, handleChangeId = null
+  data, device, updateConn, handleChangeId = null
 }) => {
+
   const {
     flows,
     flowTemp,
@@ -30,15 +31,14 @@ const Connector = ({
     updateLines,
     updateFlow
   } = useFlow();
-  const { repositionConnections, deviceScale } = useDevices();
+  const { devices, repositionConnections, deviceScale, updateDeviceValue } = useDevices();
 
   const connRef = useRef(null);
-  const [id] = useState(() => {
-    return `${name}-${uuid()}`
-  })
+  const [id] = useState(() => data.id || `${data.name}-${uuid()}`);
   const [position, setPosition] = useState({
     x: 0, y: 0
   });
+
 
   useEffect(() => {
     const { x, y } = calcPositionConnector(connRef.current, device.containerRef);
@@ -60,6 +60,19 @@ const Connector = ({
       updateLines,
       updateFlow
     })
+
+    updateDeviceValue(device.id, {
+      connector: {
+        ...devices[`${device.id}`].connector,
+        [`${data.name}`]: {
+          id,
+          name: data.name,
+          type: data.type,
+          x,
+          y
+        }
+      }
+    });
 
   }, [updateConn.posX, updateConn.posY, deviceScale]);
 
@@ -89,9 +102,8 @@ const Connector = ({
             connector: {
               ...position,
               id,
-              name,
-              type,
-              // ref: connRef
+              name: data.name,
+              type: data.type,
             }
           }
         },
@@ -107,9 +119,8 @@ const Connector = ({
       connector: {
         ...position,
         id,
-        name,
-        type,
-        // ref: connRef
+        name: data.name,
+        type: data.type,
       },
     },
     end: (item, monitor) => {
@@ -134,7 +145,7 @@ const Connector = ({
           ...device,
           connector: {
             ...position,
-            type,
+            type: data.type,
             ref: connRef
           },
         },
@@ -146,12 +157,12 @@ const Connector = ({
   return (
     <div
       ref={connRef}
-      className={`${connector} ${styles[`${type}Connector`]}`}
+      className={`${connector} ${styles[`${data.type}Connector`]}`}
 
       id={id}
     >
       <div
-        className={`${connectorRange} ${type === 'entry' ? entryConnectorRange : exitConnectorRange}`}
+        className={`${connectorRange} ${data.type === 'entry' ? entryConnectorRange : exitConnectorRange}`}
         ref={attachRef}
         onTouchStart={() => handleConnDown()}
         onMouseDown={() => handleConnDown()}
@@ -163,8 +174,11 @@ const Connector = ({
 
 
 Connector.propTypes = {
-  name: P.string.isRequired,
-  type: P.string.isRequired,
+  data: P.shape({
+    id: P.string,
+    name: P.string.isRequired,
+    type: P.string.isRequired,
+  }),
   device: P.shape({
     id: P.string.isRequired,
     defaultBehavior: P.func.isRequired,
@@ -174,7 +188,7 @@ Connector.propTypes = {
     posX: P.number.isRequired,
     posY: P.number.isRequired
   }),
-  handleChangeId: P.func
+  handleChangeId: P.func,
 }
 
 export default Connector;

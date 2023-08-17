@@ -369,10 +369,9 @@ export const FlowProvider = ({ children }) => {
   }) => {
     const { from, to } = devicesParam;
 
-    console.log({ devicesParam })
-
     if (from.connector && !to?.connector && !state.flowTemp.connectorClicked) {
-      const deviceFrom = devices.find(device => device.id === from.id);
+
+      const deviceFrom = devices[`${from.id}`];
 
       const line = createLine({
         fromPos: {
@@ -408,8 +407,8 @@ export const FlowProvider = ({ children }) => {
     //checks if the device is not wanting to connect with itself
     if (from.id === to.id) return;
 
-    let deviceFrom = devices.find(device => device.id === from.id);
-    let deviceTo = devices.find(device => device.id === to.id);
+    let deviceFrom = devices[`${from.id}`];
+    let deviceTo = devices[`${to.id}`];
 
     deviceFrom = {
       ...deviceFrom,

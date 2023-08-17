@@ -63,7 +63,7 @@ const Slider = ({
       return conn.deviceTo.id === id
     });
 
-    const device = devices.find(device => device.id === connection.deviceFrom.id);
+    const device = devices[`${connection.deviceFrom.id}`];
 
     const value = Object.hasOwn(device.value, 'current') ? device.value.current : device.value[connection.deviceFrom.connector.name].current;
     const max = Object.hasOwn(device.value, 'max') ? device.value.max : device.value[connection.deviceFrom.connector.name].max;
