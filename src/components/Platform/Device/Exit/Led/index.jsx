@@ -94,6 +94,15 @@ const Led = memo(function Led({ device, dragRef }) {
     });
   }
 
+
+  useEffect(() => {
+    updateDeviceValue(id, {
+      connectors: {
+        ...deviceData.connectors
+      }
+    })
+  }, [deviceData.connectors]);
+
   useEffect(() => {
     if (isFirstRender.current) {
       isFirstRender.current = false;

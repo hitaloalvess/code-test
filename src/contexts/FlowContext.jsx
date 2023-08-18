@@ -628,6 +628,16 @@ export const FlowProvider = ({ children }) => {
     dispatch({ type: 'CLEAR-FLOW-TEMP' });
   };
 
+
+  //SOMENTE TEST
+  const handleSetLine = (line) => {
+    dispatch({
+      type: 'CREATE-LINE',
+      payload: line
+    })
+  }
+
+
   return (
     <FlowContext.Provider
       value={{
@@ -641,7 +651,8 @@ export const FlowProvider = ({ children }) => {
         updateLines,
         executeFlow,
         deleteDeviceConnections,
-        clearFlowTemp
+        clearFlowTemp,
+        handleSetLine,//SOMENTE TESTES
       }}
     >
       {children}

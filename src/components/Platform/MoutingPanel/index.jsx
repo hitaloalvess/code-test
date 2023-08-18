@@ -21,7 +21,7 @@ const MoutingPanel = forwardRef(function MoutingPanel(props, ref) {
   // const isFirstRender = useRef(true);
 
   const { devices, addDevice, repositionDevice, handleSetDevice } = useDevices();
-  const { flows, connectionLines, updateLines, updateFlow } = useFlow();
+  const { flows, connectionLines, updateLines, updateFlow, handleSetLine } = useFlow();
   const { searchFormHasEnabled } = useContextAuth();
 
   const moutingPanelRef = useRef(null);
@@ -124,38 +124,6 @@ const MoutingPanel = forwardRef(function MoutingPanel(props, ref) {
   //SOMENTE TESTES
 
   const handleLoadDevices = (devicesTest) => {
-    // const devicesTest = [{
-    //   category: "entry",
-    //   id: "ed83557e-274e-4f30-949a-90d72d5d3b86",
-    //   imgSrc: "/src/assets/images/devices/entry/potentiometer.svg",
-    //   name: "potentiometer",
-    //   posX: 494.3999938964844,
-    //   posY: 328.40000915527344,
-    //   type: "virtual",
-    //   value: { current: 0, max: 1023 }
-    // },
-    // {
-
-    //   id: "5d1a3dc4-6910-444d-9251-527b6a8ec418",
-    //   imgSrc: "/src/assets/images/devices/exit/led.svg",
-    //   name: "led",
-    //   type: "virtual",
-    //   category: "exit",
-    //   value: {
-    //     active: false,
-    //     current: 0,
-    //     max: 0,
-    //     type: null,
-    //     color: "#ff1450",
-    //     opacity: 0,
-    //     brightness: 1023
-
-    //   },
-    //   posX: 893.3999938964844,
-    //   posY: 315.3999938964844
-
-    // }
-    // ];
 
     Object.values(devicesTest).forEach(device => {
       handleSetDevice({
@@ -252,6 +220,12 @@ const MoutingPanel = forwardRef(function MoutingPanel(props, ref) {
   //   // handleLoadFlows();
   // }, []);
 
+  const handleLoadLines = (lines) => {
+    lines.forEach(line => {
+      handleSetLine(line)
+    })
+  }
+
   const replaceFuncInString = (key, value) => {
     if (typeof value === 'function') {
       return { _isFunction: true, body: value.toString() }; //Convert func for string
@@ -307,7 +281,8 @@ const MoutingPanel = forwardRef(function MoutingPanel(props, ref) {
       id: 'asdasdas',
       userId: 'laksdjasldkas',
       // flows: objFlow,
-      devices: newDevices
+      devices: newDevices,
+      connectionLines
     }
 
     console.log(project);
@@ -328,6 +303,7 @@ const MoutingPanel = forwardRef(function MoutingPanel(props, ref) {
     const deserializedFlows = JSON.parse(project, replaceStringInFunc);
 
     handleLoadDevices(deserializedFlows.devices);
+    handleLoadLines(deserializedFlows.connectionLines);
 
     // const getValueFrom = deserializedFlows.flows['f0686513-f7d4-47cb-9e76-a3a8f5901909'].connections[0].deviceFrom.defaultBehavior();
 

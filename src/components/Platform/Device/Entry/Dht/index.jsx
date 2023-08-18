@@ -101,7 +101,16 @@ const Dht = memo(function Dht({
         }
       }
     });
+
   }
+
+  useEffect(() => {
+    updateDeviceValue(id, {
+      connectors: {
+        ...deviceData.connectors
+      }
+    })
+  }, [deviceData.connectors]);
 
   useEffect(() => {
     executeFlow({ connectorId: deviceData.connectors.temperature.id, fromBehaviorCallback: () => handleGetValue(deviceData.connectors.temperature.name) });

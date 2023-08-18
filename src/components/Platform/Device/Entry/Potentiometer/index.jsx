@@ -63,6 +63,14 @@ const Potentiometer = memo(function Potentiometer({
   }
 
   useEffect(() => {
+    updateDeviceValue(id, {
+      connectors: {
+        ...deviceData.connectors
+      }
+    })
+  }, [deviceData.connectors]);
+
+  useEffect(() => {
     executeFlow({ connectorId: deviceData.connectors.resistance.id, fromBehaviorCallback: handleGetValue });
 
   }, [deviceData.value.current]);
