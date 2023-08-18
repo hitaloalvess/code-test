@@ -28,6 +28,7 @@ import devicePickColor from '@/assets/images/devices/event/pickcolor.svg';
 import deviceToggle from '@/assets/images/devices/event/toggle.svg';
 import deviceDelay from '@/assets/images/devices/event/delay.svg';
 import deviceSlider from '@/assets/images/devices/event/slider.svg';
+import deviceLoop from '@/assets/images/devices/event/loop.svg';
 
 export const mockDevices = {
   entry: [
@@ -245,6 +246,17 @@ export const mockDevices = {
         max: 0
       }
     },
+    {
+      id: 34,
+      imgSrc: deviceLoop,
+      name: 'loop',
+      type: 'virtual',
+      category: 'event',
+      value: {
+        current: 0,
+        max: 0
+      }
+    },
   ],
   conditional: [
     {
@@ -352,7 +364,7 @@ export const deviceConnectorRules = {
   },
   counter: {
     acceptedConnections: ['oneEntry', 'allExit'],
-    connectsFrom: ['potentiometer', 'ldr', 'pushButton', 'slider', 'delay', 'toggle', 'and', 'or', 'physicalPotentiometer', 'physicalLDR'],
+    connectsFrom: ['potentiometer', 'ldr', 'loop', 'pushButton', 'slider', 'delay', 'toggle', 'and', 'or', 'physicalPotentiometer', 'physicalLDR'],
     connectsTo: ['all']
   },
   and: {
@@ -381,6 +393,11 @@ export const deviceConnectorRules = {
     connectsTo: ['all'],
   },
   delay: {
+    acceptedConnections: ['oneEntry', 'allExit'],
+    connectsFrom: ['all'],
+    connectsTo: ['all'],
+  },
+  loop: {
     acceptedConnections: ['oneEntry', 'allExit'],
     connectsFrom: ['all'],
     connectsTo: ['all'],

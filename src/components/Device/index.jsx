@@ -30,6 +30,7 @@ import Toggle from './Event/Toggle';
 import Delay from './Event/Delay';
 import Slider from './Event/Slider';
 import PickColor from './Event/PickColor';
+import Loop from './Event/Loop';
 
 import {
   deviceContainer,
@@ -78,6 +79,7 @@ const Device = memo(function Device({ device: { ...device } }) {
     delay: Delay,
     slider: Slider,
     pickColor: PickColor,
+    loop: Loop,
     counter: Counter,
     soilMoisture: SoilMoisture,
     rainDetector: RainDetector
