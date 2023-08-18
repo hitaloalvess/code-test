@@ -38,9 +38,33 @@ export const mockDevices = {
       type: 'virtual',
       category: 'entry',
       value: {
-        current: 0,
-        max: 1023
+        temperature: {
+          current: 0,
+          max: 1023
+        },
+        humidity: {
+          current: 0,
+          max: 1023
+        }
       },
+      posX: 0,
+      posY: 0,
+      connectors: {
+        temperature: {
+          id: null,
+          type: 'exit',
+          name: 'temperature',
+          x: 0,
+          y: 0
+        },
+        humidity: {
+          id: null,
+          type: 'exit',
+          name: 'humidity',
+          x: 0,
+          y: 0
+        }
+      }
     },
     {
       id: 11,
@@ -70,6 +94,17 @@ export const mockDevices = {
       value: {
         current: 0,
         max: 1023
+      },
+      posX: 0,
+      posY: 0,
+      connectors: {
+        resistance: {
+          id: null,
+          name: 'resistance',
+          type: 'exit',
+          x: 0,
+          y: 0
+        }
       }
     },
     {
@@ -126,6 +161,17 @@ export const mockDevices = {
         color: '#ff1450',
         opacity: 0,
         brightness: 1023
+      },
+      posX: 0,
+      posY: 0,
+      connectors: {
+        brightness: {
+          id: null,
+          name: 'brightness',
+          type: 'entry',
+          x: 0,
+          y: 0
+        }
       }
     },
     {

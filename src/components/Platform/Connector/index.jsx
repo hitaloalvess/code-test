@@ -18,7 +18,7 @@ import styles, {
 
 
 const Connector = ({
-  data, device, updateConn, handleChangeId = null
+  data, device, updateConn, handleChangeData
 }) => {
 
   const {
@@ -31,7 +31,8 @@ const Connector = ({
     updateLines,
     updateFlow
   } = useFlow();
-  const { devices, repositionConnections, deviceScale, updateDeviceValue } = useDevices();
+
+  const { repositionConnections, deviceScale } = useDevices();
 
   const connRef = useRef(null);
   const [id] = useState(() => data.id || `${data.name}-${uuid()}`);
@@ -61,27 +62,17 @@ const Connector = ({
       updateFlow
     })
 
-    updateDeviceValue(device.id, {
-      connector: {
-        ...devices[`${device.id}`].connector,
-        [`${data.name}`]: {
-          id,
-          name: data.name,
-          type: data.type,
-          x,
-          y
-        }
-      }
-    });
+    if (handleChangeData) {
+      handleChangeData({
+        id,
+        type: data.type,
+        name: data.name,
+        x,
+        y
+      });
+    }
 
   }, [updateConn.posX, updateConn.posY, deviceScale]);
-
-
-  useEffect(() => {
-    if (handleChangeId) {
-      handleChangeId(id);
-    }
-  }, [id]);
 
 
   const [{ }, drop] = useDrop(() => ({
@@ -188,7 +179,7 @@ Connector.propTypes = {
     posX: P.number.isRequired,
     posY: P.number.isRequired
   }),
-  handleChangeId: P.func,
+  handleChangeData: P.func,
 }
 
 export default Connector;

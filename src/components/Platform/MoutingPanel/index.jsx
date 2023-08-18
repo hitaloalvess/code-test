@@ -157,7 +157,7 @@ const MoutingPanel = forwardRef(function MoutingPanel(props, ref) {
     // }
     // ];
 
-    devicesTest.forEach(device => {
+    Object.values(devicesTest).forEach(device => {
       handleSetDevice({
         ...device,
         containerRef: ref
@@ -270,7 +270,7 @@ const MoutingPanel = forwardRef(function MoutingPanel(props, ref) {
 
   const handleSaveProject = () => {
 
-    const newDevices = devices.map(device => {
+    const newDevices = Object.values(devices).map(device => {
       if (Object.hasOwn(device, 'containerRef')) {
         delete device.containerRef;
       }
@@ -278,37 +278,40 @@ const MoutingPanel = forwardRef(function MoutingPanel(props, ref) {
       return device;
     });
 
-    const newFlows = Object.values(flows).map(flow => {
-      const connections = flow.connections.map(connection => {
-        if (Object.hasOwn(connection.deviceFrom, 'containerRef')) {
-          delete connection.deviceFrom.containerRef
-        }
+    // const newFlows = Object.values(flows).map(flow => {
+    //   const connections = flow.connections.map(connection => {
+    //     if (Object.hasOwn(connection.deviceFrom, 'containerRef')) {
+    //       delete connection.deviceFrom.containerRef
+    //     }
 
-        if (Object.hasOwn(connection.deviceTo, 'containerRef')) {
-          delete connection.deviceTo.containerRef
-        }
+    //     if (Object.hasOwn(connection.deviceTo, 'containerRef')) {
+    //       delete connection.deviceTo.containerRef
+    //     }
 
-        return connection;
-      })
+    //     return connection;
+    //   })
 
-      return {
-        ...flow,
-        connections
-      }
-    })
+    //   return {
+    //     ...flow,
+    //     connections
+    //   }
+    // })
 
-    const objFlow = newFlows.reduce((acc, flow) => {
-      return {
-        ...acc, [`${flow.id}`]: flow
-      }
-    }, {});
+    // const objFlow = newFlows.reduce((acc, flow) => {
+    //   return {
+    //     ...acc, [`${flow.id}`]: flow
+    //   }
+    // }, {});
 
     const project = {
       id: 'asdasdas',
       userId: 'laksdjasldkas',
-      flows: objFlow,
+      // flows: objFlow,
       devices: newDevices
     }
+
+    console.log(project);
+
 
     const serializedFlows = JSON.stringify(project, replaceFuncInString, 2);
 

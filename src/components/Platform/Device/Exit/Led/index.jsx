@@ -33,7 +33,8 @@ const Led = memo(function Led({ device, dragRef }) {
 
   const isFirstRender = useRef(true);
 
-  const [value, setValue] = useState(device.value);
+  const [deviceData, setDeviceData] = useState(device);
+
   const [lightUpdateData, setLightUpdateData] = useState(null);
 
 
@@ -41,32 +42,28 @@ const Led = memo(function Led({ device, dragRef }) {
 
     const hasFlow = findFlowsByDeviceId(flows, id);
 
-    if (hasFlow && newBrightness !== value.brightness) {
-      defaultBehavior({ value: newBrightness, max: value.max });
+    if (hasFlow && newBrightness !== deviceData.value.brightness) {
+      defaultBehavior({ value: newBrightness, max: deviceData.value.max });
     }
 
-    setValue({
-      ...value,
+    const value = {
+      ...deviceData.value,
       color: newColor,
       brightness: newBrightness
-    });
+    }
 
-    updateDeviceValue(id, {
-      value: {
-        ...value,
-        color: newColor,
-        brightness: newBrightness
-      }
-    });
+    setDeviceData({ ...deviceData, value })
 
-  }, [value, flows]);
+    updateDeviceValue(id, { value });
+
+  }, [deviceData.value, flows]);
 
 
   const defaultBehavior = (valueReceived) => setLightUpdateData(valueReceived);
 
 
   const redefineBehavior = () => {
-    const newValue = {
+    const value = {
       active: false,
       current: 0,
       max: 0,
@@ -76,14 +73,26 @@ const Led = memo(function Led({ device, dragRef }) {
       brightness: 1023
     }
 
-    setValue(newValue);
+    setDeviceData({
+      ...deviceData,
+      value
+    })
 
-    updateDeviceValue(id, {
-      value: newValue
-    });
+    updateDeviceValue(id, { value });
 
   }
 
+  const handleSaveConnData = (value) => {
+    setDeviceData(prev => {
+      return {
+        ...prev,
+        connectors: {
+          ...prev.connectors,
+          [`${value.name}`]: value
+        }
+      }
+    });
+  }
 
   useEffect(() => {
     if (isFirstRender.current) {
@@ -98,7 +107,7 @@ const Led = memo(function Led({ device, dragRef }) {
 
     const objValue = {
       current: typeof newValue === 'boolean' ?
-        (newValue ? value.brightness : 0) : newValue,
+        (newValue ? deviceData.value.brightness : 0) : newValue,
       max: typeof newValue === 'boolean' ? 1023 : max,
       type: typeof newValue,
     }
@@ -107,23 +116,18 @@ const Led = memo(function Led({ device, dragRef }) {
     const brigthnessValue = objValue.current < 0 ? objValue.current * -1 : objValue.current;
     const opacity = objValue.current !== 0 ? (brigthnessValue / objValue.max) : 0
 
-    setValue({
-      ...value,
+    const value = {
+      ...deviceData.value,
       ...objValue,
-      color: color === undefined ? value.color : color,
+      color: color === undefined ? deviceData.value.color : color,
       active,
       opacity
-    });
+    }
 
-    updateDeviceValue(id, {
-      value: {
-        ...value,
-        ...objValue,
-        color: color === undefined ? value.color : color,
-        active,
-        opacity
-      }
-    });
+
+    setDeviceData({ ...deviceData, value })
+
+    updateDeviceValue(id, { value });
 
 
     setLightUpdateData(null);
@@ -137,8 +141,8 @@ const Led = memo(function Led({ device, dragRef }) {
         ref={dragRef}
       >
         <div className={ledLight}>
-          {value.active && (
-            <svg className={ledLightElement} style={{ fill: `${value.color}`, fillOpacity: `${value.opacity}` }} viewBox="0 0 51 74"
+          {deviceData.value.active && (
+            <svg className={ledLightElement} style={{ fill: `${deviceData.value.color}`, fillOpacity: `${deviceData.value.opacity}` }} viewBox="0 0 51 74"
               xmlns="http://www.w3.org/2000/svg">
               <ellipse cx="25.5" cy="68" rx="7.6" ry="4.1" />
               <path
@@ -157,20 +161,22 @@ const Led = memo(function Led({ device, dragRef }) {
       <div
         className={`${connectorsContainer} ${connectorsContainerEntry}`}
       >
-        <Connector
-          data={{
-            id: '',
-            name: 'brightness',
-            type: 'entry',
-          }}
-          device={{
-            id,
-            defaultBehavior,
-            redefineBehavior,
-            containerRef: device.containerRef
-          }}
-          updateConn={{ posX, posY }}
-        />
+        {
+          Object.values(deviceData.connectors).map((connector, index) => (
+            <Connector
+              key={index}
+              data={connector}
+              device={{
+                id,
+                defaultBehavior,
+                redefineBehavior,
+                containerRef: device.containerRef
+              }}
+              updateConn={{ posX, posY }}
+              handleChangeData={handleSaveConnData}
+            />
+          ))
+        }
       </div>
 
       <div
@@ -197,8 +203,8 @@ const Led = memo(function Led({ device, dragRef }) {
           onClick={() => enableModal({
             typeContent: 'config-led',
             handleSaveConfig: handleSettingUpdate,
-            defaultColor: value.color,
-            defaultBrightness: value.brightness
+            defaultColor: deviceData.value.color,
+            defaultBrightness: deviceData.value.brightness
           })}
         >
           <Gear />
