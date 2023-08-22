@@ -50,10 +50,10 @@
 @media (max-width: 769px) and (orientation:portrait) {
 
   .container {
-    width: 480px;
-    height: 96px;
+    width: 500px;
+    height: 112px;
     border-radius: 12px 12px 0 0;
-    padding: 0 0 0 0;
+    padding: 0 0 0 16px;
   }
 
   .devicesList {
@@ -73,7 +73,11 @@
 
   .container {
     max-width: 380px;
-    height: 80px;
+    height: 100px;
+  }
+
+  .container ul {
+    gap: 24px;
   }
 
   .trashArea svg {

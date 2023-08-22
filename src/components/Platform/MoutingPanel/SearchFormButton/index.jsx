@@ -3,7 +3,7 @@ import CircleButton from '@/components/Platform/CircleButton';
 
 const SearchFormButton = () => {
   return <a
-    href="https://forms.office.com/pages/responsepage.aspx?id=J9qWQouzuU6lIUZNyZbWIXy1pl49eodCvWgqbHbB3P9UMDNVVkNSU1ozOU9TSTUxQkpMSFIyMTE0QyQlQCN0PWcu"
+    href="https://forms.office.com/r/f9n4zaS3pG"
     target='_blank' rel="noreferrer"
   >
     <CircleButton
