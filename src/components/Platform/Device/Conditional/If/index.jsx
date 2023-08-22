@@ -155,7 +155,7 @@ const If = ({
 
   const calcValues = () => {
     if (!Object.hasOwn(connectionValue, 'id')) {
-      updateValue(setValue, id, 0);
+      updateValue(setValue, id, false);
       return;
     }
 
