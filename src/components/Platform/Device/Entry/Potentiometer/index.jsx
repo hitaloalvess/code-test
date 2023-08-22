@@ -24,7 +24,7 @@ const Potentiometer = memo(function Potentiometer({
 
   const { id, imgSrc, name, posX, posY } = device;
   const { deleteDevice, updateDeviceValue } = useDevices();
-  const { executeFlow, deleteDeviceConnections } = useFlow();
+  const { executeFlow, deleteDeviceConnections, updateDeviceValueInFlow } = useFlow();
   const { enableModal, disableModal } = useModal();
 
   const [deviceData, setDeviceData] = useState(device);
@@ -71,7 +71,13 @@ const Potentiometer = memo(function Potentiometer({
   }, [deviceData.connectors]);
 
   useEffect(() => {
-    executeFlow({ connectorId: deviceData.connectors.resistance.id, fromBehaviorCallback: handleGetValue });
+    updateDeviceValue(id, {
+      defaultBehavior: handleGetValue
+    });
+
+    updateDeviceValueInFlow({ connectorId: deviceData.connectors.resistance.id, newValue: deviceData.value })
+
+    executeFlow({ connectorId: deviceData.connectors.resistance.id });
 
   }, [deviceData.value.current]);
 
@@ -115,7 +121,6 @@ const Potentiometer = memo(function Potentiometer({
               data={connector}
               device={{
                 id,
-                defaultBehavior: handleGetValue,
                 containerRef: device.containerRef
               }}
               updateConn={{ posX, posY }}

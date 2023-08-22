@@ -280,6 +280,54 @@ const reducer = (state, action) => {
           }
         }
       }
+    case 'LOAD-FLOWS':
+      {
+        const { flows } = action.payload;
+
+        return {
+          ...state,
+          flows
+        }
+      }
+    case 'UPDATE-DEVICE-VALUE-IN-FLOW':
+      {
+
+        const { connectorId, newValue } = action.payload;
+
+        if (Object.keys(state.flows).length === 0) return state;
+
+        const selectedFlow = findFlowByConnectorId(state.flows, connectorId)
+
+        if (!selectedFlow) return state;
+
+        const newConnections = selectedFlow.connections.map(conn => {
+          if (conn.deviceFrom.connector.id === connectorId) {
+            return {
+              ...conn,
+              deviceFrom: {
+                ...conn.deviceFrom,
+                value: newValue
+              }
+            }
+          }
+
+          //ARRUMAR PARA CASO FOR UM DEVICETO
+
+          return conn;
+        });
+
+        return {
+          ...state,
+          flows: {
+            ...state.flows,
+            [`${selectedFlow.id}`]: {
+              ...state.flows[`${selectedFlow.id}`],
+              connections: newConnections
+            }
+          }
+        }
+
+      }
     default:
       return state;
   }
@@ -346,10 +394,9 @@ export const FlowProvider = ({ children }) => {
 
   //FLOWS
 
-  const executeFlow = ({ flows, connectorId, fromBehaviorCallback }) => {
+  const executeFlow = ({ flows, connectorId }) => {
 
     const flowsCurrent = flows ? flows : state.flows;
-    // const selectedFlow = findFlowsByDeviceId(flowsCurrent, connectorId);
     const selectedFlow = findFlowByConnectorId(flowsCurrent, connectorId)
 
     if (!selectedFlow) return;
@@ -359,8 +406,12 @@ export const FlowProvider = ({ children }) => {
     })
 
     deviceConnections.forEach(conn => {
-      const valueFrom = fromBehaviorCallback();
-      conn.deviceTo.defaultBehavior({ ...valueFrom });
+      const valueFrom = devices[conn.deviceFrom.id].value;
+
+      devices[conn.deviceTo.id].defaultBehavior({
+        value: valueFrom.current,
+        max: valueFrom.max
+      })
     })
   }
 
@@ -563,14 +614,14 @@ export const FlowProvider = ({ children }) => {
     deleteLine({ id: idLine });
 
     //redefine devices from the connection
-    if (connectionDelete.deviceFrom.redefineBehavior) {
-      connectionDelete.deviceFrom.redefineBehavior({
+    if (devices[connectionDelete.deviceFrom.id].redefineBehavior) {
+      devices[connectionDelete.deviceFrom.id].redefineBehavior({
         idConnectionDelete: connectionDelete.id
       });
     }
 
-    if (connectionDelete.deviceTo.redefineBehavior) {
-      connectionDelete.deviceTo.redefineBehavior({
+    if (devices[connectionDelete.deviceTo.id].redefineBehavior) {
+      devices[connectionDelete.deviceTo.id].redefineBehavior({
         idConnectionDelete: connectionDelete.id
       });
     }
@@ -637,6 +688,19 @@ export const FlowProvider = ({ children }) => {
     })
   }
 
+  const handleSetFlows = (flows) => {
+    dispatch({
+      type: 'LOAD-FLOWS',
+      payload: flows
+    })
+  }
+
+  const updateDeviceValueInFlow = ({ connectorId, newValue }) => {
+    dispatch({
+      type: 'UPDATE-DEVICE-VALUE-IN-FLOW',
+      payload: { connectorId, newValue }
+    })
+  }
 
   return (
     <FlowContext.Provider
@@ -653,6 +717,8 @@ export const FlowProvider = ({ children }) => {
         deleteDeviceConnections,
         clearFlowTemp,
         handleSetLine,//SOMENTE TESTES
+        handleSetFlows, //SOMENTE TESTES
+        updateDeviceValueInFlow, //SOMENETE TESTES
       }}
     >
       {children}

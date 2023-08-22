@@ -172,7 +172,6 @@ Connector.propTypes = {
   }),
   device: P.shape({
     id: P.string.isRequired,
-    defaultBehavior: P.func.isRequired,
     containerRef: P.object.isRequired
   }),
   updateConn: P.shape({

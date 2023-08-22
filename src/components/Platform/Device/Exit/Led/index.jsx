@@ -59,7 +59,16 @@ const Led = memo(function Led({ device, dragRef }) {
   }, [deviceData.value, flows]);
 
 
-  const defaultBehavior = (valueReceived) => setLightUpdateData(valueReceived);
+  const defaultBehavior = (valueReceived) => {
+    console.log({
+      title: 'Default behavior led',
+      value: valueReceived,
+    });
+    if (setLightUpdateData) {
+      setLightUpdateData(valueReceived);
+    }
+
+  };
 
 
   const redefineBehavior = () => {
@@ -94,6 +103,14 @@ const Led = memo(function Led({ device, dragRef }) {
     });
   }
 
+  useEffect(() => {
+    console.log('Salvando funcoes')
+
+    updateDeviceValue(id, {
+      defaultBehavior,
+      redefineBehavior
+    })
+  }, []);
 
   useEffect(() => {
     updateDeviceValue(id, {
