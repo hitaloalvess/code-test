@@ -54,7 +54,32 @@ const If = ({
     setQtdIncomingConn(prev => prev + 1)
   }
 
+  const handleSpecialDeviceValues = (deviceData, objValue) => {
+    const devices = {
+      'dht': (deviceData, objValue) => {
+        const { connector } = deviceData;
+        const { value, max } = objValue;
+
+        if (connector.name === 'temperature') return objValue;
+
+        return {
+          value: Math.ceil((value * 100) / max),
+          max
+        };
+      }
+    }
+
+    const deviceTransformValue = devices[deviceData.name];
+
+    if (!deviceTransformValue) return objValue;
+
+    const newValue = deviceTransformValue(deviceData, objValue);
+
+    return newValue;
+  }
+
   const handleSettingUpdate = useCallback((newSimbol, newVariable) => {
+
     switch (connectionType) {
       case 'number':
         setNumberVariable(newVariable);
@@ -70,7 +95,6 @@ const If = ({
     setVariable(newVariable);
     setSimbol(newSimbol);
   }, [variable, simbol, connectionType]);
-
 
 
   const handleConnections = () => {
@@ -91,6 +115,7 @@ const If = ({
 
     const device = devices.find(device => device.id === connection.deviceFrom.id);
 
+
     let value = device.value.current;
     let max = device.value.max;
 
@@ -99,6 +124,7 @@ const If = ({
       value = typeof device.value === 'boolean' || typeof device.value === 'string' ? device.value : device.value[connection.deviceFrom.connector.name].current
       max = typeof device.value === 'boolean' || typeof device.value === 'string' ? device.value : device.value[connection.deviceFrom.connector.name].max
     }
+
 
     if (connectionType != String(typeof value)) {
       setConnectionType(String(typeof value));
@@ -117,17 +143,18 @@ const If = ({
     }
 
 
-    const objValue = {
-      idConnection: connection.id,
-      value,
-      max
-    }
+    //Validates if it is a device that has a special behavior in generating its value
+    const objValue = handleSpecialDeviceValues(connection.deviceFrom, { value, max });
 
-    setConnectionValue(objValue);
+    setConnectionValue({
+      id: connection.id,
+      ...connection,
+      ...objValue
+    });
   }
 
   const calcValues = () => {
-    if (!Object.hasOwn(connectionValue, 'idConnection')) {
+    if (!Object.hasOwn(connectionValue, 'id')) {
       updateValue(setValue, id, 0);
       return;
     }
@@ -174,14 +201,14 @@ const If = ({
   }, [qtdIncomingConn]);
 
   useEffect(() => {
-    calcValues();
-  }, [connectionValue, variable]);
-
-  useEffect(() => {
     updateDisplay();
-  }, [variable, simbol]);
+    calcValues();
 
-  const updateDisplay = () => displayRef.current.innerHTML = simbol + " " + variable;
+  }, [connectionValue, variable, simbol]);
+
+  const updateDisplay = () => {
+    displayRef.current.innerHTML = simbol + " " + variable;
+  };
 
   useEffect(() => {
     sendValue();
