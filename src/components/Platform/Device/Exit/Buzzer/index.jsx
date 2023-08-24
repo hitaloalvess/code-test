@@ -7,7 +7,7 @@ import { useDevices } from '@/hooks/useDevices';
 import { useFlow } from '@/hooks/useFlow';
 import { useModal } from '@/hooks/useModal';
 import ActionButton from '@/components/Platform/ActionButtons/ActionButton';
-import Connector from '@/components/Platform/Connector';
+import ConnectorsConnector from '@/components/Platform/Connectors/ConnectorsConnector';
 
 import buzzerAudio from '@/assets/audio/audio-buzzer.mp3';
 
@@ -176,7 +176,7 @@ const Buzzer = memo(function Buzzer({
       <div
         className={`${connectorsContainer} ${connectorsContainerEntry}`}
       >
-        <Connector
+        <ConnectorsConnector
           name={'boolean'}
           type={'entry'}
           device={{

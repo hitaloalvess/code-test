@@ -7,7 +7,7 @@ import { useDevices } from '@/hooks/useDevices';
 import { useFlow } from '@/hooks/useFlow';
 import { useModal } from '@/hooks/useModal';
 import ActionButton from '@/components/Platform/ActionButtons/ActionButton';
-import Connector from '@/components/Platform/Connector';
+import ConnectorsConnector from '@/components/Platform/Connectors/ConnectorsConnector';
 
 import {
   deviceBody,
@@ -91,7 +91,7 @@ const RainDetector = memo(function RainDetector({
       <div
         className={`${connectorsContainer} ${connectorsContainerExit}`}
       >
-        <Connector
+        <ConnectorsConnector
           name={'value'}
           type={'exit'}
           device={{

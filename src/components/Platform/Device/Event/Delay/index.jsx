@@ -5,7 +5,7 @@ import { Trash, Gear } from '@phosphor-icons/react';
 import { useModal } from '@/hooks/useModal';
 import { useFlow } from '@/hooks/useFlow';
 import { useDevices } from '@/hooks/useDevices';
-import Connector from '@/components/Platform/Connector';
+import ConnectorsConnector from '@/components/Platform/Connectors/ConnectorsConnector';
 import ActionButton from '@/components/Platform/ActionButtons/ActionButton';
 import { findFlowsByDeviceId } from '@/utils/flow-functions';
 
@@ -187,7 +187,7 @@ const Delay = ({
       <div
         className={`${connectorsContainer} ${connectorsContainerEntry}`}
       >
-        <Connector
+        <ConnectorsConnector
           name={'delayInputData'}
           type={'entry'}
           device={{
@@ -204,7 +204,7 @@ const Delay = ({
       <div
         className={`${connectorsContainer} ${connectorsContainerExit}`}
       >
-        <Connector
+        <ConnectorsConnector
           name={'delayOutputData'}
           type={'exit'}
           device={{

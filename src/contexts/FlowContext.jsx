@@ -414,7 +414,8 @@ export const FlowProvider = ({ children }) => {
     })
 
     deviceConnections.forEach(conn => {
-      const valueFrom = devices[conn.deviceFrom.id].value;
+      const { id: fromId, connector: fromConnector } = conn.deviceFrom;
+      const valueFrom = devices[fromId].value[fromConnector.name];
 
       devices[conn.deviceTo.id].defaultBehavior({
         value: valueFrom.current,

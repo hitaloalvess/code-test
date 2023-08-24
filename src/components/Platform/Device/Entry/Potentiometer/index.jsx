@@ -3,15 +3,13 @@ import P from 'prop-types';
 
 import { useDevices } from '@/hooks/useDevices';
 import { useFlow } from '@/hooks/useFlow';
-import Connector from '@/components/Platform/Connector';
 import ActionButtons from '@/components/Platform/ActionButtons';
+import Connectors from '@/components/Platform/Connectors';
 
 import {
   deviceBody,
   inputRangeDeviceContainer,
   inputValue,
-  connectorsContainer,
-  connectorsContainerExit
 } from '../../styles.module.css';
 
 const Potentiometer = memo(function Potentiometer({
@@ -28,17 +26,22 @@ const Potentiometer = memo(function Potentiometer({
 
   const handleGetValue = () => {
     return {
-      value: deviceData.value.current,
-      max: deviceData.value.max
+      resistance: {
+        value: deviceData.value.current,
+        max: deviceData.value.max
+      }
     }
   };
 
-  const handleOnInput = (event) => {
+  const handleOnInput = (event, name) => {
     const inputValue = Number(event.target.value);
 
     const value = {
       ...deviceData.value,
-      current: inputValue,
+      [`${name}`]: {
+        ...deviceData.value[`${name}`],
+        current: inputValue,
+      }
     }
 
     setDeviceData({ ...deviceData, value });
@@ -71,11 +74,11 @@ const Potentiometer = memo(function Potentiometer({
       defaultBehavior: handleGetValue
     });
 
-    updateDeviceValueInFlow({ connectorId: deviceData.connectors.resistance.id, newValue: deviceData.value })
+    updateDeviceValueInFlow({ connectorId: deviceData.connectors.resistance.id, newValue: deviceData.value.resistance })
 
     executeFlow({ connectorId: deviceData.connectors.resistance.id });
 
-  }, [deviceData.value.current]);
+  }, [deviceData.value.resistance.current]);
 
   return (
 
@@ -86,12 +89,12 @@ const Potentiometer = memo(function Potentiometer({
           min="0"
           max="1023"
           step="1"
-          defaultValue={deviceData.value.current}
-          onInput={handleOnInput}
+          defaultValue={deviceData.value.resistance.current}
+          onInput={(event) => handleOnInput(event, 'resistance')}
         />
         <p
           className={inputValue}
-        >{deviceData.value.current}</p>
+        >{deviceData.value.resistance.current}</p>
       </div>
 
       <div
@@ -121,24 +124,20 @@ const Potentiometer = memo(function Potentiometer({
 
       </div>
 
-      <div
-        className={`${connectorsContainer} ${connectorsContainerExit}`}
-      >
-        {
-          Object.values(deviceData.connectors).map((connector, index) => (
-            <Connector
-              key={index}
-              data={connector}
-              device={{
-                id,
-                containerRef: device.containerRef
-              }}
-              updateConn={{ posX, posY }}
-              handleChangeData={handleSaveConnData}
-            />
-          ))
-        }
-      </div>
+      <Connectors
+        type='exits'
+        exitConnectors={[
+          {
+            data: deviceData.connectors.resistance,
+            device: {
+              id,
+              containerRef: device.containerRef
+            },
+            updateConn: { posX, posY },
+            handleChangeData: handleSaveConnData
+          }
+        ]}
+      />
 
     </>
   );

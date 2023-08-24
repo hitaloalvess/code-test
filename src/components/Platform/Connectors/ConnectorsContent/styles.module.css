@@ -1,0 +1,23 @@
+.content {
+  height: 50px;
+  position: absolute;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 20px;
+}
+
+
+/*
+
+@media ((max-height: 481px) and (orientation: landscape)) or ((max-width: 481px) and (orientation: portrait)) {
+
+  .entry {
+    left: -24px;
+  }
+
+  .exit {
+    right: -24px;
+  }
+} */

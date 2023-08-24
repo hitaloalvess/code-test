@@ -5,7 +5,7 @@ import { Trash } from '@phosphor-icons/react';
 import { useModal } from '@/hooks/useModal';
 import { useFlow } from '@/hooks/useFlow';
 import { useDevices } from '@/hooks/useDevices';
-import Connector from '@/components/Platform/Connector';
+import ConnectorsConnector from '@/components/Platform/Connectors/ConnectorsConnector';
 import ActionButton from '@/components/Platform/ActionButtons/ActionButton';
 import { findFlowsByDeviceId } from '@/utils/flow-functions';
 
@@ -168,7 +168,7 @@ const Toggle = ({
       <div
         className={`${connectorsContainer} ${connectorsContainerEntry}`}
       >
-        <Connector
+        <ConnectorsConnector
           name={'toggleInputData'}
           type={'entry'}
           device={{
@@ -185,7 +185,7 @@ const Toggle = ({
       <div
         className={`${connectorsContainer} ${connectorsContainerExit}`}
       >
-        <Connector
+        <ConnectorsConnector
           name={'toggleOutputData'}
           type={'exit'}
           device={{

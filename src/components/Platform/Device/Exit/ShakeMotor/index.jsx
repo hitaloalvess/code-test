@@ -7,7 +7,7 @@ import { useDevices } from '@/hooks/useDevices';
 import { useFlow } from '@/hooks/useFlow';
 import { useModal } from '@/hooks/useModal';
 import ActionButton from '@/components/Platform/ActionButtons/ActionButton';
-import Connector from '@/components/Platform/Connector';
+import ConnectorsConnector from '@/components/Platform/Connectors/ConnectorsConnector';
 
 import {
   deviceBody,
@@ -92,7 +92,7 @@ const ShakeMotor = memo(function ShakeMotor({
       <div
         className={`${connectorsContainer} ${connectorsContainerEntry}`}
       >
-        <Connector
+        <ConnectorsConnector
           name={'boolean'}
           type={'entry'}
           device={{

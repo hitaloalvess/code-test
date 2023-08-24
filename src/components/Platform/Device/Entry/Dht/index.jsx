@@ -6,14 +6,12 @@ import { formulasForTransformation, transformHumidityValue } from '@/utils/devic
 import { useDevices } from '@/hooks/useDevices';
 import { useFlow } from '@/hooks/useFlow';
 import ActionButtons from '@/components/Platform/ActionButtons';
-import Connector from '@/components/Platform/Connector';
+import Connectors from '@/components/Platform/Connectors';
 
 import {
   deviceBody,
   inputRangeDeviceContainer,
-  inputValue,
-  connectorsContainer,
-  connectorsContainerExit
+  inputValue
 } from '../../styles.module.css';
 
 import {
@@ -36,9 +34,10 @@ const Dht = memo(function Dht({
 
   const { id, imgSrc, name, posX, posY } = device;
   const { updateDeviceValue } = useDevices();
-  const { executeFlow } = useFlow();
+  const { executeFlow, updateDeviceValueInFlow } = useFlow();
 
   const [deviceData, setDeviceData] = useState(device);
+
   const [scaleType, setScaleType] = useState('celsius');
 
   const transformationFormula = useMemo(() => {
@@ -108,11 +107,23 @@ const Dht = memo(function Dht({
   }, [deviceData.connectors]);
 
   useEffect(() => {
+    updateDeviceValue(id, {
+      defaultBehavior: () => handleGetValue('temperature')
+    });
+
+    updateDeviceValueInFlow({ connectorId: deviceData.connectors.temperature.id, newValue: deviceData.value.temperature });
+
     executeFlow({ connectorId: deviceData.connectors.temperature.id, fromBehaviorCallback: () => handleGetValue(deviceData.connectors.temperature.name) });
 
   }, [deviceData.value.temperature.current]);
 
   useEffect(() => {
+    updateDeviceValue(id, {
+      defaultBehavior: () => handleGetValue('humidity')
+    });
+
+    updateDeviceValueInFlow({ connectorId: deviceData.connectors.humidity.id, newValue: deviceData.value.humidity });
+
     executeFlow({ connectorId: deviceData.connectors.humidity.id, fromBehaviorCallback: () => handleGetValue(deviceData.connectors.humidity.name) });
   }, [deviceData.value.humidity.current]);
 
@@ -202,27 +213,29 @@ const Dht = memo(function Dht({
 
       </div>
 
-      <div
-        className={`${connectorsContainer} ${connectorsContainerExit}`}
-      >
-
-        {
-          Object.values(deviceData.connectors).map((connector, index) => (
-            <Connector
-              key={index}
-              data={connector}
-              device={{
-                id,
-                defaultBehavior: () => handleGetValue(connector.name),
-                containerRef: device.containerRef
-              }}
-              updateConn={{ posX, posY }}
-              handleChangeData={handleSaveConnData}
-            />
-          ))
-        }
-
-      </div>
+      <Connectors
+        type='exits'
+        exitConnectors={[
+          {
+            data: deviceData.connectors.temperature,
+            device: {
+              id,
+              containerRef: device.containerRef
+            },
+            updateConn: { posX, posY },
+            handleChangeData: handleSaveConnData
+          },
+          {
+            data: deviceData.connectors.humidity,
+            device: {
+              id,
+              containerRef: device.containerRef
+            },
+            updateConn: { posX, posY },
+            handleChangeData: handleSaveConnData
+          }
+        ]}
+      />
 
     </>
   );

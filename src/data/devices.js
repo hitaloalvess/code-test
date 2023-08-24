@@ -40,7 +40,7 @@ export const mockDevices = {
       value: {
         temperature: {
           current: 0,
-          max: 1023
+          max: 50
         },
         humidity: {
           current: 0,
@@ -92,8 +92,10 @@ export const mockDevices = {
       type: 'virtual',
       category: 'entry',
       value: {
-        current: 0,
-        max: 1023
+        resistance: {
+          current: 0,
+          max: 1023
+        }
       },
       posX: 0,
       posY: 0,

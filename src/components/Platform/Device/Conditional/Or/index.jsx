@@ -5,7 +5,7 @@ import { Trash } from '@phosphor-icons/react';
 import { useModal } from '@/hooks/useModal';
 import { useFlow } from '@/hooks/useFlow';
 import { useDevices } from '@/hooks/useDevices';
-import Connector from '@/components/Platform/Connector';
+import ConnectorsConnector from '@/components/Platform/Connectors/ConnectorsConnector';
 import ActionButton from '@/components/Platform/ActionButtons/ActionButton';
 import { findFlowsByDeviceId } from '@/utils/flow-functions';
 
@@ -139,7 +139,7 @@ const Or = ({
       <div
         className={`${connectorsContainer} ${connectorsContainerEntry}`}
       >
-        <Connector
+        <ConnectorsConnector
           name={'orInputData'}
           type={'entry'}
           device={{
@@ -156,7 +156,7 @@ const Or = ({
       <div
         className={`${connectorsContainer} ${connectorsContainerExit}`}
       >
-        <Connector
+        <ConnectorsConnector
           name={'orOutputData'}
           type={'exit'}
           device={{

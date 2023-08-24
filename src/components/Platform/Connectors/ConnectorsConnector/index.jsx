@@ -17,7 +17,7 @@ import styles, {
 } from './styles.module.css';
 
 
-const Connector = ({
+const ConnectorsConnector = ({
   data, device, updateConn, handleChangeData
 }) => {
 
@@ -164,7 +164,7 @@ const Connector = ({
 };
 
 
-Connector.propTypes = {
+ConnectorsConnector.propTypes = {
   data: P.shape({
     id: P.string,
     name: P.string.isRequired,
@@ -181,4 +181,4 @@ Connector.propTypes = {
   handleChangeData: P.func,
 }
 
-export default Connector;
+export default ConnectorsConnector;

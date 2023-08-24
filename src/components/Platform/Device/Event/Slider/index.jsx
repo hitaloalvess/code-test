@@ -8,7 +8,7 @@ import { useModal } from '@/hooks/useModal';
 import { useFlow } from '@/hooks/useFlow';
 import { useDevices } from '@/hooks/useDevices';
 import { findFlowsByDeviceId } from '@/utils/flow-functions';
-import Connector from '@/components/Platform/Connector';
+import ConnectorsConnector from '@/components/Platform/Connectors/ConnectorsConnector';
 import ActionButton from '@/components/Platform/ActionButtons/ActionButton';
 
 import {
@@ -166,7 +166,7 @@ const Slider = ({
       <div
         className={`${connectorsContainer} ${connectorsContainerEntry}`}
       >
-        <Connector
+        <ConnectorsConnector
           name={'sliderInputData'}
           type={'entry'}
           device={{
@@ -183,7 +183,7 @@ const Slider = ({
       <div
         className={`${connectorsContainer} ${connectorsContainerExit}`}
       >
-        <Connector
+        <ConnectorsConnector
           name={'sliderOutputData'}
           type={'exit'}
           device={{

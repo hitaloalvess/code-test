@@ -6,7 +6,7 @@ import { useDevices } from '@/hooks/useDevices';
 import { useFlow } from '@/hooks/useFlow';
 import { useModal } from '@/hooks/useModal';
 import ActionButton from '@/components/Platform/ActionButtons/ActionButton';
-import Connector from '@/components/Platform/Connector';
+import ConnectorsConnector from '@/components/Platform/Connectors/ConnectorsConnector';
 import ConfigInfraredModal from '@/components/shared/Modal/ConfigInfraredModal';
 
 import {
@@ -90,7 +90,7 @@ const Infrared = memo(function Infrared({
       <div
         className={`${connectorsContainer} ${connectorsContainerExit}`}
       >
-        <Connector
+        <ConnectorsConnector
           name={'code'}
           type={'exit'}
           device={{

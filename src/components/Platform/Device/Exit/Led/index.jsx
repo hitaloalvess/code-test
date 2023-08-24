@@ -5,14 +5,11 @@ import P from 'prop-types';
 import { findFlowsByDeviceId } from '@/utils/flow-functions';
 import { useDevices } from '@/hooks/useDevices';
 import { useFlow } from '@/hooks/useFlow';
-import Connector from '@/components/Platform/Connector';
 import ActionButtons from '@/components/Platform/ActionButtons';
+import Connectors from '@/components/Platform/Connectors';
 
-import {
-  deviceBody,
-  connectorsContainerEntry,
-  connectorsContainer
-} from '../../styles.module.css';
+
+import { deviceBody } from '../../styles.module.css';
 
 import {
   ledLight,
@@ -57,10 +54,6 @@ const Led = memo(function Led({
 
 
   const defaultBehavior = (valueReceived) => {
-    console.log({
-      title: 'Default behavior led',
-      value: valueReceived,
-    });
     if (setLightUpdateData) {
       setLightUpdateData(valueReceived);
     }
@@ -209,26 +202,23 @@ const Led = memo(function Led({
         />
 
       </div>
-      <div
-        className={`${connectorsContainer} ${connectorsContainerEntry}`}
-      >
-        {
-          Object.values(deviceData.connectors).map((connector, index) => (
-            <Connector
-              key={index}
-              data={connector}
-              device={{
-                id,
-                defaultBehavior,
-                redefineBehavior,
-                containerRef: device.containerRef
-              }}
-              updateConn={{ posX, posY }}
-              handleChangeData={handleSaveConnData}
-            />
-          ))
-        }
-      </div>
+
+      <Connectors
+        type='entrys'
+        exitConnectors={[
+          {
+            data: deviceData.connectors.brightness,
+            device: {
+              id,
+              defaultBehavior,
+              redefineBehavior,
+              containerRef: device.containerRef
+            },
+            updateConn: { posX, posY },
+            handleChangeData: handleSaveConnData
+          },
+        ]}
+      />
 
     </>
   );

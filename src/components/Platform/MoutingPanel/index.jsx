@@ -221,12 +221,8 @@ const MoutingPanel = forwardRef(function MoutingPanel(props, ref) {
       devices: newDevices,
     }
 
-    console.log(project);
-
 
     const serializedFlows = JSON.stringify(project, replaceFuncInString, 2);
-
-    console.log(serializedFlows);
 
     localStorage.setItem('@Microdigo:project', serializedFlows);
 
