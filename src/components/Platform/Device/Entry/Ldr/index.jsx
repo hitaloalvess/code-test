@@ -5,7 +5,7 @@ import { Trash } from '@phosphor-icons/react';
 import { useDevices } from '@/hooks/useDevices';
 import { useFlow } from '@/hooks/useFlow';
 import { useModal } from '@/hooks/useModal';
-import ActionButton from '@/components/Platform/ActionButton';
+import ActionButton from '@/components/Platform/ActionButtons/ActionButton';
 import Connector from '@/components/Platform/Connector';
 
 import {

@@ -1,21 +1,17 @@
 
 import { memo, useCallback, useEffect, useRef, useState } from 'react';
-import { Trash, Gear } from '@phosphor-icons/react';
 import P from 'prop-types';
 
+import { findFlowsByDeviceId } from '@/utils/flow-functions';
 import { useDevices } from '@/hooks/useDevices';
 import { useFlow } from '@/hooks/useFlow';
-import { useModal } from '@/hooks/useModal';
-import ActionButton from '@/components/Platform/ActionButton';
 import Connector from '@/components/Platform/Connector';
-import { findFlowsByDeviceId } from '@/utils/flow-functions';
+import ActionButtons from '@/components/Platform/ActionButtons';
 
 import {
   deviceBody,
-  actionButtonsContainer,
-  actionButtonsContainerRight,
-  connectorsContainer,
-  connectorsContainerEntry
+  connectorsContainerEntry,
+  connectorsContainer
 } from '../../styles.module.css';
 
 import {
@@ -23,13 +19,14 @@ import {
   ledLightElement
 } from './styles.module.css';
 
-const Led = memo(function Led({ device, dragRef }) {
+const Led = memo(function Led({
+  device, dragRef, activeActBtns, onChangeActBtns
+}) {
 
   const { id, imgSrc, name, posX, posY } = device;
 
-  const { deleteDevice, updateDeviceValue } = useDevices();
-  const { deleteDeviceConnections, flows } = useFlow();
-  const { enableModal, disableModal } = useModal();
+  const { updateDeviceValue } = useDevices();
+  const { flows, updateDeviceValueInFlow } = useFlow();
 
   const isFirstRender = useRef(true);
 
@@ -104,7 +101,6 @@ const Led = memo(function Led({ device, dragRef }) {
   }
 
   useEffect(() => {
-    console.log('Salvando funcoes')
 
     updateDeviceValue(id, {
       defaultBehavior,
@@ -155,6 +151,8 @@ const Led = memo(function Led({ device, dragRef }) {
 
     updateDeviceValue(id, { value });
 
+    updateDeviceValueInFlow({ connectorId: deviceData.connectors.brightness.id, newValue: value })
+
 
     setLightUpdateData(null);
 
@@ -165,6 +163,9 @@ const Led = memo(function Led({ device, dragRef }) {
       <div
         className={deviceBody}
         ref={dragRef}
+        onMouseEnter={() => onChangeActBtns(true)}
+        onMouseLeave={() => onChangeActBtns(false)}
+
       >
         <div className={ledLight}>
           {deviceData.value.active && (
@@ -178,11 +179,35 @@ const Led = memo(function Led({ device, dragRef }) {
             </svg>
           )}
         </div>
+
+
         <img
           src={imgSrc}
           alt={`Device ${name}`}
           loading='lazy'
         />
+
+
+        <ActionButtons
+          orientation='right'
+          active={activeActBtns}
+          actionDelete={{
+            title: 'Cuidado',
+            subtitle: 'Tem certeza que deseja excluir o componente?',
+            data: {
+              id
+            }
+          }}
+          actionConfig={{
+            typeContent: 'config-led',
+            onSave: handleSettingUpdate,
+            data: {
+              defaultColor: deviceData.value.color,
+              defaultBrightness: deviceData.value.brightness
+            }
+          }}
+        />
+
       </div>
       <div
         className={`${connectorsContainer} ${connectorsContainerEntry}`}
@@ -205,37 +230,6 @@ const Led = memo(function Led({ device, dragRef }) {
         }
       </div>
 
-      <div
-        className={
-          `${actionButtonsContainer} ${actionButtonsContainerRight}`
-        }
-      >
-        <ActionButton
-          onClick={() => enableModal({
-            typeContent: 'confirmation',
-            title: 'Cuidado',
-            subtitle: 'Tem certeza que deseja excluir o componente?',
-            handleConfirm: () => {
-              deleteDeviceConnections(id);
-              deleteDevice(id);
-              disableModal('confirmation');
-            }
-          })}
-        >
-          <Trash />
-        </ActionButton>
-
-        <ActionButton
-          onClick={() => enableModal({
-            typeContent: 'config-led',
-            handleSaveConfig: handleSettingUpdate,
-            defaultColor: deviceData.value.color,
-            defaultBrightness: deviceData.value.brightness
-          })}
-        >
-          <Gear />
-        </ActionButton>
-      </div >
     </>
   );
 });
@@ -243,6 +237,8 @@ const Led = memo(function Led({ device, dragRef }) {
 Led.propTypes = {
   device: P.object.isRequired,
   dragRef: P.func.isRequired,
+  activeActBtns: P.bool.isRequired,
+  onChangeActBtns: P.func.isRequired
 }
 
 export default Led;

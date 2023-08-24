@@ -9,7 +9,7 @@ import { useFlow } from '@/hooks/useFlow';
 import { useDevices } from '@/hooks/useDevices';
 import { findFlowsByDeviceId } from '@/utils/flow-functions';
 import Connector from '@/components/Platform/Connector';
-import ActionButton from '@/components/Platform/ActionButton';
+import ActionButton from '@/components/Platform/ActionButtons/ActionButton';
 
 import {
   deviceBody,

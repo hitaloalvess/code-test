@@ -1,20 +1,17 @@
 import { memo, useState, useEffect, useMemo } from 'react';
 import P from 'prop-types';
-import { Thermometer, Drop, Trash, Gear } from '@phosphor-icons/react';
+import { Thermometer, Drop } from '@phosphor-icons/react';
 
+import { formulasForTransformation, transformHumidityValue } from '@/utils/devices-functions';
 import { useDevices } from '@/hooks/useDevices';
 import { useFlow } from '@/hooks/useFlow';
-import { useModal } from '@/hooks/useModal';
-import ActionButton from '@/components/Platform/ActionButton';
+import ActionButtons from '@/components/Platform/ActionButtons';
 import Connector from '@/components/Platform/Connector';
-import { formulasForTransformation, transformHumidityValue } from '@/utils/devices-functions';
 
 import {
   deviceBody,
   inputRangeDeviceContainer,
   inputValue,
-  actionButtonsContainer,
-  actionButtonsContainerLeft,
   connectorsContainer,
   connectorsContainerExit
 } from '../../styles.module.css';
@@ -34,16 +31,14 @@ const MAX_HUMIDITY = 1023;
 const MIN_HUMIDITY = 0;
 
 const Dht = memo(function Dht({
-  device, dragRef
+  device, dragRef, activeActBtns, onChangeActBtns
 }) {
 
   const { id, imgSrc, name, posX, posY } = device;
-  const { deleteDevice, updateDeviceValue } = useDevices();
-  const { executeFlow, deleteDeviceConnections } = useFlow();
-  const { enableModal, disableModal } = useModal();
+  const { updateDeviceValue } = useDevices();
+  const { executeFlow } = useFlow();
 
   const [deviceData, setDeviceData] = useState(device);
-
   const [scaleType, setScaleType] = useState('celsius');
 
   const transformationFormula = useMemo(() => {
@@ -175,6 +170,8 @@ const Dht = memo(function Dht({
       <div
         className={deviceBody}
         ref={dragRef}
+        onMouseEnter={() => onChangeActBtns(true)}
+        onMouseLeave={() => onChangeActBtns(false)}
       >
 
         <img
@@ -182,6 +179,27 @@ const Dht = memo(function Dht({
           alt={`Device ${name}`}
           loading='lazy'
         />
+
+        <ActionButtons
+          orientation='left'
+          active={activeActBtns}
+          actionDelete={{
+            title: 'Cuidado',
+            subtitle: 'Tem certeza que deseja excluir o componente?',
+            data: {
+              id
+            }
+          }}
+          actionConfig={{
+            typeContent: 'config-dht',
+            onSave: handleSettingUpdate,
+            data: {
+              scaleTypeDefault: scaleType
+            }
+          }}
+        />
+
+
       </div>
 
       <div
@@ -206,37 +224,6 @@ const Dht = memo(function Dht({
 
       </div>
 
-      <div
-        className={
-          `${actionButtonsContainer} ${actionButtonsContainerLeft}`
-        }
-      >
-
-        <ActionButton
-          onClick={() => enableModal({
-            typeContent: 'confirmation',
-            title: 'Cuidado',
-            subtitle: 'Tem certeza que deseja excluir o componente?',
-            handleConfirm: () => {
-              deleteDeviceConnections(id);
-              deleteDevice(id);
-              disableModal('confirmation');
-            }
-          })}
-        >
-          <Trash />
-        </ActionButton>
-
-        <ActionButton
-          onClick={() => enableModal({
-            typeContent: 'config-dht',
-            handleSaveConfig: handleSettingUpdate,
-            scaleTypeDefault: scaleType
-          })}
-        >
-          <Gear />
-        </ActionButton>
-      </div>
     </>
   );
 });
@@ -244,6 +231,8 @@ const Dht = memo(function Dht({
 Dht.propTypes = {
   device: P.object.isRequired,
   dragRef: P.func.isRequired,
+  activeActBtns: P.bool.isRequired,
+  onChangeActBtns: P.func.isRequired
 }
 
 export default Dht;

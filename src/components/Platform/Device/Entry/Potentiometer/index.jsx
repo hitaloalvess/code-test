@@ -1,31 +1,27 @@
 import { memo, useEffect, useState } from 'react';
 import P from 'prop-types';
-import { Trash } from '@phosphor-icons/react';
 
 import { useDevices } from '@/hooks/useDevices';
 import { useFlow } from '@/hooks/useFlow';
-import { useModal } from '@/hooks/useModal';
-import ActionButton from '@/components/Platform/ActionButton';
 import Connector from '@/components/Platform/Connector';
+import ActionButtons from '@/components/Platform/ActionButtons';
 
 import {
   deviceBody,
   inputRangeDeviceContainer,
   inputValue,
-  actionButtonsContainer,
-  actionButtonsContainerLeft,
   connectorsContainer,
   connectorsContainerExit
 } from '../../styles.module.css';
 
 const Potentiometer = memo(function Potentiometer({
-  dragRef, device
+  dragRef, device, activeActBtns, onChangeActBtns
 }) {
 
   const { id, imgSrc, name, posX, posY } = device;
-  const { deleteDevice, updateDeviceValue } = useDevices();
-  const { executeFlow, deleteDeviceConnections, updateDeviceValueInFlow } = useFlow();
-  const { enableModal, disableModal } = useModal();
+  const { updateDeviceValue } = useDevices();
+  const { executeFlow, updateDeviceValueInFlow } = useFlow();
+
 
   const [deviceData, setDeviceData] = useState(device);
 
@@ -67,7 +63,7 @@ const Potentiometer = memo(function Potentiometer({
       connectors: {
         ...deviceData.connectors
       }
-    })
+    });
   }, [deviceData.connectors]);
 
   useEffect(() => {
@@ -84,8 +80,7 @@ const Potentiometer = memo(function Potentiometer({
   return (
 
     <>
-      <div className={inputRangeDeviceContainer}
-      >
+      <div className={inputRangeDeviceContainer}>
         <input
           type="range"
           min="0"
@@ -102,6 +97,8 @@ const Potentiometer = memo(function Potentiometer({
       <div
         className={deviceBody}
         ref={dragRef}
+        onMouseEnter={() => onChangeActBtns(true)}
+        onMouseLeave={() => onChangeActBtns(false)}
       >
 
         <img
@@ -109,6 +106,19 @@ const Potentiometer = memo(function Potentiometer({
           alt={`Device ${name}`}
           loading='lazy'
         />
+
+        <ActionButtons
+          orientation='left'
+          active={activeActBtns}
+          actionDelete={{
+            title: 'Cuidado',
+            subtitle: 'Tem certeza que deseja excluir o componente?',
+            data: {
+              id
+            }
+          }}
+        />
+
       </div>
 
       <div
@@ -130,27 +140,6 @@ const Potentiometer = memo(function Potentiometer({
         }
       </div>
 
-      <div
-        className={
-          `${actionButtonsContainer} ${actionButtonsContainerLeft}`
-        }
-      >
-        <ActionButton
-          onClick={() => enableModal({
-            typeContent: 'confirmation',
-            title: 'Cuidado',
-            subtitle: 'Tem certeza que deseja excluir o componente?',
-            handleConfirm: () => {
-              deleteDeviceConnections(id);
-              deleteDevice(id);
-              disableModal('confirmation');
-            }
-          })}
-        >
-          <Trash />
-        </ActionButton>
-
-      </div>
     </>
   );
 });
@@ -158,6 +147,8 @@ const Potentiometer = memo(function Potentiometer({
 Potentiometer.propTypes = {
   dragRef: P.func.isRequired,
   device: P.object.isRequired,
+  activeActBtns: P.bool.isRequired,
+  onChangeActBtns: P.func.isRequired
 }
 
 export default Potentiometer;

@@ -1,4 +1,4 @@
-import { memo, useRef } from 'react';
+import { memo, useRef, useState } from 'react';
 import P from 'prop-types';
 import { useDrag } from 'react-dnd';
 
@@ -43,6 +43,8 @@ const Device = memo(function Device({ device: { ...device } }) {
 
   const deviceRef = useRef(null);
 
+  const [activeActBtns, setActiveActBtns] = useState(false);
+
   // eslint-disable-next-line no-empty-pattern
   const [{ }, drag] = useDrag(() => {
     return {
@@ -54,13 +56,6 @@ const Device = memo(function Device({ device: { ...device } }) {
     }
   }, []);
 
-  // const updateValue = (callbackUpdate, deviceId, value) => {
-  //   if (callbackUpdate) callbackUpdate(value);
-
-  //   updateDeviceValue(deviceId, {
-  //     value
-  //   });
-  // }
 
   const devices = {
     dht: Dht,
@@ -94,6 +89,9 @@ const Device = memo(function Device({ device: { ...device } }) {
     return;
   }
 
+
+  const handleActBtns = (value) => setActiveActBtns(value);
+
   return (
     <>
       <div
@@ -108,6 +106,8 @@ const Device = memo(function Device({ device: { ...device } }) {
             <CurrentDevice
               device={device}
               dragRef={drag}
+              activeActBtns={activeActBtns}
+              onChangeActBtns={handleActBtns}
             // updateValue={updateValue}
             />
           }

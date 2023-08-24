@@ -311,7 +311,15 @@ const reducer = (state, action) => {
             }
           }
 
-          //ARRUMAR PARA CASO FOR UM DEVICETO
+          if (conn.deviceTo.connector.id === connectorId) {
+            return {
+              ...conn,
+              deviceTo: {
+                ...conn.deviceTo,
+                value: newValue
+              }
+            }
+          }
 
           return conn;
         });
