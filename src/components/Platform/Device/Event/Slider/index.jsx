@@ -8,8 +8,8 @@ import { useModal } from '@/hooks/useModal';
 import { useFlow } from '@/hooks/useFlow';
 import { useDevices } from '@/hooks/useDevices';
 import { findFlowsByDeviceId } from '@/utils/flow-functions';
-import ConnectorsConnector from '@/components/Platform/Connectors/ConnectorsConnector';
-import ActionButton from '@/components/Platform/ActionButtons/ActionButton';
+import ConnectorsConnector from '@/components/Platform/Device/SharedDevice/Connectors/ConnectorsConnector';
+import ActionButton from '@/components/Platform/Device/SharedDevice/ActionButtons/ActionButton';
 
 import {
   deviceBody,

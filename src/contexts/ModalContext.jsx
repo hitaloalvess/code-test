@@ -1,20 +1,20 @@
 import { createContext, useState } from "react"
-import ModalContainer from "@/components/shared/Modal";
+import ModalContainer from "@/components/SharedComponents/Modal";
 import P from 'prop-types';
 
-import ConfigLedModal from '@/components/shared/Modal/ConfigLedModal';
-import ConfigDelayModal from '@/components/shared/Modal/ConfigDelayModal';
-import ConfigBuzzerModal from '@/components/shared/Modal/ConfigBuzzerModal';
-import ConfigSliderModal from '@/components/shared/Modal/ConfigSliderModal';
-import ConfirmationModal from '@/components/shared/Modal/ConfirmationModal';
-import ConfigDhtModal from '@/components/shared/Modal/ConfigDhtModal';
-import ConfigIfModal from '@/components/shared/Modal/ConfigIfModal';
-import ConfigPickColorModal from '@/components/shared/Modal/ConfigPickColorModal';
-import UpdatePasswordModal from '@/components/shared/Modal/UpdatePasswordModal';
-import SearchFormModal from '@/components/shared/Modal/SearchFormModal';
-import FaqModal from '@/components/shared/Modal/FaqModal';
-import TermsOfUseModal from '@/components/shared/Modal/TermsOfUseModal';
-import InitialIntroPlatformModal from '@/components/shared/Modal/InitialIntroPlatformModal';
+import ConfigLedModal from '@/components/SharedComponents/Modal/ConfigLedModal';
+import ConfigDelayModal from '@/components/SharedComponents/Modal/ConfigDelayModal';
+import ConfigBuzzerModal from '@/components/SharedComponents/Modal/ConfigBuzzerModal';
+import ConfigSliderModal from '@/components/SharedComponents/Modal/ConfigSliderModal';
+import ConfirmationModal from '@/components/SharedComponents/Modal/ConfirmationModal';
+import ConfigDhtModal from '@/components/SharedComponents/Modal/ConfigDhtModal';
+import ConfigIfModal from '@/components/SharedComponents/Modal/ConfigIfModal';
+import ConfigPickColorModal from '@/components/SharedComponents/Modal/ConfigPickColorModal';
+import UpdatePasswordModal from '@/components/SharedComponents/Modal/UpdatePasswordModal';
+import SearchFormModal from '@/components/SharedComponents/Modal/SearchFormModal';
+import FaqModal from '@/components/SharedComponents/Modal/FaqModal';
+import TermsOfUseModal from '@/components/SharedComponents/Modal/TermsOfUseModal';
+import InitialIntroPlatformModal from '@/components/SharedComponents/Modal/InitialIntroPlatformModal';
 import { useMemo } from "react";
 
 export const ModalContext = createContext();

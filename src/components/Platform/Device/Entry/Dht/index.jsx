@@ -5,8 +5,8 @@ import { Thermometer, Drop } from '@phosphor-icons/react';
 import { formulasForTransformation, transformHumidityValue } from '@/utils/devices-functions';
 import { useDevices } from '@/hooks/useDevices';
 import { useFlow } from '@/hooks/useFlow';
-import ActionButtons from '@/components/Platform/ActionButtons';
-import Connectors from '@/components/Platform/Connectors';
+import ActionButtons from '@/components/Platform/Device/SharedDevice/ActionButtons';
+import Connectors from '@/components/Platform/Device/SharedDevice/Connectors';
 
 import {
   deviceBody,

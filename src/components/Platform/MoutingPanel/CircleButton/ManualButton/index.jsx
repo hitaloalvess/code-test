@@ -1,6 +1,6 @@
 import imgManualButton from '@/assets/images/buttons/manual-button.svg';
 
-import CircleButton from '@/components/Platform/CircleButton';
+import CircleButton from '@/components/Platform/MoutingPanel/CircleButton';
 
 const ManualButton = () => {
 

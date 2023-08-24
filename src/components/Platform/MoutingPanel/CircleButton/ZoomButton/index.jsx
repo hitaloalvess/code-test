@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import CircleButton from '@/components/Platform/CircleButton';
+import CircleButton from '@/components/Platform/MoutingPanel/CircleButton';
 import imgZoomButton from '@/assets/images/buttons/zoom-button.svg';
 
 import { zoomContent } from './styles.module.css';

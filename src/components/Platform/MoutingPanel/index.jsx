@@ -4,17 +4,17 @@ import { useDrop } from 'react-dnd';
 
 import { useDevices } from '@/hooks/useDevices';
 import { useFlow } from '@/hooks/useFlow';
+import { useContextAuth } from '@/hooks/useAuth';
 
 import Device from '@/components/Platform/Device/index';
 import BackgroundGrade from './BackgroundGrade';
 import LinesContainer from './LinesContainer';
-import ManualButton from './ManualButton';
-import ZoomButton from './ZoomButton';
-import FaqButton from './FaqButton';
+import ManualButton from './CircleButton/ManualButton';
+import ZoomButton from './CircleButton/ZoomButton';
+import FaqButton from './CircleButton/FaqButton';
+import SearchFormButton from './CircleButton/SearchFormButton';
 
 import { moutingPanelContainer, buttonsContainer } from './styles.module.css';
-import SearchFormButton from './SearchFormButton';
-import { useContextAuth } from '@/hooks/useAuth';
 
 
 const MoutingPanel = forwardRef(function MoutingPanel(props, ref) {

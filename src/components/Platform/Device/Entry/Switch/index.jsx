@@ -6,8 +6,8 @@ import { findFlowsByDeviceId } from '@/utils/flow-functions';
 import { useDevices } from '@/hooks/useDevices';
 import { useFlow } from '@/hooks/useFlow';
 import { useModal } from '@/hooks/useModal';
-import ActionButton from '@/components/Platform/ActionButtons/ActionButton';
-import ConnectorsConnector from '@/components/Platform/Connectors/ConnectorsConnector';
+import ActionButton from '@/components/Platform/Device/SharedDevice/ActionButtons/ActionButton';
+import ConnectorsConnector from '@/components/Platform/Device/SharedDevice/Connectors/ConnectorsConnector';
 
 import {
   deviceBody,

@@ -5,8 +5,8 @@ import P from 'prop-types';
 import { findFlowsByDeviceId } from '@/utils/flow-functions';
 import { useDevices } from '@/hooks/useDevices';
 import { useFlow } from '@/hooks/useFlow';
-import ActionButtons from '@/components/Platform/ActionButtons';
-import Connectors from '@/components/Platform/Connectors';
+import ActionButtons from '@/components/Platform/Device/SharedDevice/ActionButtons';
+import Connectors from '@/components/Platform/Device/SharedDevice/Connectors';
 
 
 import { deviceBody } from '../../styles.module.css';

@@ -1,5 +1,5 @@
 import imgSearchForm from '@/assets/images/buttons/search-form-button.svg';
-import CircleButton from '@/components/Platform/CircleButton';
+import CircleButton from '@/components/Platform/MoutingPanel/CircleButton';
 
 const SearchFormButton = () => {
   return <a

@@ -5,9 +5,9 @@ import { Trash, Gear } from '@phosphor-icons/react';
 import { useDevices } from '@/hooks/useDevices';
 import { useFlow } from '@/hooks/useFlow';
 import { useModal } from '@/hooks/useModal';
-import ActionButton from '@/components/Platform/ActionButtons/ActionButton';
-import ConnectorsConnector from '@/components/Platform/Connectors/ConnectorsConnector';
-import ConfigInfraredModal from '@/components/shared/Modal/ConfigInfraredModal';
+import ActionButton from '@/components/Platform/Device/SharedDevice/ActionButtons/ActionButton';
+import ConnectorsConnector from '@/components/Platform/Device/SharedDevice/Connectors/ConnectorsConnector';
+import ConfigInfraredModal from '@/components/SharedComponents/Modal/ConfigInfraredModal';
 
 import {
   deviceBody,

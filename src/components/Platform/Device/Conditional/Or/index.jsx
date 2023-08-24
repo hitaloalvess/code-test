@@ -5,8 +5,8 @@ import { Trash } from '@phosphor-icons/react';
 import { useModal } from '@/hooks/useModal';
 import { useFlow } from '@/hooks/useFlow';
 import { useDevices } from '@/hooks/useDevices';
-import ConnectorsConnector from '@/components/Platform/Connectors/ConnectorsConnector';
-import ActionButton from '@/components/Platform/ActionButtons/ActionButton';
+import ConnectorsConnector from '@/components/Platform/Device/SharedDevice/Connectors/ConnectorsConnector';
+import ActionButton from '@/components/Platform/Device/SharedDevice/ActionButtons/ActionButton';
 import { findFlowsByDeviceId } from '@/utils/flow-functions';
 
 import {

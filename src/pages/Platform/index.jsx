@@ -7,7 +7,7 @@ import { isMobile } from 'react-device-detect';
 import { DevicesProvider } from '@/contexts/DevicesContext';
 import { FlowProvider } from '@/contexts/FlowContext';
 import { useModal } from '@/hooks/useModal';
-import Header from '@/components/shared/Header';
+import Header from '@/components/SharedComponents/Header';
 import Sidebar from '@/components/Platform/Sidebar';
 import MoutingPanel from '@/components/Platform/MoutingPanel';
 import CustomDragLayer from '@/components/Platform/CustomDragLayer';
