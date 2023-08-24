@@ -5,7 +5,7 @@ import { useDrag } from 'react-dnd';
 import P from 'prop-types';
 import { isMobile } from 'react-device-detect';
 
-import { deviceItemContent, deviceItemContainer } from './styles.module.css';
+import { deviceItemContent, deviceItemContainer, deviceItemLabel } from './styles.module.css';
 
 const PRESSED_BREAK = 0.09; //90 ms
 const MenuDevice = ({ device }) => {
@@ -60,7 +60,7 @@ const MenuDevice = ({ device }) => {
           loading='lazy'
         />
       </div>
-      <p>{device.name}</p>
+      <p className={deviceItemLabel}>{device.label}</p>
     </li>
   );
 };
@@ -69,6 +69,7 @@ MenuDevice.propTypes = {
   device: P.shape({
     id: P.number.isRequired,
     name: P.string.isRequired,
+    label: P.string.isRequired,
     imgSrc: P.string.isRequired,
     type: P.string.isRequired,
     category: P.string.isRequired

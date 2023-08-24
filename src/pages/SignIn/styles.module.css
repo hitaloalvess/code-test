@@ -55,6 +55,14 @@
   color: var(--blue);
 }
 
+/* (REMOVE) PROVISIONAL -- TESTS IN LEME */
+form input[type="text"]:first-of-type {
+  text-transform: initial;
+}
+
+form input[type="text"]:first-of-type::placeholder {
+  text-transform: uppercase;
+}
 
 @media (max-width: 1024px) {
   .container {

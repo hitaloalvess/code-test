@@ -83,7 +83,7 @@ const SignIn = () => {
                     >
                       <>
                         <Input.Icon
-                          icon={<Envelope fontSize={20} color='var(--gray-100)' />}
+                          icon={<Envelope fontSize={20} />}
                         />
                         <Input.TextType
                           placeholder={"Email"}
@@ -97,7 +97,7 @@ const SignIn = () => {
                     <Input.Root
                       error={errors.password}
                     >
-                      <Input.Icon icon={<Lock fontSize={20} className='text-gray-100' />} />
+                      <Input.Icon icon={<Lock fontSize={20} />} />
                       <Input.PasswordType
                         placeholder={"Senha"}
                         {...register('password')}

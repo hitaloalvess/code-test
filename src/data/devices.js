@@ -35,6 +35,7 @@ export const mockDevices = {
       id: 10,
       imgSrc: deviceDht,
       name: 'dht',
+      label: 'Sensor de temperatura',
       type: 'virtual',
       category: 'entry',
       value: {
@@ -70,6 +71,7 @@ export const mockDevices = {
       id: 11,
       imgSrc: deviceInfrared,
       name: 'infrared',
+      label: 'Sensor infravermelho',
       type: 'virtual',
       category: 'entry',
       value: 'FF12F3'
@@ -78,6 +80,7 @@ export const mockDevices = {
       id: 12,
       imgSrc: deviceLdr,
       name: 'ldr',
+      label: 'Sensor de luz',
       type: 'virtual',
       category: 'entry',
       value: {
@@ -89,6 +92,7 @@ export const mockDevices = {
       id: 13,
       imgSrc: devicePotentiometer,
       name: 'potentiometer',
+      label: 'Potênciometro',
       type: 'virtual',
       category: 'entry',
       value: {
@@ -113,6 +117,7 @@ export const mockDevices = {
       id: 14,
       imgSrc: devicePushButton,
       name: 'pushButton',
+      label: 'Botão',
       type: 'virtual',
       category: 'entry',
       value: false
@@ -121,6 +126,7 @@ export const mockDevices = {
       id: 15,
       imgSrc: deviceSwitch,
       name: 'switch',
+      label: 'Switch',
       type: 'virtual',
       category: 'entry',
       value: false
@@ -129,6 +135,7 @@ export const mockDevices = {
     //   id: 16,
     //   imgSrc: deviceRainDetector,
     //   name: 'rainDetector',
+    // label: 'Sensor de radiação',
     //   type: 'virtual',
     //   category: 'entry',
     //   value: {
@@ -140,6 +147,7 @@ export const mockDevices = {
     //   id: 17,
     //   imgSrc: deviceSoilMoisture,
     //   name: 'soilMoisture',
+    // label: 'Sensor de humidade do solo',
     //   type: 'virtual',
     //   category: 'entry',
     //   value: {
@@ -153,6 +161,7 @@ export const mockDevices = {
       id: 20,
       imgSrc: deviceLed,
       name: 'led',
+      label: 'Led',
       type: 'virtual',
       category: 'exit',
       value: {
@@ -180,6 +189,7 @@ export const mockDevices = {
       id: 21,
       imgSrc: deviceLedMono,
       name: 'ledMono',
+      label: 'Led mono',
       type: 'virtual',
       category: 'exit',
       value: {
@@ -195,6 +205,7 @@ export const mockDevices = {
       id: 22,
       imgSrc: deviceLaser,
       name: 'laser',
+      label: 'Laser',
       type: 'virtual',
       category: 'exit',
       value: {
@@ -210,6 +221,7 @@ export const mockDevices = {
       id: 23,
       imgSrc: deviceShakeMotor,
       name: 'shakeMotor',
+      label: 'Shake motor',
       type: 'virtual',
       category: 'exit',
       value: {
@@ -223,6 +235,7 @@ export const mockDevices = {
       id: 24,
       imgSrc: deviceBuzzer,
       name: 'buzzer',
+      label: 'Buzzer',
       type: 'virtual',
       category: 'exit',
       value: {
@@ -238,6 +251,7 @@ export const mockDevices = {
     //   id: 25,
     //   imgSrc: deviceBargraph,
     //   name: 'bargraph',
+    //   label: 'Bargraph',
     //   type: 'virtual',
     //   category: 'exit',
     //   value: {
@@ -255,6 +269,7 @@ export const mockDevices = {
       id: 30,
       imgSrc: devicePickColor,
       name: 'pickColor',
+      label: 'Pick color',
       type: 'virtual',
       category: 'event',
       value: {
@@ -267,6 +282,7 @@ export const mockDevices = {
       id: 31,
       imgSrc: deviceToggle,
       name: 'toggle',
+      label: 'Toggle',
       type: 'virtual',
       category: 'event',
       value: false
@@ -275,6 +291,7 @@ export const mockDevices = {
       id: 32,
       imgSrc: deviceDelay,
       name: 'delay',
+      label: 'Delay',
       type: 'virtual',
       category: 'event',
       value: {
@@ -286,6 +303,7 @@ export const mockDevices = {
       id: 33,
       imgSrc: deviceSlider,
       name: 'slider',
+      label: 'Slider',
       type: 'virtual',
       category: 'event',
       value: {
@@ -299,6 +317,7 @@ export const mockDevices = {
       id: 40,
       imgSrc: deviceAnd,
       name: 'and',
+      label: 'And',
       type: 'virtual',
       category: 'conditional',
       value: false
@@ -307,6 +326,7 @@ export const mockDevices = {
       id: 41,
       imgSrc: deviceOr,
       name: 'or',
+      label: 'Or',
       type: 'virtual',
       category: 'conditional',
       value: false
@@ -315,6 +335,7 @@ export const mockDevices = {
       id: 42,
       imgSrc: deviceNot,
       name: 'not',
+      label: 'Not',
       type: 'virtual',
       category: 'conditional',
       value: false
@@ -323,6 +344,7 @@ export const mockDevices = {
       id: 43,
       imgSrc: deviceIf,
       name: 'if',
+      label: 'If',
       type: 'virtual',
       category: 'conditional',
       value: false
@@ -331,6 +353,7 @@ export const mockDevices = {
       id: 44,
       imgSrc: deviceCounter,
       name: 'counter',
+      label: 'Contador',
       type: 'virtual',
       category: 'conditional',
       value: {

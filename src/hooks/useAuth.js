@@ -5,13 +5,13 @@ import { useNavigate } from 'react-router-dom';
 import { api } from '@/services/api';
 import { toast } from "react-toastify";
 import { AuthContext } from '@/contexts/AuthContext';
-import { useModal } from '@/hooks/useModal';
+// import { useModal } from '@/hooks/useModal';
 
 
-const TIME_ACTIVATE_SEARCH_FORM = 7 * 60 * 1000; //7m
+// const TIME_ACTIVATE_SEARCH_FORM = 7 * 60 * 1000; //7m
 export const useAuth = () => {
   const navigate = useNavigate();
-  const { enableModal, disableModal } = useModal();
+  // const { enableModal, disableModal } = useModal();
 
   const isFirstRender = useRef(true);
   const idSearchFormTimeout = useRef(null);
@@ -22,7 +22,7 @@ export const useAuth = () => {
     return JSON.parse(user);
   });
   const [isLoading, setIsLoading] = useState(false);
-  const [searchFormHasEnabled, setSearchFormHasEnabled] = useState(false);
+  const [searchFormHasEnabled /*, setSearchFormHasEnabled*/] = useState(true);
 
   const isAuthenticated = useMemo(() => !!user, [user]);
 
@@ -65,16 +65,16 @@ export const useAuth = () => {
     return navigate('/');
   }
 
-  const handleSearchForm = () => {
-    enableModal({
-      typeContent: 'search-form',
-      handleConfirm: () => {
-        disableModal('search-form');
-      }
-    });
+  // const handleSearchForm = () => {
+  //   enableModal({
+  //     typeContent: 'search-form',
+  //     handleConfirm: () => {
+  //       disableModal('search-form');
+  //     }
+  //   });
 
-    setSearchFormHasEnabled(true);
-  }
+  //   setSearchFormHasEnabled(true);
+  // }
 
   useEffect(() => {
     if (isFirstRender.current) {
@@ -87,7 +87,7 @@ export const useAuth = () => {
       const token = localStorage.getItem('@Microdigo:token');
       api.defaults.headers.common.Authorization = `Bearer ${JSON.parse(token)}`;
 
-      idSearchFormTimeout.current = setTimeout(handleSearchForm, TIME_ACTIVATE_SEARCH_FORM);
+      // idSearchFormTimeout.current = setTimeout(handleSearchForm, TIME_ACTIVATE_SEARCH_FORM);
 
     }
   }, [isAuthenticated]);
