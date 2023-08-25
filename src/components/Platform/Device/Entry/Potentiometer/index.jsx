@@ -6,13 +6,11 @@ import { useFlow } from '@/hooks/useFlow';
 import ActionButtons from '@/components/Platform/Device/SharedDevice/ActionButtons';
 import Connectors from '@/components/Platform/Device/SharedDevice/Connectors';
 import DeviceInputs from '../../SharedDevice/DeviceInputs';
-
-import {
-  deviceBody,
-} from '../../styles.module.css';
+import DeviceBody from '../../SharedDevice/DeviceBody';
 
 const MIN_RESISTANCE = 0;
 const MAX_RESISTANCE = 1023;
+
 const Potentiometer = memo(function Potentiometer({
   dragRef, device, activeActBtns, onChangeActBtns
 }) {
@@ -99,18 +97,14 @@ const Potentiometer = memo(function Potentiometer({
         ]}
       />
 
-      <div
-        className={deviceBody}
+
+      <DeviceBody
+        name={name}
+        imgSrc={imgSrc}
         ref={dragRef}
-        onMouseEnter={() => onChangeActBtns(true)}
-        onMouseLeave={() => onChangeActBtns(false)}
+        onChangeActBtns={onChangeActBtns}
       >
 
-        <img
-          src={imgSrc}
-          alt={`Device ${name}`}
-          loading='lazy'
-        />
 
         <ActionButtons
           orientation='left'
@@ -124,7 +118,8 @@ const Potentiometer = memo(function Potentiometer({
           }}
         />
 
-      </div>
+
+      </DeviceBody>
 
       <Connectors
         type='exits'

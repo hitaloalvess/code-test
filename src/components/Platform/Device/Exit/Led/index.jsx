@@ -7,9 +7,8 @@ import { useDevices } from '@/hooks/useDevices';
 import { useFlow } from '@/hooks/useFlow';
 import ActionButtons from '@/components/Platform/Device/SharedDevice/ActionButtons';
 import Connectors from '@/components/Platform/Device/SharedDevice/Connectors';
+import DeviceBody from '../../SharedDevice/DeviceBody';
 
-
-import { deviceBody } from '../../styles.module.css';
 
 import {
   ledLight,
@@ -26,9 +25,7 @@ const Led = memo(function Led({
   const { flows, updateDeviceValueInFlow } = useFlow();
 
   const isFirstRender = useRef(true);
-
   const [deviceData, setDeviceData] = useState(device);
-
   const [lightUpdateData, setLightUpdateData] = useState(null);
 
 
@@ -153,13 +150,14 @@ const Led = memo(function Led({
 
   return (
     <>
-      <div
-        className={deviceBody}
-        ref={dragRef}
-        onMouseEnter={() => onChangeActBtns(true)}
-        onMouseLeave={() => onChangeActBtns(false)}
 
+      <DeviceBody
+        name={name}
+        imgSrc={imgSrc}
+        ref={dragRef}
+        onChangeActBtns={onChangeActBtns}
       >
+
         <div className={ledLight}>
           {deviceData.value.active && (
             <svg className={ledLightElement} style={{ fill: `${deviceData.value.color}`, fillOpacity: `${deviceData.value.opacity}` }} viewBox="0 0 51 74"
@@ -172,14 +170,6 @@ const Led = memo(function Led({
             </svg>
           )}
         </div>
-
-
-        <img
-          src={imgSrc}
-          alt={`Device ${name}`}
-          loading='lazy'
-        />
-
 
         <ActionButtons
           orientation='right'
@@ -200,8 +190,8 @@ const Led = memo(function Led({
             }
           }}
         />
+      </DeviceBody>
 
-      </div>
 
       <Connectors
         type='entrys'
