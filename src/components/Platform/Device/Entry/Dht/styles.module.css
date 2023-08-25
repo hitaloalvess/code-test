@@ -1,14 +1,3 @@
-.inputsContainer {
-  position: absolute;
-  top: -64px;
-  left: 2px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-}
-
 .thermometerIcon,
 .dropIcon {
   font-size: 20px;
@@ -34,13 +23,6 @@
   transform: translateX(0);
   width: 85px !important;
   height: 6px;
-}
-
-.showValue {
-  position: relative;
-  display: flex;
-  align-items: center;
-  gap: 4px;
 }
 
 .inputContainerDht {

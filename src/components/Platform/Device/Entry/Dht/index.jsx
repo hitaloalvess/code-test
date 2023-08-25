@@ -7,19 +7,14 @@ import { useDevices } from '@/hooks/useDevices';
 import { useFlow } from '@/hooks/useFlow';
 import ActionButtons from '@/components/Platform/Device/SharedDevice/ActionButtons';
 import Connectors from '@/components/Platform/Device/SharedDevice/Connectors';
+import DeviceInputs from '../../SharedDevice/DeviceInputs';
+
+import { deviceBody } from '../../styles.module.css';
 
 import {
-  deviceBody,
-  inputRangeDeviceContainer,
-  inputValue
-} from '../../styles.module.css';
-
-import {
-  inputsContainer,
   thermometerIcon,
   dropIcon,
   inputDht,
-  showValue,
   inputContainerDht
 } from './styles.module.css';
 
@@ -130,53 +125,44 @@ const Dht = memo(function Dht({
   return (
 
     <>
-      <div className={inputsContainer}>
-        <div className={`${inputRangeDeviceContainer} ${inputContainerDht}`}>
-          <input
-            className={inputDht}
-            type="range"
-            min={MIN_TEMPERATURE}
-            max={MAX_TEMPERATURE}
-            step="0.1"
-            defaultValue={deviceData.value.temperature.current}
-            onInput={(event) => handleOnInput(event, 'temperature')}
-          />
 
-          <div className={showValue}>
-            <p
-              className={inputValue}
-            >
-              {transformationFormula(deviceData.value.temperature.current)}
-            </p>
+      <DeviceInputs
+        inputs={[
+          {
+            data: {
+              type: 'range',
+              minValue: MIN_TEMPERATURE,
+              maxValue: MAX_TEMPERATURE,
+              step: 0.1,
+              defaultValue: deviceData.value.temperature.current,
+              onInput: (event) => handleOnInput(event, 'temperature'),
+              onTransformValue: () => transformationFormula(deviceData.value.temperature.current)
+            },
+            className: {
+              container: [inputContainerDht],
+              input: [inputDht]
+            },
+            children: <Thermometer className={thermometerIcon} />
+          },
+          {
+            data: {
+              type: 'range',
+              minValue: MIN_HUMIDITY,
+              maxValue: MAX_HUMIDITY,
+              step: 1,
+              defaultValue: deviceData.value.humidity.current,
+              onInput: (event) => handleOnInput(event, 'humidity'),
+              onTransformValue: () => transformHumidityValue(deviceData.value.humidity.current, MAX_HUMIDITY)
+            },
+            className: {
+              container: [inputContainerDht],
+              input: [inputDht]
+            },
+            children: <Drop className={dropIcon} />
 
-            <Thermometer className={thermometerIcon} />
-
-          </div>
-        </div>
-
-        <div className={`${inputRangeDeviceContainer} ${inputContainerDht}`} >
-          <input
-            className={inputDht}
-            type="range"
-            min={MIN_HUMIDITY}
-            max={MAX_HUMIDITY}
-            step="1"
-            defaultValue={deviceData.value.humidity.current}
-            onInput={(event) => handleOnInput(event, 'humidity')}
-          />
-
-          <div className={showValue}>
-            <p
-              className={inputValue}
-            >
-              {transformHumidityValue(deviceData.value.humidity.current, MAX_HUMIDITY)}
-            </p>
-
-            <Drop className={dropIcon} />
-          </div>
-        </div>
-
-      </div>
+          }
+        ]}
+      />
 
       <div
         className={deviceBody}

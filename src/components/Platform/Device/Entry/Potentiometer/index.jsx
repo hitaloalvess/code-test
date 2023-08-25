@@ -5,13 +5,14 @@ import { useDevices } from '@/hooks/useDevices';
 import { useFlow } from '@/hooks/useFlow';
 import ActionButtons from '@/components/Platform/Device/SharedDevice/ActionButtons';
 import Connectors from '@/components/Platform/Device/SharedDevice/Connectors';
+import DeviceInputs from '../../SharedDevice/DeviceInputs';
 
 import {
   deviceBody,
-  inputRangeDeviceContainer,
-  inputValue,
 } from '../../styles.module.css';
 
+const MIN_RESISTANCE = 0;
+const MAX_RESISTANCE = 1023;
 const Potentiometer = memo(function Potentiometer({
   dragRef, device, activeActBtns, onChangeActBtns
 }) {
@@ -83,19 +84,20 @@ const Potentiometer = memo(function Potentiometer({
   return (
 
     <>
-      <div className={inputRangeDeviceContainer}>
-        <input
-          type="range"
-          min="0"
-          max="1023"
-          step="1"
-          defaultValue={deviceData.value.resistance.current}
-          onInput={(event) => handleOnInput(event, 'resistance')}
-        />
-        <p
-          className={inputValue}
-        >{deviceData.value.resistance.current}</p>
-      </div>
+      <DeviceInputs
+        inputs={[
+          {
+            data: {
+              type: 'range',
+              minValue: MIN_RESISTANCE,
+              maxValue: MAX_RESISTANCE,
+              step: 1,
+              defaultValue: deviceData.value.resistance.current,
+              onInput: (event) => handleOnInput(event, 'resistance'),
+            },
+          }
+        ]}
+      />
 
       <div
         className={deviceBody}
