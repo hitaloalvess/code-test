@@ -1,51 +1,23 @@
-import { memo, useRef, useState } from 'react';
+/* eslint-disable no-empty-pattern */
+
+import { memo, useCallback, useEffect, useRef, useState } from 'react';
 import P from 'prop-types';
 import { useDrag } from 'react-dnd';
 
 import { useDevices } from '@/hooks/useDevices.js';
+import DeviceFactory from './SharedDevice/DeviceFactory';
 
-import Dht from './Entry/Dht';
-import Ldr from './Entry/Ldr';
-import Potentiometer from './Entry/Potentiometer';
-import Switch from './Entry/Switch';
-import PushButton from './Entry/PushButton';
-import Infrared from './Entry/Infrared';
-import SoilMoisture from './Entry/SoilMoisture';
-import RainDetector from './Entry/RainDetector';
-
-import Led from './Exit/Led';
-import LedMono from './Exit/LedMono';
-import Laser from './Exit/Laser';
-import ShakeMotor from './Exit/ShakeMotor';
-import Buzzer from './Exit/Buzzer';
-import Bargraph from './Exit/Bargraph';
-
-import And from './Conditional/And';
-import Or from './Conditional/Or';
-import Not from './Conditional/Not';
-import If from './Conditional/If';
-import Counter from './Conditional/counter';
-
-import Toggle from './Event/Toggle';
-import Delay from './Event/Delay';
-import Slider from './Event/Slider';
-import PickColor from './Event/PickColor';
-
-import {
-  deviceContainer,
-  deviceContent,
-} from './styles.module.css';
-
+import * as D from './styles.module.css';
 
 
 const Device = memo(function Device({ device: { ...device } }) {
-  const { deviceScale } = useDevices();
+  const { deviceScale, updateDeviceValue } = useDevices();
 
   const deviceRef = useRef(null);
 
+  const [data, setData] = useState(device);
   const [activeActBtns, setActiveActBtns] = useState(false);
 
-  // eslint-disable-next-line no-empty-pattern
   const [{ }, drag] = useDrag(() => {
     return {
       type: 'device',
@@ -56,59 +28,48 @@ const Device = memo(function Device({ device: { ...device } }) {
     }
   }, []);
 
+  const handleActBtns = useCallback((value) => {
+    setActiveActBtns(value)
+  }, []);
 
-  const devices = {
-    dht: Dht,
-    ldr: Ldr,
-    potentiometer: Potentiometer,
-    pushButton: PushButton,
-    switch: Switch,
-    infrared: Infrared,
-    led: Led,
-    ledMono: LedMono,
-    laser: Laser,
-    shakeMotor: ShakeMotor,
-    buzzer: Buzzer,
-    bargraph: Bargraph,
-    and: And,
-    or: Or,
-    not: Not,
-    if: If,
-    toggle: Toggle,
-    delay: Delay,
-    slider: Slider,
-    pickColor: PickColor,
-    counter: Counter,
-    soilMoisture: SoilMoisture,
-    rainDetector: RainDetector
-  }
-
-  const CurrentDevice = devices[device.name];
-
-  if (!CurrentDevice) {
-    return;
-  }
+  const handleSaveData = useCallback((keyValue, newValue) => {
+    setData(prev => {
+      return {
+        ...prev,
+        [`${keyValue}`]: {
+          ...prev[`${keyValue}`],
+          ...newValue
+        }
+      }
+    });
+  }, []);
 
 
-  const handleActBtns = (value) => setActiveActBtns(value);
+  useEffect(() => {
+    updateDeviceValue(data.id, {
+      connectors: {
+        ...data.connectors
+      }
+    })
+  }, [data.connectors]);
 
   return (
     <>
       <div
-        className={deviceContainer}
+        className={D.deviceContainer}
         style={{ left: `${device.posX}px`, top: `${device.posY}px`, transform: `scale(${deviceScale})` }}
         ref={deviceRef}
       >
         <div
-          className={deviceContent}
+          className={D.deviceContent}
         >
           {
-            <CurrentDevice
-              device={device}
+            <DeviceFactory
+              data={data}
               dragRef={drag}
               activeActBtns={activeActBtns}
               onChangeActBtns={handleActBtns}
-            // updateValue={updateValue}
+              onSaveData={handleSaveData}
             />
           }
         </div>

@@ -1,4 +1,4 @@
-import { memo, useEffect, useState } from 'react';
+import { memo, useEffect } from 'react';
 import P from 'prop-types';
 
 import { useDevices } from '@/hooks/useDevices';
@@ -12,72 +12,50 @@ const MIN_RESISTANCE = 0;
 const MAX_RESISTANCE = 1023;
 
 const Potentiometer = memo(function Potentiometer({
-  dragRef, device, activeActBtns, onChangeActBtns
+  dragRef, data, activeActBtns, onChangeActBtns, onSaveData
 }) {
 
-  const { id, imgSrc, name, posX, posY } = device;
+  const { id, imgSrc, name, posX, posY } = data;
   const { updateDeviceValue } = useDevices();
   const { executeFlow, updateDeviceValueInFlow } = useFlow();
-
-
-  const [deviceData, setDeviceData] = useState(device);
 
 
   const handleGetValue = () => {
     return {
       resistance: {
-        value: deviceData.value.current,
-        max: deviceData.value.max
+        value: data.value.current,
+        max: data.value.max
       }
     }
   };
+
 
   const handleOnInput = (event, name) => {
     const inputValue = Number(event.target.value);
 
     const value = {
-      ...deviceData.value,
+      ...data.value,
       [`${name}`]: {
-        ...deviceData.value[`${name}`],
+        ...data.value[`${name}`],
         current: inputValue,
       }
     }
 
-    setDeviceData({ ...deviceData, value });
-
+    onSaveData('value', value);
     updateDeviceValue(id, { value })
   }
 
-  const handleSaveConnData = (value) => {
-    setDeviceData(prev => {
-      return {
-        ...prev,
-        connectors: {
-          ...prev.connectors,
-          [`${value.name}`]: value
-        }
-      }
-    });
-  }
-
-  useEffect(() => {
-    updateDeviceValue(id, {
-      connectors: {
-        ...deviceData.connectors
-      }
-    });
-  }, [deviceData.connectors]);
 
   useEffect(() => {
     updateDeviceValue(id, {
       defaultBehavior: handleGetValue
     });
 
-    updateDeviceValueInFlow({ connectorId: deviceData.connectors.resistance.id, newValue: deviceData.value.resistance })
+    updateDeviceValueInFlow({ connectorId: data.connectors.resistance.id, newValue: data.value.resistance })
 
-    executeFlow({ connectorId: deviceData.connectors.resistance.id });
+    executeFlow({ connectorId: data.connectors.resistance.id });
 
-  }, [deviceData.value.resistance.current]);
+  }, [data.value.resistance.current]);
 
   return (
 
@@ -86,11 +64,10 @@ const Potentiometer = memo(function Potentiometer({
         inputs={[
           {
             data: {
-              type: 'range',
               minValue: MIN_RESISTANCE,
               maxValue: MAX_RESISTANCE,
               step: 1,
-              defaultValue: deviceData.value.resistance.current,
+              defaultValue: data.value.resistance.current,
               onInput: (event) => handleOnInput(event, 'resistance'),
             },
           }
@@ -125,13 +102,13 @@ const Potentiometer = memo(function Potentiometer({
         type='exits'
         exitConnectors={[
           {
-            data: deviceData.connectors.resistance,
+            data: data.connectors.resistance,
             device: {
               id,
-              containerRef: device.containerRef
+              containerRef: data.containerRef
             },
             updateConn: { posX, posY },
-            handleChangeData: handleSaveConnData
+            handleChangeData: onSaveData
           }
         ]}
       />
@@ -142,9 +119,10 @@ const Potentiometer = memo(function Potentiometer({
 
 Potentiometer.propTypes = {
   dragRef: P.func.isRequired,
-  device: P.object.isRequired,
+  data: P.object.isRequired,
   activeActBtns: P.bool.isRequired,
-  onChangeActBtns: P.func.isRequired
+  onChangeActBtns: P.func.isRequired,
+  onSaveData: P.func.isRequired
 }
 
 export default Potentiometer;

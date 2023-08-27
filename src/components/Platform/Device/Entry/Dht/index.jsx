@@ -23,14 +23,12 @@ const MAX_HUMIDITY = 1023;
 const MIN_HUMIDITY = 0;
 
 const Dht = memo(function Dht({
-  device, dragRef, activeActBtns, onChangeActBtns
+  data, dragRef, activeActBtns, onChangeActBtns, onSaveData
 }) {
 
-  const { id, imgSrc, name, posX, posY } = device;
+  const { id, imgSrc, name, posX, posY } = data;
   const { updateDeviceValue } = useDevices();
   const { executeFlow, updateDeviceValueInFlow } = useFlow();
-
-  const [deviceData, setDeviceData] = useState(device);
 
   const [scaleType, setScaleType] = useState('celsius');
 
@@ -48,14 +46,14 @@ const Dht = memo(function Dht({
 
     if (typeValue === 'temperature') {
       return {
-        value: deviceData.value.temperature.current,
+        value: data.value.temperature.current,
         max: MAX_TEMPERATURE
       };
     }
 
     if (typeValue === 'humidity') {
       return {
-        value: deviceData.value.humidity.current,
+        value: data.value.humidity.current,
         max: MAX_HUMIDITY
       };
     }
@@ -66,60 +64,40 @@ const Dht = memo(function Dht({
     const inputValue = Number(event.target.value);
 
     const value = {
-      ...deviceData.value,
+      ...data.value,
       [`${name}`]: {
-        ...deviceData.value[`${name}`],
+        ...data.value[`${name}`],
         current: inputValue,
       }
     }
 
-    setDeviceData({ ...deviceData, value });
+    onSaveData('value', value);
 
     updateDeviceValue(id, { value })
 
   }
 
-  const handleSaveConnData = (value) => {
-    setDeviceData(prev => {
-      return {
-        ...prev,
-        connectors: {
-          ...prev.connectors,
-          [`${value.name}`]: value
-        }
-      }
-    });
-
-  }
-
-  useEffect(() => {
-    updateDeviceValue(id, {
-      connectors: {
-        ...deviceData.connectors
-      }
-    })
-  }, [deviceData.connectors]);
 
   useEffect(() => {
     updateDeviceValue(id, {
       defaultBehavior: () => handleGetValue('temperature')
     });
 
-    updateDeviceValueInFlow({ connectorId: deviceData.connectors.temperature.id, newValue: deviceData.value.temperature });
+    updateDeviceValueInFlow({ connectorId: data.connectors.temperature.id, newValue: data.value.temperature });
 
-    executeFlow({ connectorId: deviceData.connectors.temperature.id, fromBehaviorCallback: () => handleGetValue(deviceData.connectors.temperature.name) });
+    executeFlow({ connectorId: data.connectors.temperature.id, fromBehaviorCallback: () => handleGetValue(data.connectors.temperature.name) });
 
-  }, [deviceData.value.temperature.current]);
+  }, [data.value.temperature.current]);
 
   useEffect(() => {
     updateDeviceValue(id, {
       defaultBehavior: () => handleGetValue('humidity')
     });
 
-    updateDeviceValueInFlow({ connectorId: deviceData.connectors.humidity.id, newValue: deviceData.value.humidity });
+    updateDeviceValueInFlow({ connectorId: data.connectors.humidity.id, newValue: data.value.humidity });
 
-    executeFlow({ connectorId: deviceData.connectors.humidity.id, fromBehaviorCallback: () => handleGetValue(deviceData.connectors.humidity.name) });
-  }, [deviceData.value.humidity.current]);
+    executeFlow({ connectorId: data.connectors.humidity.id, fromBehaviorCallback: () => handleGetValue(data.connectors.humidity.name) });
+  }, [data.value.humidity.current]);
 
   return (
 
@@ -129,13 +107,12 @@ const Dht = memo(function Dht({
         inputs={[
           {
             data: {
-              type: 'range',
               minValue: MIN_TEMPERATURE,
               maxValue: MAX_TEMPERATURE,
               step: 0.1,
-              defaultValue: deviceData.value.temperature.current,
+              defaultValue: data.value.temperature.current,
               onInput: (event) => handleOnInput(event, 'temperature'),
-              onTransformValue: () => transformationFormula(deviceData.value.temperature.current)
+              onTransformValue: () => transformationFormula(data.value.temperature.current)
             },
             className: {
               container: [inputContainerDht],
@@ -145,13 +122,12 @@ const Dht = memo(function Dht({
           },
           {
             data: {
-              type: 'range',
               minValue: MIN_HUMIDITY,
               maxValue: MAX_HUMIDITY,
               step: 1,
-              defaultValue: deviceData.value.humidity.current,
+              defaultValue: data.value.humidity.current,
               onInput: (event) => handleOnInput(event, 'humidity'),
-              onTransformValue: () => transformHumidityValue(deviceData.value.humidity.current, MAX_HUMIDITY)
+              onTransformValue: () => transformHumidityValue(data.value.humidity.current, MAX_HUMIDITY)
             },
             className: {
               container: [inputContainerDht],
@@ -198,22 +174,22 @@ const Dht = memo(function Dht({
         type='exits'
         exitConnectors={[
           {
-            data: deviceData.connectors.temperature,
+            data: data.connectors.temperature,
             device: {
               id,
-              containerRef: device.containerRef
+              containerRef: data.containerRef
             },
             updateConn: { posX, posY },
-            handleChangeData: handleSaveConnData
+            handleChangeData: onSaveData
           },
           {
-            data: deviceData.connectors.humidity,
+            data: data.connectors.humidity,
             device: {
               id,
-              containerRef: device.containerRef
+              containerRef: data.containerRef
             },
             updateConn: { posX, posY },
-            handleChangeData: handleSaveConnData
+            handleChangeData: onSaveData
           }
         ]}
       />
@@ -223,10 +199,11 @@ const Dht = memo(function Dht({
 });
 
 Dht.propTypes = {
-  device: P.object.isRequired,
+  data: P.object.isRequired,
   dragRef: P.func.isRequired,
   activeActBtns: P.bool.isRequired,
-  onChangeActBtns: P.func.isRequired
+  onChangeActBtns: P.func.isRequired,
+  onSaveData: P.func.isRequired
 }
 
 export default Dht;

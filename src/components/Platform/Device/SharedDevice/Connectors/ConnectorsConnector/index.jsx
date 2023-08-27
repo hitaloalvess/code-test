@@ -63,12 +63,14 @@ const ConnectorsConnector = ({
     })
 
     if (handleChangeData) {
-      handleChangeData({
-        id,
-        type: data.type,
-        name: data.name,
-        x,
-        y
+      handleChangeData('connectors', {
+        [`${data.name}`]: {
+          id,
+          type: data.type,
+          name: data.name,
+          x,
+          y
+        }
       });
     }
 

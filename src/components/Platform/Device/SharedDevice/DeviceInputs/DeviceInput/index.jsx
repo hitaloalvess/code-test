@@ -4,7 +4,7 @@ import P from 'prop-types';
 import * as DI from './styles.module.css';
 
 const DeviceInput = ({ data, className, children }) => {
-  const { type, minValue, maxValue, step, defaultValue, onInput, onTransformValue } = data;
+  const { minValue, maxValue, step, defaultValue, onInput, onTransformValue } = data;
 
   return (
     <div className={`${className?.container ?
@@ -17,7 +17,7 @@ const DeviceInput = ({ data, className, children }) => {
           className.input.join(' ') :
           ''
           }`}
-        type={type}
+        type='range'
         min={minValue}
         max={maxValue}
         step={step}
@@ -42,7 +42,6 @@ const DeviceInput = ({ data, className, children }) => {
 
 DeviceInput.propTypes = {
   data: P.shape({
-    type: P.string,
     minValue: P.oneOfType([P.number, P.string]),
     maxValue: P.oneOfType([P.number, P.string]),
     step: P.oneOfType([P.number, P.string]),
