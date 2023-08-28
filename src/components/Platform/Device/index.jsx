@@ -10,7 +10,7 @@ import DeviceFactory from './SharedDevice/DeviceFactory';
 import * as D from './styles.module.css';
 
 
-const Device = memo(function Device({ device: { ...device } }) {
+const Device = memo(function Device({ device }) {
   const { deviceScale, updateDeviceValue } = useDevices();
 
   const deviceRef = useRef(null);
@@ -36,7 +36,7 @@ const Device = memo(function Device({ device: { ...device } }) {
     setData(prev => {
       return {
         ...prev,
-        [`${keyValue}`]: {
+        [keyValue]: {
           ...prev[`${keyValue}`],
           ...newValue
         }
@@ -53,28 +53,36 @@ const Device = memo(function Device({ device: { ...device } }) {
     })
   }, [data.connectors]);
 
+  useEffect(() => {
+    setData(prev => {
+      return {
+        ...prev,
+        posX: device.posX,
+        posY: device.posY
+      }
+    })
+  }, [device.posX, device.posY]);
+
   return (
-    <>
+    <div
+      className={D.deviceContainer}
+      style={{ left: `${data.posX}px`, top: `${data.posY}px`, transform: `scale(${deviceScale})` }}
+      ref={deviceRef}
+    >
       <div
-        className={D.deviceContainer}
-        style={{ left: `${device.posX}px`, top: `${device.posY}px`, transform: `scale(${deviceScale})` }}
-        ref={deviceRef}
+        className={D.deviceContent}
       >
-        <div
-          className={D.deviceContent}
-        >
-          {
-            <DeviceFactory
-              data={data}
-              dragRef={drag}
-              activeActBtns={activeActBtns}
-              onChangeActBtns={handleActBtns}
-              onSaveData={handleSaveData}
-            />
-          }
-        </div>
+        {
+          <DeviceFactory
+            data={data}
+            dragRef={drag}
+            activeActBtns={activeActBtns}
+            onChangeActBtns={handleActBtns}
+            onSaveData={handleSaveData}
+          />
+        }
       </div>
-    </>
+    </div>
   )
 });
 

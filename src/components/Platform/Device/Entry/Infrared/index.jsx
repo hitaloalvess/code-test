@@ -1,45 +1,32 @@
-import { memo, useRef, useState, useCallback } from 'react';
+import { memo, useState, useCallback, useEffect } from 'react';
 import P from 'prop-types';
-import { Trash, Gear } from '@phosphor-icons/react';
 
 import { useDevices } from '@/hooks/useDevices';
 import { useFlow } from '@/hooks/useFlow';
-import { useModal } from '@/hooks/useModal';
-import ActionButton from '@/components/Platform/Device/SharedDevice/ActionButtons/ActionButton';
-import ConnectorsConnector from '@/components/Platform/Device/SharedDevice/Connectors/ConnectorsConnector';
+
+import ActionButtons from '@/components/Platform/Device/SharedDevice/ActionButtons';
+import Connectors from '@/components/Platform/Device/SharedDevice/Connectors';
+import DeviceBody from '../../SharedDevice/DeviceBody';
+
 import ConfigInfraredModal from '@/components/SharedComponents/Modal/ConfigInfraredModal';
 
-import {
-  deviceBody,
-  inputRangeDeviceContainer,
-  actionButtonsContainer,
-  actionButtonsContainerLeft,
-  connectorsContainer,
-  connectorsContainerExit
-} from '../../styles.module.css';
-
-import {
-  showCode
-} from './styles.module.css'
+import * as I from './styles.module.css';
 
 
 const Infrared = memo(function Infrared({
-  device, dragRef, updateValue
+  data, dragRef, activeActBtns, onChangeActBtns, onSaveData
 }) {
 
-  const { id, imgSrc, name, posX, posY } = device;
-  const { deleteDevice } = useDevices();
-  const { executeFlow, deleteDeviceConnections } = useFlow();
-  const { enableModal, disableModal } = useModal();
-  const [connectorId, setConnectorId] = useState('');
+  const { id, imgSrc, name, posX, posY } = data;
+
+  const { updateDeviceValue } = useDevices();
+  const { executeFlow, updateDeviceValueInFlow } = useFlow();
+
   const [isModalOpen, setIsModalOpen] = useState(true);
-  const [code, setNewCode] = useState('FF12F3');
 
-  const showValueRef = useRef(null);
-
-  const getCode = () => {
+  const handleGetValue = () => {
     return {
-      value: code,
+      value: data.value.code.current,
     };
   }
 
@@ -48,17 +35,25 @@ const Infrared = memo(function Infrared({
   }
 
   const handleSettingUpdate = useCallback((newCode) => {
-    showValueRef.current.innerHTML = newCode;
-    setNewCode(newCode);
-    updateValue(null, id, newCode);
+    const value = {
+      code: {
+        current: newCode
+      }
+    }
 
-    executeFlow({ connectorId, fromBehaviorCallback: getCode });
-  }, [code]);
+    onSaveData('value', { ...value });
 
+  }, []);
 
-  const handleChangeConnector = (value) => {
-    setConnectorId(value);
-  }
+  useEffect(() => {
+    updateDeviceValue(id, {
+      defaultBehavior: () => handleGetValue()
+    });
+
+    updateDeviceValueInFlow({ connectorId: data.connectors.code.id, newValue: data.value.code });
+
+    executeFlow({ connectorId: data.connectors.code.id, fromBehaviorCallback: () => handleGetValue() });
+  }, [data.value.code.current]);
 
   return (
     <>
@@ -68,76 +63,64 @@ const Infrared = memo(function Infrared({
         handleUpdateCode={handleSettingUpdate}
       />
 
-      <div className={inputRangeDeviceContainer}
+      <div className={I.showCodeContainer}
       >
         <p
-          className={showCode}
-          ref={showValueRef}
-        >{code}</p>
+          className={I.showCode}
+        >{data.value.code.current}</p>
       </div>
 
-      <div
-        className={deviceBody}
+
+      <DeviceBody
+        name={name}
+        imgSrc={imgSrc}
         ref={dragRef}
+        onChangeActBtns={onChangeActBtns}
       >
-        <img
-          src={imgSrc}
-          alt={`Device ${name}`}
-          loading='lazy'
-        />
-      </div>
 
-      <div
-        className={`${connectorsContainer} ${connectorsContainerExit}`}
-      >
-        <ConnectorsConnector
-          name={'code'}
-          type={'exit'}
-          device={{
-            id,
-            defaultBehavior: getCode,
-            containerRef: device.containerRef
-          }}
-          updateConn={{ posX, posY }}
-          handleChangeId={handleChangeConnector}
-        />
-      </div>
 
-      <div
-        className={
-          `${actionButtonsContainer} ${actionButtonsContainerLeft}`
-        }
-      >
-        <ActionButton
-          onClick={() => enableModal({
-            typeContent: 'confirmation',
+        <ActionButtons
+          orientation='left'
+          active={activeActBtns}
+          actionDelete={{
             title: 'Cuidado',
             subtitle: 'Tem certeza que deseja excluir o componente?',
-            handleConfirm: () => {
-              deleteDeviceConnections(id);
-              deleteDevice(id);
-              disableModal('confirmation');
+            data: {
+              id
             }
-          })}
-        >
-          <Trash />
-        </ActionButton>
+          }}
+          actionConfig={{
+            onClick: () => setIsModalOpen(!isModalOpen)
+          }}
+        />
 
-        <ActionButton
-          onClick={() => setIsModalOpen(!isModalOpen)}
-        >
-          <Gear />
-        </ActionButton>
 
-      </div>
+      </DeviceBody>
+
+      <Connectors
+        type='exits'
+        exitConnectors={[
+          {
+            data: data.connectors.code,
+            device: {
+              id,
+              containerRef: data.containerRef
+            },
+            updateConn: { posX, posY },
+            handleChangeData: onSaveData
+          }
+        ]}
+      />
     </>
   );
 });
 
 Infrared.propTypes = {
-  device: P.object.isRequired,
   dragRef: P.func.isRequired,
-  updateValue: P.func.isRequired
+  data: P.object.isRequired,
+  activeActBtns: P.bool.isRequired,
+  onChangeActBtns: P.func.isRequired,
+  onSaveData: P.func.isRequired
 }
 
 export default Infrared;

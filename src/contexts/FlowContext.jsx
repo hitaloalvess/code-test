@@ -429,6 +429,7 @@ export const FlowProvider = ({ children }) => {
   }) => {
     const { from, to } = devicesParam;
 
+
     if (from.connector && !to?.connector && !state.flowTemp.connectorClicked) {
 
       const deviceFrom = devices[`${from.id}`];
@@ -467,8 +468,11 @@ export const FlowProvider = ({ children }) => {
     //checks if the device is not wanting to connect with itself
     if (from.id === to.id) return;
 
-    let deviceFrom = devices[`${from.id}`];
-    let deviceTo = devices[`${to.id}`];
+    let deviceFrom = { ...devices[`${from.id}`] };
+    let deviceTo = { ...devices[`${to.id}`] };
+
+    delete deviceFrom.connectors;
+    delete deviceTo.connectors;
 
     deviceFrom = {
       ...deviceFrom,

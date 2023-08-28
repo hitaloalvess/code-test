@@ -44,6 +44,7 @@ export const DevicesProvider = ({ children }) => {
   }
 
   const repositionDevice = useCallback((data) => {
+
     const {
       device,
       screen,
@@ -77,6 +78,7 @@ export const DevicesProvider = ({ children }) => {
   }, [devices]);
 
   const repositionConnections = (data) => {
+
 
     const {
       device,

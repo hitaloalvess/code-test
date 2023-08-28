@@ -74,7 +74,22 @@ export const mockDevices = {
       label: 'Sensor infravermelho',
       type: 'virtual',
       category: 'entry',
-      value: 'FF12F3'
+      value: {
+        code: {
+          current: 'FF12F3'
+        }
+      },
+      posX: 0,
+      posY: 0,
+      connectors: {
+        code: {
+          id: null,
+          name: 'code',
+          type: 'exit',
+          x: 0,
+          y: 0
+        }
+      }
     },
     {
       id: 12,
@@ -84,8 +99,21 @@ export const mockDevices = {
       type: 'virtual',
       category: 'entry',
       value: {
-        current: 0,
-        max: 1023
+        luminosity: {
+          current: 0,
+          max: 1023
+        }
+      },
+      posX: 0,
+      posY: 0,
+      connectors: {
+        luminosity: {
+          id: null,
+          name: 'luminosity',
+          type: 'exit',
+          x: 0,
+          y: 0
+        }
       }
     },
     {
@@ -120,7 +148,22 @@ export const mockDevices = {
       label: 'Botão',
       type: 'virtual',
       category: 'entry',
-      value: false
+      value: {
+        state: {
+          current: false
+        }
+      },
+      posX: 0,
+      posY: 0,
+      connectors: {
+        state: {
+          id: null,
+          name: 'state',
+          type: 'exit',
+          x: 0,
+          y: 0
+        }
+      }
     },
     {
       id: 15,
@@ -129,31 +172,73 @@ export const mockDevices = {
       label: 'Switch',
       type: 'virtual',
       category: 'entry',
-      value: false
+      value: {
+        state: {
+          current: false
+        }
+      },
+      posX: 0,
+      posY: 0,
+      connectors: {
+        state: {
+          id: null,
+          name: 'state',
+          type: 'exit',
+          x: 0,
+          y: 0
+        }
+      }
+
     },
     // {
     //   id: 16,
     //   imgSrc: deviceRainDetector,
     //   name: 'rainDetector',
-    // label: 'Sensor de radiação',
+    //   label: 'Sensor de radiação',
     //   type: 'virtual',
     //   category: 'entry',
     //   value: {
-    //     current: 0,
-    //     max: 1023
+    //     radiation: {
+    //       current: 0,
+    //       max: 1023
+    //     }
     //   },
+    //   posX: 0,
+    //   posY: 0,
+    //   connectors: {
+    //     radiation: {
+    //       id: null,
+    //       name: 'radiation',
+    //       type: 'exit',
+    //       x: 0,
+    //       y: 0
+    //     }
+    //   }
     // },
     // {
     //   id: 17,
     //   imgSrc: deviceSoilMoisture,
     //   name: 'soilMoisture',
-    // label: 'Sensor de humidade do solo',
+    //   label: 'Sensor de humidade do solo',
     //   type: 'virtual',
     //   category: 'entry',
     //   value: {
-    //     current: 0,
-    //     max: 1023
+    //     humidity: {
+    //       current: 0,
+    //       max: 1023
+    //     }
     //   },
+    //   posX: 0,
+    //   posY: 0,
+    //   connectors: {
+    //     humidity: {
+    //       id: null,
+    //       name: 'humidity',
+    //       type: 'exit',
+    //       x: 0,
+    //       y: 0
+    //     }
+    //   }
     // }
   ],
   exit: [

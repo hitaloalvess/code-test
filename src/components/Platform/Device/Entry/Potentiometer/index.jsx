@@ -23,8 +23,8 @@ const Potentiometer = memo(function Potentiometer({
   const handleGetValue = () => {
     return {
       resistance: {
-        value: data.value.current,
-        max: data.value.max
+        value: data.value.resistance.current,
+        max: data.value.resistance.max
       }
     }
   };

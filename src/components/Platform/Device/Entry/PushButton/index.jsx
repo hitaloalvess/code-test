@@ -1,121 +1,122 @@
-import { memo, useCallback, useEffect, useState } from 'react';
+import { memo, useEffect } from 'react';
 import P from 'prop-types';
-import { Trash } from '@phosphor-icons/react';
 
-import { findFlowsByDeviceId } from '@/utils/flow-functions';
 import { useDevices } from '@/hooks/useDevices';
 import { useFlow } from '@/hooks/useFlow';
-import { useModal } from '@/hooks/useModal';
-import ActionButton from '@/components/Platform/Device/SharedDevice/ActionButtons/ActionButton';
-import ConnectorsConnector from '@/components/Platform/Device/SharedDevice/Connectors/ConnectorsConnector';
+import ActionButtons from '@/components/Platform/Device/SharedDevice/ActionButtons';
+import Connectors from '@/components/Platform/Device/SharedDevice/Connectors';
+import DeviceBody from '../../SharedDevice/DeviceBody';
 
 import pushButtonOn from '@/assets/images/devices/entry/pushButtonOn.svg';
 
-import {
-  deviceBody,
-  actionButtonsContainer,
-  actionButtonsContainerLeft,
-  connectorsContainer,
-  connectorsContainerExit
-} from '../../styles.module.css';
-
 
 const PushButton = memo(function PushButton({
-  dragRef, device, updateValue
+  dragRef, data, activeActBtns, onChangeActBtns, onSaveData
 }) {
-  const { id, imgSrc, name, posX, posY } = device;
-  const { deleteDevice } = useDevices();
-  const { executeFlow, flows, deleteDeviceConnections } = useFlow();
-  const { enableModal, disableModal } = useModal();
-  const [click, setClick] = useState(device.value);
-  const [connectorId, setConnectorId] = useState('');
+  const {
+    id,
+    imgSrc,
+    name,
+    posX,
+    posY,
+    value,
+    connectors,
+    containerRef
+  } = data;
+  const { updateDeviceValue } = useDevices();
+  const { executeFlow, updateDeviceValueInFlow } = useFlow();
 
-  const getBoolean = useCallback(() => {
+  const handleGetValue = () => {
     return {
-      value: click,
+      state: {
+        current: data.value.state.current
+      }
     };
-  }, [click])
+  };
+
+
+  const handleClick = (newValue, name) => {
+    const value = {
+      ...data.value,
+      [name]: {
+        ...data.value[`${name}`],
+        current: newValue,
+      }
+    }
+
+    onSaveData('value', value);
+    updateDeviceValue(id, { value });
+
+  };
 
 
   useEffect(() => {
-    const existFlow = findFlowsByDeviceId(flows, id);
+    updateDeviceValue(id, {
+      defaultBehavior: handleGetValue
+    });
 
-    if (existFlow) {
-      executeFlow({ connectorId, fromBehaviorCallback: getBoolean });
-    }
-  }, [click]);
+    updateDeviceValueInFlow({ connectorId: connectors.state.id, newValue: value.state })
 
-  const handleOnClickUp = () => updateValue(setClick, id, false);
+    executeFlow({ connectorId: connectors.state.id });
 
-  const handleOnClickDown = () => updateValue(setClick, id, true);
-
-  const handleChangeConnector = (value) => {
-    setConnectorId(value);
-  }
+  }, [value.state.current]);
 
   return (
     <>
-      <div
-        className={deviceBody}
+
+      <DeviceBody
+        name={name}
+        imgSrc={value.state.current ? pushButtonOn : imgSrc}
         ref={dragRef}
-        onMouseUp={handleOnClickUp}
-        onMouseDown={handleOnClickDown}
-        onDragEnd={handleOnClickUp}
-        onTouchStart={handleOnClickDown}
-        onTouchEnd={handleOnClickUp}
+        onChangeActBtns={onChangeActBtns}
+        onMouseUp={() => handleClick(false, 'state')}
+        onMouseDown={() => handleClick(true, 'state')}
+        onDragEnd={() => handleClick(false, 'state')}
+        onTouchStart={() => handleClick(true, 'state')}
+        onTouchEnd={() => handleClick(false, 'state')}
       >
-        <img
-          src={click ? pushButtonOn : imgSrc}
-          alt={`Device ${name}`}
-          loading='lazy'
-        />
-      </div>
 
-      <div
-        className={`${connectorsContainer} ${connectorsContainerExit}`}
-      >
-        <ConnectorsConnector
-          name={'bool'}
-          type={'exit'}
-          device={{
-            id,
-            defaultBehavior: getBoolean,
-            containerRef: device.containerRef
-          }}
-          updateConn={{ posX, posY }}
-          handleChangeId={handleChangeConnector}
-        />
-      </div>
 
-      <div
-        className={
-          `${actionButtonsContainer} ${actionButtonsContainerLeft}`
-        }
-      >
-        <ActionButton
-          onClick={() => enableModal({
-            typeContent: 'confirmation',
+        <ActionButtons
+          orientation='left'
+          active={activeActBtns}
+          actionDelete={{
             title: 'Cuidado',
             subtitle: 'Tem certeza que deseja excluir o componente?',
-            handleConfirm: () => {
-              deleteDeviceConnections(id);
-              deleteDevice(id);
-              disableModal('confirmation');
+            data: {
+              id
             }
-          })}
-        >
-          <Trash />
-        </ActionButton>
+          }}
+        />
 
-      </div>
+
+      </DeviceBody>
+
+      <Connectors
+        type='exits'
+        exitConnectors={[
+          {
+            data: connectors.state,
+            device: {
+              id,
+              containerRef: containerRef
+            },
+            updateConn: { posX, posY },
+            handleChangeData: onSaveData
+          }
+        ]}
+      />
+
     </>
   );
 });
 
 PushButton.propTypes = {
   dragRef: P.func.isRequired,
-  device: P.object.isRequired,
-  updateValue: P.func.isRequired
+  data: P.object.isRequired,
+  activeActBtns: P.bool.isRequired,
+  onChangeActBtns: P.func.isRequired,
+  onSaveData: P.func.isRequired
 }
 
 export default PushButton;

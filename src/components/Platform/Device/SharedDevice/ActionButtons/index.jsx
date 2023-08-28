@@ -56,11 +56,14 @@ const ActionButtons = ({ orientation = 'left', active, actionDelete = null, acti
       {
         actionConfig && (
           <ActionButton
-            onClick={() => enableModal({
-              typeContent: actionConfig.typeContent,
-              handleSaveConfig: actionConfig.onSave,
-              ...actionConfig.data
-            })}
+            onClick={actionConfig.onClick ?
+              actionConfig.onClick :
+              () => enableModal({
+                typeContent: actionConfig.typeContent,
+                handleSaveConfig: actionConfig.onSave,
+                ...actionConfig.data
+              })
+            }
           >
             <Gear />
           </ActionButton>
@@ -81,9 +84,10 @@ ActionButtons.propTypes = {
     }).isRequired
   }),
   actionConfig: P.shape({
-    typeContent: P.string.isRequired,
-    onSave: P.func.isRequired,
-    data: P.object.isRequired
+    onClick: P.func,
+    typeContent: P.string,
+    onSave: P.func,
+    data: P.object
   })
 }
 

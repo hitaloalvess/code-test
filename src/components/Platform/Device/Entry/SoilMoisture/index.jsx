@@ -1,138 +1,142 @@
-import { memo, useRef, useState } from 'react';
+import { memo, useEffect } from 'react';
 import P from 'prop-types';
-import { Trash } from '@phosphor-icons/react';
 
 
 import { useDevices } from '@/hooks/useDevices';
 import { useFlow } from '@/hooks/useFlow';
-import { useModal } from '@/hooks/useModal';
-import ActionButton from '@/components/Platform/Device/SharedDevice/ActionButtons/ActionButton';
-import ConnectorsConnector from '@/components/Platform/Device/SharedDevice/Connectors/ConnectorsConnector';
+import ActionButtons from '@/components/Platform/Device/SharedDevice/ActionButtons';
+import Connectors from '@/components/Platform/Device/SharedDevice/Connectors';
+import DeviceInputs from '../../SharedDevice/DeviceInputs';
+import DeviceBody from '../../SharedDevice/DeviceBody';
 
-import {
-  deviceBody,
-  inputRangeDeviceContainer,
-  inputValue,
-  actionButtonsContainer,
-  actionButtonsContainerLeft,
-  connectorsContainer,
-  connectorsContainerExit
-} from '../../styles.module.css';
 
-const MAX_VALUE = 1023;
-const SoilMoisture = memo(function SoilMoisture({
-  dragRef, device, updateValue
+const MIN_HUMIDITY = 0;
+const MAX_HUMIDITY = 1023;
+
+const RainDetector = memo(function RainDetector({
+  dragRef, data, activeActBtns, onChangeActBtns, onSaveData
 }) {
 
-  const { id, imgSrc, name, posX, posY } = device;
-  const { deleteDevice } = useDevices();
-  const { executeFlow, deleteDeviceConnections } = useFlow();
-  const { enableModal, disableModal } = useModal();
-  const [connectorId, setConnectorId] = useState('');
+  const {
+    id,
+    imgSrc,
+    name,
+    posX,
+    posY,
+    value,
+    connectors,
+    containerRef
+  } = data;
+  const { updateDeviceValue } = useDevices();
+  const { executeFlow, updateDeviceValueInFlow } = useFlow();
 
-  const inputRef = useRef(null);
-  const showValueRef = useRef(null);
 
-  const getValue = () => {
+  const handleGetValue = () => {
     return {
-      value: Number(inputRef.current.value),
-      max: MAX_VALUE
-    };
+      humidity: {
+        value: value.humidity.current,
+        max: value.humidity.max
+      }
+    }
+  };
+
+
+  const handleOnInput = (event, name) => {
+    const inputValue = Number(event.target.value);
+
+    const value = {
+      ...data.value,
+      [name]: {
+        ...data.value[name],
+        current: inputValue,
+      }
+    }
+
+    onSaveData('value', value);
+    updateDeviceValue(id, { value })
   }
 
-  const handleOnInput = () => {
-    const inputValue = Number(inputRef.current.value);
-    showValueRef.current.innerHTML = inputValue;
 
-    updateValue(null, id, {
-      current: inputValue,
-      max: MAX_VALUE
+  useEffect(() => {
+    updateDeviceValue(id, {
+      defaultBehavior: handleGetValue
     });
 
-    executeFlow({ connectorId, fromBehaviorCallback: getValue });
+    updateDeviceValueInFlow({ connectorId: connectors.humidity.id, newValue: value.humidity })
 
-  }
+    executeFlow({ connectorId: connectors.humidity.id });
 
-  const handleChangeConnector = (value) => {
-    setConnectorId(value);
-  }
+  }, [value.humidity.current]);
+
 
   return (
     <>
-      <div className={inputRangeDeviceContainer}
-      >
-        <input
-          type="range"
-          min="0"
-          max="1023"
-          step="1"
-          defaultValue={0}
-          onInput={handleOnInput}
-          ref={inputRef}
-        />
-        <p
-          className={inputValue}
-          ref={showValueRef}
-        >0</p>
-      </div>
 
-      <div
-        className={deviceBody}
+
+      <DeviceInputs
+        inputs={[
+          {
+            data: {
+              minValue: MIN_HUMIDITY,
+              maxValue: MAX_HUMIDITY,
+              step: 1,
+              defaultValue: value.humidity.current,
+              onInput: (event) => handleOnInput(event, 'humidity'),
+            },
+          }
+        ]}
+      />
+
+
+      <DeviceBody
+        name={name}
+        imgSrc={imgSrc}
         ref={dragRef}
+        onChangeActBtns={onChangeActBtns}
       >
 
-        <img
-          src={imgSrc}
-          alt={`Device ${name}`}
-          loading='lazy'
-        />
-      </div>
 
-      <div
-        className={`${connectorsContainer} ${connectorsContainerExit}`}
-      >
-        <ConnectorsConnector
-          name={'moisture'}
-          type={'exit'}
-          device={{
-            id,
-            defaultBehavior: getValue,
-            containerRef: device.containerRef
-          }}
-          updateConn={{ posX, posY }}
-          handleChangeId={handleChangeConnector}
-        />
-      </div>
-
-      <div
-        className={
-          `${actionButtonsContainer} ${actionButtonsContainerLeft}`
-        }
-      >
-        <ActionButton
-          onClick={() => enableModal({
-            typeContent: 'confirmation',
+        <ActionButtons
+          orientation='left'
+          active={activeActBtns}
+          actionDelete={{
             title: 'Cuidado',
             subtitle: 'Tem certeza que deseja excluir o componente?',
-            handleConfirm: () => {
-              deleteDeviceConnections(id);
-              deleteDevice(id);
-              disableModal();
+            data: {
+              id
             }
-          })}
-        >
-          <Trash />
-        </ActionButton>
+          }}
+        />
 
-      </div>
+
+      </DeviceBody>
+
+
+      <Connectors
+        type='exits'
+        exitConnectors={[
+          {
+            data: connectors.humidity,
+            device: {
+              id,
+              containerRef: containerRef
+            },
+            updateConn: { posX, posY },
+            handleChangeData: onSaveData
+          }
+        ]}
+      />
+
     </>
   );
 });
 
-SoilMoisture.propTypes = {
+RainDetector.propTypes = {
   dragRef: P.func.isRequired,
-  device: P.object.isRequired,
-  updateValue: P.func.isRequired
+  data: P.object.isRequired,
+  activeActBtns: P.bool.isRequired,
+  onChangeActBtns: P.func.isRequired,
+  onSaveData: P.func.isRequired
 }
 
-export default SoilMoisture;
+export default RainDetector;
