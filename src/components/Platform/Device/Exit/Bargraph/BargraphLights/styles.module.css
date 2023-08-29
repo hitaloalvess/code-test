@@ -6,7 +6,7 @@
 .ledLightElement {
   width: 12px;
   height: 10px;
-  fill: red;
+  fill: var(--red);
 }
 
 

@@ -1,17 +1,20 @@
+.buzzerIcon {
+  position: absolute;
+  top: -24px;
+  left: 24px;
+}
+
 .buzzerIconOff {
   display: none;
-  position: absolute;
 }
 
 .buzzerIconOn {
-  display: block;
-  margin: -20px auto 0px auto;
   animation: music-animation 2s infinite;
 }
 
 @keyframes music-animation {
   0% {
-    transform: translateY(-2rem);
+    transform: translateY(-20px);
   }
 
   50% {
@@ -19,6 +22,6 @@
   }
 
   100% {
-    transform: translateY(-2rem);
+    transform: translateY(-20px);
   }
 }

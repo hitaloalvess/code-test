@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useMemo, useState } from "react";
 import P from 'prop-types';
 
 import {
@@ -20,24 +20,39 @@ import {
 const ConfigBuzzerModal = ({ closeModal, contentData }) => {
   const { handleSaveConfig, defaultDuration, defaultVolume } = contentData;
 
-  const durationRef = useRef(null);
-  const volumeRef = useRef(null);
-  const showVolumeValueRef = useRef(null);
+  const [value, setValue] = useState(() => {
+    return {
+      duration: defaultDuration,
+      volume: defaultVolume
+    }
+  })
 
   const handleSave = () => {
-    const newDuration = Number(durationRef.current.value);
-    const newVolume = Number(volumeRef.current.value);
+    const newDuration = Number(value.duration);
+    const newVolume = Number(value.volume);
 
     handleSaveConfig(newDuration, newVolume);
 
     closeModal();
   }
 
-  const handleInputRange = () => {
-    const input = volumeRef.current;
+  const handleInputRange = (event, name) => {
+    const inputValue = event.target.value;
 
-    showVolumeValueRef.current.innerHTML = input.value + "%";
+    const newValue = {
+      ...value,
+      [name]: inputValue
+    }
+
+    setValue(newValue);
   }
+
+  const transformedVolumeValue = useMemo(() => {
+    const transformValue = value.volume * 100;
+
+    return `${transformValue}%`;
+  }, [value.volume]);
+
   return (
 
     <section
@@ -70,7 +85,7 @@ const ConfigBuzzerModal = ({ closeModal, contentData }) => {
             min="0"
             className={inputNumber}
             defaultValue={defaultDuration}
-            ref={durationRef}
+            onChange={(event) => handleInputRange(event, 'duration')}
           />
         </div>
 
@@ -88,18 +103,16 @@ const ConfigBuzzerModal = ({ closeModal, contentData }) => {
             <input
               type="range"
               id='buzzerVolume'
-              ref={volumeRef}
               max={1}
               min={0}
-              step={0.01}
+              step={0.1}
               defaultValue={defaultVolume}
-              onInput={handleInputRange}
+              onInput={(event) => handleInputRange(event, 'volume')}
             />
             <p
               className={inputValue}
-              ref={showVolumeValueRef}
             >
-              {defaultVolume}%
+              {transformedVolumeValue}
             </p>
           </div>
         </div>

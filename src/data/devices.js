@@ -284,6 +284,17 @@ export const mockDevices = {
         type: null,
         opacity: 0,
         brightness: 1023
+      },
+      posX: 0,
+      posY: 0,
+      connectors: {
+        lumen: {
+          id: null,
+          name: 'lumen',
+          type: 'entry',
+          x: 0,
+          y: 0
+        }
       }
     },
     {
@@ -300,6 +311,17 @@ export const mockDevices = {
         type: null,
         opacity: 0,
         brightness: 1023
+      },
+      posX: 0,
+      posY: 0,
+      connectors: {
+        intensity: {
+          id: null,
+          name: 'intensity',
+          type: 'entry',
+          x: 0,
+          y: 0
+        }
       }
     },
     {
@@ -314,6 +336,17 @@ export const mockDevices = {
         current: 0,
         max: 0,
         type: null
+      },
+      posX: 0,
+      posY: 0,
+      connectors: {
+        vibration: {
+          id: null,
+          name: 'vibration',
+          type: 'entry',
+          x: 0,
+          y: 0
+        }
       }
     },
     {
@@ -330,6 +363,17 @@ export const mockDevices = {
         type: null,
         duration: 4,
         volume: 0.5,
+      },
+      posX: 0,
+      posY: 0,
+      connectors: {
+        frequency: {
+          id: null,
+          name: 'frequency',
+          type: 'entry',
+          x: 0,
+          y: 0,
+        }
       }
     },
     // {
@@ -346,6 +390,17 @@ export const mockDevices = {
     //     type: null,
     //     opacity: 0,
     //     brightness: 1023
+    //   },
+    //   posX: 0,
+    //   posY: 0,
+    //   connectors: {
+    //     lumen: {
+    //       id: null,
+    //       name: 'lumen',
+    //       type: 'entry',
+    //       x: 0,
+    //       y: 0
+    //     }
     //   }
     // },
   ],

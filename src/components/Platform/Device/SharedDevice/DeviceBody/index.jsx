@@ -19,6 +19,7 @@ const DeviceBody = forwardRef(function DeviceBody(
         src={imgSrc}
         alt={`Device ${name}`}
         loading='lazy'
+        className={rest.classImg ? rest.classImg : ''}
       />
 
       {children}
