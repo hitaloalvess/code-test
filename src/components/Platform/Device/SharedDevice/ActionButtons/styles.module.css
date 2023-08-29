@@ -24,7 +24,7 @@
 .bottom {
   flex-direction: row;
   top: auto;
-  bottom: -32px;
+  bottom: -28px;
   min-height: 16px;
   width: 112px;
 }

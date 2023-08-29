@@ -460,7 +460,29 @@ export const mockDevices = {
       label: 'And',
       type: 'virtual',
       category: 'conditional',
-      value: false
+      value: {
+        send: {
+          current: false
+        },
+      },
+      posX: 0,
+      posY: 0,
+      connectors: {
+        receive: {
+          id: null,
+          name: 'receive',
+          type: 'entry',
+          x: 0,
+          y: 0
+        },
+        send: {
+          id: null,
+          name: 'send',
+          type: 'exit',
+          x: 0,
+          y: 0
+        },
+      }
     },
     {
       id: 41,
@@ -469,7 +491,29 @@ export const mockDevices = {
       label: 'Or',
       type: 'virtual',
       category: 'conditional',
-      value: false
+      value: {
+        send: {
+          current: false
+        }
+      },
+      posX: 0,
+      posY: 0,
+      connectors: {
+        receive: {
+          id: null,
+          name: 'receive',
+          type: 'entry',
+          x: 0,
+          y: 0
+        },
+        send: {
+          id: null,
+          name: 'send',
+          type: 'exit',
+          x: 0,
+          y: 0
+        },
+      }
     },
     {
       id: 42,
@@ -478,7 +522,29 @@ export const mockDevices = {
       label: 'Not',
       type: 'virtual',
       category: 'conditional',
-      value: false
+      value: {
+        send: {
+          current: false
+        }
+      },
+      posX: 0,
+      posY: 0,
+      connectors: {
+        receive: {
+          id: null,
+          name: 'receive',
+          type: 'entry',
+          x: 0,
+          y: 0
+        },
+        send: {
+          id: null,
+          name: 'send',
+          type: 'exit',
+          x: 0,
+          y: 0
+        },
+      }
     },
     {
       id: 43,
@@ -487,7 +553,32 @@ export const mockDevices = {
       label: 'If',
       type: 'virtual',
       category: 'conditional',
-      value: false
+      value: {
+        send: {
+          current: false,
+        },
+        simbol: '=',
+        connectionType: 'number',
+        numberDisplay: 0
+      },
+      posX: 0,
+      posY: 0,
+      connectors: {
+        receive: {
+          id: null,
+          name: 'receive',
+          type: 'entry',
+          x: 0,
+          y: 0
+        },
+        send: {
+          id: null,
+          name: 'send',
+          type: 'exit',
+          x: 0,
+          y: 0
+        },
+      }
     },
     {
       id: 44,

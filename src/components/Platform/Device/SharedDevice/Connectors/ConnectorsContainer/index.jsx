@@ -9,7 +9,7 @@ const ConnectorsContainer = ({ typeContainer, children }) => {
     const types = {
       'entrys': C.entry,
       'exits': C.exit,
-      'doubleType': C.twoConn
+      'doubleTypes': C.doubleType
     }
 
     return types[typeContainer] || '';
@@ -23,7 +23,7 @@ const ConnectorsContainer = ({ typeContainer, children }) => {
 };
 
 ConnectorsContainer.propTypes = {
-  typeContainer: P.oneOf(['entrys', 'exits', 'doubleType']),
+  typeContainer: P.oneOf(['entrys', 'exits', 'doubleTypes']),
   children: P.oneOfType([
     P.element,
     P.arrayOf(P.element),

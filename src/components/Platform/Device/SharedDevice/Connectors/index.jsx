@@ -1,17 +1,19 @@
+import { memo } from 'react';
 import P from 'prop-types';
 
 import ConnectorsContainer from './ConnectorsContainer';
 import ConnectorsContent from './ConnectorsContent';
 import ConnectorsConnector from './ConnectorsConnector';
 
-const Connectors = ({
+const Connectors = memo(function Connectors({
   type, entryConnectors = null, exitConnectors = null
-}) => {
+}) {
 
   return (
     <ConnectorsContainer typeContainer={type}>
 
       <>
+
         {
           !!exitConnectors && (
             <ConnectorsContent>
@@ -32,7 +34,6 @@ const Connectors = ({
             </ConnectorsContent>
           )
         }
-
 
         {
           !!entryConnectors && (
@@ -58,7 +59,7 @@ const Connectors = ({
 
     </ConnectorsContainer>
   );
-};
+});
 
 Connectors.propTypes = {
   type: P.oneOf(['exits', 'entrys', 'doubleTypes']),

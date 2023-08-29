@@ -1,22 +1,14 @@
-import { useEffect, useRef, useCallback, useState } from 'react';
+import { useEffect, useCallback, useState, useRef } from 'react';
 import P from 'prop-types';
-import { Trash, Gear } from '@phosphor-icons/react';
 
-import { useModal } from '@/hooks/useModal';
+import { findFlowsByDeviceId } from '@/utils/flow-functions';
 import { useFlow } from '@/hooks/useFlow';
 import { useDevices } from '@/hooks/useDevices';
-import ConnectorsConnector from '@/components/Platform/Device/SharedDevice/Connectors/ConnectorsConnector';
-import ActionButton from '@/components/Platform/Device/SharedDevice/ActionButtons/ActionButton';
-import { findFlowsByDeviceId } from '@/utils/flow-functions';
 
-import {
-  deviceBody,
-  actionButtonsContainer,
-  actionButtonsContainerBottom,
-  connectorsContainer,
-  connectorsContainerExit,
-  connectorsContainerEntry
-} from '../../styles.module.css';
+import ActionButtons from '@/components/Platform/Device/SharedDevice/ActionButtons';
+import Connectors from '@/components/Platform/Device/SharedDevice/Connectors';
+import DeviceBody from '../../SharedDevice/DeviceBody';
+
 
 import {
   ifNumber
@@ -25,45 +17,51 @@ import {
 
 import eventBaseImg from '@/assets/images/devices/event/eventBase.svg';
 
+const defaultValuesOfType = {
+  'number': 0,
+  'boolean': false,
+  'string': 'FF12F3'
+}
+
 const If = ({
-  dragRef, device, updateValue
+  data, dragRef, activeActBtns, onChangeActBtns, onSaveData
 }) => {
-
-  const { id, name, posX, posY } = device;
-  const { deleteDevice, devices } = useDevices();
-  const { deleteDeviceConnections, flows } = useFlow();
-  const { enableModal, disableModal } = useModal();
-
-  const [value, setValue] = useState(device.value);
-  const [connectionValue, setConnectionValue] = useState([]);
-  const [qtdIncomingConn, setQtdIncomingConn] = useState(0)
-
-
-  const [numberVariable, setNumberVariable] = useState(0);
-  const [boolVariable, setBoolVariable] = useState(false);
-  const [stringVariable, setStringVariable] = useState('');
-  const [variable, setVariable] = useState(0);
-
-  const [connectionType, setConnectionType] = useState('number');
-  const [simbol, setSimbol] = useState('=');
+  const {
+    id,
+    name,
+    posX,
+    posY,
+    value,
+    connectors,
+    containerRef
+  } = data;
 
 
-  const displayRef = useRef(null);
+  const isFirstRender = useRef(true);
+  const { updateDeviceValue, devices } = useDevices();
+  const { updateDeviceValueInFlow, flows } = useFlow();
 
-  const connectionReceiver = () => {
+  const [connectionValue, setConnectionValue] = useState({});
+  const [qtdIncomingConn, setQtdIncomingConn] = useState(0);
+
+
+  const handleGetValue = () => ({ value });
+
+  const connectionReceiver = useCallback(() => {
     setQtdIncomingConn(prev => prev + 1)
-  }
+  }, []);
 
   const handleSpecialDeviceValues = (deviceData, objValue) => {
     const devices = {
       'dht': (deviceData, objValue) => {
+
         const { connector } = deviceData;
-        const { value, max } = objValue;
+        const { current, max } = objValue;
 
         if (connector.name === 'temperature') return objValue;
 
         return {
-          value: Math.ceil((value * 100) / max),
+          current: Math.ceil((current * 100) / 1023),
           max
         };
       }
@@ -78,102 +76,110 @@ const If = ({
     return newValue;
   }
 
-  const handleSettingUpdate = useCallback((newSimbol, newVariable) => {
+  const handleSettingUpdate = useCallback((newSimbol, newNumberDisplay) => {
 
-    switch (connectionType) {
-      case 'number':
-        setNumberVariable(newVariable);
-        break;
-      case 'boolean':
-        setBoolVariable(newVariable);
-        break;
-      case 'string':
-        setStringVariable(newVariable);
-        break;
+    const newValue = {
+      ...data.value,
+      numberDisplay: newNumberDisplay,
+      simbol: newSimbol
     }
 
-    setVariable(newVariable);
-    setSimbol(newSimbol);
-  }, [variable, simbol, connectionType]);
+    onSaveData('value', newValue)
+    updateDeviceValue(id, { value: newValue });
+
+    // setVariable(newVariable);
+    // setSimbol(newSimbol);
+    setQtdIncomingConn(prev => prev + 1);
+
+  }, [value.connectionType]);
 
 
   const handleConnections = () => {
 
     const flow = findFlowsByDeviceId(flows, id);
 
-    if (!flow) {
-      updateValue(setValue, id, { value: 0, max: 0 });
-
-      return;
-    }
-
-    const connection = flow.connections.find(conn => {
+    const connection = flow?.connections.find(conn => {
       return conn.deviceTo.id === id
     });
 
-    if (!connection) return;
 
-    const device = devices[`${connection.deviceFrom.id}`];
+    if (!flow || !connection) {
 
-
-    let value = device.value.current;
-    let max = device.value.max;
-
-    if ([undefined, null].includes(value)) {
-      //If device.value.current undefined or null, structure equal boolean (true or false) or object -> ex: {temperature:{..}, humidity:{...}
-      value = typeof device.value === 'boolean' || typeof device.value === 'string' ? device.value : device.value[connection.deviceFrom.connector.name].current
-      max = typeof device.value === 'boolean' || typeof device.value === 'string' ? device.value : device.value[connection.deviceFrom.connector.name].max
-    }
-
-
-    if (connectionType != String(typeof value)) {
-      setConnectionType(String(typeof value));
-      switch (String(typeof value)) {
-        case 'number':
-          setVariable(0);
-          break;
-        case 'boolean':
-          setVariable(false);
-          break;
-        case 'string':
-          setVariable('FF12F3');
-          break;
+      const value = {
+        ...data.value,
+        send: {
+          current: 0,
+        }
       }
-      setSimbol('=');
+
+      onSaveData('value', value)
+      updateDeviceValue(id, { value });
+      return;
     }
 
+
+    const device = { ...devices[connection.deviceFrom.id] };
+
+    const deviceValue = device.value[connection.deviceFrom.connector.name];
+
+    const typeValue = typeof deviceValue.current;
+
+    if (value.connectionType !== typeValue) {
+
+      const defaultValue = defaultValuesOfType[typeValue];
+
+
+      const newValue = {
+        ...data.value,
+        numberDisplay: defaultValue,
+        simbol: '=',
+        connectionType: typeValue
+      }
+
+      onSaveData('value', newValue)
+      updateDeviceValue(id, { value: newValue });
+    }
 
     //Validates if it is a device that has a special behavior in generating its value
-    const objValue = handleSpecialDeviceValues(connection.deviceFrom, { value, max });
+    const objValue = handleSpecialDeviceValues(connection.deviceFrom, { current: deviceValue.current });
 
     setConnectionValue({
       id: connection.id,
       ...connection,
-      ...objValue
+      value: { ...objValue }
     });
+
   }
 
   const calcValues = () => {
+
     if (!Object.hasOwn(connectionValue, 'id')) {
-      updateValue(setValue, id, false);
       return;
     }
 
     const operations = {
-      '>': (newValue) => newValue > variable ? true : false,
-      '<': (newValue) => newValue < variable ? true : false,
-      '≥': (newValue) => newValue >= variable ? true : false,
-      '≤': (newValue) => newValue <= variable ? true : false,
-      '=': (newValue) => newValue === variable ? true : false,
-      '≠': (newValue) => newValue != variable ? true : false
+      '>': (newValue) => newValue > value.numberDisplay ? true : false,
+      '<': (newValue) => newValue < value.numberDisplay ? true : false,
+      '≥': (newValue) => newValue >= value.numberDisplay ? true : false,
+      '≤': (newValue) => newValue <= value.numberDisplay ? true : false,
+      '=': (newValue) => newValue === value.numberDisplay ? true : false,
+      '≠': (newValue) => newValue != value.numberDisplay ? true : false
     }
-    const operationType = operations[simbol];
+    const operationType = operations[value.simbol];
 
     if (!operationType) return;
 
-    const newValue = operationType(connectionValue.value);
 
-    updateValue(setValue, id, newValue);
+    const newValue = {
+      ...data.value,
+      send: {
+        current: operationType(connectionValue.value.current)
+      }
+    }
+
+    onSaveData('value', newValue)
+    updateDeviceValue(id, { value: newValue });
+    updateDeviceValueInFlow({ connectorId: connectors.send.id, newValue })
   }
 
   const sendValue = () => {
@@ -186,132 +192,135 @@ const If = ({
     });
 
     connsOutput.forEach(conn => {
-      conn.deviceTo.defaultBehavior({ value });
+      conn.deviceTo.defaultBehavior({ value: value.send.current });
     })
   }
 
-  const redefineBehavior = () => setConnectionValue({});
+  const redefineBehavior = useCallback(() => {
+    setQtdIncomingConn(prev => prev + 1);
+  }, []);
 
-  const getValue = () => ({ value });
 
   useEffect(() => {
-    if (qtdIncomingConn > 0) {
-      handleConnections();
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+
+      return;
     }
+
+    handleConnections();
+
   }, [qtdIncomingConn]);
 
   useEffect(() => {
-    updateDisplay();
+
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+
+      return;
+    }
+
     calcValues();
 
-  }, [connectionValue, variable, simbol]);
+  }, [connectionValue, value.numberDisplay, value.simbol]);
 
-  const updateDisplay = () => {
-    displayRef.current.innerHTML = simbol + " " + variable;
-  };
 
   useEffect(() => {
-    sendValue();
-  }, [value]);
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
 
+      return;
+    }
+
+    sendValue();
+  }, [value.send.current]);
+
+  useEffect(() => {
+
+    updateDeviceValue(id, {
+      defaultBehavior: connectionReceiver,
+      redefineBehavior
+    })
+  }, [connectionReceiver, redefineBehavior]);
 
   return (
     <>
-      <div
-        className={deviceBody}
+
+      <DeviceBody
+        name={name}
+        imgSrc={eventBaseImg}
         ref={dragRef}
+        onChangeActBtns={onChangeActBtns}
       >
-        <img
-          src={eventBaseImg}
-          alt={`Device ${name}`}
-          loading='lazy'
-        />
-        <p ref={displayRef} className={ifNumber}>
-          = 0
+
+        <p className={ifNumber}>
+          {`${value.simbol} ${value.numberDisplay}`}
         </p>
-      </div>
 
-      <div
-        className={`${connectorsContainer} ${connectorsContainerEntry}`}
-      >
-        <ConnectorsConnector
-          name={'ifInputData'}
-          type={'entry'}
-          device={{
-            id,
-            defaultBehavior: connectionReceiver,
-            redefineBehavior,
-            containerRef: device.containerRef
-          }}
-          updateConn={{ posX, posY }}
-        />
-
-      </div>
-
-      <div
-        className={`${connectorsContainer} ${connectorsContainerExit}`}
-      >
-        <ConnectorsConnector
-          name={'ifOutputData'}
-          type={'exit'}
-          device={{
-            id,
-            defaultBehavior: () => {
-              connectionReceiver();
-
-              return getValue();
-            },
-            redefineBehavior,
-            containerRef: device.containerRef
-          }}
-          updateConn={{ posX, posY }}
-        />
-
-      </div>
-
-      <div
-        className={
-          `${actionButtonsContainer} ${actionButtonsContainerBottom}`
-        }
-      >
-        <ActionButton
-          onClick={() => enableModal({
-            typeContent: 'confirmation',
+        <ActionButtons
+          orientation='bottom'
+          active={activeActBtns}
+          actionDelete={{
             title: 'Cuidado',
             subtitle: 'Tem certeza que deseja excluir o componente?',
-            handleConfirm: () => {
-              deleteDeviceConnections(id);
-              deleteDevice(id);
-              disableModal('confirmation');
+            data: {
+              id
             }
-          })}
-        >
-          <Trash />
-        </ActionButton>
-
-        <ActionButton
-          onClick={() => enableModal({
+          }}
+          actionConfig={{
             typeContent: 'config-if',
-            handleSaveConfig: handleSettingUpdate,
-            defaultSimbol: simbol,
-            defaultNumber: numberVariable,
-            defaultBool: boolVariable,
-            defaultString: stringVariable,
-            connectionType: connectionType,
-          })}
-        >
-          <Gear />
-        </ActionButton>
-      </div >
+            onSave: handleSettingUpdate,
+            data: {
+              defaultSimbol: value.simbol,
+              defaultValue: value.numberDisplay,
+              connectionType: value.connectionType,
+            }
+          }}
+        />
+      </DeviceBody>
+
+      <Connectors
+        type='doubleTypes'
+        exitConnectors={[
+          {
+            data: connectors.receive,
+            device: {
+              id,
+              defaultBehavior: connectionReceiver,
+              redefineBehavior,
+              containerRef
+            },
+            updateConn: { posX, posY },
+            handleChangeData: onSaveData
+          },
+        ]}
+        entryConnectors={[
+          {
+            data: connectors.send,
+            device: {
+              id,
+              defaultBehavior: handleGetValue,
+              redefineBehavior,
+              containerRef
+            },
+            updateConn: { posX, posY },
+            handleChangeData: onSaveData
+          },
+        ]}
+
+      />
+
     </>
   );
 };
 
 
 If.propTypes = {
-  device: P.object.isRequired,
+  data: P.object.isRequired,
   dragRef: P.func.isRequired,
-  updateValue: P.func.isRequired
+  activeActBtns: P.bool.isRequired,
+  onChangeActBtns: P.func.isRequired,
+  onSaveData: P.func.isRequired
 }
 
 export default If;

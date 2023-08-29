@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import P from 'prop-types';
 
 import {
@@ -17,27 +17,41 @@ import {
 } from '@/styles/common.module.css';
 
 const ConfigIfModal = ({ closeModal, contentData }) => {
-  const { handleSaveConfig, defaultSimbol, defaultNumber, defaultBool, defaultString, connectionType } = contentData;
+  const { handleSaveConfig, defaultSimbol, defaultValue, connectionType } = contentData;
 
-    const refDefaultSimbol = useRef(null);
-    const refDefaultNumber = useRef(null);
-    const refDefaultBool = useRef(null);
-    const refDefaultString = useRef(null);
+  const refDefaultSimbol = useRef(null);
+  const [value, setValue] = useState(defaultValue);
+
+  const handleInputChange = (event) => {
+    const transformFunc = {
+      'number': (value) => Number(value),
+      'boolean': (value) => value === 'true' ? true : false,
+      'string': (value) => value.toUpperCase()
+    }
+    const value = event.target.value;
+
+    const currentTransformFunc = transformFunc[typeof value];
+    const valueTransform = currentTransformFunc(value)
+
+    setValue(valueTransform);
+  }
+
+  const handleTransformValue = (variable) => {
+    const typesTransform = {
+      'number': (value) => Number(value),
+      'boolean': (value) => value === 'TRUE' ? true : false,
+      'string': (value) => value.toUpperCase()
+    }
+
+    const currentTransform = typesTransform[connectionType];
+
+    return currentTransform(variable)
+  }
 
   const handleSave = () => {
 
-    let newVariable;
+    let newVariable = handleTransformValue(value);
     const newSimbol = refDefaultSimbol.current.value;
-
-    if (connectionType === 'number'){
-      newVariable = Number(refDefaultNumber.current.value);
-    }
-    else if (connectionType === 'boolean'){
-      newVariable = refDefaultBool.current.value === "true" ? true : false;
-    }
-    else if (connectionType === 'string'){
-      newVariable = String(refDefaultString.current.value).toUpperCase();
-    }
 
     handleSaveConfig(newSimbol, newVariable);
 
@@ -63,38 +77,47 @@ const ConfigIfModal = ({ closeModal, contentData }) => {
         <div
           className={inputArea}
         >
-          <select ref={refDefaultSimbol} defaultValue={defaultSimbol} className={selectBox}>
-              <option value="="> = </option>
-              <option value="≠"> ≠ </option>
-              <option className = {connectionType === 'number' ? '' : disabled} value="&gt;"> &gt; </option>
-              <option className = {connectionType === 'number' ? '' : disabled} value="&lt;"> &lt; </option>
-              <option className = {connectionType === 'number' ? '' : disabled} value="≤"> ≤ </option>
-              <option className = {connectionType === 'number' ? '' : disabled} value="≥"> ≥ </option>
+          <select
+            defaultValue={defaultSimbol}
+            className={selectBox}
+            ref={refDefaultSimbol}
+          >
+            <option value="="> = </option>
+            <option value="≠"> ≠ </option>
+            <option className={connectionType === 'number' ? '' : disabled} value="&gt;"> &gt; </option>
+            <option className={connectionType === 'number' ? '' : disabled} value="&lt;"> &lt; </option>
+            <option className={connectionType === 'number' ? '' : disabled} value="≤"> ≤ </option>
+            <option className={connectionType === 'number' ? '' : disabled} value="≥"> ≥ </option>
           </select>
 
-        {/* NUMBER ----------------------------------------------------------------------------- */}
+          {/* NUMBER ----------------------------------------------------------------------------- */}
           <input
             type="number"
-            min = '0'
-            max = '999'
-            defaultValue={defaultNumber}
-            ref={refDefaultNumber}
-            className = {connectionType === 'number' ? inputNumber : disabled}
+            min='0'
+            max='999'
+            defaultValue={value}
+            className={connectionType === 'number' ? inputNumber : disabled}
+            onChange={handleInputChange}
           />
 
           {/* BOOLEAN  ----------------------------------------------------------------------------- */}
-          <select ref={refDefaultBool} defaultValue={defaultBool} className = {connectionType === 'boolean' ? selectBox : disabled}>
+          <select
+            defaultValue={value}
+            className={connectionType === 'boolean' ? selectBox : disabled}
+            onChange={handleInputChange}
+          >
             <option value="true"> true </option>
             <option value="false"> false </option>
           </select>
 
 
-        {/* STRING  ----------------------------------------------------------------------------- */}
+          {/* STRING  ----------------------------------------------------------------------------- */}
           <input
             type="text"
-            ref={refDefaultString}
-            defaultValue={defaultString}
+            defaultValue={value}
             className={connectionType === 'string' ? inputNumber : disabled}
+            onChange={handleInputChange}
+
           />
         </div>
       </div>
@@ -117,9 +140,11 @@ ConfigIfModal.propTypes = {
   contentData: P.shape({
     handleSaveConfig: P.func,
     defaultSimbol: P.string,
-    defaultNumber: P.number,
-    defaultBool: P.bool,
-    defaultString: P.string,
+    defaultValue: P.oneOfType([
+      P.string,
+      P.number,
+      P.bool
+    ]),
     connectionType: P.string,
   }).isRequired
 }

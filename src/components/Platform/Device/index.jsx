@@ -30,7 +30,7 @@ const Device = memo(function Device({ device }) {
 
   const handleActBtns = useCallback((value) => {
     setActiveActBtns(value)
-  }, []);
+  }, [activeActBtns]);
 
   const handleSaveData = useCallback((keyValue, newValue) => {
     setData(prev => {
@@ -42,7 +42,7 @@ const Device = memo(function Device({ device }) {
         }
       }
     });
-  }, []);
+  }, [data]);
 
 
   useEffect(() => {

@@ -42,6 +42,7 @@ const Infrared = memo(function Infrared({
     }
 
     onSaveData('value', { ...value });
+    updateDeviceValue(id, { value })
 
   }, []);
 
