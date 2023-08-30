@@ -28,13 +28,13 @@ const And = ({
 
   const [qtdIncomingConn, setQtdIncomingConn] = useState(0);
 
-  const handleGetValue = () => ({ value });
 
   const connectionReceiver = useCallback(() => {
     setQtdIncomingConn(prev => prev + 1)
   }, []);
 
   const handleConnections = () => {
+    console.log('HandleConnections and')
     const flow = findFlowsByDeviceId(flows, id);
 
     if (!flow) {
@@ -69,6 +69,10 @@ const And = ({
 
     }, []);
 
+    console.log({
+      title: 'Handle connections values',
+      values
+    });
 
     //Calc values
     if (values.length <= 0) {
@@ -95,6 +99,11 @@ const And = ({
       }
     }
 
+    console.log({
+      title: 'Handle connections value',
+      value
+    });
+
     onSaveData('value', value);
     updateDeviceValue(id, { value });
     updateDeviceValueInFlow({ connectorId: connectors.send.id, newValue: value })
@@ -105,14 +114,24 @@ const And = ({
   const sendValue = () => {
     const flow = findFlowsByDeviceId(flows, id);
 
+    console.log({
+      title: 'Dentro do sendValue and',
+      flow
+    });
     if (!flow) return;
+
 
     const connsOutput = flow.connections.filter(conn => {
       return conn.deviceFrom.id === id
     });
 
+    console.log({
+      title: 'Send value and',
+      connsOutput
+    });
+
     connsOutput.forEach(conn => {
-      conn.deviceTo.defaultBehavior({ value: value.send.current });
+      conn.deviceTo.defaultReceiveBehavior({ value: value.send.current });
     })
   }
 
@@ -147,7 +166,7 @@ const And = ({
   useEffect(() => {
 
     updateDeviceValue(id, {
-      defaultBehavior: connectionReceiver,
+      defaultReceiveBehavior: connectionReceiver,
       redefineBehavior
     })
   }, [connectionReceiver, redefineBehavior]);
@@ -182,8 +201,6 @@ const And = ({
             data: connectors.receive,
             device: {
               id,
-              defaultBehavior: connectionReceiver,
-              redefineBehavior,
               containerRef
             },
             updateConn: { posX, posY },
@@ -195,8 +212,6 @@ const And = ({
             data: connectors.send,
             device: {
               id,
-              defaultBehavior: handleGetValue,
-              redefineBehavior,
               containerRef
             },
             updateConn: { posX, posY },

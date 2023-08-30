@@ -45,8 +45,6 @@ const If = ({
   const [qtdIncomingConn, setQtdIncomingConn] = useState(0);
 
 
-  const handleGetValue = () => ({ value });
-
   const connectionReceiver = useCallback(() => {
     setQtdIncomingConn(prev => prev + 1)
   }, []);
@@ -192,7 +190,7 @@ const If = ({
     });
 
     connsOutput.forEach(conn => {
-      conn.deviceTo.defaultBehavior({ value: value.send.current });
+      conn.deviceTo.defaultReceiveBehavior({ value: value.send.current });
     })
   }
 
@@ -238,7 +236,7 @@ const If = ({
   useEffect(() => {
 
     updateDeviceValue(id, {
-      defaultBehavior: connectionReceiver,
+      defaultReceiveBehavior: connectionReceiver,
       redefineBehavior
     })
   }, [connectionReceiver, redefineBehavior]);
@@ -286,8 +284,6 @@ const If = ({
             data: connectors.receive,
             device: {
               id,
-              defaultBehavior: connectionReceiver,
-              redefineBehavior,
               containerRef
             },
             updateConn: { posX, posY },
@@ -299,8 +295,6 @@ const If = ({
             data: connectors.send,
             device: {
               id,
-              defaultBehavior: handleGetValue,
-              redefineBehavior,
               containerRef
             },
             updateConn: { posX, posY },
