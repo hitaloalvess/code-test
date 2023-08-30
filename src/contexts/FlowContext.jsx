@@ -415,12 +415,21 @@ export const FlowProvider = ({ children }) => {
 
     deviceConnections.forEach(conn => {
       const { id: fromId, connector: fromConnector } = conn.deviceFrom;
+
+      if (devices[fromId].defaultSendBehavior) {
+        //For components that have logic before passing values, ex: delay
+        devices[fromId].defaultSendBehavior();
+
+        return
+      }
+
+      //For components that only pass values
       const valueFrom = devices[fromId].value[fromConnector.name];
 
-      devices[conn.deviceTo.id].defaultBehavior({
+      devices[conn.deviceTo.id].defaultReceiveBehavior({
         value: valueFrom.current,
         max: valueFrom.max
-      })
+      });
     })
   }
 
