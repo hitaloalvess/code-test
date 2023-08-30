@@ -24,12 +24,6 @@ const Infrared = memo(function Infrared({
 
   const [isModalOpen, setIsModalOpen] = useState(true);
 
-  const handleGetValue = () => {
-    return {
-      value: data.value.code.current,
-    };
-  }
-
   const closeModal = () => {
     setIsModalOpen(false);
   }
@@ -47,13 +41,10 @@ const Infrared = memo(function Infrared({
   }, []);
 
   useEffect(() => {
-    updateDeviceValue(id, {
-      defaultBehavior: () => handleGetValue()
-    });
 
     updateDeviceValueInFlow({ connectorId: data.connectors.code.id, newValue: data.value.code });
 
-    executeFlow({ connectorId: data.connectors.code.id, fromBehaviorCallback: () => handleGetValue() });
+    executeFlow({ connectorId: data.connectors.code.id });
   }, [data.value.code.current]);
 
   return (

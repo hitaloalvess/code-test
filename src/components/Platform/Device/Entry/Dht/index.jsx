@@ -41,25 +41,6 @@ const Dht = memo(function Dht({
     setScaleType(newScaleType);
   }
 
-  const handleGetValue = (typeValue) => {
-    if (!['temperature', 'humidity'].includes(typeValue)) return;
-
-    if (typeValue === 'temperature') {
-      return {
-        value: data.value.temperature.current,
-        max: MAX_TEMPERATURE
-      };
-    }
-
-    if (typeValue === 'humidity') {
-      return {
-        value: data.value.humidity.current,
-        max: MAX_HUMIDITY
-      };
-    }
-
-  }
-
   const handleOnInput = (event, name) => {
     const inputValue = Number(event.target.value);
 
@@ -77,26 +58,19 @@ const Dht = memo(function Dht({
 
   }
 
-
   useEffect(() => {
-    updateDeviceValue(id, {
-      defaultBehavior: () => handleGetValue('temperature')
-    });
 
     updateDeviceValueInFlow({ connectorId: data.connectors.temperature.id, newValue: data.value.temperature });
 
-    executeFlow({ connectorId: data.connectors.temperature.id, fromBehaviorCallback: () => handleGetValue(data.connectors.temperature.name) });
+    executeFlow({ connectorId: data.connectors.temperature.id });
 
   }, [data.value.temperature.current]);
 
   useEffect(() => {
-    updateDeviceValue(id, {
-      defaultBehavior: () => handleGetValue('humidity')
-    });
 
     updateDeviceValueInFlow({ connectorId: data.connectors.humidity.id, newValue: data.value.humidity });
 
-    executeFlow({ connectorId: data.connectors.humidity.id, fromBehaviorCallback: () => handleGetValue(data.connectors.humidity.name) });
+    executeFlow({ connectorId: data.connectors.humidity.id });
   }, [data.value.humidity.current]);
 
   return (

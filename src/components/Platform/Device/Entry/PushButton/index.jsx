@@ -26,14 +26,6 @@ const PushButton = memo(function PushButton({
   const { updateDeviceValue } = useDevices();
   const { executeFlow, updateDeviceValueInFlow } = useFlow();
 
-  const handleGetValue = () => {
-    return {
-      state: {
-        current: data.value.state.current
-      }
-    };
-  };
-
 
   const handleClick = (newValue, name) => {
     const value = {
@@ -51,9 +43,6 @@ const PushButton = memo(function PushButton({
 
 
   useEffect(() => {
-    updateDeviceValue(id, {
-      defaultBehavior: handleGetValue
-    });
 
     updateDeviceValueInFlow({ connectorId: connectors.state.id, newValue: value.state })
 

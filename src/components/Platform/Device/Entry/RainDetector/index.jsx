@@ -30,17 +30,6 @@ const RainDetector = memo(function RainDetector({
   const { updateDeviceValue } = useDevices();
   const { executeFlow, updateDeviceValueInFlow } = useFlow();
 
-
-  const handleGetValue = () => {
-    return {
-      radiation: {
-        value: value.radiation.current,
-        max: value.radiation.max
-      }
-    }
-  };
-
-
   const handleOnInput = (event, name) => {
     const inputValue = Number(event.target.value);
 
@@ -58,9 +47,6 @@ const RainDetector = memo(function RainDetector({
 
 
   useEffect(() => {
-    updateDeviceValue(id, {
-      defaultBehavior: handleGetValue
-    });
 
     updateDeviceValueInFlow({ connectorId: connectors.radiation.id, newValue: value.radiation })
 

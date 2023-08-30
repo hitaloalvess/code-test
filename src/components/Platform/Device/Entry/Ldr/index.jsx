@@ -21,16 +21,6 @@ const Ldr = memo(function Ldr({
   const { updateDeviceValue } = useDevices();
   const { executeFlow, updateDeviceValueInFlow } = useFlow();
 
-
-  const handleGetValue = () => {
-    return {
-      luminosity: {
-        value: data.value.luminosity.current,
-        max: data.value.luminosity.max
-      }
-    }
-  }
-
   const handleOnInput = (event, name) => {
     const inputValue = Number(event.target.value);
 
@@ -48,9 +38,7 @@ const Ldr = memo(function Ldr({
   }
 
   useEffect(() => {
-    updateDeviceValue(id, {
-      defaultBehavior: handleGetValue
-    });
+
 
     updateDeviceValueInFlow({ connectorId: data.connectors.luminosity.id, newValue: data.value.luminosity })
 
@@ -113,58 +101,7 @@ const Ldr = memo(function Ldr({
           }
         ]}
       />
-      {/* <div
-        className={deviceBody}
-        ref={dragRef}
-      >
 
-        <img
-          src={imgSrc}
-          alt={`Device ${name}`}
-          loading='lazy'
-        />
-      </div>
-
-      <div
-        className={`${connectorsContainer} ${connectorsContainerExit}`}
-      >
-        <ConnectorsConnector
-          name={'luminosity'}
-          type={'exit'}
-          device={{
-            id,
-            defaultBehavior: handleGetValue,
-            containerRef: device.containerRef
-          }}
-          updateConn={{ posX, posY }}
-          handleChangeId={handleChangeLumenConnector}
-        />
-
-      </div>
-
-
-
-      <div
-        className={
-          `${actionButtonsContainer} ${actionButtonsContainerLeft}`
-        }
-      >
-        <ActionButton
-          onClick={() => enableModal({
-            typeContent: 'confirmation',
-            title: 'Cuidado',
-            subtitle: 'Tem certeza que deseja excluir o componente?',
-            handleConfirm: () => {
-              deleteDeviceConnections(id);
-              deleteDevice(id);
-              disableModal('confirmation');
-            }
-          })}
-        >
-          <Trash />
-        </ActionButton>
-
-      </div> */}
     </>
   );
 });

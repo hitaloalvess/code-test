@@ -29,7 +29,7 @@ const ShakeMotor = memo(function ShakeMotor({
   const { updateDeviceValueInFlow } = useFlow();
 
 
-  const defaultBehavior = useCallback((valueReceived) => {
+  const defaultReceiveBehavior = useCallback((valueReceived) => {
     const { value, max } = valueReceived;
 
     const objValue = {
@@ -82,10 +82,10 @@ const ShakeMotor = memo(function ShakeMotor({
   useEffect(() => {
 
     updateDeviceValue(id, {
-      defaultBehavior,
+      defaultReceiveBehavior,
       redefineBehavior
     })
-  }, [defaultBehavior, redefineBehavior]);
+  }, [defaultReceiveBehavior, redefineBehavior]);
 
   return (
     <>
@@ -125,8 +125,6 @@ const ShakeMotor = memo(function ShakeMotor({
             data: connectors.vibration,
             device: {
               id,
-              defaultBehavior,
-              redefineBehavior,
               containerRef: containerRef
             },
             updateConn: { posX, posY },

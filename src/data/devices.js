@@ -435,8 +435,29 @@ export const mockDevices = {
       type: 'virtual',
       category: 'event',
       value: {
-        current: 0,
-        max: 0
+        send: {
+          current: 0,
+          max: 0
+        },
+        duration: 5,
+      },
+      posX: 0,
+      posY: 0,
+      connectors: {
+        receive: {
+          id: null,
+          name: 'receive',
+          type: 'entry',
+          x: 0,
+          y: 0
+        },
+        send: {
+          id: null,
+          name: 'send',
+          type: 'exit',
+          x: 0,
+          y: 0
+        },
       }
     },
     {
@@ -634,11 +655,11 @@ export const deviceConnectorRules = {
   },
   buzzer: {
     acceptedConnections: ['allEntry'],
-    connectsFrom: ['potentiometer', 'ldr', 'pushButton', 'counter', 'and', 'or', 'not', 'if', 'toggle', 'slider', 'delay', 'switch', 'physicalPotentiometer', 'physicalLDR']
+    connectsFrom: ['potentiometer', 'ldr', 'rainDetector', 'soilMoisture', 'pushButton', 'counter', 'and', 'or', 'not', 'if', 'toggle', 'slider', 'delay', 'switch', 'physicalPotentiometer', 'physicalLDR']
   },
   shakeMotor: {
     acceptedConnections: ['allEntry'],
-    connectsFrom: ['potentiometer', 'ldr', 'pushButton', 'counter', 'and', 'or', 'not', 'if', 'toggle', 'slider', 'delay', 'switch', 'physicalPotentiometer', 'physicalLDR']
+    connectsFrom: ['potentiometer', 'ldr', 'rainDetector', 'soilMoisture', 'pushButton', 'counter', 'and', 'or', 'not', 'if', 'toggle', 'slider', 'delay', 'switch', 'physicalPotentiometer', 'physicalLDR']
   },
   ledMono: {
     acceptedConnections: ['allEntry'],
@@ -650,11 +671,11 @@ export const deviceConnectorRules = {
   },
   bargraph: {
     acceptedConnections: ['oneEntry'],
-    connectsFrom: ['potentiometer', 'dht', 'ldr', 'counter', 'slider', 'physicalPotentiometer', 'physicalLDR', 'physicalDHT'],
+    connectsFrom: ['potentiometer', 'dht', 'ldr', 'rainDetector', 'soilMoisture', 'counter', 'slider', 'physicalPotentiometer', 'physicalLDR', 'physicalDHT'],
   },
   counter: {
     acceptedConnections: ['oneEntry', 'allExit'],
-    connectsFrom: ['potentiometer', 'ldr', 'pushButton', 'slider', 'delay', 'toggle', 'and', 'or', 'physicalPotentiometer', 'physicalLDR'],
+    connectsFrom: ['potentiometer', 'ldr', 'rainDetector', 'soilMoisture', 'pushButton', 'slider', 'delay', 'toggle', 'and', 'or', 'physicalPotentiometer', 'physicalLDR'],
     connectsTo: ['all']
   },
   and: {
@@ -694,7 +715,7 @@ export const deviceConnectorRules = {
   },
   slider: {
     acceptedConnections: ['oneEntry', 'allExit'],
-    connectsFrom: ['potentiometer', 'dht', 'ldr', 'counter', 'slider', 'physicalPotentiometer', 'physicalLDR', 'physicalDHT'],
+    connectsFrom: ['potentiometer', 'dht', 'ldr', 'rainDetector', 'soilMoisture', 'counter', 'slider', 'physicalPotentiometer', 'physicalLDR', 'physicalDHT'],
     connectsTo: ['all'],
   },
 }

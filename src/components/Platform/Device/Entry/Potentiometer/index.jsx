@@ -19,17 +19,6 @@ const Potentiometer = memo(function Potentiometer({
   const { updateDeviceValue } = useDevices();
   const { executeFlow, updateDeviceValueInFlow } = useFlow();
 
-
-  const handleGetValue = () => {
-    return {
-      resistance: {
-        value: data.value.resistance.current,
-        max: data.value.resistance.max
-      }
-    }
-  };
-
-
   const handleOnInput = (event, name) => {
     const inputValue = Number(event.target.value);
 
@@ -47,9 +36,6 @@ const Potentiometer = memo(function Potentiometer({
 
 
   useEffect(() => {
-    updateDeviceValue(id, {
-      defaultBehavior: handleGetValue
-    });
 
     updateDeviceValueInFlow({ connectorId: data.connectors.resistance.id, newValue: data.value.resistance })
 
