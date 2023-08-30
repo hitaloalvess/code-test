@@ -413,9 +413,29 @@ export const mockDevices = {
       type: 'virtual',
       category: 'event',
       value: {
-        current: 0,
-        max: 0,
-        color: '#39394E'
+        send: {
+          current: 0,
+          max: 0,
+          color: '#39394E'
+        }
+      },
+      posX: 0,
+      posY: 0,
+      connectors: {
+        receive: {
+          id: null,
+          name: 'receive',
+          type: 'entry',
+          x: 0,
+          y: 0
+        },
+        send: {
+          id: null,
+          name: 'send',
+          type: 'exit',
+          x: 0,
+          y: 0
+        },
       }
     },
     {
@@ -425,7 +445,29 @@ export const mockDevices = {
       label: 'Toggle',
       type: 'virtual',
       category: 'event',
-      value: false
+      value: {
+        send: {
+          current: false
+        }
+      },
+      posX: 0,
+      posY: 0,
+      connectors: {
+        receive: {
+          id: null,
+          name: 'receive',
+          type: 'entry',
+          x: 0,
+          y: 0
+        },
+        send: {
+          id: null,
+          name: 'send',
+          type: 'exit',
+          x: 0,
+          y: 0
+        },
+      }
     },
     {
       id: 32,
@@ -468,8 +510,29 @@ export const mockDevices = {
       type: 'virtual',
       category: 'event',
       value: {
-        current: 0,
-        max: 0
+        send: {
+          current: 0,
+          max: 0
+        },
+        limit: 1023
+      },
+      posX: 0,
+      posY: 0,
+      connectors: {
+        receive: {
+          id: null,
+          name: 'receive',
+          type: 'entry',
+          x: 0,
+          y: 0
+        },
+        send: {
+          id: null,
+          name: 'send',
+          type: 'exit',
+          x: 0,
+          y: 0
+        },
       }
     },
   ],

@@ -1,102 +1,93 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import P from 'prop-types';
-import { Trash, Gear } from '@phosphor-icons/react';
 
 import eventBaseImg from '@/assets/images/devices/event/eventBase.svg';
 
-import { useModal } from '@/hooks/useModal';
+import { findFlowsByDeviceId } from '@/utils/flow-functions';
 import { useFlow } from '@/hooks/useFlow';
 import { useDevices } from '@/hooks/useDevices';
-import { findFlowsByDeviceId } from '@/utils/flow-functions';
-import ConnectorsConnector from '@/components/Platform/Device/SharedDevice/Connectors/ConnectorsConnector';
-import ActionButton from '@/components/Platform/Device/SharedDevice/ActionButtons/ActionButton';
 
-import {
-  deviceBody,
-  actionButtonsContainer,
-  actionButtonsContainerBottom,
-  connectorsContainer,
-  connectorsContainerExit,
-  connectorsContainerEntry
-} from '../../styles.module.css';
-
-import {
-  numberValue,
-  rangeSlider
-} from './styles.module.css';
+import ActionButtons from '@/components/Platform/Device/SharedDevice/ActionButtons';
+import Connectors from '@/components/Platform/Device/SharedDevice/Connectors';
+import DeviceBody from '../../SharedDevice/DeviceBody';
+import SliderIcon from './SliderIcon';
 
 
 const Slider = ({
-  dragRef, device, updateValue
+  data, dragRef, activeActBtns, onChangeActBtns, onSaveData
 }) => {
 
-  const { id, name, posX, posY } = device;
-  const { deleteDevice, devices } = useDevices();
-  const { deleteDeviceConnections, flows } = useFlow();
-  const { enableModal, disableModal } = useModal();
+  const {
+    id,
+    name,
+    posX,
+    posY,
+    value,
+    connectors,
+    containerRef
+  } = data;
+  const { updateDeviceValue, devices } = useDevices();
+  const { updateDeviceValueInFlow, flows } = useFlow();
 
-  const [value, setValue] = useState(device.value);
-  const [limit, setLimit] = useState(1023);
-  const [connectionValue, setConnectionValue] = useState({});
   const [qtdIncomingConn, setQtdIncomingConn] = useState(0);
-  const showValueRef = useRef(null);
 
-  const handleSettingUpdate = (newLimit) => {
-    setLimit(newLimit);
-  };
+  const handleSettingUpdate = useCallback((newLimit) => {
+
+    const newValue = {
+      ...data.value,
+      limit: newLimit
+    }
+    onSaveData('value', newValue)
+    updateDeviceValue(id, { value: newValue });
+
+    setQtdIncomingConn(prev => prev + 1);
+
+  }, [value]);
 
 
-  const connectionReceiver = () => {
+  const connectionReceiver = useCallback(() => {
     setQtdIncomingConn(prev => prev + 1)
-  }
+  }, []);
 
   const handleConnections = () => {
     const flow = findFlowsByDeviceId(flows, id);
 
-    if (!flow) {
-      updateValue(setValue, id, { value: 0, max: 0 });
-
-      return;
-    }
-
-    const connection = flow.connections.find(conn => {
+    const connection = flow?.connections.find(conn => {
       return conn.deviceTo.id === id
     });
 
-    const device = devices[`${connection.deviceFrom.id}`];
+    if (!flow || !connection) {
 
-    const value = Object.hasOwn(device.value, 'current') ? device.value.current : device.value[connection.deviceFrom.connector.name].current;
-    const max = Object.hasOwn(device.value, 'max') ? device.value.max : device.value[connection.deviceFrom.connector.name].max;
+      const newValue = {
+        ...data.value,
+        send: {
+          ...data.value.send,
+          current: 0,
+          max: 0
+        }
+      }
 
-    const objValue = {
-      idConnection: connection.id,
-      value,
-      max
-    }
-
-    setConnectionValue(objValue);
-  }
-
-  const calcValues = () => {
-    if (!Object.hasOwn(connectionValue, 'idConnection')) {
-      updateValue(setValue, id, { current: 0, max: 0 });
-
-      showValueRef.current.innerHTML = 0;
+      onSaveData('value', newValue)
+      updateDeviceValue(id, { value: newValue });
 
       return;
     }
 
-    const newValue = connectionValue.value > limit ? {
-      current: limit,
-      max: connectionValue.max
-    } : {
-      current: connectionValue.value,
-      max: connectionValue.max
-    };
+    const device = { ...devices[connection.deviceFrom.id] };
+    const deviceValue = device.value[connection.deviceFrom.connector.name];
 
-    showValueRef.current.innerHTML = newValue.current;
+    const newValue = {
+      ...data.value,
+      send: {
+        ...deviceValue,
+        current: deviceValue.current > value.limit ? value.limit : deviceValue.current
+      }
+    }
 
-    updateValue(setValue, id, newValue);
+    onSaveData('value', newValue);
+    updateDeviceValue(id, { value: newValue });
+    updateDeviceValueInFlow({ connectorId: connectors.send.id, newValue });
+
   }
 
   const sendValue = () => {
@@ -109,17 +100,28 @@ const Slider = ({
     });
 
     connsOutput.forEach(conn => {
-      conn.deviceTo.defaultBehavior({
-        value: value.current,
-        max: value.max
+      conn.deviceTo.defaultReceiveBehavior({
+        value: value.send.current,
+        max: value.send.max
       });
     })
   }
 
-  const redefineBehavior = () => setConnectionValue({})
+  const redefineBehavior = useCallback(() => {
+    const newValue = {
+      ...value,
+      send: {
+        ...value.send,
+        current: 0,
+        max: 0
+      }
+    }
+
+    onSaveData('value', newValue)
+    updateDeviceValue(id, { value: newValue });
+  }, [])
 
 
-  const getValue = () => ({ value: value.current, max: value.max });
 
   useEffect(() => {
     if (qtdIncomingConn > 0) {
@@ -129,113 +131,88 @@ const Slider = ({
 
   useEffect(() => {
     sendValue();
-  }, [value]);
+  }, [value.send.current]);
+
 
   useEffect(() => {
-    calcValues();
-  }, [connectionValue, limit])
+
+    updateDeviceValue(id, {
+      defaultSendBehavior: connectionReceiver,
+      defaultReceiveBehavior: connectionReceiver,
+      redefineBehavior
+    })
+  }, [connectionReceiver, redefineBehavior]);
 
   return (
     <>
-      <div
-        className={deviceBody}
+
+      <DeviceBody
+        name={name}
+        imgSrc={eventBaseImg}
         ref={dragRef}
+        onChangeActBtns={onChangeActBtns}
       >
-        <p
-          className={numberValue}
-          ref={showValueRef}
-        >
-          0
-        </p>
 
-        <input
-          type="range"
-          min='0'
-          className={rangeSlider}
-          max={limit}
-          value={value.current}
-          readOnly={true}
-        />
+        <SliderIcon currentValue={value.send.current} limit={value.limit} />
 
-        <img
-          src={eventBaseImg}
-          alt={`Device ${name}`}
-        />
-      </div>
-
-      <div
-        className={`${connectorsContainer} ${connectorsContainerEntry}`}
-      >
-        <ConnectorsConnector
-          name={'sliderInputData'}
-          type={'entry'}
-          device={{
-            id,
-            defaultBehavior: connectionReceiver,
-            redefineBehavior,
-            containerRef: device.containerRef
-          }}
-          updateConn={{ posX, posY }}
-        />
-
-      </div>
-
-      <div
-        className={`${connectorsContainer} ${connectorsContainerExit}`}
-      >
-        <ConnectorsConnector
-          name={'sliderOutputData'}
-          type={'exit'}
-          device={{
-            id,
-            defaultBehavior: getValue,
-            redefineBehavior,
-            containerRef: device.containerRef
-          }}
-          updateConn={{ posX, posY }}
-        />
-
-      </div>
-
-      <div
-        className={
-          `${actionButtonsContainer} ${actionButtonsContainerBottom}`
-        }
-      >
-        <ActionButton
-          onClick={() => enableModal({
-            typeContent: 'confirmation',
+        <ActionButtons
+          orientation='bottom'
+          active={activeActBtns}
+          actionDelete={{
             title: 'Cuidado',
             subtitle: 'Tem certeza que deseja excluir o componente?',
-            handleConfirm: () => {
-              deleteDeviceConnections(id);
-              deleteDevice(id);
-              disableModal('confirmation');
+            data: {
+              id
             }
-          })}
-        >
-          <Trash />
-        </ActionButton>
-
-        <ActionButton
-          onClick={() => enableModal({
+          }}
+          actionConfig={{
             typeContent: 'config-slider',
-            handleSaveConfig: handleSettingUpdate,
-            defaultMaxValue: limit
-          })}
-        >
-          <Gear />
-        </ActionButton>
-      </div>
+            onSave: handleSettingUpdate,
+            data: {
+              defaultMaxValue: value.limit
+            }
+          }}
+        />
+      </DeviceBody>
+
+      <Connectors
+        type='doubleTypes'
+        exitConnectors={[
+          {
+            data: connectors.receive,
+            device: {
+              id,
+              containerRef
+            },
+            updateConn: { posX, posY },
+            handleChangeData: onSaveData
+          },
+        ]}
+        entryConnectors={[
+          {
+            data: connectors.send,
+            device: {
+              id,
+              containerRef
+            },
+            updateConn: { posX, posY },
+            handleChangeData: onSaveData
+          },
+        ]}
+
+      />
+
     </>
   );
 };
 
 
 Slider.propTypes = {
-  device: P.object.isRequired,
+  data: P.object.isRequired,
   dragRef: P.func.isRequired,
-  updateValue: P.func.isRequired
+  activeActBtns: P.bool.isRequired,
+  onChangeActBtns: P.func.isRequired,
+  onSaveData: P.func.isRequired
 }
 
 export default Slider;

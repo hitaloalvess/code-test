@@ -1,101 +1,91 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import P from 'prop-types';
-import { Trash, Gear } from '@phosphor-icons/react';
 
-import { useModal } from '@/hooks/useModal';
+import { findFlowsByDeviceId } from '@/utils/flow-functions';
 import { useFlow } from '@/hooks/useFlow';
 import { useDevices } from '@/hooks/useDevices';
-import ConnectorsConnector from '@/components/Platform/Device/SharedDevice/Connectors/ConnectorsConnector';
-import ActionButton from '@/components/Platform/Device/SharedDevice/ActionButtons/ActionButton';
-import { findFlowsByDeviceId } from '@/utils/flow-functions';
 
-import {
-  deviceBody,
-  actionButtonsContainer,
-  actionButtonsContainerBottom,
-  connectorsContainer,
-  connectorsContainerExit,
-  connectorsContainerEntry
-} from '../../styles.module.css';
+import ActionButtons from '@/components/Platform/Device/SharedDevice/ActionButtons';
+import Connectors from '@/components/Platform/Device/SharedDevice/Connectors';
+import DeviceBody from '../../SharedDevice/DeviceBody';
 
-import {
-  dropPosition
-} from './styles.module.css';
 
 import eventBaseImg from '@/assets/images/devices/event/eventBase.svg';
+import PickColorIcon from './PickColorIcon';
 
 const PickColor = ({
-  dragRef, device, updateValue
+  data, dragRef, activeActBtns, onChangeActBtns, onSaveData
 }) => {
 
-  const { id, name, posX, posY } = device;
-  const { deleteDevice, devices } = useDevices();
-  const { deleteDeviceConnections, flows } = useFlow();
-  const { enableModal, disableModal } = useModal();
+  const isFirstRender = useRef(true);
+  const {
+    id,
+    name,
+    posX,
+    posY,
+    value,
+    connectors,
+    containerRef
+  } = data;
+  const { updateDeviceValue, devices } = useDevices();
+  const { updateDeviceValueInFlow, flows } = useFlow();
 
-  const [value, setValue] = useState(false);
-  const [connectionValue, setConnectionValue] = useState({});
   const [qtdIncomingConn, setQtdIncomingConn] = useState(0);
 
-  const [color, setColor] = useState('#39394E');
 
-  const connectionReceiver = () => {
+  const connectionReceiver = useCallback(() => {
     setQtdIncomingConn(prev => prev + 1)
-  }
+  }, []);
 
   const handleSettingUpdate = useCallback((newColor) => {
-    setColor(newColor);
-  }, [color]);
+    const newValue = {
+      ...value,
+      send: {
+        ...value.send,
+        color: newColor
+      }
+    }
+
+    onSaveData('value', newValue)
+    updateDeviceValue(id, { value: newValue });
+
+  }, [value]);
 
 
   const handleConnections = () => {
+
     const flow = findFlowsByDeviceId(flows, id);
-
-    if (!flow) {
-      updateValue(setValue, id, { current: 0, max: 0, color: '#39394E' });
-
-      return;
-    }
 
     const connection = flow.connections.find(conn => {
       return conn.deviceTo.id === id
     });
 
-    const device = devices[`${connection.deviceFrom.id}`];
+    if (!flow || !connection) {
+      redefineBehavior();
 
-    let value = device.value.current;
-    let max = device.value.max;
-
-
-    if ([undefined, null].includes(value)) {
-      //If device.value.current undefined or null, structure equal boolean (true or false) or object -> ex: {temperature:{..}, humidity:{...}
-      value = typeof device.value === 'boolean' ? device.value : device.value[connection.deviceFrom.connector.name]?.current
-      max = typeof device.value === 'boolean' ? device.value : device.value[connection.deviceFrom.connector.name]?.max
-    }
-
-    const objValue = {
-      idConnection: connection.id,
-      value,
-      max,
-    }
-
-    setConnectionValue(objValue);
-  }
-
-  const calcValues = () => {
-    if (!Object.hasOwn(connectionValue, 'idConnection')) {
-      updateValue(setValue, id, { current: 0, max: 0, color: '#39394E' });
       return;
     }
 
-    const newValue = {
-      current: connectionValue.value,
-      max: connectionValue.max,
-      color: color
-    };
 
-    updateValue(setValue, id, newValue);
-  }
+    const device = { ...devices[connection.deviceFrom.id] };
+    const deviceValue = device.value[connection.deviceFrom.connector.name];
+
+    console.log({ deviceValue });
+
+    const newValue = {
+      ...data.value,
+      send: {
+        ...data.value.send,
+        ...deviceValue
+      }
+    }
+
+
+    onSaveData('value', newValue)
+    updateDeviceValue(id, { value: newValue });
+    updateDeviceValueInFlow({ connectorId: connectors.send.id, newValue });
+
+  };
 
   const sendValue = () => {
 
@@ -108,133 +98,131 @@ const PickColor = ({
     });
 
     connsOutput.forEach(conn => {
-      conn.deviceTo.defaultBehavior({
-        value: value.current,
-        max: value.max,
-        color: value.color
+      conn.deviceTo.defaultReceiveBehavior({
+        value: value.send.current,
+        max: value.send.max,
+        color: value.send.color
       });
     })
   }
 
-  const redefineBehavior = () => setConnectionValue({});
+  const redefineBehavior = useCallback(() => {
+    const newValue = {
+      ...value,
+      send: {
+        ...value.send,
+        current: 0,
+        max: 0,
+      }
+    }
 
-  const getValue = () => ({ value: value.current, max: value.max, color: value.color });
+    onSaveData('value', newValue)
+    updateDeviceValue(id, { value: newValue });
+  }, [value]);
+
 
   useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+
+      return;
+    }
+
     if (qtdIncomingConn > 0) {
       handleConnections();
     }
   }, [qtdIncomingConn]);
 
   useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+
+      return;
+    }
+
     sendValue();
   }, [value]);
 
+
   useEffect(() => {
-    calcValues();
-  }, [connectionValue, color])
+
+    updateDeviceValue(id, {
+      defaultSendBehavior: connectionReceiver,
+      defaultReceiveBehavior: connectionReceiver,
+    })
+  }, [connectionReceiver, redefineBehavior]);
 
   return (
     <>
-      <div
-        className={deviceBody}
+
+      <DeviceBody
+        name={name}
+        imgSrc={eventBaseImg}
         ref={dragRef}
+        onChangeActBtns={onChangeActBtns}
       >
-        <svg
-          className={dropPosition}
-          width="60"
-          height="75"
-          viewBox="0 0 60 75"
-          fill="none" xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            className=""
-            d="M30 75C13.4375 75 0 62.4023 0 46.875C0 33.5156 20.3438 8.45215 26.0313 1.71387C26.9688 0.615234 28.3594 0 29.8594 0H30.1406C31.6406 0 33.0312 0.615234 33.9687 1.71387C39.6562 8.45215 60 33.5156 60 46.875C60 62.4023 46.5625 75 30 75ZM15 49.2188C15 47.9297 13.875 46.875 12.5 46.875C11.125 46.875 10 47.9297 10 49.2188C10 58.2861 17.8281 65.625 27.5 65.625C28.875 65.625 30 64.5703 30 63.2812C30 61.9922 28.875 60.9375 27.5 60.9375C20.5937 60.9375 15 55.6934 15 49.2188Z"
-            fill={color}
-          />
-        </svg>
 
-        <img
-          src={eventBaseImg}
-          alt={`Device ${name}`}
-          loading='lazy'
-        />
-      </div>
+        <PickColorIcon color={value.send.color} />
 
-      <div
-        className={`${connectorsContainer} ${connectorsContainerEntry}`}
-      >
-        <ConnectorsConnector
-          name={'toggleInputData'}
-          type={'entry'}
-          device={{
-            id,
-            defaultBehavior: connectionReceiver,
-            redefineBehavior,
-            containerRef: device.containerRef
-          }}
-          updateConn={{ posX, posY }}
-        />
-
-      </div>
-
-      <div
-        className={`${connectorsContainer} ${connectorsContainerExit}`}
-      >
-        <ConnectorsConnector
-          name={'toggleOutputData'}
-          type={'exit'}
-          device={{
-            id,
-            defaultBehavior: getValue,
-            redefineBehavior,
-            containerRef: device.containerRef
-          }}
-          updateConn={{ posX, posY }}
-        />
-
-      </div>
-
-      <div
-        className={
-          `${actionButtonsContainer} ${actionButtonsContainerBottom}`
-        }
-      >
-        <ActionButton
-          onClick={() => enableModal({
-            typeContent: 'confirmation',
+        <ActionButtons
+          orientation='bottom'
+          active={activeActBtns}
+          actionDelete={{
             title: 'Cuidado',
             subtitle: 'Tem certeza que deseja excluir o componente?',
-            handleConfirm: () => {
-              deleteDeviceConnections(id);
-              deleteDevice(id);
-              disableModal('confirmation');
+            data: {
+              id
             }
-          })}
-        >
-          <Trash />
-        </ActionButton>
-
-        <ActionButton
-          onClick={() => enableModal({
+          }}
+          actionConfig={{
             typeContent: 'config-pickColor',
-            handleSaveConfig: handleSettingUpdate,
-            defaultColor: color,
-          })}
-        >
-          <Gear />
-        </ActionButton>
+            onSave: handleSettingUpdate,
+            data: {
+              defaultColor: value.send.color,
+            }
+          }}
+        />
+      </DeviceBody>
 
-      </div>
+
+      <Connectors
+        type='doubleTypes'
+        exitConnectors={[
+          {
+            data: connectors.receive,
+            device: {
+              id,
+              containerRef
+            },
+            updateConn: { posX, posY },
+            handleChangeData: onSaveData
+          },
+        ]}
+        entryConnectors={[
+          {
+            data: connectors.send,
+            device: {
+              id,
+              containerRef
+            },
+            updateConn: { posX, posY },
+            handleChangeData: onSaveData
+          },
+        ]}
+
+      />
+
     </>
   );
 };
 
 
 PickColor.propTypes = {
-  device: P.object.isRequired,
+  data: P.object.isRequired,
   dragRef: P.func.isRequired,
-  updateValue: P.func.isRequired
+  activeActBtns: P.bool.isRequired,
+  onChangeActBtns: P.func.isRequired,
+  onSaveData: P.func.isRequired
 }
 
 export default PickColor;
