@@ -82,7 +82,7 @@ const Buzzer = memo(function Buzzer({
 
   }, [value.duration, value.volume]);
 
-  const defaultBehavior = useCallback((valueReceived) => {
+  const defaultReceiveBehavior = useCallback((valueReceived) => {
     const { value, max } = valueReceived;
 
     const objValue = {
@@ -146,10 +146,10 @@ const Buzzer = memo(function Buzzer({
   useEffect(() => {
 
     updateDeviceValue(id, {
-      defaultBehavior,
+      defaultReceiveBehavior,
       redefineBehavior
     })
-  }, [defaultBehavior, redefineBehavior]);
+  }, [defaultReceiveBehavior, redefineBehavior]);
 
   return (
     <>
@@ -192,8 +192,6 @@ const Buzzer = memo(function Buzzer({
             data: connectors.frequency,
             device: {
               id,
-              defaultBehavior,
-              redefineBehavior,
               containerRef: containerRef
             },
             updateConn: { posX, posY },

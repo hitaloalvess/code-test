@@ -28,7 +28,7 @@ const LedMono = memo(function Led({
   const { updateDeviceValueInFlow } = useFlow();
 
 
-  const defaultBehavior = useCallback((valueReceived) => {
+  const defaultReceiveBehavior = useCallback((valueReceived) => {
     const { value, max } = valueReceived;
 
     const objValue = {
@@ -82,24 +82,13 @@ const LedMono = memo(function Led({
   useEffect(() => {
 
     updateDeviceValue(id, {
-      defaultBehavior,
+      defaultReceiveBehavior,
       redefineBehavior
     })
-  }, [defaultBehavior, redefineBehavior]);
+  }, [defaultReceiveBehavior, redefineBehavior]);
 
   return (
     <>
-      {/* <div
-        className={deviceBody}
-        ref={dragRef}
-      >
-
-        <img
-          src={imgSrc}
-          alt={`Device ${name}`}
-          loading='lazy'
-        />
-      </div> */}
 
       <DeviceBody
         name={name}
@@ -130,8 +119,6 @@ const LedMono = memo(function Led({
             data: connectors.lumen,
             device: {
               id,
-              defaultBehavior,
-              redefineBehavior,
               containerRef: containerRef
             },
             updateConn: { posX, posY },
@@ -139,42 +126,7 @@ const LedMono = memo(function Led({
           },
         ]}
       />
-      {/* <div
-        className={`${connectorsContainer} ${connectorsContainerEntry}`}
-      >
-        <ConnectorsConnector
-          name={'brightness'}
-          type={'entry'}
-          device={{
-            id,
-            defaultBehavior,
-            redefineBehavior,
-            containerRef: containerRef
-          }}
-          updateConn={{ posX, posY }}
-        />
-      </div> */}
 
-      {/* <div
-        className={
-          `${actionButtonsContainer} ${actionButtonsContainerRight}`
-        }
-      >
-        <ActionButton
-          onClick={() => enableModal({
-            typeContent: 'confirmation',
-            title: 'Cuidado',
-            subtitle: 'Tem certeza que deseja excluir o componente?',
-            handleConfirm: () => {
-              deleteDeviceConnections(id);
-              deleteDevice(id);
-              disableModal('confirmation');
-            }
-          })}
-        >
-          <Trash />
-        </ActionButton>
-      </div > */}
     </>
   );
 });

@@ -28,7 +28,7 @@ const Laser = memo(function Laser({
   const { updateDeviceValueInFlow } = useFlow();
 
 
-  const defaultBehavior = useCallback((valueReceived) => {
+  const defaultReceiveBehavior = useCallback((valueReceived) => {
     const { value, max } = valueReceived;
 
     const objValue = {
@@ -83,10 +83,10 @@ const Laser = memo(function Laser({
   useEffect(() => {
 
     updateDeviceValue(id, {
-      defaultBehavior,
+      defaultReceiveBehavior,
       redefineBehavior
     })
-  }, [defaultBehavior, redefineBehavior]);
+  }, [defaultReceiveBehavior, redefineBehavior]);
 
   return (
     <>
@@ -120,8 +120,6 @@ const Laser = memo(function Laser({
             data: connectors.intensity,
             device: {
               id,
-              defaultBehavior,
-              redefineBehavior,
               containerRef: containerRef
             },
             updateConn: { posX, posY },

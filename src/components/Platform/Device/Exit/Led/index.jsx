@@ -26,7 +26,7 @@ const Led = memo(function Led({
     const hasFlow = findFlowsByDeviceId(flows, id);
 
     if (hasFlow && newBrightness !== data.value.brightness) {
-      defaultBehavior({ value: newBrightness, max: value.max });
+      defaultReceiveBehavior({ value: newBrightness, max: value.max });
     }
 
     const value = {
@@ -42,7 +42,7 @@ const Led = memo(function Led({
   }, [data.value, flows]);
 
 
-  const defaultBehavior = useCallback((valueReceived) => {
+  const defaultReceiveBehavior = useCallback((valueReceived) => {
     const { value, max, color } = valueReceived;
 
     const objValue = {
@@ -93,10 +93,10 @@ const Led = memo(function Led({
   useEffect(() => {
 
     updateDeviceValue(id, {
-      defaultBehavior,
+      defaultReceiveBehavior,
       redefineBehavior
     })
-  }, [defaultBehavior, redefineBehavior]);
+  }, [defaultReceiveBehavior, redefineBehavior]);
 
 
   return (
@@ -144,7 +144,6 @@ const Led = memo(function Led({
             data: data.connectors.brightness,
             device: {
               id,
-              defaultBehavior,
               redefineBehavior,
               containerRef: data.containerRef
             },

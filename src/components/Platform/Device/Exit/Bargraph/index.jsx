@@ -32,7 +32,7 @@ const Bargraph = memo(function Bargraph({
 
   const [lightsActive, setLightsActive] = useState(0);
 
-  const defaultBehavior = useCallback((valueReceived) => {
+  const defaultReceiveBehavior = useCallback((valueReceived) => {
     const { value, max } = valueReceived;
 
     const objValue = {
@@ -96,10 +96,10 @@ const Bargraph = memo(function Bargraph({
   useEffect(() => {
 
     updateDeviceValue(id, {
-      defaultBehavior,
+      defaultReceiveBehavior,
       redefineBehavior
     })
-  }, [defaultBehavior, redefineBehavior]);
+  }, [defaultReceiveBehavior, redefineBehavior]);
 
   return (
     <>
@@ -133,8 +133,6 @@ const Bargraph = memo(function Bargraph({
             data: connectors.lumen,
             device: {
               id,
-              defaultBehavior,
-              redefineBehavior,
               containerRef: containerRef
             },
             updateConn: { posX, posY },
