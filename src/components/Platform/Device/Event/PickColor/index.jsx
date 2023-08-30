@@ -150,7 +150,7 @@ const PickColor = ({
       defaultSendBehavior: connectionReceiver,
       defaultReceiveBehavior: connectionReceiver,
     })
-  }, [connectionReceiver, redefineBehavior]);
+  }, [connectionReceiver]);
 
   return (
     <>

@@ -1,140 +1,78 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import P from 'prop-types';
-import { Trash } from '@phosphor-icons/react';
 
-import { useModal } from '@/hooks/useModal';
+import { findFlowsByDeviceId } from '@/utils/flow-functions';
 import { useFlow } from '@/hooks/useFlow';
 import { useDevices } from '@/hooks/useDevices';
-import ConnectorsConnector from '@/components/Platform/Device/SharedDevice/Connectors/ConnectorsConnector';
-import ActionButton from '@/components/Platform/Device/SharedDevice/ActionButtons/ActionButton';
-import { findFlowsByDeviceId } from '@/utils/flow-functions';
 
-import {
-  deviceBody,
-  actionButtonsContainer,
-  actionButtonsContainerBottom,
-  connectorsContainer,
-  connectorsContainerExit,
-  connectorsContainerEntry
-} from '../../styles.module.css';
-
-import {
-  BodyCounterNumbers,
-  counterButton,
-  counterButtonDecrease,
-  BodyCounterButtons
-} from './styles.module.css';
+import ActionButtons from '@/components/Platform/Device/SharedDevice/ActionButtons';
+import Connectors from '@/components/Platform/Device/SharedDevice/Connectors';
+import DeviceBody from '../../SharedDevice/DeviceBody';
+import CounterDisplay from './CounterDisplay';
 
 import eventBaseImg from '@/assets/images/devices/conditional/counter/counterBase.svg';
-import buttonImage from '@/assets/images/devices/conditional/counter/counterChevron.svg';
 
 const Counter = ({
-  dragRef, device, updateValue
+  data, dragRef, activeActBtns, onChangeActBtns, onSaveData
 }) => {
 
-  const { id, name, posX, posY } = device;
-  const { deleteDevice, devices } = useDevices();
-  const { deleteDeviceConnections, flows } = useFlow();
-  const { enableModal, disableModal } = useModal();
+  const {
+    id,
+    name,
+    posX,
+    posY,
+    value,
+    connectors,
+    containerRef
+  } = data;
+  const { updateDeviceValue, devices } = useDevices();
+  const { updateDeviceValueInFlow, flows } = useFlow();
 
-  const [value, setValue] = useState(device.value);
-  const [connectionValue, setConnectionValue] = useState([]);
   const [qtdIncomingConn, setQtdIncomingConn] = useState(0)
 
-  const numberThousand = useRef(null);
-  const numberHundred = useRef(null);
-  const numberTen = useRef(null);
-  const numberUnity = useRef(null);
 
-  const connectionReceiver = () => {
+  const connectionReceiver = useCallback(() => {
     setQtdIncomingConn(prev => prev + 1)
-  }
+  }, []);
 
   const handleConnections = () => {
 
     const flow = findFlowsByDeviceId(flows, id);
 
-    if (!flow) {
-      updateValue(setValue, id, { current: 0, max: 0 });
-
-      return;
-    }
-
-    const connection = flow.connections.find(conn => {
+    const connection = flow?.connections.find(conn => {
       return conn.deviceTo.id === id
     });
 
-    if (!connection) return;
+    if (!flow || !connection) {
+      redefineBehavior();
 
-    const device = devices[`${connection.deviceFrom.id}`];
-
-    let value = device.value.current;
-    let max = device.value.max;
-
-    if ([undefined, null].includes(value)) {
-      //If device.value.current undefined or null, structure equal boolean (true or false) or object -> ex: {temperature:{..}, humidity:{...}
-      value = typeof device.value === 'boolean' ? device.value : device.value[connection.deviceFrom.connector.name].current
-      max = typeof device.value === 'boolean' ? device.value.max : device.value[connection.deviceFrom.connector.name].max
-    }
-
-    const objValue = {
-      idConnection: connection.id,
-      value,
-      max
-    }
-
-    setConnectionValue(objValue);
-  }
-
-  const calcValues = () => {
-    if (!Object.hasOwn(connectionValue, 'idConnection')) {
-      updateValue(setValue, id, { current: 0, max: 0 });
       return;
     }
 
-    const flow = findFlowsByDeviceId(flows, id);
+    const device = { ...devices[connection.deviceFrom.id] };
+    const deviceValue = device.value[connection.deviceFrom.connector.name];
 
-    if (!flow) return;
+    let currentValue = deviceValue?.current;
 
-    let newValue;
-
-    if (typeof connectionValue.value === 'boolean') {
-      newValue = connectionValue.value ? value.current + 1 : value.current;
-    } else {
-      newValue = connectionValue.value || connectionValue.value === 0 ? connectionValue.value : value;
+    if (typeof deviceValue.current === 'boolean') {
+      currentValue = deviceValue?.current ? value.send.current + 1 : value.send.current;
     }
-    updateValue(setValue, id, { current: newValue, max: connectionValue.max });
+
+
+    const newValue = {
+      ...value,
+      send: {
+        ...value.send,
+        current: currentValue,
+      }
+    }
+
+
+    onSaveData('value', newValue);
+    updateDeviceValue(id, { value: newValue });
+    updateDeviceValueInFlow({ connectorId: connectors.send.id, newValue });
+
   }
-
-  const displayNumbers = () => {
-    if (value.current <= 9) {
-      numberThousand.current.innerHTML = 0;
-      numberHundred.current.innerHTML = 0;
-      numberTen.current.innerHTML = 0;
-      numberUnity.current.innerHTML = value.current;
-      return;
-    }
-
-    const newValue = value.current.toString().split('');
-
-    if (value.current > 9 && value.current <= 99) {
-      numberThousand.current.innerHTML = 0;
-      numberHundred.current.innerHTML = 0;
-      numberTen.current.innerHTML = newValue[0];
-      numberUnity.current.innerHTML = newValue[1];
-    } else if (value.current > 99 && value.current <= 999) {
-      numberThousand.current.innerHTML = 0;
-      numberHundred.current.innerHTML = newValue[0];
-      numberTen.current.innerHTML = newValue[1];
-      numberUnity.current.innerHTML = newValue[2];
-    } else if (value.current > 999) {
-      numberThousand.current.innerHTML = newValue[0];
-      numberHundred.current.innerHTML = newValue[1];
-      numberTen.current.innerHTML = newValue[2];
-      numberUnity.current.innerHTML = newValue[3];
-    }
-  }
-
 
 
   const sendValue = () => {
@@ -149,29 +87,56 @@ const Counter = ({
 
 
     connsOutput.forEach(conn => {
-      conn.deviceTo.defaultBehavior({
-        value: value.current,
-        max: value.max
+      conn.deviceTo.defaultReceiveBehavior({
+        value: value.send.current,
+        max: value.send.max
       });
     })
   }
 
-  const redefineBehavior = () => {
-    setConnectionValue({});
-  }
+  const redefineBehavior = useCallback(() => {
+    const newValue = {
+      ...value,
+      send: {
+        ...value.send,
+        current: 0,
+        max: 1023,
+      }
+    }
+
+    onSaveData('value', newValue)
+    updateDeviceValue(id, { value: newValue });
+  }, [value]);
 
   const handleIncreaseClick = () => {
-    const newValue = value.current + 1;
-    updateValue(setValue, id, { current: newValue, max: value.max });
+    const newValue = {
+      ...value,
+      send: {
+        ...value.send,
+        current: value.send.current + 1
+      }
+    }
+
+    onSaveData('value', newValue)
+    updateDeviceValue(id, { value: newValue });
+    updateDeviceValueInFlow({ connectorId: connectors.send.id, newValue });
+
   };
 
   const handleDecreaseClick = () => {
-    const newValue = value.current - 1;
-    updateValue(setValue, id, { current: newValue, max: value.max });
+    const newValue = {
+      ...value,
+      send: {
+        ...value.send,
+        current: value.send.current - 1
+      }
+    }
+
+    onSaveData('value', newValue)
+    updateDeviceValue(id, { value: newValue });
+    updateDeviceValueInFlow({ connectorId: connectors.send.id, newValue });
   };
 
-
-  const getValue = () => ({ value: value.current, max: value.max });
 
   useEffect(() => {
     if (qtdIncomingConn > 0) {
@@ -181,111 +146,84 @@ const Counter = ({
 
   useEffect(() => {
     sendValue();
-    displayNumbers();
-  }, [value]);
+  }, [value.send.current]);
 
   useEffect(() => {
-    calcValues();
-  }, [connectionValue]);
+
+    updateDeviceValue(id, {
+      defaultSendBehavior: connectionReceiver,
+      defaultReceiveBehavior: connectionReceiver,
+    })
+  }, [connectionReceiver]);
 
   return (
     <>
-      <div
-        className={deviceBody}
+
+      <DeviceBody
+        name={name}
+        imgSrc={eventBaseImg}
         ref={dragRef}
+        onChangeActBtns={onChangeActBtns}
       >
-        <img
-          src={eventBaseImg}
-          alt={`Device ${name}`}
-          loading='lazy'
-        />
-        <div className={BodyCounterNumbers}>
-          <div ref={numberThousand} >0</div>
-          <div ref={numberHundred} >0</div>
-          <div ref={numberTen} >0</div>
-          <div ref={numberUnity} >0</div>
-        </div>
-        <div className={BodyCounterButtons}>
-          <button className={counterButton} onClick={handleIncreaseClick}>
-            <img src={buttonImage}
-              alt="botao de incrementar" draggable="false" />
-          </button>
-          <button className={counterButtonDecrease} onClick={handleDecreaseClick}>
-            <img src={buttonImage}
-              alt="botao de decrementar" draggable="false" />
-          </button>
-        </div>
-      </div>
 
-      <div
-        className={`${connectorsContainer} ${connectorsContainerEntry}`}
-      >
-        <ConnectorsConnector
-          name={'delayInputData'}
-          type={'entry'}
-          device={{
-            id,
-            defaultBehavior: connectionReceiver,
-            redefineBehavior,
-            containerRef: device.containerRef
-          }}
-          updateConn={{ posX, posY }}
+        <CounterDisplay
+          value={value.send.current}
+          onIncrease={handleIncreaseClick}
+          onDecrease={handleDecreaseClick}
         />
 
-      </div>
-
-      <div
-        className={`${connectorsContainer} ${connectorsContainerExit}`}
-      >
-        <ConnectorsConnector
-          name={'delayOutputData'}
-          type={'exit'}
-          device={{
-            id,
-            defaultBehavior: () => {
-              connectionReceiver();
-
-              return getValue();
-            },
-            redefineBehavior,
-            containerRef: device.containerRef
-          }}
-          updateConn={{ posX, posY }}
-        />
-
-      </div>
-
-      <div
-        className={
-          `${actionButtonsContainer} ${actionButtonsContainerBottom}`
-        }
-      >
-        <ActionButton
-          onClick={() => enableModal({
-            typeContent: 'confirmation',
+        <ActionButtons
+          orientation='bottom'
+          active={activeActBtns}
+          actionDelete={{
             title: 'Cuidado',
             subtitle: 'Tem certeza que deseja excluir o componente?',
-            handleConfirm: () => {
-              deleteDeviceConnections(id);
-              deleteDevice(id);
-              disableModal('confirmation');
+            data: {
+              id
             }
-          })}
-        >
-          <Trash />
-        </ActionButton>
+          }}
+        />
+      </DeviceBody>
 
 
-      </div >
+      <Connectors
+        type='doubleTypes'
+        exitConnectors={[
+          {
+            data: connectors.receive,
+            device: {
+              id,
+              containerRef
+            },
+            updateConn: { posX, posY },
+            handleChangeData: onSaveData
+          },
+        ]}
+        entryConnectors={[
+          {
+            data: connectors.send,
+            device: {
+              id,
+              containerRef
+            },
+            updateConn: { posX, posY },
+            handleChangeData: onSaveData
+          },
+        ]}
+
+      />
+
     </>
   );
 };
 
 
 Counter.propTypes = {
-  device: P.object.isRequired,
+  data: P.object.isRequired,
   dragRef: P.func.isRequired,
-  updateValue: P.func.isRequired
+  activeActBtns: P.bool.isRequired,
+  onChangeActBtns: P.func.isRequired,
+  onSaveData: P.func.isRequired
 }
 
 export default Counter;

@@ -20,7 +20,7 @@ import And from '../../Conditional/And';
 import Or from '../../Conditional/Or';
 import Not from '../../Conditional/Not';
 import If from '../../Conditional/If';
-import Counter from '../../Conditional/counter';
+import Counter from '../../Conditional/Counter';
 
 import Toggle from '../../Event/Toggle';
 import Delay from '../../Event/Delay';

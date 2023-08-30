@@ -3,18 +3,18 @@
   top: 25px;
   display: flex;
   justify-content: center;
-  gap: 4.3px;
+  gap: 4px;
   width: 100%;
   color: var(--white);
 }
 
 .BodyCounterButtons {
   position: absolute;
-  top: 9.5px;
+  top: 10px;
   left: 31px;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 14px;
 }
 
 .counterButton {
@@ -44,15 +44,12 @@
   transform: scale(1.1) rotate(180deg);
 }
 
-.number{
-  background-color: blue;
-}
 
 
 @media (((max-height: 481px) and (orientation: landscape)) or ((max-width: 481px) and (orientation: portrait))) {
   .delayNumber {
     color: var(--black);
-    font-size: 1.3rem;
+    font-size: 14px;
     font-weight: 900;
     text-align: center;
     margin: -48px auto 0 auto;
