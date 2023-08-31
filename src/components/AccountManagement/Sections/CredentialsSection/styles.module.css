@@ -4,7 +4,7 @@
   border: none;
   cursor: pointer;
   border-radius: 4px;
-  color: var(--gray-100);
+  color: var(--gray-200);
   background-color: transparent;
   transition: all 0.3s ease-in-out;
 }

@@ -12,7 +12,7 @@
 }
 
 :root {
-  --background: #e5e5e5;
+  --background: #fffffe;
   --red: #ff1450;
   --blue-900: #004bc8;
   --blue: #0078ff;
@@ -26,7 +26,8 @@
   --white-100: #f2f2f2;
   --white-200: #efefef;
   --gray-50: #d9d9d9;
-  --gray-100: #929292;
+  --gray-100: #e5e5e5;
+  --gray-200: #929292;
   --green: #14ae5c;
 }
 

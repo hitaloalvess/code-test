@@ -29,5 +29,9 @@
 
 .buttonSubmit:disabled {
   cursor: not-allowed;
-  background-color: var(--gray-100);
+  background-color: var(--gray-50);
+}
+
+.buttonSubmit:disabled p {
+  color: var(--gray-200);
 }

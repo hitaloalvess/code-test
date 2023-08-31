@@ -9,7 +9,7 @@
 }
 
 .selectIcon {
-  color: var(--gray-100);
+  color: var(--gray-200);
   margin-left: auto;
   pointer-events: none;
 }
