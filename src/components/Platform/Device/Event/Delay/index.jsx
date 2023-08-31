@@ -19,6 +19,7 @@ const Delay = ({
   data, dragRef, activeActBtns, onChangeActBtns, onSaveData
 }) => {
 
+  const isFirstRender = useRef(true);
   const { id, name, posX, posY, value, connectors, containerRef } = data;
   const { updateDeviceValue, devices } = useDevices();
   const { updateDeviceValueInFlow, flows } = useFlow();
@@ -30,6 +31,9 @@ const Delay = ({
   const setIntervalRef = useRef(null);
 
   const connectionReceiver = useCallback(() => {
+    console.log({
+      title: 'Connection Receiver'
+    });
     setQtdIncomingConn(prev => prev + 1);
   }, [])
 
@@ -51,28 +55,20 @@ const Delay = ({
   }
 
   const handleConnections = useCallback(() => {
-
+    console.log({
+      title: 'Handle connections'
+    });
     const flow = findFlowsByDeviceId(flows, id);
 
     const connection = flow?.connections.find(conn => {
       return conn.deviceTo.id === id
     });
 
-    if (!flow || !connection) {
+    const connOutput = flow?.connections.filter(conn => {
+      return conn.deviceFrom.id === id
+    });
 
-      const value = {
-        ...data.value,
-        send: {
-          current: 0,
-          max: 0
-        }
-      }
-
-      onSaveData('value', value)
-      updateDeviceValue(id, { value });
-
-      return;
-    }
+    if (!flow || !connection || connOutput.length <= 0) return;
 
 
     const device = { ...devices[connection.deviceFrom.id] };
@@ -86,14 +82,7 @@ const Delay = ({
       }
     }
 
-
     //Calc values
-
-    const connOutput = flow.connections.filter(conn => {
-      return conn.deviceFrom.id === id
-    });
-
-    if (connOutput.length <= 0) return;
 
     restartTimer();
 
@@ -113,7 +102,10 @@ const Delay = ({
   }, [value.duration, flows, value.send]);
 
   const sendValue = () => {
-
+    console.log({
+      title: 'Send value',
+      value
+    })
     const flow = findFlowsByDeviceId(flows, id);
 
     if (!flow) return;
@@ -131,21 +123,50 @@ const Delay = ({
 
   const redefineBehavior = useCallback(() => {
     restartTimer();
+
+    const value = {
+      ...data.value,
+      send: {
+        current: 0,
+        max: 0
+      }
+    }
+
+    onSaveData('value', value)
+    updateDeviceValue(id, { value });
+
   }, []);
 
 
   useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+
+      return;
+    }
+
     if (qtdIncomingConn > 0) {
       handleConnections();
     }
   }, [qtdIncomingConn]);
 
   useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+
+      return;
+    }
+
     sendValue();
   }, [value.send.current]);
 
 
   useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+
+      return;
+    }
     restartTimer();
   }, [value.duration]);
 

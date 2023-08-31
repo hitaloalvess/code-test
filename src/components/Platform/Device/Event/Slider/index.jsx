@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import P from 'prop-types';
 
 import eventBaseImg from '@/assets/images/devices/event/eventBase.svg';
@@ -29,6 +29,7 @@ const Slider = ({
   const { updateDeviceValue, devices } = useDevices();
   const { updateDeviceValueInFlow, flows } = useFlow();
 
+  const isFirstRender = useRef(true);
   const [qtdIncomingConn, setQtdIncomingConn] = useState(0);
 
   const handleSettingUpdate = useCallback((newLimit) => {
@@ -58,17 +59,7 @@ const Slider = ({
 
     if (!flow || !connection) {
 
-      const newValue = {
-        ...data.value,
-        send: {
-          ...data.value.send,
-          current: 0,
-          max: 0
-        }
-      }
-
-      onSaveData('value', newValue)
-      updateDeviceValue(id, { value: newValue });
+      redefineBehavior();
 
       return;
     }
@@ -82,6 +73,12 @@ const Slider = ({
         ...deviceValue,
         current: deviceValue.current > value.limit ? value.limit : deviceValue.current
       }
+    }
+
+    if (newValue.send.current === value.send.current) {
+      sendValue();
+
+      return;
     }
 
     onSaveData('value', newValue);
@@ -124,12 +121,24 @@ const Slider = ({
 
 
   useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+
+      return;
+    }
+
     if (qtdIncomingConn > 0) {
       handleConnections();
     }
   }, [qtdIncomingConn]);
 
   useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+
+      return;
+    }
+
     sendValue();
   }, [value.send.current]);
 
@@ -139,9 +148,8 @@ const Slider = ({
     updateDeviceValue(id, {
       defaultSendBehavior: connectionReceiver,
       defaultReceiveBehavior: connectionReceiver,
-      redefineBehavior
     })
-  }, [connectionReceiver, redefineBehavior]);
+  }, [connectionReceiver]);
 
   return (
     <>

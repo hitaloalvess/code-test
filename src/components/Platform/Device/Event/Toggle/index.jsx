@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import P from 'prop-types';
 
 import { findFlowsByDeviceId } from '@/utils/flow-functions';
@@ -22,6 +22,7 @@ const Toggle = ({
   const { updateDeviceValue, devices } = useDevices();
   const { updateDeviceValueInFlow, flows } = useFlow();
 
+  const isFirstRender = useRef(true);
   const [qtdIncomingConn, setQtdIncomingConn] = useState(0);
 
   const connectionReceiver = useCallback(() => {
@@ -138,26 +139,30 @@ const Toggle = ({
   }
 
   const redefineBehavior = useCallback(() => {
-    const newValue = {
-      ...value,
-      send: {
-        ...value.send,
-        current: false,
-      }
-    }
-
-    onSaveData('value', newValue)
-    updateDeviceValue(id, { value: newValue });
-  }, [value]);
+    setQtdIncomingConn(prev => prev + 1);
+  }, [value, flows]);
 
 
   useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+
+      return;
+    }
+
+
     if (qtdIncomingConn > 0) {
       handleConnections();
     }
   }, [qtdIncomingConn]);
 
   useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+
+      return;
+    }
+
     sendValue();
   }, [value]);
 
@@ -166,7 +171,7 @@ const Toggle = ({
 
     updateDeviceValue(id, {
       defaultReceiveBehavior: connectionReceiver,
-      redefineBehavior
+      defaultSendBehavior: connectionReceiver,
     })
   }, [connectionReceiver, redefineBehavior]);
 

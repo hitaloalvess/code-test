@@ -67,6 +67,11 @@ const Counter = ({
       }
     }
 
+    if (newValue.send.current === value.send.current) {
+      sendValue();
+
+      return;
+    }
 
     onSaveData('value', newValue);
     updateDeviceValue(id, { value: newValue });

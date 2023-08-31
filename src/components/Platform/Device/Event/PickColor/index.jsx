@@ -70,8 +70,6 @@ const PickColor = ({
     const device = { ...devices[connection.deviceFrom.id] };
     const deviceValue = device.value[connection.deviceFrom.connector.name];
 
-    console.log({ deviceValue });
-
     const newValue = {
       ...data.value,
       send: {
@@ -149,8 +147,9 @@ const PickColor = ({
     updateDeviceValue(id, {
       defaultSendBehavior: connectionReceiver,
       defaultReceiveBehavior: connectionReceiver,
+      redefineBehavior
     })
-  }, [connectionReceiver]);
+  }, [connectionReceiver, redefineBehavior]);
 
   return (
     <>
