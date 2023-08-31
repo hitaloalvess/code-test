@@ -31,9 +31,7 @@ const Delay = ({
   const setIntervalRef = useRef(null);
 
   const connectionReceiver = useCallback(() => {
-    console.log({
-      title: 'Connection Receiver'
-    });
+
     setQtdIncomingConn(prev => prev + 1);
   }, [])
 
@@ -55,9 +53,7 @@ const Delay = ({
   }
 
   const handleConnections = useCallback(() => {
-    console.log({
-      title: 'Handle connections'
-    });
+
     const flow = findFlowsByDeviceId(flows, id);
 
     const connection = flow?.connections.find(conn => {
@@ -102,10 +98,7 @@ const Delay = ({
   }, [value.duration, flows, value.send]);
 
   const sendValue = () => {
-    console.log({
-      title: 'Send value',
-      value
-    })
+
     const flow = findFlowsByDeviceId(flows, id);
 
     if (!flow) return;

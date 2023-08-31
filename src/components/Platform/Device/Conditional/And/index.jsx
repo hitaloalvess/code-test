@@ -34,7 +34,6 @@ const And = ({
   }, []);
 
   const handleConnections = () => {
-    console.log('HandleConnections and')
     const flow = findFlowsByDeviceId(flows, id);
 
     if (!flow) {
@@ -69,10 +68,6 @@ const And = ({
 
     }, []);
 
-    console.log({
-      title: 'Handle connections values',
-      values
-    });
 
     //Calc values
     if (values.length <= 0) {
@@ -99,11 +94,6 @@ const And = ({
       }
     }
 
-    console.log({
-      title: 'Handle connections value',
-      value
-    });
-
     onSaveData('value', value);
     updateDeviceValue(id, { value });
     updateDeviceValueInFlow({ connectorId: connectors.send.id, newValue: value })
@@ -114,20 +104,11 @@ const And = ({
   const sendValue = () => {
     const flow = findFlowsByDeviceId(flows, id);
 
-    console.log({
-      title: 'Dentro do sendValue and',
-      flow
-    });
     if (!flow) return;
 
 
     const connsOutput = flow.connections.filter(conn => {
       return conn.deviceFrom.id === id
-    });
-
-    console.log({
-      title: 'Send value and',
-      connsOutput
     });
 
     connsOutput.forEach(conn => {

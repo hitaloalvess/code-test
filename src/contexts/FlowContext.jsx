@@ -280,15 +280,6 @@ const reducer = (state, action) => {
           }
         }
       }
-    case 'LOAD-FLOWS':
-      {
-        const { flows } = action.payload;
-
-        return {
-          ...state,
-          flows
-        }
-      }
     case 'UPDATE-DEVICE-VALUE-IN-FLOW':
       {
 
@@ -702,21 +693,6 @@ export const FlowProvider = ({ children }) => {
   };
 
 
-  //SOMENTE TEST
-  const handleSetLine = (line) => {
-    dispatch({
-      type: 'CREATE-LINE',
-      payload: line
-    })
-  }
-
-  const handleSetFlows = (flows) => {
-    dispatch({
-      type: 'LOAD-FLOWS',
-      payload: flows
-    })
-  }
-
   const updateDeviceValueInFlow = ({ connectorId, newValue }) => {
     dispatch({
       type: 'UPDATE-DEVICE-VALUE-IN-FLOW',
@@ -738,9 +714,7 @@ export const FlowProvider = ({ children }) => {
         executeFlow,
         deleteDeviceConnections,
         clearFlowTemp,
-        handleSetLine,//SOMENTE TESTES
-        handleSetFlows, //SOMENTE TESTES
-        updateDeviceValueInFlow, //SOMENETE TESTES
+        updateDeviceValueInFlow,
       }}
     >
       {children}

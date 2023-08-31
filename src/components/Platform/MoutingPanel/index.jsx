@@ -1,5 +1,8 @@
 /* eslint-disable no-unused-vars */
-import { useRef, useState, forwardRef /*, useEffect */ } from 'react';
+import {
+  useRef, useState, forwardRef, /*, useEffect */
+  useEffect
+} from 'react';
 import { useDrop } from 'react-dnd';
 
 import { useDevices } from '@/hooks/useDevices';
@@ -15,13 +18,14 @@ import FaqButton from './CircleButton/FaqButton';
 import SearchFormButton from './CircleButton/SearchFormButton';
 
 import { moutingPanelContainer, buttonsContainer } from './styles.module.css';
+import { useProject } from '@/hooks/useProject';
 
 
 const MoutingPanel = forwardRef(function MoutingPanel(props, ref) {
-  // const isFirstRender = useRef(true);
 
-  const { devices, addDevice, repositionDevice, handleSetDevice } = useDevices();
-  const { flows, connectionLines, updateLines, updateFlow, handleSetLine, handleSetFlows, createFlow } = useFlow();
+  const { saveProject } = useProject();
+  const { devices, addDevice, repositionDevice } = useDevices();
+  const { flows, connectionLines, updateLines, updateFlow } = useFlow();
   const { searchFormHasEnabled } = useContextAuth();
 
   const moutingPanelRef = useRef(null);
@@ -121,122 +125,6 @@ const MoutingPanel = forwardRef(function MoutingPanel(props, ref) {
 
   }
 
-  //SOMENTE TESTES
-
-  const handleLoadDevices = async (devicesTest) => {
-
-    const deviceList = Object.values(devicesTest).map(async (device) => {
-      handleSetDevice({
-        ...device,
-        containerRef: ref
-      });
-      await new Promise(resolve => setTimeout(resolve, 10))
-    });
-
-
-    await Promise.all(deviceList);
-
-    return;
-
-  }
-
-  const handleLoadFlows = (flows) => {
-
-    Object.values(flows).forEach(flow => {
-      flow.connections.forEach(connection => {
-        createFlow({
-          devices: {
-            from: connection.deviceFrom,
-            to: connection.deviceTo
-          }
-        })
-      })
-    })
-  }
-
-
-  const replaceFuncInString = (key, value) => {
-    if (typeof value === 'function') {
-      return { _isFunction: true, body: value.toString() }; //Convert func for string
-    }
-
-    return value;
-  }
-
-  const replaceStringInFunc = (key, value) => {
-    if (value && typeof value === 'object' && value._isFunction && value.body) {
-      return new Function(`return ${value.body}`)();
-    }
-
-    return value;
-  }
-
-  const handleSaveProject = () => {
-
-    const newDevices = Object.values(devices).map(device => {
-      if (Object.hasOwn(device, 'containerRef')) {
-        delete device.containerRef;
-      }
-
-      if (Object.hasOwn(device, 'defaultBehavior')) {
-        delete device.defaultBehavior;
-      }
-
-      if (Object.hasOwn(device, 'redefineBehavior')) {
-        delete device.redefineBehavior;
-      }
-
-      return device;
-    });
-
-    const newFlows = Object.values(flows).map(flow => {
-      const connections = flow.connections.map(connection => {
-        if (Object.hasOwn(connection.deviceFrom, 'containerRef')) {
-          delete connection.deviceFrom.containerRef
-        }
-
-        if (Object.hasOwn(connection.deviceTo, 'containerRef')) {
-          delete connection.deviceTo.containerRef
-        }
-
-        return connection;
-      })
-
-      return {
-        ...flow,
-        connections
-      }
-    })
-
-    const objFlow = newFlows.reduce((acc, flow) => {
-      return {
-        ...acc, [`${flow.id}`]: flow
-      }
-    }, {});
-
-    const project = {
-      id: 'asdasdas',
-      userId: 'laksdjasldkas',
-      flows: objFlow,
-      devices: newDevices,
-    }
-
-
-    const serializedFlows = JSON.stringify(project, replaceFuncInString, 2);
-
-    localStorage.setItem('@Microdigo:project', serializedFlows);
-
-
-  }
-
-  const handleGetProject = async () => {
-    const project = localStorage.getItem('@Microdigo:project');
-
-    const deserializedFlows = JSON.parse(project, replaceStringInFunc);
-
-    await handleLoadDevices(deserializedFlows.devices);
-    handleLoadFlows(deserializedFlows.flows);
-  }
 
   return (
     <div
@@ -269,11 +157,19 @@ const MoutingPanel = forwardRef(function MoutingPanel(props, ref) {
         <ZoomButton />
 
         <button
-          onClick={handleSaveProject}
+          onClick={() => {
+            saveProject({
+              name: 'Projeto 1',
+              userId: '232131',
+              description: 'Projeto 1 - teste para criacao da funcionalidade',
+              devices,
+              flows
+            })
+          }}
         >Save</button>
-        <button
-          onClick={handleGetProject}
-        >Load</button>
+        {/* <button
+          onClick={getProject}
+        >Load</button> */}
       </div>
 
     </div>
