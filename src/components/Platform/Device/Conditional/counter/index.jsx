@@ -92,7 +92,7 @@ const Counter = ({
 
 
     connsOutput.forEach(conn => {
-      conn.deviceTo.defaultReceiveBehavior({
+      devices[conn.deviceTo.id].defaultReceiveBehavior({
         value: value.send.current,
         max: value.send.max
       });

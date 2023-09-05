@@ -40,7 +40,7 @@ const SignIn = () => {
 
   useEffect(() => {
     if (isAuthenticated) {
-      navigate('/platform');
+      navigate('/projetos');
     }
   }, []);
 

@@ -1,53 +1,16 @@
 import { v4 as uuid } from 'uuid';
 
-// import { useDevices } from '@/hooks/useDevices';
-// import { useFlow } from '@/hooks/useFlow';
-
 import {
   removeHTMLElementRef,
   replaceFuncInString,
   replaceStringInFunc
-} from "@/utils/projects-function";
+} from "@/utils/projects-functions";
+import { formattedDate } from '@/utils/date-functions';
 
 
 export const useProject = () => {
 
-  // const { handleSetDevice } = useDevices();
-  // const { createFlow } = useFlow();
-
-  // const loadDevices = async (devicesTest) => {
-
-  //   const deviceList = Object.values(devicesTest).map(async (device) => {
-  //     handleSetDevice({
-  //       ...device,
-  //       // containerRef: ref
-  //     });
-  //     await new Promise(resolve => setTimeout(resolve, 10))
-  //   });
-
-
-  //   await Promise.all(deviceList);
-
-  //   return;
-
-  // }
-
-  // const loadFlows = (flows) => {
-
-  //   Object.values(flows).forEach(flow => {
-  //     flow.connections.forEach(connection => {
-  //       createFlow({
-  //         devices: {
-  //           from: connection.deviceFrom,
-  //           to: connection.deviceTo
-  //         }
-  //       })
-  //     })
-  //   })
-  // }
-
-
-  const saveProject = (objProject) => {
+  const createProject = (objProject) => {
 
     const { userId, name, description, devices, flows } = objProject;
 
@@ -93,6 +56,7 @@ export const useProject = () => {
       description,
       flows: transformFlows,
       devices: transformDevices,
+      created_at: new Date()
     }
 
 
@@ -108,26 +72,116 @@ export const useProject = () => {
     const serializedFlows = JSON.stringify(newProjectList, replaceFuncInString, 2);
     localStorage.setItem('@Microdigo:projects', serializedFlows);
 
+
+    return project.id;
   }
 
-  const getProjects = async () => {
+  const getProjects = () => {
     const project = localStorage.getItem('@Microdigo:projects');
 
-    if (!project) return;
+    if (!project) return [];
 
-    const deserializedFlows = JSON.parse(project, replaceStringInFunc);
+    const deserializedProjects = JSON.parse(project, replaceStringInFunc);
 
-    return deserializedFlows;
+    const newProjects = deserializedProjects.map(project => {
+
+      return {
+        ...project,
+        created_at: formattedDate(project.created_at)
+      }
+    });
+
+
+    return newProjects;
   }
 
-  // const loadProject = async (id) => {
-  //   await loadDevices(deserializedFlows.devices);
-  //   loadFlows(deserializedFlows.flows);
-  // }
+  const saveProject = (objProject) => {
+    const projects = getProjects();
+
+    // Apply transformation on devices and streams object to remove HTMLElements
+    // HTML elements are not accepted when serializing to JSON.
+    const transformDevices = Object.values(objProject.devices).map(device => {
+      const newDevice = removeHTMLElementRef(device);
+
+      return newDevice;
+    });
+
+    const transformFlows = Object.entries(objProject.flows).reduce((acc, value) => {
+      const key = value[0];
+      const objValue = value[1];
+
+      const connections = objValue.connections.map(connection => {
+
+        const newDeviceFrom = removeHTMLElementRef(connection.deviceFrom);
+        const newDeviceTo = removeHTMLElementRef(connection.deviceTo);
+
+        return {
+          ...connection,
+          deviceFrom: newDeviceFrom,
+          deviceTo: newDeviceTo
+        };
+      });
+
+      return {
+        ...acc,
+        [key]: {
+          ...objValue,
+          connections
+        }
+      }
+    }, {});
+
+    const newProject = {
+      ...objProject,
+      devices: transformDevices,
+      flows: transformFlows
+    }
+
+    const newProjectList = projects.map(project => {
+      if (newProject.id === project.id) {
+        return newProject;
+      }
+
+      return project;
+    });
+
+    const serializedFlows = JSON.stringify(newProjectList, replaceFuncInString, 2);
+    localStorage.setItem('@Microdigo:projects', serializedFlows);
+  }
+
+  const deleteProject = (projectId) => {
+    const projects = getProjects();
+
+    const newProjectList = projects.filter(project => project.id !== projectId);
+
+    const serializedFlows = JSON.stringify(newProjectList, replaceFuncInString, 2);
+    localStorage.setItem('@Microdigo:projects', serializedFlows);
+  }
+
+  const updateProject = (objProject) => {
+    const projects = getProjects();
+
+    const newProjects = projects.map(project => {
+      if (project.id === objProject.id) {
+        return {
+          ...project,
+          name: objProject.name,
+          description: objProject.description
+        }
+      }
+
+      return project;
+    })
+
+    const serializedFlows = JSON.stringify(newProjects, replaceFuncInString, 2);
+    localStorage.setItem('@Microdigo:projects', serializedFlows);
+  }
 
   return {
-    saveProject,
+    createProject,
     getProjects,
-    // loadProject
+    saveProject,
+    deleteProject,
+    updateProject
   }
 }

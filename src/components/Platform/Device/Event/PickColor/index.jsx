@@ -34,6 +34,7 @@ const PickColor = ({
 
 
   const connectionReceiver = useCallback(() => {
+    ('Connection receive pick color')
     setQtdIncomingConn(prev => prev + 1)
   }, []);
 
@@ -95,8 +96,9 @@ const PickColor = ({
       return conn.deviceFrom.id === id
     });
 
+
     connsOutput.forEach(conn => {
-      conn.deviceTo.defaultReceiveBehavior({
+      devices[conn.deviceTo.id].defaultReceiveBehavior({
         value: value.send.current,
         max: value.send.max,
         color: value.send.color

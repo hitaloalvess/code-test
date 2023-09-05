@@ -193,7 +193,7 @@ export const DevicesProvider = ({ children }) => {
   }
 
   //SOMENTE TESTE
-  const handleSetDevice = (device) => {
+  const setDevice = useCallback((device) => {
     setDevices(prevDevices => {
       return {
         ...prevDevices,
@@ -202,7 +202,7 @@ export const DevicesProvider = ({ children }) => {
         }
       }
     })
-  }
+  })
 
   return (
     <DevicesContext.Provider
@@ -215,7 +215,7 @@ export const DevicesProvider = ({ children }) => {
         repositionConnections,
         updateDeviceValue,
         handleZoomChange,
-        handleSetDevice
+        setDevice
       }}
     >
       {children}

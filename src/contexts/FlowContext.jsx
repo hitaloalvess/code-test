@@ -344,7 +344,6 @@ export const FlowProvider = ({ children }) => {
 
     executeFlow({
       connectorId: state.exec.connectorId,
-      fromBehaviorCallback: state.exec.funcDefault
     });
 
     dispatch({ type: 'CLEAR-EXEC' })
@@ -655,6 +654,7 @@ export const FlowProvider = ({ children }) => {
   const deleteDeviceConnections = useCallback((deviceId) => {
     const selectedFlow = findFlowsByDeviceId(state.flows, deviceId);
 
+
     if (!selectedFlow) return;
 
     const deviceConnections = selectedFlow.connections.filter(conn => {
@@ -663,16 +663,18 @@ export const FlowProvider = ({ children }) => {
 
     deviceConnections.forEach(conn => {
       deleteLine({ id: conn.idLine });
+      const deviceFrom = devices[conn.deviceFrom.id];
+      const deviceTo = devices[conn.deviceTo.id];
 
       //redefine devices from the connection
-      if (conn.deviceFrom.redefineBehavior) {
-        conn.deviceFrom.redefineBehavior({
+      if (deviceFrom.redefineBehavior) {
+        deviceFrom.redefineBehavior({
           idConnectionDelete: conn.id
         });
       }
 
-      if (conn.deviceTo.redefineBehavior) {
-        conn.deviceTo.redefineBehavior({
+      if (deviceTo.redefineBehavior) {
+        deviceTo.redefineBehavior({
           idConnectionDelete: conn.id
         });
       }

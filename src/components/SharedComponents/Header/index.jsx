@@ -53,7 +53,7 @@ const Header = () => {
   return (
     <header className={H.container}>
 
-      <Link to={'/platform'}>
+      <Link to={'/plataforma'}>
         <img
           src={logoMicrodigo}
           alt="Logo da microdigo"
@@ -73,7 +73,7 @@ const Header = () => {
           (
             <Dropdown.Root>
               <Dropdown.Item>
-                <Dropdown.ItemLink src={'/platform'}>
+                <Dropdown.ItemLink src={'/plataforma'}>
                   <GameController />
                   <span>Plataforma</span>
                 </Dropdown.ItemLink>
@@ -99,7 +99,7 @@ const Header = () => {
           (
             <Dropdown.Root orientation='right'>
               <Dropdown.Item>
-                <Dropdown.ItemLink src={'/account'}>
+                <Dropdown.ItemLink src={'/conta'}>
                   <HardDrives />
                   <span>Meus dados</span>
                 </Dropdown.ItemLink>

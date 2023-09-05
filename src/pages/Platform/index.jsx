@@ -9,10 +9,10 @@ import { FlowProvider } from '@/contexts/FlowContext';
 import { useModal } from '@/hooks/useModal';
 import Header from '@/components/SharedComponents/Header';
 import Sidebar from '@/components/Platform/Sidebar';
-import MoutingPanel from '@/components/Platform/MoutingPanel';
 import CustomDragLayer from '@/components/Platform/CustomDragLayer';
 
 import { container } from './styles.module.css';
+import { Outlet } from 'react-router-dom';
 
 
 const Platform = () => {
@@ -52,8 +52,7 @@ const Platform = () => {
 
             <Sidebar />
 
-            <MoutingPanel ref={containerRef} />
-
+            <Outlet context={containerRef} />
 
           </main>
         </FlowProvider>

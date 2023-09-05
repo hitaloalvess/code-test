@@ -1,0 +1,28 @@
+.myProjectsContainer {
+  margin: 60px 0 0 0;
+  padding: 44px 120px;
+}
+
+.myProjectsToolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 44px;
+}
+
+.myProjectsToolbar span {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.myProjectsTitle {
+  font-size: 36px;
+}
+
+.myProjectsList {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px 44px;
+}

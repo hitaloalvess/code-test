@@ -3,11 +3,13 @@ import {
   useRef, useState, forwardRef, /*, useEffect */
   useEffect
 } from 'react';
+import { useOutletContext, useParams } from 'react-router-dom';
 import { useDrop } from 'react-dnd';
 
 import { useDevices } from '@/hooks/useDevices';
 import { useFlow } from '@/hooks/useFlow';
 import { useContextAuth } from '@/hooks/useAuth';
+import { useProject } from '@/hooks/useProject';
 
 import Device from '@/components/Platform/Device/index';
 import BackgroundGrade from './BackgroundGrade';
@@ -18,18 +20,22 @@ import FaqButton from './CircleButton/FaqButton';
 import SearchFormButton from './CircleButton/SearchFormButton';
 
 import { moutingPanelContainer, buttonsContainer } from './styles.module.css';
-import { useProject } from '@/hooks/useProject';
 
 
-const MoutingPanel = forwardRef(function MoutingPanel(props, ref) {
+const MoutingPanel = () => {
 
-  const { saveProject } = useProject();
-  const { devices, addDevice, repositionDevice } = useDevices();
-  const { flows, connectionLines, updateLines, updateFlow } = useFlow();
+  const containerRef = useOutletContext();
+  const { id: projectId } = useParams();
+
+  const { getProjects, saveProject } = useProject();
+  const { devices, addDevice, repositionDevice, setDevice } = useDevices();
+  const { flows, connectionLines, updateLines, updateFlow, createFlow } = useFlow();
   const { searchFormHasEnabled } = useContextAuth();
 
+  const isFirstRender = useRef(true);
   const moutingPanelRef = useRef(null);
 
+  const [project, setProject] = useState();
   const [changingScrollPos, setChangingScrollPos] = useState({
     moving: false,
     posX: 0,
@@ -50,7 +56,7 @@ const MoutingPanel = forwardRef(function MoutingPanel(props, ref) {
     if (!elementIndex) {
       addDevice({
         ...item,
-        containerRef: ref
+        containerRef
       }, monitor)
 
       return;
@@ -59,7 +65,7 @@ const MoutingPanel = forwardRef(function MoutingPanel(props, ref) {
     repositionDevice({
       device: {
         ...item,
-        containerRef: ref
+        containerRef
       },
       screen: monitor,
       flows,
@@ -81,7 +87,7 @@ const MoutingPanel = forwardRef(function MoutingPanel(props, ref) {
 
     if (!isLinesContainer) return;
 
-    const scrollElement = ref.current;
+    const scrollElement = containerRef.current;
     const { clientX, clientY } = event;
 
     setChangingScrollPos({
@@ -111,7 +117,7 @@ const MoutingPanel = forwardRef(function MoutingPanel(props, ref) {
 
     if (!moving) return;
 
-    const scrollElement = ref.current;
+    const scrollElement = containerRef.current;
 
     const { clientX, clientY } = event;
 
@@ -125,6 +131,50 @@ const MoutingPanel = forwardRef(function MoutingPanel(props, ref) {
 
   }
 
+  const handleLoadProject = async ({ projectId }) => {
+
+    const projects = getProjects();
+    const project = projects.find(project => project.id === projectId);
+
+
+    const deviceList = Object.values(project.devices).map(async (device) => {
+      setDevice({
+        ...device,
+        containerRef
+      });
+      await new Promise(resolve => setTimeout(resolve, 50))
+    });
+
+
+    await Promise.all(deviceList);
+
+
+    Object.values(project.flows).forEach(flow => {
+      flow.connections.forEach(connection => {
+        createFlow({
+          devices: {
+            from: connection.deviceFrom,
+            to: connection.deviceTo
+          }
+        })
+      })
+    })
+
+    return project;
+  }
+
+
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+
+      return;
+    }
+
+    handleLoadProject({ projectId })
+      .then(project => setProject(project));
+
+  }, []);
 
   return (
     <div
@@ -144,7 +194,7 @@ const MoutingPanel = forwardRef(function MoutingPanel(props, ref) {
         ))
       }
 
-      <LinesContainer ref={ref} />
+      <LinesContainer ref={containerRef} />
 
       <BackgroundGrade
         moutingPanelRef={moutingPanelRef}
@@ -158,22 +208,21 @@ const MoutingPanel = forwardRef(function MoutingPanel(props, ref) {
 
         <button
           onClick={() => {
-            saveProject({
-              name: 'Projeto 1',
-              userId: '232131',
-              description: 'Projeto 1 - teste para criacao da funcionalidade',
+            const newProject = {
+              ...project,
               devices,
               flows
-            })
+            }
+
+            saveProject(newProject);
           }}
-        >Save</button>
-        {/* <button
-          onClick={getProject}
-        >Load</button> */}
+        >
+          Save
+        </button>
       </div>
 
     </div>
   );
-})
+};
 
 export default MoutingPanel;

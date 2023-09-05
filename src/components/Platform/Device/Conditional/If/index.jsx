@@ -85,8 +85,6 @@ const If = ({
     onSaveData('value', newValue)
     updateDeviceValue(id, { value: newValue });
 
-    // setVariable(newVariable);
-    // setSimbol(newSimbol);
     setQtdIncomingConn(prev => prev + 1);
 
   }, [value.connectionType]);
@@ -99,7 +97,6 @@ const If = ({
     const connection = flow?.connections.find(conn => {
       return conn.deviceTo.id === id
     });
-
 
     if (!flow || !connection) {
 
@@ -125,7 +122,6 @@ const If = ({
     if (value.connectionType !== typeValue) {
 
       const defaultValue = defaultValuesOfType[typeValue];
-
 
       const newValue = {
         ...data.value,
@@ -175,6 +171,12 @@ const If = ({
       }
     }
 
+    if (newValue.send.current === data.value.send.current) {
+      sendValue();
+
+      return;
+    }
+
     onSaveData('value', newValue)
     updateDeviceValue(id, { value: newValue });
     updateDeviceValueInFlow({ connectorId: connectors.send.id, newValue })
@@ -190,7 +192,7 @@ const If = ({
     });
 
     connsOutput.forEach(conn => {
-      conn.deviceTo.defaultReceiveBehavior({ value: value.send.current });
+      devices[conn.deviceTo.id].defaultReceiveBehavior({ value: value.send.current });
     })
   }
 
@@ -236,6 +238,8 @@ const If = ({
   useEffect(() => {
 
     updateDeviceValue(id, {
+
+      defaultSendBehavior: connectionReceiver,
       defaultReceiveBehavior: connectionReceiver,
       redefineBehavior
     })

@@ -112,7 +112,7 @@ const And = ({
     });
 
     connsOutput.forEach(conn => {
-      conn.deviceTo.defaultReceiveBehavior({ value: value.send.current });
+      devices[conn.deviceTo.id].defaultReceiveBehavior({ value: value.send.current });
     })
   }
 

@@ -21,7 +21,8 @@ export const removeHTMLElementRef = (objElement) => {
     const objkey = value[0];
     const objValue = value[1];
 
-    if (objValue?.current && objValue?.current instanceof Element) {
+    if ((objValue?.current && objValue?.current instanceof Element) ||
+      (objValue instanceof Function)) {
       return acc;
     }
 

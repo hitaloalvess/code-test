@@ -1,7 +1,7 @@
-import { createContext, useState } from "react"
-import ModalContainer from "@/components/SharedComponents/Modal";
+import { createContext, useState, useMemo } from "react"
 import P from 'prop-types';
 
+import ModalContainer from "@/components/SharedComponents/Modal";
 import ConfigLedModal from '@/components/SharedComponents/Modal/ConfigLedModal';
 import ConfigDelayModal from '@/components/SharedComponents/Modal/ConfigDelayModal';
 import ConfigBuzzerModal from '@/components/SharedComponents/Modal/ConfigBuzzerModal';
@@ -15,7 +15,7 @@ import SearchFormModal from '@/components/SharedComponents/Modal/SearchFormModal
 import FaqModal from '@/components/SharedComponents/Modal/FaqModal';
 import TermsOfUseModal from '@/components/SharedComponents/Modal/TermsOfUseModal';
 import InitialIntroPlatformModal from '@/components/SharedComponents/Modal/InitialIntroPlatformModal';
-import { useMemo } from "react";
+import CreateProjectModal from "@/components/SharedComponents/Modal/CreateProjectModal";
 
 export const ModalContext = createContext();
 
@@ -32,7 +32,8 @@ const contents = {
   'search-form': SearchFormModal,
   'faq': FaqModal,
   'terms-of-use': TermsOfUseModal,
-  'initial-intro-platform': InitialIntroPlatformModal
+  'initial-intro-platform': InitialIntroPlatformModal,
+  'create-project': CreateProjectModal
 }
 
 export const ModalProvider = ({ children }) => {
