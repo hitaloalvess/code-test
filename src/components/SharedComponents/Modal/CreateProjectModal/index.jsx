@@ -11,8 +11,8 @@ import { Input } from '@/components/SharedComponents/Input';
 import * as UP from './styles.module.css';
 
 const createProjectSchema = z.object({
-  name: z.string().nonempty().trim(),
-  description: z.string().nonempty().trim(),
+  name: z.string().nonempty().trim().max(50, 'Limite máximo de 50 caracteres para o nome do projeto.'),
+  description: z.string().nonempty().trim().max(255, 'Limite máximo de 255 caracteres para a descrição do projeto.'),
 });
 
 
