@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import { MagnifyingGlass } from '@phosphor-icons/react';
+import { useEffect, useMemo, useState } from 'react';
+import { MagnifyingGlass, SmileyXEyes } from '@phosphor-icons/react';
 
 import { useProject } from '@/hooks/useProject';
 
@@ -9,12 +9,24 @@ import ProjectCard from '@/components/MyProjects/ProjectCard';
 import NewProjectButton from '@/components/MyProjects/NewProjectButton';
 
 import * as MP from './styles.module.css';
+import ProjectList from '../../components/MyProjects/ProjectList';
 
 const MyProjects = () => {
   const { getProjects, deleteProject, updateProject, createProject } = useProject();
 
   const [projects, setProjects] = useState([]);
+  const [filter, setFilter] = useState('');
 
+
+  const filteredProjects = useMemo(() => {
+    if (!filter) return projects;
+
+    const list = projects.filter(project => {
+      return project.name.toLowerCase().includes(filter.toLowerCase());
+    })
+
+    return list;
+  }, [projects, filter]);
 
   const handleProjectDelete = (projectId) => {
     deleteProject(projectId);
@@ -58,12 +70,13 @@ const MyProjects = () => {
     return projectId;
   }
 
+  const handleFilterProjects = (event) => setFilter(event.target.value);
+
 
   useEffect(() => {
     const projects = getProjects();
     setProjects(projects)
   }, []);
-
 
   return (
     <>
@@ -78,7 +91,7 @@ const MyProjects = () => {
                 <Input.Icon icon={<MagnifyingGlass fontSize={20} />} />
                 <Input.TextType
                   placeholder={"Procurar projetos"}
-                  className={MP.test}
+                  onChange={handleFilterProjects}
                 />
               </>
             </Input.Root>
@@ -88,23 +101,32 @@ const MyProjects = () => {
         </div>
 
         {
-          projects.length <= 0 ?
-            <h1>Você ainda não possui projetos criados.</h1> :
-            <ul className={MP.myProjectsList}>
-              {projects.map(project => (
-                <ProjectCard
-                  key={project.id}
-                  data={{
-                    id: project.id,
-                    name: project.name,
-                    description: project.description,
-                    created_at: project.created_at,
-                  }}
-                  onDelete={handleProjectDelete}
-                  onUpdate={handleProjectUpdate}
-                />
-              ))}
-            </ul>
+          filteredProjects.length > 0 ?
+            <ProjectList hasProjects={filteredProjects.length > 0}>
+
+              {
+                filteredProjects.map(project => (
+                  <ProjectCard
+                    key={project.id}
+                    data={{
+                      id: project.id,
+                      name: project.name,
+                      description: project.description,
+                      created_at: project.created_at,
+                    }}
+                    onDelete={handleProjectDelete}
+                    onUpdate={handleProjectUpdate}
+                  />
+                ))
+              }
+            </ProjectList> :
+            <div className={MP.myProjectListEmpty}>
+              <SmileyXEyes weight="fill" />
+              <span>
+                <h1>Nenhum projeto foi encontrado</h1>
+                <p>Crie um projeto e comece a trabalhar com a Microdigo..</p>
+              </span>
+            </div>
         }
 
       </main>
