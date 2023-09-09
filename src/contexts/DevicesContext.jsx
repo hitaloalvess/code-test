@@ -9,7 +9,7 @@ export const DevicesContext = createContext();
 
 export const DevicesProvider = ({ children }) => {
   const [devices, setDevices] = useState({});
-  const [deviceScale, setDeviceScale] = useState(1);
+  const [deviceScale, setDeviceScale] = useState(1); //Deve ir para state global
 
   const addDevice = (item, monitor) => {
     const { width, height } = item.draggedDevice.getBoundingClientRect();
