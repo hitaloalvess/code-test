@@ -3,11 +3,9 @@ import {
   useRef, useState, forwardRef, /*, useEffect */
   useEffect
 } from 'react';
-import { useOutletContext, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useDrop } from 'react-dnd';
 
-import { useDevices } from '@/hooks/useDevices';
-import { useFlow } from '@/hooks/useFlow';
 import { useContextAuth } from '@/hooks/useAuth';
 import { useProject } from '@/hooks/useProject';
 
@@ -21,16 +19,32 @@ import SearchFormButton from './CircleButton/SearchFormButton';
 
 import { moutingPanelContainer, buttonsContainer } from './styles.module.css';
 
+import { useStore } from '@/store';
+import { shallow } from 'zustand/shallow';
 
 const MoutingPanel = () => {
-
-  const containerRef = useOutletContext();
   const { id: projectId } = useParams();
 
-  const { getProjects, saveProject } = useProject();
-  const { devices, addDevice, repositionDevice, setDevice } = useDevices();
-  const { flows, connectionLines, updateLines, updateFlow, createFlow } = useFlow();
   const { searchFormHasEnabled } = useContextAuth();
+  const { getProjects, saveProject } = useProject();
+
+  const {
+    devices,
+    flows,
+    loadDevice,
+    createFlow,
+    insertDevice,
+    repositionDevice,
+    loadMoutingPanel
+  } = useStore(store => ({
+    devices: store.devices,
+    flows: store.flows,
+    loadDevice: store.loadDevice,
+    createFlow: store.createFlow,
+    insertDevice: store.insertDevice,
+    repositionDevice: store.repositionDevice,
+    loadMoutingPanel: store.loadMoutingPanel
+  }), shallow);
 
   const isFirstRender = useRef(true);
   const moutingPanelRef = useRef(null);
@@ -47,38 +61,32 @@ const MoutingPanel = () => {
   const attachRef = (el) => {
     drop(el);
     moutingPanelRef.current = el;
+    loadMoutingPanel(moutingPanelRef);
   }
 
   const deviceDrop = (item, monitor) => {
 
-    const elementIndex = devices[`${item.id}`];
+    const itemType = monitor.getItemType();
 
-    if (!elementIndex) {
-      addDevice({
-        ...item,
-        containerRef
-      }, monitor)
+    if (itemType === 'menu-device') {
+      insertDevice({
+        device: { ...item },
+        dropPos: monitor.getClientOffset(),
+      });
 
       return;
     }
 
     repositionDevice({
-      device: {
-        ...item,
-        containerRef
-      },
-      screen: monitor,
-      flows,
-      connectionLines,
-      updateLines,
-      updateFlow
+      device: { ...item },
+      screenPos: monitor.getClientOffset(),
     });
   }
 
   const [_, drop] = useDrop(() => ({
     accept: ['device', 'menu-device'],
     drop: (item, monitor) => deviceDrop(item, monitor),
-  }), [devices, flows, connectionLines]);
+  }), []);
 
   const handleMouseDown = (event) => {
     //Valid if the element to be dragged is the line container,
@@ -87,7 +95,7 @@ const MoutingPanel = () => {
 
     if (!isLinesContainer) return;
 
-    const scrollElement = containerRef.current;
+    const scrollElement = moutingPanelRef.current;
     const { clientX, clientY } = event;
 
     setChangingScrollPos({
@@ -117,7 +125,7 @@ const MoutingPanel = () => {
 
     if (!moving) return;
 
-    const scrollElement = containerRef.current;
+    const scrollElement = moutingPanelRef.current;
 
     const { clientX, clientY } = event;
 
@@ -138,11 +146,8 @@ const MoutingPanel = () => {
 
 
     const deviceList = Object.values(project.devices).map(async (device) => {
-      setDevice({
-        ...device,
-        containerRef
-      });
-      await new Promise(resolve => setTimeout(resolve, 50))
+      loadDevice({ ...device, moutingPanelRef }); //REMOVER containerREF depois
+      await new Promise(resolve => setTimeout(resolve, 100))
     });
 
 
@@ -194,7 +199,7 @@ const MoutingPanel = () => {
         ))
       }
 
-      <LinesContainer ref={containerRef} />
+      <LinesContainer />
 
       <BackgroundGrade
         moutingPanelRef={moutingPanelRef}

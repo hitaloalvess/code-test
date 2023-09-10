@@ -1,10 +1,10 @@
 
 import { memo, useCallback, useEffect } from 'react';
 import P from 'prop-types';
+import { shallow } from 'zustand/shallow';
 
+import { useStore } from '@/store';
 import { findFlowsByDeviceId } from '@/utils/flow-functions';
-import { useDevices } from '@/hooks/useDevices';
-import { useFlow } from '@/hooks/useFlow';
 
 import ActionButtons from '@/components/Platform/Device/SharedDevice/ActionButtons';
 import Connectors from '@/components/Platform/Device/SharedDevice/Connectors';
@@ -18,8 +18,15 @@ const Led = memo(function Led({
 
   const { id, imgSrc, name, posX, posY, value, connectors } = data;
 
-  const { updateDeviceValue } = useDevices();
-  const { flows, updateDeviceValueInFlow } = useFlow();
+  const {
+    flows,
+    updateDeviceValue,
+    updateDeviceValueInFlow
+  } = useStore(store => ({
+    flows: store.flows,
+    updateDeviceValue: store.updateDeviceValue,
+    updateDeviceValueInFlow: store.updateDeviceValueInFlow
+  }), shallow);
 
 
   const handleSettingUpdate = useCallback((newColor, newBrightness) => {

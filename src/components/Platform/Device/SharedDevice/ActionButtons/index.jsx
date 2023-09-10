@@ -1,20 +1,25 @@
 import P from 'prop-types';
-
 import { Gear, Trash } from '@phosphor-icons/react';
+import { shallow } from 'zustand/shallow';
 
+import { useStore } from '@/store';
 import ActionButton from "./ActionButton";
-import { useDevices } from '@/hooks/useDevices';
-import { useFlow } from '@/hooks/useFlow';
+
 import { useModal } from '@/hooks/useModal';
 
 import * as AB from './styles.module.css';
-import { useMemo } from 'react';
+import { memo, useMemo } from 'react';
 
-const ActionButtons = ({ orientation = 'left', active, actionDelete = null, actionConfig = null }) => {
+const ActionButtons = memo(function ActionButtons
+  ({ orientation = 'left', active, actionDelete = null, actionConfig = null }) {
 
   const { enableModal, disableModal } = useModal();
-  const { deleteDevice } = useDevices();
-  const { deleteDeviceConnections } = useFlow();
+
+  const {
+    deleteDeviceConnections,
+  } = useStore(store => ({
+    deleteDeviceConnections: store.deleteDeviceConnections,
+  }), shallow);
 
   const currentOrientation = useMemo(() => {
     const orientations = {
@@ -40,8 +45,7 @@ const ActionButtons = ({ orientation = 'left', active, actionDelete = null, acti
               title: actionDelete.title,
               subtitle: actionDelete.subtitle,
               handleConfirm: () => {
-                deleteDeviceConnections(actionDelete.data.id);
-                deleteDevice(actionDelete.data.id);
+                deleteDeviceConnections({ deviceId: actionDelete.data.id });
                 disableModal('confirmation');
               }
             })}
@@ -71,7 +75,7 @@ const ActionButtons = ({ orientation = 'left', active, actionDelete = null, acti
       }
     </div>
   );
-};
+});
 
 ActionButtons.propTypes = {
   orientation: P.oneOf(['left', 'right', 'bottom']),

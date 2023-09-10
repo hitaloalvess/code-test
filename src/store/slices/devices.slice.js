@@ -37,6 +37,7 @@ export const createDevicesSlice = (set, get) => ({
   },
 
   deleteDevice: (deviceId) => {
+
     const { devices } = get();
 
     const newDevices = { ...devices };
@@ -71,13 +72,13 @@ export const createDevicesSlice = (set, get) => ({
     }))
   },
 
-  repositionDevice: ({ device, screen }) => {
+  repositionDevice: ({ device, screenPos }) => {
     const { moutingPanelRef } = get();
     const { id, deviceRef } = device;
 
     const { width, height } = deviceRef.current.getBoundingClientRect();
 
-    const { x, y } = screen.getClientOffset();
+    const { x, y } = screenPos;
     const [posX, posY] = calcPositionDevice({
       x,
       y,

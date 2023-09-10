@@ -1,6 +1,7 @@
 import { useState } from "react";
+import { shallow } from 'zustand/shallow';
 
-import { useDevices } from '@/hooks/useDevices';
+import { useStore } from '@/store';
 
 import { inputZoom } from './styles.module.css';
 
@@ -9,7 +10,9 @@ const MIN_DEVICE_ZOOM = 0.5;
 const STEP_ZOOM = 0.1;
 
 const InputRangeZoom = () => {
-  const { handleZoomChange } = useDevices();
+  const { handleZoomChange } = useStore(store => ({
+    handleZoomChange: store.handleZoomChange
+  }), shallow);
 
   const [zoomValue, setZoomValue] = useState(1);
 

@@ -3,15 +3,22 @@
 import { memo, useCallback, useEffect, useRef, useState } from 'react';
 import P from 'prop-types';
 import { useDrag } from 'react-dnd';
+import { shallow } from 'zustand/shallow';
 
-import { useDevices } from '@/hooks/useDevices.js';
+import { useStore } from '@/store';
 import DeviceFactory from './SharedDevice/DeviceFactory';
 
 import * as D from './styles.module.css';
 
 
 const Device = memo(function Device({ device }) {
-  const { deviceScale, updateDeviceValue } = useDevices();
+  const {
+    scale,
+    updateDeviceValue
+  } = useStore(store => ({
+    scale: store.scale,
+    updateDeviceValue: store.updateDeviceValue
+  }), shallow);
 
   const deviceRef = useRef(null);
 
@@ -66,7 +73,7 @@ const Device = memo(function Device({ device }) {
   return (
     <div
       className={D.deviceContainer}
-      style={{ left: `${data.posX}px`, top: `${data.posY}px`, transform: `scale(${deviceScale})` }}
+      style={{ left: `${data.posX}px`, top: `${data.posY}px`, transform: `scale(${scale})` }}
       ref={deviceRef}
     >
       <div

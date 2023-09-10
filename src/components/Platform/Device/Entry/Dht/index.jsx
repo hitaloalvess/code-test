@@ -1,10 +1,11 @@
 import { memo, useState, useEffect, useMemo } from 'react';
 import P from 'prop-types';
 import { Thermometer, Drop } from '@phosphor-icons/react';
+import { shallow } from 'zustand/shallow';
 
+import { useStore } from '@/store';
 import { formulasForTransformation, transformHumidityValue } from '@/utils/devices-functions';
-import { useDevices } from '@/hooks/useDevices';
-import { useFlow } from '@/hooks/useFlow';
+
 import ActionButtons from '@/components/Platform/Device/SharedDevice/ActionButtons';
 import Connectors from '@/components/Platform/Device/SharedDevice/Connectors';
 import DeviceInputs from '../../SharedDevice/DeviceInputs';
@@ -27,8 +28,16 @@ const Dht = memo(function Dht({
 }) {
 
   const { id, imgSrc, name, posX, posY } = data;
-  const { updateDeviceValue } = useDevices();
-  const { executeFlow, updateDeviceValueInFlow } = useFlow();
+
+  const {
+    executeFlow,
+    updateDeviceValue,
+    updateDeviceValueInFlow
+  } = useStore(store => ({
+    executeFlow: store.executeFlow,
+    updateDeviceValue: store.updateDeviceValue,
+    updateDeviceValueInFlow: store.updateDeviceValueInFlow
+  }), shallow);
 
   const [scaleType, setScaleType] = useState('celsius');
 

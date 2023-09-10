@@ -3,13 +3,25 @@ import { Trash } from '@phosphor-icons/react';
 
 import { btnDeleteLine } from './styles.module.css';
 
+import { useStore } from '@/store';
+import { shallow } from 'zustand/shallow';
+
+
 const ButtonDeleteLine = ({
-  isActive, deleteLine, data: { idConnection, idLine }
+  isActive, data: { idConnection, idLine }
 }) => {
+
+  const { deleteConnection } = useStore(store => {
+
+    return {
+      deleteConnection: store.deleteConnection
+    }
+  }, shallow);
 
   const handleDeleteLine = (e) => {
     e.stopPropagation();
-    deleteLine({ idConnection, idLine })
+
+    deleteConnection({ idConnection, idLine })
   }
   return (
     <button
@@ -24,7 +36,6 @@ const ButtonDeleteLine = ({
 
 ButtonDeleteLine.propTypes = {
   isActive: P.bool.isRequired,
-  deleteLine: P.func.isRequired,
   data: P.shape({
     idConnection: P.string.isRequired,
     idLine: P.string.isRequired

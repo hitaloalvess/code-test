@@ -1,14 +1,19 @@
 import { useEffect, useRef, useState } from 'react';
 import P from 'prop-types';
+import { shallow } from 'zustand/shallow';
 
-import { useDevices } from '@/hooks/useDevices';
+import { useStore } from '@/store';
 import { backgroundGrade } from './styles.module.css';
 
 const STEP_ZOOM = 0.05;
 const BackgroundGrade = ({ moutingPanelRef }) => {
-  const { deviceScale } = useDevices();
+
+  const { scale } = useStore(store => ({
+    scale: store.scale
+  }), shallow);
+
   const bgGradeRef = useRef(null);
-  const [oldDeviceScale, setOldDeviceScale] = useState(deviceScale);
+  const [oldDeviceScale, setOldDeviceScale] = useState(scale);
   const [bgScale, setBgScale] = useState(1.25);
 
   function drawBackground() {
@@ -52,20 +57,20 @@ const BackgroundGrade = ({ moutingPanelRef }) => {
   useEffect(() => {
     setBgScale(prevScale => {
 
-      if (oldDeviceScale < deviceScale) {
+      if (oldDeviceScale < scale) {
         return prevScale + STEP_ZOOM;
       }
 
-      if (oldDeviceScale > deviceScale) {
+      if (oldDeviceScale > scale) {
         return prevScale - STEP_ZOOM;
       }
 
       return prevScale;
     })
 
-    setOldDeviceScale(deviceScale);
+    setOldDeviceScale(scale);
 
-  }, [deviceScale]);
+  }, [scale]);
 
   return (
     <canvas

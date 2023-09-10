@@ -4,8 +4,6 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 import { TouchBackend } from 'react-dnd-touch-backend';
 import { isMobile } from 'react-device-detect';
 
-import { DevicesProvider } from '@/contexts/DevicesContext';
-import { FlowProvider } from '@/contexts/FlowContext';
 import { useModal } from '@/hooks/useModal';
 import Header from '@/components/SharedComponents/Header';
 import Sidebar from '@/components/Platform/Sidebar';
@@ -45,18 +43,15 @@ const Platform = () => {
 
   return (
     <DndProvider backend={isMobile ? TouchBackend : HTML5Backend}>
-      <DevicesProvider>
-        <FlowProvider>
-          <main className={container} ref={containerRef}>
-            <Header />
+      <main className={container} ref={containerRef}>
+        <Header />
 
-            <Sidebar />
+        <Sidebar />
 
-            <Outlet context={containerRef} />
+        <Outlet context={containerRef} />
 
-          </main>
-        </FlowProvider>
-      </DevicesProvider>
+
+      </main>
 
       {isMobile && <CustomDragLayer />}
     </DndProvider>

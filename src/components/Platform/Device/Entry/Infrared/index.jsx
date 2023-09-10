@@ -1,8 +1,8 @@
 import { memo, useState, useCallback, useEffect } from 'react';
 import P from 'prop-types';
+import { shallow } from 'zustand/shallow';
 
-import { useDevices } from '@/hooks/useDevices';
-import { useFlow } from '@/hooks/useFlow';
+import { useStore } from '@/store';
 
 import ActionButtons from '@/components/Platform/Device/SharedDevice/ActionButtons';
 import Connectors from '@/components/Platform/Device/SharedDevice/Connectors';
@@ -19,8 +19,15 @@ const Infrared = memo(function Infrared({
 
   const { id, imgSrc, name, posX, posY } = data;
 
-  const { updateDeviceValue } = useDevices();
-  const { executeFlow, updateDeviceValueInFlow } = useFlow();
+  const {
+    executeFlow,
+    updateDeviceValue,
+    updateDeviceValueInFlow
+  } = useStore(store => ({
+    executeFlow: store.executeFlow,
+    updateDeviceValue: store.updateDeviceValue,
+    updateDeviceValueInFlow: store.updateDeviceValueInFlow
+  }), shallow);
 
   const [isModalOpen, setIsModalOpen] = useState(true);
 

@@ -1,5 +1,6 @@
 import { deviceConnectorRules } from '@/data/devices.js';
 export const calcPositionConnector = (connector, containerRef) => {
+
   const {
     left: connectorLeft,
     right: connectorRight,
@@ -129,6 +130,7 @@ const getQtdConnections = (flows, connector) => {
 }
 
 export const verifConnector = ({ flows, deviceFrom, deviceTo }) => {
+
   if (deviceFrom && !deviceTo) {
     const { name, category } = deviceFrom;
 
@@ -155,13 +157,13 @@ export const verifConnector = ({ flows, deviceFrom, deviceTo }) => {
   const qtdToInputConnections = getQtdConnections(flows, deviceTo.connector);
 
   const deviceFromIsInvalid = (
-    deviceConnectorRules[fromName].acceptedConnections.includes('oneExit') &&
+    deviceConnectorRules[fromName]?.acceptedConnections.includes('oneExit') &&
     fromConnCategory === 'exit' &&
     qtdFromOutputConnections > 0
   );
 
   const deviceToIsInvalid = (
-    deviceConnectorRules[toName].acceptedConnections.includes('oneEntry') &&
+    deviceConnectorRules[toName]?.acceptedConnections.includes('oneEntry') &&
     toConnCategory === 'entry' &&
     qtdToInputConnections > 0
   );

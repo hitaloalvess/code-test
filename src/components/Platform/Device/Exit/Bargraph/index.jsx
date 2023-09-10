@@ -2,9 +2,9 @@
 import { memo, useCallback, useEffect, useState } from 'react';
 import P from 'prop-types';
 
+import { shallow } from 'zustand/shallow';
 
-import { useDevices } from '@/hooks/useDevices';
-import { useFlow } from '@/hooks/useFlow';
+import { useStore } from '@/store';
 
 import ActionButtons from '@/components/Platform/Device/SharedDevice/ActionButtons';
 import Connectors from '@/components/Platform/Device/SharedDevice/Connectors';
@@ -27,8 +27,14 @@ const Bargraph = memo(function Bargraph({
     connectors,
     containerRef
   } = data;
-  const { updateDeviceValue } = useDevices();
-  const { updateDeviceValueInFlow } = useFlow();
+
+  const {
+    updateDeviceValue,
+    updateDeviceValueInFlow
+  } = useStore(store => ({
+    updateDeviceValue: store.updateDeviceValue,
+    updateDeviceValueInFlow: store.updateDeviceValueInFlow
+  }), shallow);
 
   const [lightsActive, setLightsActive] = useState(0);
 

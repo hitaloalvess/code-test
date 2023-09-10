@@ -1,17 +1,21 @@
 import P from 'prop-types';
 import { useEffect, useMemo, useRef, useState } from 'react';
 
-import { useDevices } from '@/hooks/useDevices';
 import { calcDistance, calcAngle } from '@/utils/line-functions';
 import { line, lineRange } from './styles.module.css';
 import ButtonDeleteLine from '../ButtonDeleteLine';
 
-const Line = ({ id, fromPos, toPos, idConnection = '', deleteLine }) => {
+import { useStore } from '@/store';
+import { shallow } from 'zustand/shallow';
+
+const Line = ({ id, fromPos, toPos, idConnection = '' }) => {
   const lineRef = useRef(null);
   const [height, setHeight] = useState(0);
   const [disableBtnDelete, setDisableBtnDelete] = useState(true);
 
-  const { deviceScale } = useDevices();
+  const { scale } = useStore(store => ({
+    scale: store.scale
+  }), shallow);
 
   useEffect(() => {
     if (lineRef.current) {
@@ -54,7 +58,7 @@ const Line = ({ id, fromPos, toPos, idConnection = '', deleteLine }) => {
         left: `${fromPos.x}px`,
         width: `${dimensions.width}px`,
         transform: `rotate(${dimensions.angle}deg)`,
-        height: `${6 * deviceScale}px`
+        height: `${6 * scale}px`
       }}
       onClick={() => handleBtnDelete()}
     >
@@ -73,7 +77,6 @@ const Line = ({ id, fromPos, toPos, idConnection = '', deleteLine }) => {
           idLine: id
         }}
         isActive={disableBtnDelete}
-        deleteLine={deleteLine}
       />
     </div>
   );
@@ -90,7 +93,6 @@ Line.propTypes = {
     x: P.number.isRequired,
     y: P.number.isRequired
   }),
-  deleteLine: P.func.isRequired
 }
 
 export default Line;

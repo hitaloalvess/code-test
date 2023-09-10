@@ -21,26 +21,29 @@ export const createLinesSlice = (set, get) => ({
     return newLine;
   },
 
-  updateLines: ({ lineId, newLineData }) => {
+  updateLines: ({ lineId, newData }) => {
 
     set((state) => ({
       lines: {
         ...state.lines,
         [lineId]: {
           ...state.lines[lineId],
-          ...newLineData
+          ...newData
         }
       }
     }))
   },
 
   deleteLine: (lineId) => {
+    const { clearFlowTemp } = get();
+
     const { lines } = get();
 
     const newLines = { ...lines };
 
-    delete newLines[lineId];
+    delete newLines[`${lineId}`];
 
     set({ lines: newLines });
+    clearFlowTemp();
   }
 })

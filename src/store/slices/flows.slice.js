@@ -8,7 +8,7 @@ import {
   findFlowByConnectorId,
   concatConnections,
   findFlowByConnectionId
-} from "../utils/flow-functions";
+} from "@/utils/flow-functions";
 
 const categoriesTwoConns = ['entry', 'conditional', 'event'];
 export const createFlowsSlice = (set, get) => ({
@@ -98,7 +98,17 @@ export const createFlowsSlice = (set, get) => ({
   },
 
   createFlow: ({ devices }) => {
-    const { flows, flowTemp, createLine, deleteLine, updateLines, saveFlow } = get();
+
+    const {
+      flows,
+      flowTemp,
+      createLine,
+      deleteLine,
+      updateLines,
+      saveFlow,
+      devices: deviceList,
+      clearFlowTemp
+    } = get();
     const { from, to } = devices;
 
     if (from.connector && !to?.connector && !flowTemp.connectorClicked) {
@@ -138,8 +148,8 @@ export const createFlowsSlice = (set, get) => ({
     //checks if the device is not wanting to connect with itself
     if (from.id === to.id) return;
 
-    let deviceFrom = { ...devices[`${from.id}`] };
-    let deviceTo = { ...devices[`${to.id}`] };
+    let deviceFrom = { ...deviceList[`${from.id}`] };
+    let deviceTo = { ...deviceList[`${to.id}`] };
 
     delete deviceFrom.connectors;
     delete deviceTo.connectors;
@@ -168,7 +178,7 @@ export const createFlowsSlice = (set, get) => ({
       !verifConnector({ flows: flows, deviceFrom, deviceTo }) ||
       connsAlreadyConnect
     ) {
-      deleteLine({ id: flowTemp.currentLine.id });
+      deleteLine(flowTemp.currentLine.id);
 
       set({ flowTemp: {} });
       return;
@@ -182,8 +192,8 @@ export const createFlowsSlice = (set, get) => ({
           y: from.connector.y
         },
         toPos: {
-          x: from.connector.x,
-          y: from.connector.y
+          x: to.connector.x,
+          y: to.connector.y
         }
       });
 
@@ -211,6 +221,9 @@ export const createFlowsSlice = (set, get) => ({
     });
 
     saveFlow({ connection });
+
+    clearFlowTemp();
+
   },
 
   executeFlow: ({ connectorId }) => {
@@ -237,10 +250,14 @@ export const createFlowsSlice = (set, get) => ({
       //For components that only pass values
       const valueFrom = devices[fromId].value[fromConnector.name];
 
-      devices[conn.deviceTo.id].defaultReceiveBehavior({
-        value: valueFrom.current,
-        max: valueFrom.max
-      });
+      if (devices[conn.deviceTo.id].defaultReceiveBehavior) {
+
+        devices[conn.deviceTo.id].defaultReceiveBehavior({
+          value: valueFrom.current,
+          max: valueFrom.max
+        });
+
+      }
     })
   },
 
@@ -270,9 +287,7 @@ export const createFlowsSlice = (set, get) => ({
       connsAlreadyConnect ||
       !verifConnector({ flows, deviceFrom, deviceTo })
     ) {
-      deleteLine({
-        id: idLine
-      });
+      deleteLine(idLine);
 
       set({ flowTemp: {} });
       return;
@@ -331,12 +346,13 @@ export const createFlowsSlice = (set, get) => ({
   },
 
   deleteConnection: ({ idConnection, idLine }) => {
+
     const { flows, devices, deleteLine, recreateFlow } = get();
 
     const { id: currentFlowId, connections: currentFlowConnections } = findFlowByConnectionId(flows, idConnection);
     const connectionDelete = currentFlowConnections.find(conn => conn.id === idConnection);
 
-    deleteLine({ id: idLine });
+    deleteLine(idLine);
 
     //redefine devices from the connection
     if (devices[connectionDelete.deviceFrom.id].redefineBehavior) {
@@ -355,19 +371,23 @@ export const createFlowsSlice = (set, get) => ({
   },
 
   deleteDeviceConnections: ({ deviceId }) => {
-    const { flows, devices, deleteLine } = get();
+    const { flows, devices, deleteLine, deleteDevice } = get();
 
     const selectedFlow = findFlowsByDeviceId(flows, deviceId);
 
 
-    if (!selectedFlow) return;
+    if (!selectedFlow) {
+      deleteDevice(deviceId);
+
+      return;
+    }
 
     const deviceConnections = selectedFlow.connections.filter(conn => {
       return conn.deviceFrom.id === deviceId || conn.deviceTo.id === deviceId;
     });
 
     deviceConnections.forEach(conn => {
-      deleteLine({ id: conn.idLine });
+      deleteLine(conn.idLine);
       const deviceFrom = devices[conn.deviceFrom.id];
       const deviceTo = devices[conn.deviceTo.id];
 
@@ -387,6 +407,8 @@ export const createFlowsSlice = (set, get) => ({
       connections: selectedFlow.connections.filter(connection => !connsIds.includes(connection.id)),
     }
 
+    deleteDevice(deviceId);
+
     if (newFlow.connections.length <= 0) {
       const newFlows = { ...flows };
       delete newFlows[newFlow.id];
@@ -402,6 +424,7 @@ export const createFlowsSlice = (set, get) => ({
     }
 
     set({ flows: newFlows });
+
   },
 
   repositionConnections: ({ device, connector }) => {
@@ -430,7 +453,7 @@ export const createFlowsSlice = (set, get) => ({
 
     connectorConnections.forEach(connection => {
       const { deviceFrom, deviceTo } = connection;
-      const connectionLine = lines.find(line => line.id === connection.idLine);
+      const connectionLine = Object.values(lines).find(line => line.id === connection.idLine);
 
       let newConnection = {}
 
@@ -530,5 +553,5 @@ export const createFlowsSlice = (set, get) => ({
 
   },
 
-  clearFlowTemp: () => set({ flowTemp: {} });
+  clearFlowTemp: () => set({ flowTemp: {} }),
 })

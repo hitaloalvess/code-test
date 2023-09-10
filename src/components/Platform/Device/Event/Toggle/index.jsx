@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import P from 'prop-types';
+import { shallow } from 'zustand/shallow';
 
+import { useStore } from '@/store';
 import { findFlowsByDeviceId } from '@/utils/flow-functions';
-import { useFlow } from '@/hooks/useFlow';
-import { useDevices } from '@/hooks/useDevices';
 
 import ActionButtons from '@/components/Platform/Device/SharedDevice/ActionButtons';
 import Connectors from '@/components/Platform/Device/SharedDevice/Connectors';
@@ -19,8 +19,18 @@ const Toggle = ({
 }) => {
 
   const { id, name, posX, posY, value, connectors, containerRef } = data;
-  const { updateDeviceValue, devices } = useDevices();
-  const { updateDeviceValueInFlow, flows } = useFlow();
+
+  const {
+    flows,
+    devices,
+    updateDeviceValue,
+    updateDeviceValueInFlow
+  } = useStore(store => ({
+    flows: store.flows,
+    devices: store.devices,
+    updateDeviceValue: store.updateDeviceValue,
+    updateDeviceValueInFlow: store.updateDeviceValueInFlow
+  }), shallow);
 
   const isFirstRender = useRef(true);
   const [qtdIncomingConn, setQtdIncomingConn] = useState(0);

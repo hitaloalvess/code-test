@@ -4,9 +4,6 @@ import { useDrop, useDrag } from 'react-dnd';
 import P from 'prop-types';
 import { v4 as uuid } from 'uuid';
 
-import { useFlow } from '@/hooks/useFlow';
-import { useDevices } from '@/hooks/useDevices';
-
 import { calcPositionConnector } from '@/utils/flow-functions';
 
 import styles, {
@@ -16,23 +13,28 @@ import styles, {
   exitConnectorRange
 } from './styles.module.css';
 
+import { useStore } from '@/store';
+import { shallow } from 'zustand/shallow';
 
 const ConnectorsConnector = ({
   data, device, updateConn, handleChangeData
 }) => {
 
   const {
-    flows,
-    flowTemp,
+    moutingPanelRef,
     createFlow,
     deleteLine,
-    clearFlowTemp,
-    connectionLines,
-    updateLines,
-    updateFlow
-  } = useFlow();
-
-  const { repositionConnections, deviceScale } = useDevices();
+    flowTemp,
+    repositionConnections,
+    scale
+  } = useStore(store => ({
+    moutingPanelRef: store.moutingPanelRef,
+    createFlow: store.createFlow,
+    deleteLine: store.deleteLine,
+    flowTemp: store.flowTemp,
+    repositionConnections: store.repositionConnections,
+    scale: store.scale
+  }), shallow);
 
   const connRef = useRef(null);
   const [id] = useState(() => data.id || `${data.name}-${uuid()}`);
@@ -42,7 +44,9 @@ const ConnectorsConnector = ({
 
 
   useEffect(() => {
-    const { x, y } = calcPositionConnector(connRef.current, device.containerRef);
+    if (!moutingPanelRef?.current) return;
+
+    const { x, y } = calcPositionConnector(connRef.current, moutingPanelRef);
     setPosition({ x, y });
 
     repositionConnections({
@@ -56,10 +60,6 @@ const ConnectorsConnector = ({
         posX: x,
         posY: y
       },
-      flows,
-      connectionLines,
-      updateLines,
-      updateFlow
     })
 
     if (handleChangeData) {
@@ -74,7 +74,7 @@ const ConnectorsConnector = ({
       });
     }
 
-  }, [updateConn.posX, updateConn.posY, deviceScale]);
+  }, [updateConn.posX, updateConn.posY, scale, moutingPanelRef.current]);
 
 
   const [{ }, drop] = useDrop(() => ({
@@ -83,10 +83,9 @@ const ConnectorsConnector = ({
 
       if (item.connector.id === id) {
         //If the line is dropped within the range of the device connector itself, it will be deleted.
-        deleteLine({ id: flowTemp.currentLine.id })
+        deleteLine(flowTemp.currentLine.id)
       }
 
-      clearFlowTemp();
       createFlow({
         devices: {
           from: { ...item },
@@ -103,7 +102,7 @@ const ConnectorsConnector = ({
         lineId: null
       })
     }
-  }), [flowTemp, position]);
+  }), [position, flowTemp]);
 
   const [{ }, drag] = useDrag(() => ({
     type: 'connector',
@@ -119,9 +118,7 @@ const ConnectorsConnector = ({
     end: (item, monitor) => {
       if (!monitor.didDrop()) {
         //dropped in invalid local
-        deleteLine({
-          id: flowTemp.currentLine.id
-        })
+        deleteLine(flowTemp.currentLine.id)
       }
     }
   }), [position, flowTemp]);
@@ -132,6 +129,7 @@ const ConnectorsConnector = ({
   }
 
   const handleConnDown = () => {
+
     createFlow({
       devices: {
         from: {
@@ -174,7 +172,6 @@ ConnectorsConnector.propTypes = {
   }),
   device: P.shape({
     id: P.string.isRequired,
-    containerRef: P.object.isRequired
   }),
   updateConn: P.shape({
     posX: P.number.isRequired,
