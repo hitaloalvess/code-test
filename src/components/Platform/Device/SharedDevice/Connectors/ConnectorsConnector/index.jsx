@@ -21,14 +21,14 @@ const ConnectorsConnector = ({
 }) => {
 
   const {
-    moutingPanelRef,
+    platformContainerRef,
     createFlow,
     deleteLine,
     flowTemp,
     repositionConnections,
     scale
   } = useStore(store => ({
-    moutingPanelRef: store.moutingPanelRef,
+    platformContainerRef: store.platformContainerRef,
     createFlow: store.createFlow,
     deleteLine: store.deleteLine,
     flowTemp: store.flowTemp,
@@ -44,9 +44,9 @@ const ConnectorsConnector = ({
 
 
   useEffect(() => {
-    if (!moutingPanelRef?.current) return;
+    if (!platformContainerRef?.current) return;
 
-    const { x, y } = calcPositionConnector(connRef.current, moutingPanelRef);
+    const { x, y } = calcPositionConnector(connRef.current, platformContainerRef);
     setPosition({ x, y });
 
     repositionConnections({
@@ -74,7 +74,7 @@ const ConnectorsConnector = ({
       });
     }
 
-  }, [updateConn.posX, updateConn.posY, scale, moutingPanelRef.current]);
+  }, [updateConn.posX, updateConn.posY, scale, platformContainerRef.current]);
 
 
   const [{ }, drop] = useDrop(() => ({

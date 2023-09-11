@@ -76,7 +76,6 @@ const BackgroundGrade = ({ moutingPanelRef }) => {
     <canvas
       className={backgroundGrade}
       ref={bgGradeRef}
-    // style={{ transform: `scale(${bgScale})` }}
     ></canvas>
   );
 };

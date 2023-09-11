@@ -11,13 +11,13 @@ import * as LC from './styles.module.css';
 const LinesContainer = memo(function LinesContainer() {
 
   const {
-    moutingPanelRef,
+    platformContainerRef,
     flowTemp,
     lines,
     deleteLine,
     updateLines,
   } = useStore(store => ({
-    moutingPanelRef: store.moutingPanelRef,
+    platformContainerRef: store.platformContainerRef,
     flowTemp: store.flowTemp,
     lines: store.lines,
     deleteLine: store.deleteLine,
@@ -31,8 +31,8 @@ const LinesContainer = memo(function LinesContainer() {
 
     const { currentLine, from } = flowTemp;
 
-    const scrollLeft = moutingPanelRef.current.scrollLeft;
-    const scrollTop = moutingPanelRef.current.scrollTop;
+    const scrollLeft = platformContainerRef.current.scrollLeft;
+    const scrollTop = platformContainerRef.current.scrollTop;
 
     updateLines({
       lineId: currentLine.id,
@@ -69,6 +69,7 @@ const LinesContainer = memo(function LinesContainer() {
     <div
       className={LC.lines}
       ref={drop}
+      id='lines'
     >
       {Object.values(lines).map(({ id, fromPos, toPos, idConnection }) => (
         <Line

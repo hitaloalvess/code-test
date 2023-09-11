@@ -1,5 +1,8 @@
 import { v4 as uuid } from 'uuid';
+import { useState } from 'react';
+import { shallow } from 'zustand/shallow';
 
+import { useStore } from '@/store';
 import {
   removeHTMLElementRef,
   replaceFuncInString,
@@ -9,6 +12,20 @@ import { formattedDate } from '@/utils/date-functions';
 
 
 export const useProject = () => {
+
+  const [project, setProject] = useState();
+
+  const {
+    getFlows,
+    getDevices,
+    loadDevice,
+    createFlow,
+  } = useStore(store => ({
+    getFlows: store.getFlows,
+    getDevices: store.getDevices,
+    loadDevice: store.loadDevice,
+    createFlow: store.createFlow,
+  }), shallow);
 
   const createProject = (objProject) => {
 
@@ -95,8 +112,15 @@ export const useProject = () => {
     return newProjects;
   }
 
-  const saveProject = (objProject) => {
+  const saveProject = () => {
+
     const projects = getProjects();
+
+    const objProject = {
+      ...project,
+      devices: getDevices(),
+      flows: getFlows()
+    }
 
     // Apply transformation on devices and streams object to remove HTMLElements
     // HTML elements are not accepted when serializing to JSON.
@@ -177,11 +201,41 @@ export const useProject = () => {
     localStorage.setItem('@Microdigo:projects', serializedFlows);
   }
 
+  const loadProject = async (projectId) => {
+    const projects = getProjects();
+    const project = projects.find(project => project.id === projectId);
+
+    const deviceList = Object.values(project.devices).map(async (device) => {
+      loadDevice({ ...device });
+      await new Promise(resolve => setTimeout(resolve, 100))
+    });
+
+
+    await Promise.all(deviceList);
+
+
+    Object.values(project.flows).forEach(flow => {
+      flow.connections.forEach(connection => {
+        createFlow({
+          devices: {
+            from: connection.deviceFrom,
+            to: connection.deviceTo
+          }
+        })
+      })
+    })
+
+    setProject(project);
+
+  };
+
   return {
+    project,
     createProject,
     getProjects,
     saveProject,
     deleteProject,
-    updateProject
+    updateProject,
+    loadProject
   }
 }

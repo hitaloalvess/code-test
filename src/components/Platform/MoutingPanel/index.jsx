@@ -1,15 +1,15 @@
 /* eslint-disable no-unused-vars */
-import {
-  useRef, useState, forwardRef, /*, useEffect */
-  useEffect
-} from 'react';
-import { useParams } from 'react-router-dom';
+import { useRef, useState, useEffect, forwardRef } from 'react';
+import { useOutletContext, useParams } from 'react-router-dom';
 import { useDrop } from 'react-dnd';
+import { shallow } from 'zustand/shallow';
 
+import { useStore } from '@/store';
+import { useScroll } from '@/hooks/useScroll';
 import { useContextAuth } from '@/hooks/useAuth';
 import { useProject } from '@/hooks/useProject';
 
-import Device from '@/components/Platform/Device/index';
+import DevicesArea from './DevicesArea';
 import BackgroundGrade from './BackgroundGrade';
 import LinesContainer from './LinesContainer';
 import ManualButton from './CircleButton/ManualButton';
@@ -19,49 +19,30 @@ import SearchFormButton from './CircleButton/SearchFormButton';
 
 import { moutingPanelContainer, buttonsContainer } from './styles.module.css';
 
-import { useStore } from '@/store';
-import { shallow } from 'zustand/shallow';
-
 const MoutingPanel = () => {
+  console.log('re-render mouting panel');
+
   const { id: projectId } = useParams();
-
+  const containerRef = useOutletContext();
+  const { startMove, endMove, moving } = useScroll(containerRef);
   const { searchFormHasEnabled } = useContextAuth();
-  const { getProjects, saveProject } = useProject();
-
+  const { project, loadProject, saveProject } = useProject();
   const {
-    devices,
-    flows,
-    loadDevice,
-    createFlow,
     insertDevice,
     repositionDevice,
-    loadMoutingPanel
+    cleanMoutingPanel
   } = useStore(store => ({
-    devices: store.devices,
-    flows: store.flows,
-    loadDevice: store.loadDevice,
-    createFlow: store.createFlow,
     insertDevice: store.insertDevice,
     repositionDevice: store.repositionDevice,
-    loadMoutingPanel: store.loadMoutingPanel
+    cleanMoutingPanel: store.cleanMoutingPanel
   }), shallow);
 
   const isFirstRender = useRef(true);
   const moutingPanelRef = useRef(null);
 
-  const [project, setProject] = useState();
-  const [changingScrollPos, setChangingScrollPos] = useState({
-    moving: false,
-    posX: 0,
-    posY: 0,
-    posTop: 0,
-    posLeft: 0
-  });
-
   const attachRef = (el) => {
     drop(el);
     moutingPanelRef.current = el;
-    loadMoutingPanel(moutingPanelRef);
   }
 
   const deviceDrop = (item, monitor) => {
@@ -88,85 +69,6 @@ const MoutingPanel = () => {
     drop: (item, monitor) => deviceDrop(item, monitor),
   }), []);
 
-  const handleMouseDown = (event) => {
-    //Valid if the element to be dragged is the line container,
-    //this way the scroll will only be moved when we drag the container
-    const isLinesContainer = event.target.id.includes('lines');
-
-    if (!isLinesContainer) return;
-
-    const scrollElement = moutingPanelRef.current;
-    const { clientX, clientY } = event;
-
-    setChangingScrollPos({
-      moving: true,
-      posLeft: scrollElement.scrollLeft,
-      posTop: scrollElement.scrollTop,
-      posX: clientX,
-      posY: clientY
-    })
-
-  }
-
-  const handleMouseUp = () => {
-    setChangingScrollPos({
-      moving: false,
-      posX: 0,
-      posY: 0,
-      posTop: 0,
-      posLeft: 0
-    });
-
-    moutingPanelRef.current.style.cursor = 'grab';
-  }
-
-  const handleMouseMove = (event) => {
-    const { posX, posY, posLeft, posTop, moving } = changingScrollPos;
-
-    if (!moving) return;
-
-    const scrollElement = moutingPanelRef.current;
-
-    const { clientX, clientY } = event;
-
-    const distanceX = clientX - posX;
-    const distanceY = clientY - posY;
-
-    scrollElement.scrollTop = posTop - distanceY;
-    scrollElement.scrollLeft = posLeft - distanceX;
-
-    moutingPanelRef.current.style.cursor = 'grabbing';
-
-  }
-
-  const handleLoadProject = async ({ projectId }) => {
-
-    const projects = getProjects();
-    const project = projects.find(project => project.id === projectId);
-
-
-    const deviceList = Object.values(project.devices).map(async (device) => {
-      loadDevice({ ...device, moutingPanelRef }); //REMOVER containerREF depois
-      await new Promise(resolve => setTimeout(resolve, 100))
-    });
-
-
-    await Promise.all(deviceList);
-
-
-    Object.values(project.flows).forEach(flow => {
-      flow.connections.forEach(connection => {
-        createFlow({
-          devices: {
-            from: connection.deviceFrom,
-            to: connection.deviceTo
-          }
-        })
-      })
-    })
-
-    return project;
-  }
 
 
   useEffect(() => {
@@ -176,28 +78,24 @@ const MoutingPanel = () => {
       return;
     }
 
-    handleLoadProject({ projectId })
-      .then(project => setProject(project));
+    loadProject(projectId)
+      .catch(error => console.log(error));
 
-  }, []);
+    return () => {
+      cleanMoutingPanel();
+    }
+  }, [projectId]);
 
   return (
     <div
       className={moutingPanelContainer}
       ref={attachRef}
-      onMouseDown={handleMouseDown}
-      onMouseUp={handleMouseUp}
-      onMouseMove={handleMouseMove}
+      onMouseDown={startMove}
+      onMouseUp={endMove}
+      onMouseMove={moving}
     >
 
-      {
-        Object.values(devices).map(device => (
-          <Device
-            key={device.id}
-            device={device}
-          />
-        ))
-      }
+      <DevicesArea />
 
       <LinesContainer />
 
@@ -212,15 +110,7 @@ const MoutingPanel = () => {
         <ZoomButton />
 
         <button
-          onClick={() => {
-            const newProject = {
-              ...project,
-              devices,
-              flows
-            }
-
-            saveProject(newProject);
-          }}
+          onClick={saveProject}
         >
           Save
         </button>

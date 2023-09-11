@@ -6,7 +6,7 @@ export const createDevicesSlice = (set, get) => ({
   devices: {},
 
   insertDevice: ({ device, dropPos }) => {
-    const { moutingPanelRef } = get();
+    const { platformContainerRef } = get();
 
     const { width, height } = device.draggedDevice.getBoundingClientRect();
     const { x, y } = dropPos;
@@ -15,7 +15,7 @@ export const createDevicesSlice = (set, get) => ({
       y,
       width,
       height,
-      containerRef: moutingPanelRef
+      containerRef: platformContainerRef
     });
 
 
@@ -62,18 +62,19 @@ export const createDevicesSlice = (set, get) => ({
 
   loadDevice: (device) => {
 
+
     set((state) => ({
       devices: {
         ...state.devices,
         [device.id]: {
-          ...device
+          ...device,
         }
       }
     }))
   },
 
   repositionDevice: ({ device, screenPos }) => {
-    const { moutingPanelRef } = get();
+    const { platformContainerRef } = get();
     const { id, deviceRef } = device;
 
     const { width, height } = deviceRef.current.getBoundingClientRect();
@@ -84,7 +85,7 @@ export const createDevicesSlice = (set, get) => ({
       y,
       width,
       height,
-      containerRef: moutingPanelRef
+      containerRef: platformContainerRef
     });
 
     set((state) => ({
@@ -98,5 +99,11 @@ export const createDevicesSlice = (set, get) => ({
         }
       }
     }))
+  },
+
+  getDevices: () => {
+    const { devices } = get();
+
+    return devices;
   }
 })

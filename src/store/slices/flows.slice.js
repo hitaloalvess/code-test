@@ -178,9 +178,8 @@ export const createFlowsSlice = (set, get) => ({
       !verifConnector({ flows: flows, deviceFrom, deviceTo }) ||
       connsAlreadyConnect
     ) {
-      deleteLine(flowTemp.currentLine.id);
+      // deleteLine(flowTemp.currentLine.id);
 
-      set({ flowTemp: {} });
       return;
     }
 
@@ -554,4 +553,10 @@ export const createFlowsSlice = (set, get) => ({
   },
 
   clearFlowTemp: () => set({ flowTemp: {} }),
+
+  getFlows: () => {
+    const { flows } = get();
+
+    return flows;
+  }
 })
