@@ -26,11 +26,6 @@
   color: var(--white);
 }
 
-.btnDeleteLine:disabled {
-  opacity: 0;
-  pointer-events: none;
-}
-
 @media (max-width: 769px) {
 
 

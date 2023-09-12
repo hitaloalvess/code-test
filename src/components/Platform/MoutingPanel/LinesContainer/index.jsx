@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { memo } from 'react';
 import { useDrop } from 'react-dnd';
 import { shallow } from 'zustand/shallow';
@@ -50,7 +51,6 @@ const LinesContainer = memo(function LinesContainer() {
     });
   };
 
-  // eslint-disable-next-line no-unused-vars
   const [_, drop] = useDrop(() => ({
     accept: ['connector'],
     hover: (_, monitor) => {

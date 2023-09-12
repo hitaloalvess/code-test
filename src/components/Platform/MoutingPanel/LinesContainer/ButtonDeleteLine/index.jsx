@@ -5,11 +5,12 @@ import { btnDeleteLine } from './styles.module.css';
 
 import { useStore } from '@/store';
 import { shallow } from 'zustand/shallow';
+import { memo } from 'react';
 
 
-const ButtonDeleteLine = ({
-  isActive, data: { idConnection, idLine }
-}) => {
+const ButtonDeleteLine = memo(function ButtonDeleteLine({
+  data: { idConnection, idLine }
+}) {
 
   const { deleteConnection } = useStore(store => {
 
@@ -27,17 +28,15 @@ const ButtonDeleteLine = ({
     <button
       className={btnDeleteLine}
       onClick={handleDeleteLine}
-      disabled={isActive}
     >
       <Trash />
     </button>
   );
-};
+});
 
 ButtonDeleteLine.propTypes = {
-  isActive: P.bool.isRequired,
   data: P.shape({
-    idConnection: P.string.isRequired,
+    idConnection: P.string,
     idLine: P.string.isRequired
   })
 }
