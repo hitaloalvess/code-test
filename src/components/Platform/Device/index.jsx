@@ -13,8 +13,6 @@ import * as D from './styles.module.css';
 
 const Device = memo(function Device({ device }) {
 
-  console.log('re-render device');
-
   const {
     scale,
     updateDeviceValue

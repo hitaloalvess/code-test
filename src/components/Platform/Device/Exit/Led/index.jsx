@@ -15,8 +15,6 @@ import LedLight from './LedLight';
 const Led = memo(function Led({
   data, dragRef, onSaveData
 }) {
-  console.log('re-render led');
-
   const { id, imgSrc, name, posX, posY, value, connectors } = data;
 
   const {

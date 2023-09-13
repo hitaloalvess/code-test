@@ -15,8 +15,6 @@ const Potentiometer = memo(function Potentiometer({
   dragRef, data, onSaveData
 }) {
 
-  console.log('re-render potênciometro');
-
   const { id, imgSrc, name, posX, posY } = data;
 
   const {
