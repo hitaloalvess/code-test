@@ -1,30 +1,20 @@
-import { memo, useRef, useState, useEffect } from 'react';
+import { memo, useState, useEffect, useMemo } from 'react';
 import P from 'prop-types';
-import { Thermometer, Drop, Trash, Gear } from '@phosphor-icons/react';
+import { Thermometer, Drop } from '@phosphor-icons/react';
+import { shallow } from 'zustand/shallow';
 
-import { useDevices } from '@/hooks/useDevices';
-import { useFlow } from '@/hooks/useFlow';
-import { useModal } from '@/hooks/useModal';
-import ActionButton from '@/components/Platform/ActionButton';
-import Connector from '@/components/Platform/Connector';
+import { useStore } from '@/store';
 import { formulasForTransformation, transformHumidityValue } from '@/utils/devices-functions';
 
-import {
-  deviceBody,
-  inputRangeDeviceContainer,
-  inputValue,
-  actionButtonsContainer,
-  actionButtonsContainerLeft,
-  connectorsContainer,
-  connectorsContainerExit
-} from '../../styles.module.css';
+import ActionButtons from '@/components/Platform/Device/SharedDevice/ActionButtons';
+import Connectors from '@/components/Platform/Device/SharedDevice/Connectors';
+import DeviceInputs from '../../SharedDevice/DeviceInputs';
+import DeviceBody from '../../SharedDevice/DeviceBody';
 
 import {
-  inputsContainer,
   thermometerIcon,
   dropIcon,
   inputDht,
-  showValue,
   inputContainerDht
 } from './styles.module.css';
 
@@ -34,243 +24,165 @@ const MAX_HUMIDITY = 1023;
 const MIN_HUMIDITY = 0;
 
 const Dht = memo(function Dht({
-  device, dragRef, updateValue
+  data, dragRef, onSaveData
 }) {
 
-  const { id, imgSrc, name, posX, posY } = device;
-  const { deleteDevice } = useDevices();
-  const { executeFlow, deleteDeviceConnections } = useFlow();
-  const { enableModal, disableModal } = useModal();
+  const { id, imgSrc, name, posX, posY } = data;
 
-  const [temperatureConnectorId, setTemperatureConnectorId] = useState('');
-  const [humidityConnectorId, setHumidityConnectorId] = useState('');
-
-  const inputRefTemperature = useRef(null);
-  const showValueRefTemperature = useRef(null);
-
-  const inputRefHumidity = useRef(null);
-  const showValueRefHumidity = useRef(null);
+  const {
+    executeFlow,
+    updateDeviceValue,
+    updateDeviceValueInFlow
+  } = useStore(store => ({
+    executeFlow: store.executeFlow,
+    updateDeviceValue: store.updateDeviceValue,
+    updateDeviceValueInFlow: store.updateDeviceValueInFlow
+  }), shallow);
 
   const [scaleType, setScaleType] = useState('celsius');
+
+  const transformationFormula = useMemo(() => {
+    return formulasForTransformation[scaleType];
+  }, [scaleType]);
+
 
   const handleSettingUpdate = (newScaleType) => {
     setScaleType(newScaleType);
   }
 
+  const handleOnInput = (event, name) => {
+    const inputValue = Number(event.target.value);
 
-  const getTemperature = () => {
-    return {
-      value: inputRefTemperature.current.value,
-      max: MAX_TEMPERATURE
-    };
-  }
-
-
-  const getHumidity = () => {
-    return {
-      value: inputRefHumidity.current.value,
-      max: MAX_HUMIDITY
-    };
-  }
-
-
-  const handleOnInputTemperature = () => {
-    const humidityValue = Number(inputRefHumidity.current.value);
-
-    const transformationFormula = formulasForTransformation[scaleType];
-    const temperatureValue = Number(inputRefTemperature.current.value);
-    showValueRefTemperature.current.innerHTML = transformationFormula(temperatureValue);
-
-    updateValue(null, id, {
-      temperature: {
-        current: temperatureValue,
-        max: MAX_TEMPERATURE
-      },
-      humidity: {
-        current: humidityValue,
-        max: MAX_HUMIDITY
+    const value = {
+      ...data.value,
+      [`${name}`]: {
+        ...data.value[`${name}`],
+        current: inputValue,
       }
-    });
+    }
 
-    executeFlow({ connectorId: temperatureConnectorId, fromBehaviorCallback: getTemperature });
+    onSaveData('value', value);
+
+    updateDeviceValue(id, { value })
+
   }
-
-
-  const handleOnInputHumidity = () => {
-    const humidityValue = Number(inputRefHumidity.current.value);
-    const temperatureValue = Number(inputRefTemperature.current.value);
-
-    showValueRefHumidity.current.innerHTML = transformHumidityValue(humidityValue, MAX_HUMIDITY);
-
-    updateValue(null, id, {
-      temperature: {
-        current: temperatureValue,
-        max: MAX_TEMPERATURE
-      },
-      humidity: {
-        current: humidityValue,
-        max: MAX_HUMIDITY
-      }
-    });
-
-    executeFlow({ connectorId: humidityConnectorId, fromBehaviorCallback: getHumidity });
-  }
-
-
-  const handleChangeTempConnector = (value) => {
-    setTemperatureConnectorId(value);
-  }
-
-
-  const handleChangeHumidityConnector = (value) => {
-    setHumidityConnectorId(value);
-  }
-
 
   useEffect(() => {
-    handleOnInputTemperature();
-  }, [scaleType])
+
+    updateDeviceValueInFlow({ connectorId: data.connectors.temperature.id, newValue: data.value.temperature });
+
+    executeFlow({ connectorId: data.connectors.temperature.id });
+
+  }, [data.value.temperature.current]);
+
+  useEffect(() => {
+
+    updateDeviceValueInFlow({ connectorId: data.connectors.humidity.id, newValue: data.value.humidity });
+
+    executeFlow({ connectorId: data.connectors.humidity.id });
+  }, [data.value.humidity.current]);
 
   return (
 
     <>
-      <div className={inputsContainer}>
-        <div className={`${inputRangeDeviceContainer} ${inputContainerDht}`}>
-          <input
-            className={inputDht}
-            type="range"
-            min={MIN_TEMPERATURE}
-            max={MAX_TEMPERATURE}
-            step="0.1"
-            defaultValue={0}
-            onInput={handleOnInputTemperature}
-            ref={inputRefTemperature}
-          />
 
-          <div className={showValue}>
-            <p
-              className={inputValue}
-              ref={showValueRefTemperature}
-            >0</p>
+      <DeviceInputs
+        inputs={[
+          {
+            data: {
+              minValue: MIN_TEMPERATURE,
+              maxValue: MAX_TEMPERATURE,
+              step: 0.1,
+              defaultValue: data.value.temperature.current,
+              onInput: (event) => handleOnInput(event, 'temperature'),
+              onTransformValue: () => transformationFormula(data.value.temperature.current)
+            },
+            className: {
+              container: [inputContainerDht],
+              input: [inputDht]
+            },
+            children: <Thermometer className={thermometerIcon} />
+          },
+          {
+            data: {
+              minValue: MIN_HUMIDITY,
+              maxValue: MAX_HUMIDITY,
+              step: 1,
+              defaultValue: data.value.humidity.current,
+              onInput: (event) => handleOnInput(event, 'humidity'),
+              onTransformValue: () => transformHumidityValue(data.value.humidity.current, MAX_HUMIDITY)
+            },
+            className: {
+              container: [inputContainerDht],
+              input: [inputDht]
+            },
+            children: <Drop className={dropIcon} />
 
-            <Thermometer className={thermometerIcon} />
+          }
+        ]}
+      />
 
-            {/* <div className={iconContainer}>
-              <div className={thermometer}>
-                <div className={thermometerTop}></div>
-                <div className={thermometerBottom}></div>
-              </div>
-            </div> */}
-          </div>
-        </div>
-
-        <div className={`${inputRangeDeviceContainer} ${inputContainerDht}`} >
-          <input
-            className={inputDht}
-            type="range"
-            min={MIN_HUMIDITY}
-            max={MAX_HUMIDITY}
-            step="1"
-            defaultValue={0}
-            onInput={handleOnInputHumidity}
-            ref={inputRefHumidity}
-          />
-
-          <div className={showValue}>
-            <p
-              className={inputValue}
-              ref={showValueRefHumidity}
-            >0</p>
-
-            {/* <div className={iconContainer}>
-              <div className={drop}></div>
-            </div> */}
-            <Drop className={dropIcon} />
-          </div>
-        </div>
-
-      </div>
-
-      <div
-        className={deviceBody}
+      <DeviceBody
+        name={name}
+        imgSrc={imgSrc}
         ref={dragRef}
       >
 
-        <img
-          src={imgSrc}
-          alt={`Device ${name}`}
-          loading='lazy'
-        />
-      </div>
 
-      <div
-        className={`${connectorsContainer} ${connectorsContainerExit}`}
-      >
-        <Connector
-          name={'temperature'}
-          type={'exit'}
-          device={{
-            id,
-            defaultBehavior: getTemperature,
-            containerRef: device.containerRef
-          }}
-          updateConn={{ posX, posY }}
-          handleChangeId={handleChangeTempConnector}
-        />
-
-        <Connector
-          name={'humidity'}
-          type={'exit'}
-          device={{
-            id,
-            defaultBehavior: getHumidity,
-            containerRef: device.containerRef
-          }}
-          updateConn={{ posX, posY }}
-          handleChangeId={handleChangeHumidityConnector}
-        />
-
-      </div>
-
-      <div
-        className={
-          `${actionButtonsContainer} ${actionButtonsContainerLeft}`
-        }
-      >
-
-        <ActionButton
-          onClick={() => enableModal({
-            typeContent: 'confirmation',
+        <ActionButtons
+          orientation='left'
+          actionDelete={{
             title: 'Cuidado',
             subtitle: 'Tem certeza que deseja excluir o componente?',
-            handleConfirm: () => {
-              deleteDeviceConnections(id);
-              deleteDevice(id);
-              disableModal('confirmation');
+            data: {
+              id
             }
-          })}
-        >
-          <Trash />
-        </ActionButton>
-
-        <ActionButton
-          onClick={() => enableModal({
+          }}
+          actionConfig={{
             typeContent: 'config-dht',
-            handleSaveConfig: handleSettingUpdate,
-            scaleTypeDefault: scaleType
-          })}
-        >
-          <Gear />
-        </ActionButton>
-      </div>
+            onSave: handleSettingUpdate,
+            data: {
+              scaleTypeDefault: scaleType
+            }
+          }}
+        />
+
+
+      </DeviceBody>
+
+
+      <Connectors
+        type='exits'
+        exitConnectors={[
+          {
+            data: data.connectors.temperature,
+            device: {
+              id,
+              containerRef: data.containerRef
+            },
+            updateConn: { posX, posY },
+            handleChangeData: onSaveData
+          },
+          {
+            data: data.connectors.humidity,
+            device: {
+              id,
+              containerRef: data.containerRef
+            },
+            updateConn: { posX, posY },
+            handleChangeData: onSaveData
+          }
+        ]}
+      />
+
     </>
   );
 });
 
 Dht.propTypes = {
-  device: P.object.isRequired,
+  data: P.object.isRequired,
   dragRef: P.func.isRequired,
-  updateValue: P.func.isRequired
+  onSaveData: P.func.isRequired
 }
 
 export default Dht;

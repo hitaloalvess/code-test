@@ -1,0 +1,28 @@
+.ledLight {
+  position: relative;
+  z-index: 2;
+}
+
+.ledLightElement {
+  width: 12px;
+  height: 10px;
+  fill: var(--red);
+}
+
+
+.lights {
+  display: flex;
+  flex-wrap: wrap;
+  position: absolute;
+  width: 51px;
+  height: 40px;
+  top: 17px;
+  left: 18px;
+}
+
+@media (((max-height: 481px) and (orientation: landscape)) or ((max-width: 481px) and (orientation: portrait))) {
+
+  .ledLightElement {
+    width: 38px;
+  }
+}

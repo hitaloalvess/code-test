@@ -1,5 +1,5 @@
 import { useDragLayer } from 'react-dnd';
-import DevicePreview from '../Device/DevicePreview';
+import DevicePreview from './DevicePreview';
 
 
 const layerStyles = {

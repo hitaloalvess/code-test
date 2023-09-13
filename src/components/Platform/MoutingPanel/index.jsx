@@ -1,156 +1,114 @@
-import { useRef, useState, forwardRef } from 'react';
+/* eslint-disable no-unused-vars */
+import { useRef, useEffect } from 'react';
+import { useOutletContext, useParams } from 'react-router-dom';
 import { useDrop } from 'react-dnd';
+import { shallow } from 'zustand/shallow';
 
-import { useDevices } from '@/hooks/useDevices';
-import { useFlow } from '@/hooks/useFlow';
+import { useStore } from '@/store';
+import { useScroll } from '@/hooks/useScroll';
+import { useProject } from '@/hooks/useProject';
 
-import Device from '@/components/Platform/Device/index';
+import DevicesArea from './DevicesArea';
 import BackgroundGrade from './BackgroundGrade';
 import LinesContainer from './LinesContainer';
-import ManualButton from './ManualButton';
-import ZoomButton from './ZoomButton';
-import FaqButton from './FaqButton';
-
-import { moutingPanelContainer, buttonsContainer } from './styles.module.css';
-import SearchFormButton from './SearchFormButton';
-import { useContextAuth } from '@/hooks/useAuth';
+import ActionsArea from './ActionsArea';
 
 
-const MoutingPanel = forwardRef(function MoutingPanel(props, ref) {
-  const { devices, addDevice, repositionDevice } = useDevices();
-  const { flows, connectionLines, updateLines, updateFlow } = useFlow();
-  const { searchFormHasEnabled } = useContextAuth();
+import { moutingPanelContainer } from './styles.module.css';
+
+const MoutingPanel = () => {
+
+  const { id: projectId } = useParams();
+
+  const containerRef = useOutletContext();
+
+  const { startMove, endMove, moving } = useScroll(containerRef);
+
+  const { loadProject } = useProject();
+
+  const {
+    insertDevice,
+    repositionDevice,
+    cleanMoutingPanel
+  } = useStore(store => ({
+    insertDevice: store.insertDevice,
+    repositionDevice: store.repositionDevice,
+    cleanMoutingPanel: store.cleanMoutingPanel
+  }), shallow);
+
+  const isFirstRender = useRef(true);
 
   const moutingPanelRef = useRef(null);
-
-  const [changingScrollPos, setChangingScrollPos] = useState({
-    moving: false,
-    posX: 0,
-    posY: 0,
-    posTop: 0,
-    posLeft: 0
-  });
 
   const attachRef = (el) => {
     drop(el);
     moutingPanelRef.current = el;
   }
 
-  const deviceDrop = (item, monitor) => {
-    const elementIndex = devices.find(device => device.id === item.id);
 
-    if (!elementIndex) {
-      addDevice({
-        ...item,
-        containerRef: ref
-      }, monitor)
+  const deviceDrop = (item, monitor) => {
+
+    const itemType = monitor.getItemType();
+
+    if (itemType === 'menu-device') {
+      insertDevice({
+        device: { ...item },
+        dropPos: monitor.getClientOffset(),
+      });
 
       return;
     }
 
     repositionDevice({
-      device: {
-        ...item,
-        containerRef: ref
-      },
-      screen: monitor,
-      flows,
-      connectionLines,
-      updateLines,
-      updateFlow
+      device: { ...item },
+      screenPos: monitor.getClientOffset(),
     });
   }
 
-  // eslint-disable-next-line no-unused-vars
+
   const [_, drop] = useDrop(() => ({
     accept: ['device', 'menu-device'],
     drop: (item, monitor) => deviceDrop(item, monitor),
-  }), [devices, flows, connectionLines]);
+  }), []);
 
-  const handleMouseDown = (event) => {
-    //Valid if the element to be dragged is the line container,
-    //this way the scroll will only be moved when we drag the container
-    const isLinesContainer = event.target.id.includes('lines');
 
-    if (!isLinesContainer) return;
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
 
-    const scrollElement = ref.current;
-    const { clientX, clientY } = event;
+      return;
+    }
 
-    setChangingScrollPos({
-      moving: true,
-      posLeft: scrollElement.scrollLeft,
-      posTop: scrollElement.scrollTop,
-      posX: clientX,
-      posY: clientY
-    })
+    loadProject(projectId)
+      .catch(error => console.log(error));
 
-  }
+    return () => {
+      cleanMoutingPanel();
+    }
+  }, [projectId]);
 
-  const handleMouseUp = () => {
-    setChangingScrollPos({
-      moving: false,
-      posX: 0,
-      posY: 0,
-      posTop: 0,
-      posLeft: 0
-    });
-
-    moutingPanelRef.current.style.cursor = 'grab';
-  }
-
-  const handleMouseMove = (event) => {
-    const { posX, posY, posLeft, posTop, moving } = changingScrollPos;
-
-    if (!moving) return;
-
-    const scrollElement = ref.current;
-
-    const { clientX, clientY } = event;
-
-    const distanceX = clientX - posX;
-    const distanceY = clientY - posY;
-
-    scrollElement.scrollTop = posTop - distanceY;
-    scrollElement.scrollLeft = posLeft - distanceX;
-
-    moutingPanelRef.current.style.cursor = 'grabbing';
-
-  }
 
   return (
     <div
       className={moutingPanelContainer}
       ref={attachRef}
-      onMouseDown={handleMouseDown}
-      onMouseUp={handleMouseUp}
-      onMouseMove={handleMouseMove}
+      onMouseDown={startMove}
+      onMouseUp={endMove}
+      onMouseMove={moving}
     >
 
-      {
-        devices.map(device => (
-          <Device
-            key={device.id}
-            device={device}
-          />
-        ))
-      }
+      <DevicesArea />
 
-      <LinesContainer ref={ref} />
+      <LinesContainer />
 
       <BackgroundGrade
         moutingPanelRef={moutingPanelRef}
       />
 
-      <div className={buttonsContainer}>
-        <ManualButton />
-        <FaqButton />
-        {searchFormHasEnabled && (<SearchFormButton />)}
-        <ZoomButton />
-      </div>
+      <ActionsArea />
 
     </div>
   );
-})
+};
 
 export default MoutingPanel;

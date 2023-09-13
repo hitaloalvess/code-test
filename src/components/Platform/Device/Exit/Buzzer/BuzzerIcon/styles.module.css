@@ -1,0 +1,27 @@
+.buzzerIcon {
+  position: absolute;
+  top: -24px;
+  left: 24px;
+}
+
+.buzzerIconOff {
+  display: none;
+}
+
+.buzzerIconOn {
+  animation: music-animation 2s infinite;
+}
+
+@keyframes music-animation {
+  0% {
+    transform: translateY(-20px);
+  }
+
+  50% {
+    transform: translateY(0rem);
+  }
+
+  100% {
+    transform: translateY(-20px);
+  }
+}

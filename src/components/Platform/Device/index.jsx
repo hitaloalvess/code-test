@@ -1,113 +1,90 @@
-import { memo } from 'react';
+/* eslint-disable no-empty-pattern */
+
+import { memo, useCallback, useEffect, useRef, useState } from 'react';
 import P from 'prop-types';
 import { useDrag } from 'react-dnd';
+import { shallow } from 'zustand/shallow';
 
-import { useDevices } from '@/hooks/useDevices.js';
+import { useStore } from '@/store';
+import DeviceFactory from './SharedDevice/DeviceFactory';
 
-import Dht from './Entry/Dht';
-import Ldr from './Entry/Ldr';
-import Potentiometer from './Entry/Potentiometer';
-import Switch from './Entry/Switch';
-import PushButton from './Entry/PushButton';
-import Infrared from './Entry/Infrared';
-import SoilMoisture from './Entry/SoilMoisture';
-import RainDetector from './Entry/RainDetector';
-
-import Led from './Exit/Led';
-import LedMono from './Exit/LedMono';
-import Laser from './Exit/Laser';
-import ShakeMotor from './Exit/ShakeMotor';
-import Buzzer from './Exit/Buzzer';
-import Bargraph from './Exit/Bargraph';
-
-import And from './Conditional/And';
-import Or from './Conditional/Or';
-import Not from './Conditional/Not';
-import If from './Conditional/If';
-import Counter from './Conditional/counter';
-
-import Toggle from './Event/Toggle';
-import Delay from './Event/Delay';
-import Slider from './Event/Slider';
-import PickColor from './Event/PickColor';
-
-import {
-  deviceContainer,
-  deviceContent,
-} from './styles.module.css';
+import * as D from './styles.module.css';
 
 
+const Device = memo(function Device({ device }) {
 
-const Device = memo(function Device({ device: { ...device } }) {
-  const { deviceScale, updateDeviceValue } = useDevices();
+  const {
+    scale,
+    updateDeviceValue
+  } = useStore(store => ({
+    scale: store.scale,
+    updateDeviceValue: store.updateDeviceValue
+  }), shallow);
 
-  // eslint-disable-next-line no-empty-pattern
-  const [{ }, drag] = useDrag(() => ({
-    type: 'device',
-    item: {
-      ...device,
-    },
-  }), []);
+  const deviceRef = useRef(null);
 
-  const updateValue = (callbackUpdate, deviceId, value) => {
-    if (callbackUpdate) callbackUpdate(value);
+  const [data, setData] = useState(device);
 
-    updateDeviceValue(deviceId, {
-      value
+  const [{ }, drag] = useDrag(() => {
+    return {
+      type: 'device',
+      item: {
+        ...device,
+        deviceRef
+      },
+    }
+  }, []);
+
+
+  const handleSaveData = useCallback((keyValue, newValue) => {
+    setData(prev => {
+      return {
+        ...prev,
+        [keyValue]: {
+          ...prev[`${keyValue}`],
+          ...newValue
+        }
+      }
     });
-  }
+  }, [data]);
 
-  const devices = {
-    dht: Dht,
-    ldr: Ldr,
-    potentiometer: Potentiometer,
-    pushButton: PushButton,
-    switch: Switch,
-    infrared: Infrared,
-    led: Led,
-    ledMono: LedMono,
-    laser: Laser,
-    shakeMotor: ShakeMotor,
-    buzzer: Buzzer,
-    bargraph: Bargraph,
-    and: And,
-    or: Or,
-    not: Not,
-    if: If,
-    toggle: Toggle,
-    delay: Delay,
-    slider: Slider,
-    pickColor: PickColor,
-    counter: Counter,
-    soilMoisture: SoilMoisture,
-    rainDetector: RainDetector
-  }
 
-  const CurrentDevice = devices[device.name];
+  useEffect(() => {
+    updateDeviceValue(data.id, {
+      connectors: {
+        ...data.connectors
+      }
+    })
+  }, [data.connectors]);
 
-  if (!CurrentDevice) {
-    return;
-  }
+  useEffect(() => {
+    setData(prev => {
+      return {
+        ...prev,
+        posX: device.posX,
+        posY: device.posY
+      }
+    })
+  }, [device.posX, device.posY]);
 
   return (
-    <>
+    <div
+      className={D.deviceContainer}
+      style={{ left: `${data.posX}px`, top: `${data.posY}px`, transform: `scale(${scale})` }}
+      ref={deviceRef}
+    >
       <div
-        className={deviceContainer}
-        style={{ left: `${device.posX}px`, top: `${device.posY}px`, transform: `scale(${deviceScale})` }}
+        className={D.deviceContent}
       >
-        <div
-          className={deviceContent}
-        >
-          {
-            <CurrentDevice
-              device={device}
-              dragRef={drag}
-              updateValue={updateValue}
-            />
-          }
-        </div>
+        {
+          <DeviceFactory
+            data={data}
+            dragRef={drag}
+            onSaveData={handleSaveData}
+          />
+        }
       </div>
-    </>
+    </div>
   )
 });
 

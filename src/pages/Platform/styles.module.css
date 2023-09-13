@@ -2,6 +2,7 @@
   width: 100vw;
   height: 100vh;
   overflow: auto;
+  background-color: var(--gray-100);
 }
 
 .container::-webkit-scrollbar {

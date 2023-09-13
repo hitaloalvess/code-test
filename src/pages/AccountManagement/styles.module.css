@@ -24,8 +24,7 @@
   flex-direction: column;
   gap: 16px;
   border-radius: 4px;
-  border: 1px solid var(--gray-50);
-  box-shadow: 0px 0px 4px 0px rgba(40, 40, 50, 0.40);
+  border: 1px solid var(--white-200);
   background-color: var(--white);
 }
 

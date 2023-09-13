@@ -1,0 +1,23 @@
+.ledMonoLightContainer {
+  position: absolute;
+  top: -4px;
+  left: 18px;
+  z-index: 2;
+}
+
+.ledMonoLightElement {
+  width: 51px;
+}
+
+
+@media (((max-height: 481px) and (orientation: landscape)) or ((max-width: 481px) and (orientation: portrait))) {
+
+  .ledMonoLightContainer {
+    top: -1px;
+    left: 11px;
+  }
+
+  .ledMonoLightElement {
+    width: 38px;
+  }
+}

@@ -1,207 +1,160 @@
 
-import { memo, useState } from 'react';
+import { memo, useCallback, useEffect, useState } from 'react';
 import P from 'prop-types';
-import { Trash } from '@phosphor-icons/react';
+
+import { shallow } from 'zustand/shallow';
+
+import { useStore } from '@/store';
+
+import ActionButtons from '@/components/Platform/Device/SharedDevice/ActionButtons';
+import Connectors from '@/components/Platform/Device/SharedDevice/Connectors';
+import DeviceBody from '../../SharedDevice/DeviceBody';
+import BargraphLights from './BargraphLights';
 
 
-import { useDevices } from '@/hooks/useDevices';
-import { useFlow } from '@/hooks/useFlow';
-import { useModal } from '@/hooks/useModal';
-import ActionButton from '@/components/Platform/ActionButton';
-import Connector from '@/components/Platform/Connector';
-
-import {
-  deviceBody,
-  actionButtonsContainer,
-  actionButtonsContainerRight,
-  connectorsContainer,
-  connectorsContainerEntry
-} from '../../styles.module.css';
-
-import {
-  ledLight,
-  ledLightElement,
-  lights
-} from './styles.module.css';
-
+const AMOUNT_LIGHTS = 8;
 const Bargraph = memo(function Bargraph({
-  dragRef, device, updateValue
+  data, dragRef, onSaveData
 }) {
 
-  const { id, imgSrc, name, posX, posY } = device;
-  const { deleteDevice } = useDevices();
-  const { deleteDeviceConnections } = useFlow();
-  const { enableModal, disableModal } = useModal();
+  const {
+    id,
+    imgSrc,
+    name,
+    posX,
+    posY,
+    value,
+    connectors,
+    containerRef
+  } = data;
 
-  const [value, setValue] = useState(device.value);
+  const {
+    updateDeviceValue,
+    updateDeviceValueInFlow
+  } = useStore(store => ({
+    updateDeviceValue: store.updateDeviceValue,
+    updateDeviceValueInFlow: store.updateDeviceValueInFlow
+  }), shallow);
+
   const [lightsActive, setLightsActive] = useState(0);
 
-  const defaultBehavior = (valueReceived) => {
-    const { value: newValue, max } = valueReceived;
+  const defaultReceiveBehavior = useCallback((valueReceived) => {
+    const { value, max } = valueReceived;
 
     const objValue = {
       ...value,
-      current: typeof newValue === 'boolean' ?
-        (newValue ? value.brightness : 0) : newValue,
-      max: typeof newValue === 'boolean' ? 1023 : max,
-      type: typeof newValue,
+      current: typeof value === 'boolean' ?
+        (value ? data.value.brightness : 0) : value,
+      max: typeof value === 'boolean' ? 1023 : max,
+      type: typeof value,
     }
 
+    let newValue = {
+      ...objValue,
+      active: false,
+      opacity: 0,
+    }
+
+
     if (objValue?.current !== 0) {
-      //enable light
       const { current, max } = objValue;
 
-      const stepValue = max / 8;
-      let numberLights = 8;
+      const stepValue = max / AMOUNT_LIGHTS;
+      let numberLights = AMOUNT_LIGHTS;
 
-      for (let i = 0; i < 9; i++) {
+
+      for (let i = 0; i <= AMOUNT_LIGHTS; i++) {
         if (stepValue * i > current) {
           numberLights--;
         }
       }
 
+      if (numberLights < 0) numberLights = 0;
+
       setLightsActive(numberLights);
-
-      updateValue(setValue, id, {
+      newValue = {
         ...objValue,
-        active: true,
-      });
-
-    } else {
-      //disable light
-      updateValue(setValue, id, {
-        ...objValue,
-        active: false,
-        opacity: 0,
-      });
+        active: true
+      }
     }
-  }
 
-  const redefineBehavior = () => {
-    setLightsActive(0),
-      updateValue(setValue, id, {
-        active: false,
-        current: 0,
-        max: 0,
-        type: null,
-        brightness: 1023
-      });
-  }
+    onSaveData('value', newValue);
+    updateDeviceValue(id, { value: newValue });
+    updateDeviceValueInFlow({ connectorId: connectors.lumen.id, newValue })
+
+  }, [connectors, value.brightness])
+
+  const redefineBehavior = useCallback(() => {
+    const value = {
+      active: false,
+      current: 0,
+      max: 0,
+      type: null,
+      brightness: 1023
+    }
+
+    setLightsActive(0);
+
+    onSaveData('value', value)
+    updateDeviceValue(id, { value });
+  }, []);
+
+  useEffect(() => {
+
+    updateDeviceValue(id, {
+      defaultReceiveBehavior,
+      redefineBehavior
+    })
+  }, [defaultReceiveBehavior, redefineBehavior]);
 
   return (
     <>
-      <div
-        className={deviceBody}
+
+      <DeviceBody
+        name={name}
+        imgSrc={imgSrc}
         ref={dragRef}
       >
-        <ul className={lights}>
-          <li className={ledLight}>
-            {lightsActive > 0 && (
-              <svg className={ledLightElement}>
-                <circle cx="5" cy="5" r="5" />
-              </svg>
-            )}
-          </li>
-          <li className={ledLight}>
-            {lightsActive > 1 && (
-              <svg className={ledLightElement}>
-                <circle cx="5" cy="5" r="5" />
-              </svg>
-            )}
-          </li>
-          <li className={ledLight}>
-            {lightsActive > 2 && (
-              <svg className={ledLightElement}>
-                <circle cx="5" cy="5" r="5" />
-              </svg>
-            )}
-          </li>
-          <li className={ledLight}>
-            {lightsActive > 3 && (
-              <svg className={ledLightElement}>
-                <circle cx="5" cy="5" r="5" />
-              </svg>
-            )}
-          </li>
-          <li className={ledLight}>
-            {lightsActive > 4 && (
-              <svg className={ledLightElement}>
-                <circle cx="5" cy="5" r="5" />
-              </svg>
-            )}
-          </li>
-          <li className={ledLight}>
-            {lightsActive > 5 && (
-              <svg className={ledLightElement}>
-                <circle cx="5" cy="5" r="5" />
-              </svg>
-            )}
-          </li>
-          <li className={ledLight}>
-            {lightsActive > 6 && (
-              <svg className={ledLightElement}>
-                <circle cx="5" cy="5" r="5" />
-              </svg>
-            )}
-          </li>
-          <li className={ledLight}>
-            {lightsActive > 7 && (
-              <svg className={ledLightElement}>
-                <circle cx="5" cy="5" r="5" />
-              </svg>
-            )}
-          </li>
-        </ul>
-        <img
-          src={imgSrc}
-          alt={`Device ${name}`}
-          loading='lazy'
-        />
-      </div>
-      <div
-        className={`${connectorsContainer} ${connectorsContainerEntry}`}
-      >
-        <Connector
-          name={'light'}
-          type={'entry'}
-          device={{
-            id,
-            defaultBehavior,
-            redefineBehavior,
-            containerRef: device.containerRef
-          }}
-          updateConn={{ posX, posY }}
-        />
-      </div>
 
-      <div
-        className={
-          `${actionButtonsContainer} ${actionButtonsContainerRight}`
-        }
-      >
-        <ActionButton
-          onClick={() => enableModal({
-            typeContent: 'confirmation',
+        <BargraphLights numActiveLights={lightsActive} />
+
+        <ActionButtons
+          orientation='right'
+          actionDelete={{
             title: 'Cuidado',
             subtitle: 'Tem certeza que deseja excluir o componente?',
-            handleConfirm: () => {
-              deleteDeviceConnections(id);
-              deleteDevice(id);
-              disableModal();
+            data: {
+              id
             }
-          })}
-        >
-          <Trash />
-        </ActionButton>
-      </div >
+          }}
+        />
+      </DeviceBody>
+
+      <Connectors
+        type='entrys'
+        exitConnectors={[
+          {
+            data: connectors.lumen,
+            device: {
+              id,
+              containerRef: containerRef
+            },
+            updateConn: { posX, posY },
+            handleChangeData: onSaveData
+          },
+        ]}
+      />
+
     </>
   );
 });
 
 Bargraph.propTypes = {
+  data: P.object.isRequired,
   dragRef: P.func.isRequired,
-  device: P.object.isRequired,
-  updateValue: P.func.isRequired
+  activeActBtns: P.bool.isRequired,
+  onChangeActBtns: P.func.isRequired,
+  onSaveData: P.func.isRequired
 }
 
 export default Bargraph;

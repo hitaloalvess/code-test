@@ -3,9 +3,9 @@ import { Envelope, Lock } from '@phosphor-icons/react';
 import { api } from '@/services/api'
 import { useContextAuth } from '@/hooks/useAuth';
 import { useModal } from '@/hooks/useModal';
-import { Form } from '@/components/shared/Form';
-import { Input } from '@/components/shared/Input';
-import { InputPassword } from '@/components/shared/Input/InputPasswordType';
+import { Form } from '@/components/SharedComponents/Form';
+import { Input } from '@/components/SharedComponents/Input';
+import { InputPassword } from '@/components/SharedComponents/Input/InputPasswordType';
 
 import * as A from '../styles.module.css';
 import * as C from './styles.module.css';

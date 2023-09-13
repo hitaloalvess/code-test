@@ -1,0 +1,15 @@
+.selectInput {
+  appearance: none;
+  cursor: pointer;
+}
+
+.selectOpt {
+  appearance: none;
+  background-color: var(--white-200);
+}
+
+.selectIcon {
+  color: var(--gray-200);
+  margin-left: auto;
+  pointer-events: none;
+}

@@ -18,17 +18,12 @@
 .btnDeleteLine svg {
   width: 16px;
   height: 16px;
-  color: var(--gray-100);
+  color: var(--gray-200);
   transition: color 0.3s ease-in-out;
 }
 
 .btnDeleteLine:hover svg {
   color: var(--white);
-}
-
-.btnDeleteLine:disabled {
-  opacity: 0;
-  pointer-events: none;
 }
 
 @media (max-width: 769px) {

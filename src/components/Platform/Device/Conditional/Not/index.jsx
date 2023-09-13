@@ -1,79 +1,91 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import P from 'prop-types';
-import { Trash } from '@phosphor-icons/react';
+import { shallow } from 'zustand/shallow';
 
-import { useModal } from '@/hooks/useModal';
-import { useFlow } from '@/hooks/useFlow';
-import { useDevices } from '@/hooks/useDevices';
-import Connector from '@/components/Platform/Connector';
-import ActionButton from '@/components/Platform/ActionButton';
+import { useStore } from '@/store';
 import { findFlowsByDeviceId } from '@/utils/flow-functions';
 
-import {
-  deviceBody,
-  actionButtonsContainer,
-  actionButtonsContainerBottom,
-  connectorsContainer,
-  connectorsContainerExit,
-  connectorsContainerEntry
-} from '../../styles.module.css';
+import ActionButtons from '@/components/Platform/Device/SharedDevice/ActionButtons';
+import Connectors from '@/components/Platform/Device/SharedDevice/Connectors';
+import DeviceBody from '../../SharedDevice/DeviceBody';
 
 const Not = ({
-  dragRef, device, updateValue
+  data, dragRef, onSaveData
 }) => {
+  const isFirstRender = useRef(true);
+  const {
+    id,
+    imgSrc,
+    name,
+    posX,
+    posY,
+    value,
+    connectors,
+    containerRef
+  } = data;
 
-  const { id, imgSrc, name, posX, posY } = device;
-  const { deleteDevice, devices } = useDevices();
-  const { deleteDeviceConnections, flows } = useFlow();
-  const { enableModal, disableModal } = useModal();
+  const {
+    flows,
+    devices,
+    updateDeviceValue,
+    updateDeviceValueInFlow
+  } = useStore(store => ({
+    flows: store.flows,
+    devices: store.devices,
+    updateDeviceValue: store.updateDeviceValue,
+    updateDeviceValueInFlow: store.updateDeviceValueInFlow
+  }), shallow);
 
-  const [value, setValue] = useState(device.value);
-  const [connectionValue, setConnectionValue] = useState({});
   const [qtdIncomingConn, setQtdIncomingConn] = useState(0);
 
-  const connectionReceiver = () => {
+
+  const connectionReceiver = useCallback(() => {
     setQtdIncomingConn(prev => prev + 1)
-  }
+  }, []);
 
   const handleConnections = () => {
 
     const flow = findFlowsByDeviceId(flows, id);
 
-    if (!flow) {
-      updateValue(setValue, id, false);
-
-      return;
-    }
-
-    const connection = flow.connections.find(conn => {
+    const connection = flow?.connections.find(conn => {
       return conn.deviceTo.id === id
     });
 
-    const device = devices.find(device => device.id === connection.deviceFrom.id);
-    let value = device.value.current;
+    if (!flow || !connection) {
 
-    if ([undefined, null].includes(value)) {
-      //If device.value.current undefined or null, structure equal boolean (true or false) or object -> ex: {temperature:{..}, humidity:{...}
-      value = typeof device.value === 'boolean' || typeof device.value === 'string' ? device.value : device.value[connection.deviceFrom.connector.name]?.current
-    }
+      const value = {
+        ...data.value,
+        send: {
+          current: false
+        }
+      }
 
-    const objValue = {
-      idConnection: connection.id,
-      value
-    }
+      onSaveData('value', value)
+      updateDeviceValue(id, { value });
+      updateDeviceValueInFlow({ connectorId: connectors.send.id, newValue: value })
 
-    setConnectionValue(objValue);
 
-  }
-
-  const calcValues = () => {
-    if (!Object.hasOwn(connectionValue, 'idConnection')) {
-      updateValue(setValue, id, false);
       return;
     }
-    const incomingConnValue = !connectionValue.value === false;
 
-    updateValue(setValue, id, !incomingConnValue);
+    const device = { ...devices[connection.deviceFrom.id] };
+
+    let valueReceived = device.value[connection.deviceFrom.connector.name].current;
+
+    const incomingConnValue = !valueReceived === false;
+
+    const value = {
+      ...data.value,
+      send: {
+        current: !incomingConnValue,
+      }
+    }
+
+    onSaveData('value', value);
+    updateDeviceValue(id, { value });
+    updateDeviceValueInFlow({ connectorId: connectors.send.id, newValue: value })
+
+
   }
 
   const sendValue = () => {
@@ -86,107 +98,103 @@ const Not = ({
     });
 
     connsOutput.forEach(conn => {
-      conn.deviceTo.defaultBehavior({ value });
+      devices[conn.deviceTo.id].defaultReceiveBehavior({ value: value.send.current });
     })
   }
 
-  const redefineBehavior = () => setConnectionValue({});
+  const redefineBehavior = useCallback(() => {
+    setQtdIncomingConn(prev => prev + 1);
+  }, []);
 
-
-  const getValue = () => ({ value });
 
   useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+
+      return;
+    }
+
     if (qtdIncomingConn > 0) {
       handleConnections();
     }
   }, [qtdIncomingConn]);
 
-  useEffect(() => {
-    sendValue();
-  }, [value]);
 
   useEffect(() => {
-    calcValues();
-  }, [connectionValue])
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+
+      return;
+    }
+
+    sendValue();
+  }, [value.send.current]);
+
+  useEffect(() => {
+
+    updateDeviceValue(id, {
+      defaultReceiveBehavior: connectionReceiver,
+      redefineBehavior
+    })
+  }, [connectionReceiver, redefineBehavior]);
 
   return (
     <>
-      <div
-        className={deviceBody}
+
+      <DeviceBody
+        name={name}
+        imgSrc={imgSrc}
         ref={dragRef}
       >
 
-        <img
-          src={imgSrc}
-          alt={`Device ${name}`}
-          loading='lazy'
-        />
-      </div>
-
-      <div
-        className={`${connectorsContainer} ${connectorsContainerEntry}`}
-      >
-        <Connector
-          name={'notInputData'}
-          type={'entry'}
-          device={{
-            id,
-            defaultBehavior: connectionReceiver,
-            redefineBehavior,
-            containerRef: device.containerRef
-          }}
-          updateConn={{ posX, posY }}
-        />
-
-      </div>
-
-      <div
-        className={`${connectorsContainer} ${connectorsContainerExit}`}
-      >
-        <Connector
-          name={'notOutputData'}
-          type={'exit'}
-          device={{
-            id,
-            defaultBehavior: getValue,
-            redefineBehavior,
-            containerRef: device.containerRef
-          }}
-          updateConn={{ posX, posY }}
-        />
-
-      </div>
-
-      <div
-        className={
-          `${actionButtonsContainer} ${actionButtonsContainerBottom}`
-        }
-      >
-        <ActionButton
-          onClick={() => enableModal({
-            typeContent: 'confirmation',
+        <ActionButtons
+          orientation='bottom'
+          actionDelete={{
             title: 'Cuidado',
             subtitle: 'Tem certeza que deseja excluir o componente?',
-            handleConfirm: () => {
-              deleteDeviceConnections(id);
-              deleteDevice(id);
-              disableModal('confirmation');
+            data: {
+              id
             }
-          })}
-        >
-          <Trash />
-        </ActionButton>
+          }}
+        />
+      </DeviceBody>
 
-      </div>
+      <Connectors
+        type='doubleTypes'
+        exitConnectors={[
+          {
+            data: connectors.receive,
+            device: {
+              id,
+              containerRef
+            },
+            updateConn: { posX, posY },
+            handleChangeData: onSaveData
+          },
+        ]}
+        entryConnectors={[
+          {
+            data: connectors.send,
+            device: {
+              id,
+              containerRef
+            },
+            updateConn: { posX, posY },
+            handleChangeData: onSaveData
+          },
+        ]}
+
+      />
+
     </>
   );
 };
 
 
 Not.propTypes = {
-  device: P.object.isRequired,
+  data: P.object.isRequired,
   dragRef: P.func.isRequired,
-  updateValue: P.func.isRequired
+  onSaveData: P.func.isRequired
 }
 
 export default Not;

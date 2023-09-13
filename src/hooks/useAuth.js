@@ -43,7 +43,7 @@ export const useAuth = () => {
 
       api.defaults.headers.Authorization = `Bearer ${token}`;
 
-      return navigate('/platform');
+      return navigate('/projetos');
 
     } catch (error) {
       toast.error(error.response.data.message);
