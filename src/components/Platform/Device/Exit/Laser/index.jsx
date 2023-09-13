@@ -1,4 +1,4 @@
-import { memo, useCallback, useEffect } from 'react';
+import { memo, useCallback } from 'react';
 import P from 'prop-types';
 import { shallow } from 'zustand/shallow';
 
@@ -21,7 +21,6 @@ const Laser = memo(function Laser({
     posY,
     value,
     connectors,
-    containerRef
   } = data;
 
   const {
@@ -84,13 +83,13 @@ const Laser = memo(function Laser({
     updateDeviceValue(id, { value });
   }, [])
 
-  useEffect(() => {
+  // useEffect(() => {
 
-    updateDeviceValue(id, {
-      defaultReceiveBehavior,
-      redefineBehavior
-    })
-  }, [defaultReceiveBehavior, redefineBehavior]);
+  //   updateDeviceValue(id, {
+  //     defaultReceiveBehavior,
+  //     redefineBehavior
+  //   })
+  // }, [defaultReceiveBehavior, redefineBehavior]);
 
   return (
     <>
@@ -119,11 +118,12 @@ const Laser = memo(function Laser({
         type='entrys'
         exitConnectors={[
           {
-            data: connectors.intensity,
-            device: {
-              id,
-              containerRef: containerRef
+            data: {
+              ...connectors.intensity,
+              defaultReceiveBehavior,
+              redefineBehavior
             },
+            device: { id },
             updateConn: { posX, posY },
             handleChangeData: onSaveData
           },

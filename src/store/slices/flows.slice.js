@@ -236,10 +236,14 @@ export const createFlowsSlice = (set, get) => ({
 
     deviceConnections.forEach(conn => {
       const { id: fromId, connector: fromConnector } = conn.deviceFrom;
+      const { id: toId, connector: toConnector } = conn.deviceTo;
 
-      if (devices[fromId].defaultSendBehavior) {
+      const currentFromConnectorData = devices[fromId].connectors[fromConnector.name];
+      const currentToConnectorData = devices[toId].connectors[toConnector.name];
+
+      if (currentFromConnectorData.defaultSendBehavior) {
         //For components that have logic before passing values, ex: delay
-        devices[fromId].defaultSendBehavior();
+        currentFromConnectorData.defaultSendBehavior();
 
         return
       }
@@ -247,9 +251,9 @@ export const createFlowsSlice = (set, get) => ({
       //For components that only pass values
       const valueFrom = devices[fromId].value[fromConnector.name];
 
-      if (devices[conn.deviceTo.id].defaultReceiveBehavior) {
+      if (currentToConnectorData.defaultReceiveBehavior) {
 
-        devices[conn.deviceTo.id].defaultReceiveBehavior({
+        currentToConnectorData.defaultReceiveBehavior({
           value: valueFrom.current,
           max: valueFrom.max
         });
@@ -351,17 +355,17 @@ export const createFlowsSlice = (set, get) => ({
 
     deleteLine(idLine);
 
+    const { deviceFrom, deviceTo } = connectionDelete;
+    const deviceFromConnector = devices[deviceFrom.id].connectors[deviceFrom.connector.name];
+    const deviceToConnector = devices[deviceTo.id].connectors[deviceTo.connector.name];
+
     //redefine devices from the connection
-    if (devices[connectionDelete.deviceFrom.id].redefineBehavior) {
-      devices[connectionDelete.deviceFrom.id].redefineBehavior({
-        idConnectionDelete: connectionDelete.id
-      });
+    if (deviceFromConnector.redefineBehavior) {
+      deviceFromConnector.redefineBehavior();
     }
 
-    if (devices[connectionDelete.deviceTo.id].redefineBehavior) {
-      devices[connectionDelete.deviceTo.id].redefineBehavior({
-        idConnectionDelete: connectionDelete.id
-      });
+    if (deviceToConnector.redefineBehavior) {
+      deviceToConnector.redefineBehavior();
     }
 
     recreateFlow({ flowId: currentFlowId, connectionId: idConnection });
@@ -385,15 +389,15 @@ export const createFlowsSlice = (set, get) => ({
 
     deviceConnections.forEach(conn => {
       deleteLine(conn.idLine);
-      const deviceFrom = devices[conn.deviceFrom.id];
-      const deviceTo = devices[conn.deviceTo.id];
+      const fromConnector = devices[conn.deviceFrom.id].connectors[conn.deviceFrom.connector.name];
+      const toConnector = devices[conn.deviceTo.id].connectors[conn.deviceTo.connector.name];
 
-      if (deviceFrom.redefineBehavior) {
-        deviceFrom.redefineBehavior();
+      if (fromConnector.redefineBehavior) {
+        fromConnector.redefineBehavior();
       }
 
-      if (deviceTo.redefineBehavior) {
-        deviceTo.redefineBehavior();
+      if (toConnector.redefineBehavior) {
+        toConnector.redefineBehavior();
       }
     });
 

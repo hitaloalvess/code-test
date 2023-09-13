@@ -37,6 +37,7 @@ const DeviceBody = forwardRef(function DeviceBody(
       ref={ref}
       onMouseEnter={() => handleActBtns(true)}
       onMouseLeave={() => handleActBtns(false)}
+      {...rest}
     >
 
       <img

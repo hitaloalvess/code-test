@@ -21,7 +21,6 @@ const And = ({
     posY,
     value,
     connectors,
-    containerRef
   } = data;
 
   const {
@@ -123,7 +122,8 @@ const And = ({
     });
 
     connsOutput.forEach(conn => {
-      devices[conn.deviceTo.id].defaultReceiveBehavior({ value: value.send.current });
+      const toConnector = devices[conn.deviceTo.id].connectors[conn.deviceTo.connector.name];
+      toConnector.defaultReceiveBehavior({ value: value.send.current });
     })
   }
 
@@ -155,13 +155,6 @@ const And = ({
     sendValue();
   }, [value.send.current]);
 
-  useEffect(() => {
-
-    updateDeviceValue(id, {
-      defaultReceiveBehavior: connectionReceiver,
-      redefineBehavior
-    })
-  }, [connectionReceiver, redefineBehavior]);
 
   return (
     <>
@@ -188,22 +181,23 @@ const And = ({
         type='doubleTypes'
         exitConnectors={[
           {
-            data: connectors.receive,
-            device: {
-              id,
-              containerRef
+            data: {
+              ...connectors.receive,
+              defaultReceiveBehavior: connectionReceiver,
+              redefineBehavior
             },
+            device: { id },
             updateConn: { posX, posY },
             handleChangeData: onSaveData
           },
         ]}
         entryConnectors={[
           {
-            data: connectors.send,
-            device: {
-              id,
-              containerRef
+            data: {
+              ...connectors.send,
+              redefineBehavior
             },
+            device: { id },
             updateConn: { posX, posY },
             handleChangeData: onSaveData
           },

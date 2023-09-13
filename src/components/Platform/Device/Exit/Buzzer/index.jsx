@@ -27,7 +27,6 @@ const Buzzer = memo(function Buzzer({
     posY,
     value,
     connectors,
-    containerRef
   } = data;
 
   const {
@@ -134,14 +133,6 @@ const Buzzer = memo(function Buzzer({
   }, [value.active]);
 
 
-  useEffect(() => {
-
-    updateDeviceValue(id, {
-      defaultReceiveBehavior,
-      redefineBehavior
-    })
-  }, [defaultReceiveBehavior, redefineBehavior]);
-
   return (
     <>
 
@@ -178,11 +169,12 @@ const Buzzer = memo(function Buzzer({
         type='entrys'
         exitConnectors={[
           {
-            data: connectors.frequency,
-            device: {
-              id,
-              containerRef: containerRef
+            data: {
+              ...connectors.frequency,
+              defaultReceiveBehavior,
+              redefineBehavior
             },
+            device: { id },
             updateConn: { posX, posY },
             handleChangeData: onSaveData
           },

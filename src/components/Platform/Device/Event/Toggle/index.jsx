@@ -18,7 +18,7 @@ const Toggle = ({
   data, dragRef, onSaveData
 }) => {
 
-  const { id, name, posX, posY, value, connectors, containerRef } = data;
+  const { id, name, posX, posY, value, connectors } = data;
 
   const {
     flows,
@@ -144,14 +144,10 @@ const Toggle = ({
     });
 
     connsOutput.forEach(conn => {
-      devices[conn.deviceTo.id].defaultReceiveBehavior({ value: value.send.current });
+      const toConnector = devices[conn.deviceTo.id].connectors[conn.deviceTo.connector.name];
+      toConnector.defaultReceiveBehavior({ value: value.send.current });
     })
   }
-
-  const redefineBehavior = useCallback(() => {
-    setQtdIncomingConn(prev => prev + 1);
-  }, [value, flows]);
-
 
   useEffect(() => {
     if (isFirstRender.current) {
@@ -176,14 +172,6 @@ const Toggle = ({
     sendValue();
   }, [value]);
 
-
-  useEffect(() => {
-
-    updateDeviceValue(id, {
-      defaultReceiveBehavior: connectionReceiver,
-      defaultSendBehavior: connectionReceiver,
-    })
-  }, [connectionReceiver, redefineBehavior]);
 
   return (
     <>
@@ -214,22 +202,22 @@ const Toggle = ({
         type='doubleTypes'
         exitConnectors={[
           {
-            data: connectors.receive,
-            device: {
-              id,
-              containerRef
+            data: {
+              ...connectors.receive,
+              defaultReceiveBehavior: connectionReceiver
             },
+            device: { id },
             updateConn: { posX, posY },
             handleChangeData: onSaveData
           },
         ]}
         entryConnectors={[
           {
-            data: connectors.send,
-            device: {
-              id,
-              containerRef
+            data: {
+              ...connectors.send,
+              defaultSendBehavior: connectionReceiver
             },
+            device: { id },
             updateConn: { posX, posY },
             handleChangeData: onSaveData
           },

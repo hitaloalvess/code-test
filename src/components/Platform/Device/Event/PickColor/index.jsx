@@ -25,7 +25,6 @@ const PickColor = ({
     posY,
     value,
     connectors,
-    containerRef
   } = data;
 
   const {
@@ -107,7 +106,8 @@ const PickColor = ({
 
 
     connsOutput.forEach(conn => {
-      devices[conn.deviceTo.id].defaultReceiveBehavior({
+      const toConnector = devices[conn.deviceTo.id].connectors[conn.deviceTo.connector.name];
+      toConnector.defaultReceiveBehavior({
         value: value.send.current,
         max: value.send.max,
         color: value.send.color
@@ -153,15 +153,6 @@ const PickColor = ({
   }, [value]);
 
 
-  useEffect(() => {
-
-    updateDeviceValue(id, {
-      defaultSendBehavior: connectionReceiver,
-      defaultReceiveBehavior: connectionReceiver,
-      redefineBehavior
-    })
-  }, [connectionReceiver, redefineBehavior]);
-
   return (
     <>
 
@@ -197,22 +188,24 @@ const PickColor = ({
         type='doubleTypes'
         exitConnectors={[
           {
-            data: connectors.receive,
-            device: {
-              id,
-              containerRef
+            data: {
+              ...connectors.receive,
+              defaultReceiveBehavior: connectionReceiver,
+              redefineBehavior
             },
+            device: { id },
             updateConn: { posX, posY },
             handleChangeData: onSaveData
           },
         ]}
         entryConnectors={[
           {
-            data: connectors.send,
-            device: {
-              id,
-              containerRef
+            data: {
+              ...connectors.send,
+              defaultSendBehavior: connectionReceiver,
+              redefineBehavior
             },
+            device: { id },
             updateConn: { posX, posY },
             handleChangeData: onSaveData
           },

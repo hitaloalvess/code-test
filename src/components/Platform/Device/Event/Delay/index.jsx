@@ -20,7 +20,7 @@ const Delay = ({
 }) => {
 
   const isFirstRender = useRef(true);
-  const { id, name, posX, posY, value, connectors, containerRef } = data;
+  const { id, name, posX, posY, value, connectors } = data;
 
   const {
     flows,
@@ -63,6 +63,7 @@ const Delay = ({
   }
 
   const handleConnections = useCallback(() => {
+    console.log('HANDLE CONNECTIONS');
 
     const flow = findFlowsByDeviceId(flows, id);
 
@@ -118,7 +119,8 @@ const Delay = ({
     });
 
     connsOutput.forEach(conn => {
-      devices[conn.deviceTo.id].defaultReceiveBehavior({
+      const toConnector = devices[conn.deviceTo.id].connectors[conn.deviceTo.connector.name];
+      toConnector.defaultReceiveBehavior({
         value: value.send.current, max: value.send.max
       });
     })
@@ -173,14 +175,6 @@ const Delay = ({
     restartTimer();
   }, [value.duration]);
 
-  useEffect(() => {
-
-    updateDeviceValue(id, {
-      defaultSendBehavior: connectionReceiver,
-      defaultReceiveBehavior: connectionReceiver,
-      redefineBehavior
-    })
-  }, [connectionReceiver, redefineBehavior]);
 
   return (
     <>
@@ -220,22 +214,24 @@ const Delay = ({
         type='doubleTypes'
         exitConnectors={[
           {
-            data: connectors.receive,
-            device: {
-              id,
-              containerRef
+            data: {
+              ...connectors.receive,
+              defaultReceiveBehavior: connectionReceiver,
+              redefineBehavior
             },
+            device: { id },
             updateConn: { posX, posY },
             handleChangeData: onSaveData
           },
         ]}
         entryConnectors={[
           {
-            data: connectors.send,
-            device: {
-              id,
-              containerRef
+            data: {
+              ...connectors.send,
+              defaultSendBehavior: connectionReceiver,
+              redefineBehavior
             },
+            device: { id },
             updateConn: { posX, posY },
             handleChangeData: onSaveData
           },

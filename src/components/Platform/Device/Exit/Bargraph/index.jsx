@@ -1,5 +1,5 @@
 
-import { memo, useCallback, useEffect, useState } from 'react';
+import { memo, useCallback, useState } from 'react';
 import P from 'prop-types';
 
 import { shallow } from 'zustand/shallow';
@@ -25,7 +25,6 @@ const Bargraph = memo(function Bargraph({
     posY,
     value,
     connectors,
-    containerRef
   } = data;
 
   const {
@@ -99,13 +98,6 @@ const Bargraph = memo(function Bargraph({
     updateDeviceValue(id, { value });
   }, []);
 
-  useEffect(() => {
-
-    updateDeviceValue(id, {
-      defaultReceiveBehavior,
-      redefineBehavior
-    })
-  }, [defaultReceiveBehavior, redefineBehavior]);
 
   return (
     <>
@@ -134,11 +126,12 @@ const Bargraph = memo(function Bargraph({
         type='entrys'
         exitConnectors={[
           {
-            data: connectors.lumen,
-            device: {
-              id,
-              containerRef: containerRef
+            data: {
+              ...connectors.lumen,
+              defaultReceiveBehavior,
+              redefineBehavior
             },
+            device: { id },
             updateConn: { posX, posY },
             handleChangeData: onSaveData
           },

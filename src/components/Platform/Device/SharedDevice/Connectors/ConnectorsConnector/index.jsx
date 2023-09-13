@@ -66,6 +66,7 @@ const ConnectorsConnector = ({
     if (handleChangeData) {
       handleChangeData('connectors', {
         [`${data.name}`]: {
+          ...data,
           id,
           type: data.type,
           name: data.name,

@@ -1,5 +1,5 @@
 
-import { memo, useCallback, useEffect } from 'react';
+import { memo, useCallback } from 'react';
 import P from 'prop-types';
 import { shallow } from 'zustand/shallow';
 
@@ -21,7 +21,6 @@ const LedMono = memo(function Led({
     posY,
     value,
     connectors,
-    containerRef
   } = data;
 
   const {
@@ -84,13 +83,6 @@ const LedMono = memo(function Led({
     updateDeviceValue(id, { value });
   }, []);
 
-  useEffect(() => {
-
-    updateDeviceValue(id, {
-      defaultReceiveBehavior,
-      redefineBehavior
-    })
-  }, [defaultReceiveBehavior, redefineBehavior]);
 
   return (
     <>
@@ -119,11 +111,12 @@ const LedMono = memo(function Led({
         type='entrys'
         exitConnectors={[
           {
-            data: connectors.lumen,
-            device: {
-              id,
-              containerRef: containerRef
+            data: {
+              ...connectors.lumen,
+              defaultReceiveBehavior,
+              redefineBehavior
             },
+            device: { id },
             updateConn: { posX, posY },
             handleChangeData: onSaveData
           },

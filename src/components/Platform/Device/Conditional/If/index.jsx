@@ -33,7 +33,6 @@ const If = ({
     posY,
     value,
     connectors,
-    containerRef
   } = data;
 
   const {
@@ -200,7 +199,8 @@ const If = ({
     });
 
     connsOutput.forEach(conn => {
-      devices[conn.deviceTo.id].defaultReceiveBehavior({ value: value.send.current });
+      const toConnector = devices[conn.deviceTo.id].connectors[conn.deviceTo.connector.name];
+      toConnector.defaultReceiveBehavior({ value: value.send.current });
     })
   }
 
@@ -243,15 +243,6 @@ const If = ({
     sendValue();
   }, [value.send.current]);
 
-  useEffect(() => {
-
-    updateDeviceValue(id, {
-
-      defaultSendBehavior: connectionReceiver,
-      defaultReceiveBehavior: connectionReceiver,
-      redefineBehavior
-    })
-  }, [connectionReceiver, redefineBehavior]);
 
   return (
     <>
@@ -291,22 +282,24 @@ const If = ({
         type='doubleTypes'
         exitConnectors={[
           {
-            data: connectors.receive,
-            device: {
-              id,
-              containerRef
+            data: {
+              ...connectors.receive,
+              defaultReceiveBehavior: connectionReceiver,
+              redefineBehavior
             },
+            device: { id },
             updateConn: { posX, posY },
             handleChangeData: onSaveData
           },
         ]}
         entryConnectors={[
           {
-            data: connectors.send,
-            device: {
-              id,
-              containerRef
+            data: {
+              ...connectors.send,
+              defaultSendBehavior: connectionReceiver,
+              redefineBehavior
             },
+            device: { id },
             updateConn: { posX, posY },
             handleChangeData: onSaveData
           },

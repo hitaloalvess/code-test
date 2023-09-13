@@ -1,5 +1,5 @@
 
-import { memo, useCallback, useEffect, useMemo } from 'react';
+import { memo, useCallback, useMemo } from 'react';
 import P from 'prop-types';
 import { shallow } from 'zustand/shallow';
 
@@ -22,7 +22,6 @@ const ShakeMotor = memo(function ShakeMotor({
     posY,
     value,
     connectors,
-    containerRef
   } = data;
 
   const {
@@ -84,14 +83,6 @@ const ShakeMotor = memo(function ShakeMotor({
   }, [value.current]);
 
 
-  useEffect(() => {
-
-    updateDeviceValue(id, {
-      defaultReceiveBehavior,
-      redefineBehavior
-    })
-  }, [defaultReceiveBehavior, redefineBehavior]);
-
   return (
     <>
 
@@ -125,11 +116,12 @@ const ShakeMotor = memo(function ShakeMotor({
         type='entrys'
         exitConnectors={[
           {
-            data: connectors.vibration,
-            device: {
-              id,
-              containerRef: containerRef
+            data: {
+              ...connectors.vibration,
+              defaultReceiveBehavior,
+              redefineBehavior
             },
+            device: { id },
             updateConn: { posX, posY },
             handleChangeData: onSaveData
           },
