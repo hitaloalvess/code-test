@@ -18,17 +18,19 @@ const Led = memo(function Led({
   const { id, imgSrc, name, posX, posY, value, connectors } = data;
 
   const {
-    flows,
     updateDeviceValue,
-    updateDeviceValueInFlow
+    updateDeviceValueInFlow,
+    getFlows,
   } = useStore(store => ({
-    flows: store.flows,
     updateDeviceValue: store.updateDeviceValue,
-    updateDeviceValueInFlow: store.updateDeviceValueInFlow
+    updateDeviceValueInFlow: store.updateDeviceValueInFlow,
+    getFlows: store.getFlows,
   }), shallow);
 
 
   const handleSettingUpdate = useCallback((newColor, newBrightness) => {
+    const flows = getFlows();
+
     const hasFlow = findFlowsByDeviceId(flows, id);
 
     if (hasFlow && newBrightness !== data.value.brightness) {
@@ -45,7 +47,7 @@ const Led = memo(function Led({
 
     updateDeviceValue(id, { value });
 
-  }, [data.value, flows]);
+  }, [data.value]);
 
 
   const defaultReceiveBehavior = useCallback((valueReceived) => {

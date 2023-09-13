@@ -44,7 +44,6 @@ const PickColor = ({
 
 
   const connectionReceiver = useCallback(() => {
-    ('Connection receive pick color')
     setQtdIncomingConn(prev => prev + 1)
   }, []);
 
