@@ -14,7 +14,7 @@ import eventBaseImg from '@/assets/images/devices/event/eventBase.svg';
 import PickColorIcon from './PickColorIcon';
 
 const PickColor = ({
-  data, dragRef, activeActBtns, onChangeActBtns, onSaveData
+  data, dragRef, onSaveData
 }) => {
 
   const isFirstRender = useRef(true);
@@ -170,14 +170,12 @@ const PickColor = ({
         name={name}
         imgSrc={eventBaseImg}
         ref={dragRef}
-        onChangeActBtns={onChangeActBtns}
       >
 
         <PickColorIcon color={value.send.color} />
 
         <ActionButtons
           orientation='bottom'
-          active={activeActBtns}
           actionDelete={{
             title: 'Cuidado',
             subtitle: 'Tem certeza que deseja excluir o componente?',
@@ -231,8 +229,6 @@ const PickColor = ({
 PickColor.propTypes = {
   data: P.object.isRequired,
   dragRef: P.func.isRequired,
-  activeActBtns: P.bool.isRequired,
-  onChangeActBtns: P.func.isRequired,
   onSaveData: P.func.isRequired
 }
 

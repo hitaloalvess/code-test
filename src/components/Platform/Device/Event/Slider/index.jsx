@@ -13,7 +13,7 @@ import SliderIcon from './SliderIcon';
 import eventBaseImg from '@/assets/images/devices/event/eventBase.svg';
 
 const Slider = ({
-  data, dragRef, activeActBtns, onChangeActBtns, onSaveData
+  data, dragRef, onSaveData
 }) => {
 
   const {
@@ -167,14 +167,12 @@ const Slider = ({
         name={name}
         imgSrc={eventBaseImg}
         ref={dragRef}
-        onChangeActBtns={onChangeActBtns}
       >
 
         <SliderIcon currentValue={value.send.current} limit={value.limit} />
 
         <ActionButtons
           orientation='bottom'
-          active={activeActBtns}
           actionDelete={{
             title: 'Cuidado',
             subtitle: 'Tem certeza que deseja excluir o componente?',
@@ -227,8 +225,6 @@ const Slider = ({
 Slider.propTypes = {
   data: P.object.isRequired,
   dragRef: P.func.isRequired,
-  activeActBtns: P.bool.isRequired,
-  onChangeActBtns: P.func.isRequired,
   onSaveData: P.func.isRequired
 }
 

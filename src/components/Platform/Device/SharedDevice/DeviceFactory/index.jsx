@@ -28,7 +28,7 @@ import Slider from '../../Event/Slider';
 import PickColor from '../../Event/PickColor';
 
 const DeviceFactory = ({
-  data, dragRef, activeActBtns, onChangeActBtns, onSaveData
+  data, dragRef, onSaveData
 }) => {
 
   const devices = {
@@ -67,8 +67,6 @@ const DeviceFactory = ({
     <CurrentDevice
       data={data}
       dragRef={dragRef}
-      activeActBtns={activeActBtns}
-      onChangeActBtns={onChangeActBtns}
       onSaveData={onSaveData}
     />
   )
@@ -86,8 +84,6 @@ DeviceFactory.propTypes = {
     draggedDevice: P.object
   }).isRequired,
   dragRef: P.func.isRequired,
-  activeActBtns: P.bool.isRequired,
-  onChangeActBtns: P.func.isRequired,
   onSaveData: P.func.isRequired
 }
 

@@ -14,7 +14,7 @@ import * as I from './styles.module.css';
 
 
 const Infrared = memo(function Infrared({
-  data, dragRef, activeActBtns, onChangeActBtns, onSaveData
+  data, dragRef, onSaveData
 }) {
 
   const { id, imgSrc, name, posX, posY } = data;
@@ -74,13 +74,11 @@ const Infrared = memo(function Infrared({
         name={name}
         imgSrc={imgSrc}
         ref={dragRef}
-        onChangeActBtns={onChangeActBtns}
       >
 
 
         <ActionButtons
           orientation='left'
-          active={activeActBtns}
           actionDelete={{
             title: 'Cuidado',
             subtitle: 'Tem certeza que deseja excluir o componente?',
@@ -117,8 +115,6 @@ const Infrared = memo(function Infrared({
 Infrared.propTypes = {
   dragRef: P.func.isRequired,
   data: P.object.isRequired,
-  activeActBtns: P.bool.isRequired,
-  onChangeActBtns: P.func.isRequired,
   onSaveData: P.func.isRequired
 }
 

@@ -13,7 +13,7 @@ const MIN_LUMINOSITY = 0;
 const MAX_LUMINOSITY = 1023;
 
 const Ldr = memo(function Ldr({
-  data, dragRef, activeActBtns, onChangeActBtns, onSaveData
+  data, dragRef, onSaveData
 }) {
 
   const { id, imgSrc, name, posX, posY } = data;
@@ -75,13 +75,11 @@ const Ldr = memo(function Ldr({
         name={name}
         imgSrc={imgSrc}
         ref={dragRef}
-        onChangeActBtns={onChangeActBtns}
       >
 
 
         <ActionButtons
           orientation='left'
-          active={activeActBtns}
           actionDelete={{
             title: 'Cuidado',
             subtitle: 'Tem certeza que deseja excluir o componente?',
@@ -116,8 +114,6 @@ const Ldr = memo(function Ldr({
 Ldr.propTypes = {
   dragRef: P.func.isRequired,
   data: P.object.isRequired,
-  activeActBtns: P.bool.isRequired,
-  onChangeActBtns: P.func.isRequired,
   onSaveData: P.func.isRequired
 }
 

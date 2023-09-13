@@ -13,7 +13,7 @@ import CounterDisplay from './CounterDisplay';
 import eventBaseImg from '@/assets/images/devices/conditional/counter/counterBase.svg';
 
 const Counter = ({
-  data, dragRef, activeActBtns, onChangeActBtns, onSaveData
+  data, dragRef, onSaveData
 }) => {
 
   const {
@@ -178,7 +178,6 @@ const Counter = ({
         name={name}
         imgSrc={eventBaseImg}
         ref={dragRef}
-        onChangeActBtns={onChangeActBtns}
       >
 
         <CounterDisplay
@@ -189,7 +188,6 @@ const Counter = ({
 
         <ActionButtons
           orientation='bottom'
-          active={activeActBtns}
           actionDelete={{
             title: 'Cuidado',
             subtitle: 'Tem certeza que deseja excluir o componente?',
@@ -236,8 +234,6 @@ const Counter = ({
 Counter.propTypes = {
   data: P.object.isRequired,
   dragRef: P.func.isRequired,
-  activeActBtns: P.bool.isRequired,
-  onChangeActBtns: P.func.isRequired,
   onSaveData: P.func.isRequired
 }
 

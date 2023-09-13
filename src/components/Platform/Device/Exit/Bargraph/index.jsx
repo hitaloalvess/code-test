@@ -14,7 +14,7 @@ import BargraphLights from './BargraphLights';
 
 const AMOUNT_LIGHTS = 8;
 const Bargraph = memo(function Bargraph({
-  data, dragRef, activeActBtns, onChangeActBtns, onSaveData
+  data, dragRef, onSaveData
 }) {
 
   const {
@@ -114,14 +114,12 @@ const Bargraph = memo(function Bargraph({
         name={name}
         imgSrc={imgSrc}
         ref={dragRef}
-        onChangeActBtns={onChangeActBtns}
       >
 
         <BargraphLights numActiveLights={lightsActive} />
 
         <ActionButtons
           orientation='right'
-          active={activeActBtns}
           actionDelete={{
             title: 'Cuidado',
             subtitle: 'Tem certeza que deseja excluir o componente?',

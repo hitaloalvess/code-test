@@ -12,8 +12,10 @@ const MIN_RESISTANCE = 0;
 const MAX_RESISTANCE = 1023;
 
 const Potentiometer = memo(function Potentiometer({
-  dragRef, data, activeActBtns, onChangeActBtns, onSaveData
+  dragRef, data, onSaveData
 }) {
+
+  console.log('re-render potênciometro');
 
   const { id, imgSrc, name, posX, posY } = data;
 
@@ -73,13 +75,11 @@ const Potentiometer = memo(function Potentiometer({
         name={name}
         imgSrc={imgSrc}
         ref={dragRef}
-        onChangeActBtns={onChangeActBtns}
       >
 
 
         <ActionButtons
           orientation='left'
-          active={activeActBtns}
           actionDelete={{
             title: 'Cuidado',
             subtitle: 'Tem certeza que deseja excluir o componente?',
@@ -114,8 +114,6 @@ const Potentiometer = memo(function Potentiometer({
 Potentiometer.propTypes = {
   dragRef: P.func.isRequired,
   data: P.object.isRequired,
-  activeActBtns: P.bool.isRequired,
-  onChangeActBtns: P.func.isRequired,
   onSaveData: P.func.isRequired
 }
 

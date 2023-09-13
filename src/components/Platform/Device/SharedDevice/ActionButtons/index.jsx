@@ -11,7 +11,7 @@ import * as AB from './styles.module.css';
 import { memo, useMemo } from 'react';
 
 const ActionButtons = memo(function ActionButtons
-  ({ orientation = 'left', active, actionDelete = null, actionConfig = null }) {
+  ({ orientation = 'left', actionDelete = null, actionConfig = null }) {
 
   const { enableModal, disableModal } = useModal();
 
@@ -34,7 +34,7 @@ const ActionButtons = memo(function ActionButtons
   return (
     <div
       className={
-        `${AB.container} ${currentOrientation} ${active ? AB.active : ''}`
+        `${AB.container} ${currentOrientation} ${ AB.active }`
       }
     >
       {
@@ -79,7 +79,6 @@ const ActionButtons = memo(function ActionButtons
 
 ActionButtons.propTypes = {
   orientation: P.oneOf(['left', 'right', 'bottom']),
-  active: P.bool.isRequired,
   actionDelete: P.shape({
     title: P.string.isRequired,
     subtitle: P.string.isRequired,

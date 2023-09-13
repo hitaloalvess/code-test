@@ -24,7 +24,7 @@ const MAX_HUMIDITY = 1023;
 const MIN_HUMIDITY = 0;
 
 const Dht = memo(function Dht({
-  data, dragRef, activeActBtns, onChangeActBtns, onSaveData
+  data, dragRef, onSaveData
 }) {
 
   const { id, imgSrc, name, posX, posY } = data;
@@ -126,13 +126,11 @@ const Dht = memo(function Dht({
         name={name}
         imgSrc={imgSrc}
         ref={dragRef}
-        onChangeActBtns={onChangeActBtns}
       >
 
 
         <ActionButtons
           orientation='left'
-          active={activeActBtns}
           actionDelete={{
             title: 'Cuidado',
             subtitle: 'Tem certeza que deseja excluir o componente?',
@@ -184,8 +182,6 @@ const Dht = memo(function Dht({
 Dht.propTypes = {
   data: P.object.isRequired,
   dragRef: P.func.isRequired,
-  activeActBtns: P.bool.isRequired,
-  onChangeActBtns: P.func.isRequired,
   onSaveData: P.func.isRequired
 }
 

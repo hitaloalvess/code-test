@@ -10,7 +10,7 @@ import DeviceBody from '../../SharedDevice/DeviceBody';
 import LedMonoLight from './LedMonoLight';
 
 const LedMono = memo(function Led({
-  data, dragRef, activeActBtns, onChangeActBtns, onSaveData
+  data, dragRef, onSaveData
 }) {
 
   const {
@@ -99,14 +99,12 @@ const LedMono = memo(function Led({
         name={name}
         imgSrc={imgSrc}
         ref={dragRef}
-        onChangeActBtns={onChangeActBtns}
       >
 
         <LedMonoLight active={value.active} opacity={value.opacity} />
 
         <ActionButtons
           orientation='right'
-          active={activeActBtns}
           actionDelete={{
             title: 'Cuidado',
             subtitle: 'Tem certeza que deseja excluir o componente?',
@@ -139,8 +137,6 @@ const LedMono = memo(function Led({
 LedMono.propTypes = {
   data: P.object.isRequired,
   dragRef: P.func.isRequired,
-  activeActBtns: P.bool.isRequired,
-  onChangeActBtns: P.func.isRequired,
   onSaveData: P.func.isRequired
 }
 

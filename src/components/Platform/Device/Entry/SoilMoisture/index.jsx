@@ -13,7 +13,7 @@ const MIN_HUMIDITY = 0;
 const MAX_HUMIDITY = 1023;
 
 const RainDetector = memo(function RainDetector({
-  dragRef, data, activeActBtns, onChangeActBtns, onSaveData
+  dragRef, data, onSaveData
 }) {
 
   const {
@@ -85,13 +85,11 @@ const RainDetector = memo(function RainDetector({
         name={name}
         imgSrc={imgSrc}
         ref={dragRef}
-        onChangeActBtns={onChangeActBtns}
       >
 
 
         <ActionButtons
           orientation='left'
-          active={activeActBtns}
           actionDelete={{
             title: 'Cuidado',
             subtitle: 'Tem certeza que deseja excluir o componente?',
@@ -127,8 +125,6 @@ const RainDetector = memo(function RainDetector({
 RainDetector.propTypes = {
   dragRef: P.func.isRequired,
   data: P.object.isRequired,
-  activeActBtns: P.bool.isRequired,
-  onChangeActBtns: P.func.isRequired,
   onSaveData: P.func.isRequired
 }
 

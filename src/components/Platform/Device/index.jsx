@@ -12,6 +12,9 @@ import * as D from './styles.module.css';
 
 
 const Device = memo(function Device({ device }) {
+
+  console.log('re-render device');
+
   const {
     scale,
     updateDeviceValue
@@ -23,7 +26,6 @@ const Device = memo(function Device({ device }) {
   const deviceRef = useRef(null);
 
   const [data, setData] = useState(device);
-  const [activeActBtns, setActiveActBtns] = useState(false);
 
   const [{ }, drag] = useDrag(() => {
     return {
@@ -35,9 +37,6 @@ const Device = memo(function Device({ device }) {
     }
   }, []);
 
-  const handleActBtns = useCallback((value) => {
-    setActiveActBtns(value)
-  }, [activeActBtns]);
 
   const handleSaveData = useCallback((keyValue, newValue) => {
     setData(prev => {
@@ -83,8 +82,6 @@ const Device = memo(function Device({ device }) {
           <DeviceFactory
             data={data}
             dragRef={drag}
-            activeActBtns={activeActBtns}
-            onChangeActBtns={handleActBtns}
             onSaveData={handleSaveData}
           />
         }

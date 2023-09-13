@@ -13,7 +13,7 @@ import buzzerAudio from '@/assets/audio/audio-buzzer.mp3';
 
 
 const Buzzer = memo(function Buzzer({
-  data, dragRef, activeActBtns, onChangeActBtns, onSaveData
+  data, dragRef, onSaveData
 }) {
 
   const isFirstRender = useRef(true);
@@ -50,11 +50,6 @@ const Buzzer = memo(function Buzzer({
     audio.pause();
     audio.loop = false;
 
-    // setValueTemp({
-    //   ...valueTemp,
-    //   active: false
-    // })
-
     const newValue = {
       ...value,
       active: false
@@ -69,11 +64,6 @@ const Buzzer = memo(function Buzzer({
 
   const handleSettingUpdate = useCallback((newDuration, newVolume) => {
 
-    // updateValue(setValue, id, {
-    //   ...value,
-    //   duration: newDuration,
-    //   volume: newVolume
-    // });
     audio.volume = newVolume;
 
     const newValue = {
@@ -97,10 +87,6 @@ const Buzzer = memo(function Buzzer({
       type: typeof value
     }
 
-    // setValueTemp({
-    //   ...objValue,
-    //   active: objValue.current !== 0
-    // })
     const newValue = {
       ...objValue,
       active: objValue.current !== 0
@@ -164,14 +150,12 @@ const Buzzer = memo(function Buzzer({
         name={name}
         imgSrc={imgSrc}
         ref={dragRef}
-        onChangeActBtns={onChangeActBtns}
       >
 
         <BuzzerIcon active={value.active} />
 
         <ActionButtons
           orientation='right'
-          active={activeActBtns}
           actionDelete={{
             title: 'Cuidado',
             subtitle: 'Tem certeza que deseja excluir o componente?',
@@ -213,8 +197,6 @@ const Buzzer = memo(function Buzzer({
 Buzzer.propTypes = {
   data: P.object.isRequired,
   dragRef: P.func.isRequired,
-  activeActBtns: P.bool.isRequired,
-  onChangeActBtns: P.func.isRequired,
   onSaveData: P.func.isRequired
 }
 

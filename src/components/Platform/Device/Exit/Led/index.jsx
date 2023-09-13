@@ -13,8 +13,9 @@ import LedLight from './LedLight';
 
 
 const Led = memo(function Led({
-  data, dragRef, activeActBtns, onChangeActBtns, onSaveData
+  data, dragRef, onSaveData
 }) {
+  console.log('re-render led');
 
   const { id, imgSrc, name, posX, posY, value, connectors } = data;
 
@@ -108,14 +109,11 @@ const Led = memo(function Led({
 
   return (
     <>
-
       <DeviceBody
         name={name}
         imgSrc={imgSrc}
         ref={dragRef}
-        onChangeActBtns={onChangeActBtns}
       >
-
         <LedLight
           active={value.active}
           color={value.color}
@@ -124,7 +122,6 @@ const Led = memo(function Led({
 
         <ActionButtons
           orientation='right'
-          active={activeActBtns}
           actionDelete={{
             title: 'Cuidado',
             subtitle: 'Tem certeza que deseja excluir o componente?',
@@ -167,8 +164,6 @@ const Led = memo(function Led({
 Led.propTypes = {
   data: P.object.isRequired,
   dragRef: P.func.isRequired,
-  activeActBtns: P.bool.isRequired,
-  onChangeActBtns: P.func.isRequired,
   onSaveData: P.func.isRequired
 }
 

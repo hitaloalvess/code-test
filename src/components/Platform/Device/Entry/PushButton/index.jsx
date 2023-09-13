@@ -11,7 +11,7 @@ import pushButtonOn from '@/assets/images/devices/entry/pushButtonOn.svg';
 
 
 const PushButton = memo(function PushButton({
-  dragRef, data, activeActBtns, onChangeActBtns, onSaveData
+  dragRef, data, onSaveData
 }) {
   const {
     id,
@@ -65,7 +65,6 @@ const PushButton = memo(function PushButton({
         name={name}
         imgSrc={value.state.current ? pushButtonOn : imgSrc}
         ref={dragRef}
-        onChangeActBtns={onChangeActBtns}
         onMouseUp={() => handleClick(false, 'state')}
         onMouseDown={() => handleClick(true, 'state')}
         onDragEnd={() => handleClick(false, 'state')}
@@ -76,7 +75,6 @@ const PushButton = memo(function PushButton({
 
         <ActionButtons
           orientation='left'
-          active={activeActBtns}
           actionDelete={{
             title: 'Cuidado',
             subtitle: 'Tem certeza que deseja excluir o componente?',
@@ -111,8 +109,6 @@ const PushButton = memo(function PushButton({
 PushButton.propTypes = {
   dragRef: P.func.isRequired,
   data: P.object.isRequired,
-  activeActBtns: P.bool.isRequired,
-  onChangeActBtns: P.func.isRequired,
   onSaveData: P.func.isRequired
 }
 

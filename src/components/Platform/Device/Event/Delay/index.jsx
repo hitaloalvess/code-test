@@ -16,7 +16,7 @@ import eventBaseImg from '@/assets/images/devices/event/eventBase.svg';
 
 const INITIAL_DURATION = 5;
 const Delay = ({
-  data, dragRef, activeActBtns, onChangeActBtns, onSaveData
+  data, dragRef, onSaveData
 }) => {
 
   const isFirstRender = useRef(true);
@@ -190,7 +190,6 @@ const Delay = ({
         name={name}
         imgSrc={eventBaseImg}
         ref={dragRef}
-        onChangeActBtns={onChangeActBtns}
       >
 
         <p className={D.delayNumber}>
@@ -199,7 +198,6 @@ const Delay = ({
 
         <ActionButtons
           orientation='bottom'
-          active={activeActBtns}
           actionDelete={{
             title: 'Cuidado',
             subtitle: 'Tem certeza que deseja excluir o componente?',
@@ -252,8 +250,6 @@ const Delay = ({
 Delay.propTypes = {
   data: P.object.isRequired,
   dragRef: P.func.isRequired,
-  activeActBtns: P.bool.isRequired,
-  onChangeActBtns: P.func.isRequired,
   onSaveData: P.func.isRequired
 }
 

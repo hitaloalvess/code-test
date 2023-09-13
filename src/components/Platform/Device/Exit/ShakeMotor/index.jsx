@@ -12,7 +12,7 @@ import DeviceBody from '../../SharedDevice/DeviceBody';
 import * as SM from './styles.module.css';
 
 const ShakeMotor = memo(function ShakeMotor({
-  data, dragRef, activeActBtns, onChangeActBtns, onSaveData
+  data, dragRef, onSaveData
 }) {
   const {
     id,
@@ -100,7 +100,6 @@ const ShakeMotor = memo(function ShakeMotor({
         name={name}
         imgSrc={imgSrc}
         ref={dragRef}
-        onChangeActBtns={onChangeActBtns}
         classImg={`${value.current > 0 ? SM.shake : ''}`}
       >
 
@@ -112,7 +111,6 @@ const ShakeMotor = memo(function ShakeMotor({
 
         <ActionButtons
           orientation='right'
-          active={activeActBtns}
           actionDelete={{
             title: 'Cuidado',
             subtitle: 'Tem certeza que deseja excluir o componente?',
@@ -145,8 +143,6 @@ const ShakeMotor = memo(function ShakeMotor({
 ShakeMotor.propTypes = {
   data: P.object.isRequired,
   dragRef: P.func.isRequired,
-  activeActBtns: P.bool.isRequired,
-  onChangeActBtns: P.func.isRequired,
   onSaveData: P.func.isRequired
 }
 

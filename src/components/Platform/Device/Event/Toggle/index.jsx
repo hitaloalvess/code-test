@@ -15,7 +15,7 @@ import eventBaseImg from '@/assets/images/devices/event/eventBase.svg';
 
 const devicesDbClick = ['pushButton'];
 const Toggle = ({
-  data, dragRef, activeActBtns, onChangeActBtns, onSaveData
+  data, dragRef, onSaveData
 }) => {
 
   const { id, name, posX, posY, value, connectors, containerRef } = data;
@@ -193,14 +193,12 @@ const Toggle = ({
         name={name}
         imgSrc={eventBaseImg}
         ref={dragRef}
-        onChangeActBtns={onChangeActBtns}
       >
 
         <ToggleIcon active={value.send.current} />
 
         <ActionButtons
           orientation='bottom'
-          active={activeActBtns}
           actionDelete={{
             title: 'Cuidado',
             subtitle: 'Tem certeza que deseja excluir o componente?',
@@ -247,8 +245,6 @@ const Toggle = ({
 Toggle.propTypes = {
   data: P.object.isRequired,
   dragRef: P.func.isRequired,
-  activeActBtns: P.bool.isRequired,
-  onChangeActBtns: P.func.isRequired,
   onSaveData: P.func.isRequired
 }
 

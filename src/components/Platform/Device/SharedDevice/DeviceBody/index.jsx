@@ -1,18 +1,42 @@
-import { forwardRef } from 'react';
+import { Children, forwardRef, useMemo, useState } from 'react';
 import P from 'prop-types';
+
+import ActionButtons from '../ActionButtons'
 
 import * as DB from './styles.module.css';
 
 const DeviceBody = forwardRef(function DeviceBody(
-  { name = 'Device', imgSrc, onChangeActBtns, children, ...rest }, ref
+  { name = 'Device', imgSrc, children, ...rest }, ref
 ) {
+
+  const [activeActBtns, setActiveActBtns] = useState(false);
+
+  const handleActBtns = (value) => {
+    setActiveActBtns(value)
+  };
+
+  const { actionButtonsChildren, othersChildren } = useMemo(() => {
+    let actionButtonsChildren = null;
+
+    const othersChildren = Children.map(children, child => {
+      if (child.type !== ActionButtons) {
+        return child;
+      } else {
+        actionButtonsChildren = child;
+      }
+    });
+
+    return { actionButtonsChildren, othersChildren }
+
+  }, [children]);
+
+
   return (
     <div
       className={DB.deviceBody}
       ref={ref}
-      onMouseEnter={() => onChangeActBtns(true)}
-      onMouseLeave={() => onChangeActBtns(false)}
-      {...rest}
+      onMouseEnter={() => handleActBtns(true)}
+      onMouseLeave={() => handleActBtns(false)}
     >
 
       <img
@@ -22,7 +46,11 @@ const DeviceBody = forwardRef(function DeviceBody(
         className={rest.classImg ? rest.classImg : ''}
       />
 
-      {children}
+      {othersChildren}
+
+      {
+        activeActBtns && (actionButtonsChildren)
+      }
 
     </div>
   );
@@ -31,7 +59,6 @@ const DeviceBody = forwardRef(function DeviceBody(
 DeviceBody.propTypes = {
   name: P.string,
   imgSrc: P.string.isRequired,
-  onChangeActBtns: P.func.isRequired,
   children: P.oneOfType([
     P.element,
     P.arrayOf(P.element)

@@ -10,7 +10,7 @@ import Connectors from '@/components/Platform/Device/SharedDevice/Connectors';
 import DeviceBody from '../../SharedDevice/DeviceBody';
 
 const Not = ({
-  data, dragRef, activeActBtns, onChangeActBtns, onSaveData
+  data, dragRef, onSaveData
 }) => {
   const isFirstRender = useRef(true);
   const {
@@ -145,12 +145,10 @@ const Not = ({
         name={name}
         imgSrc={imgSrc}
         ref={dragRef}
-        onChangeActBtns={onChangeActBtns}
       >
 
         <ActionButtons
           orientation='bottom'
-          active={activeActBtns}
           actionDelete={{
             title: 'Cuidado',
             subtitle: 'Tem certeza que deseja excluir o componente?',
@@ -196,8 +194,6 @@ const Not = ({
 Not.propTypes = {
   data: P.object.isRequired,
   dragRef: P.func.isRequired,
-  activeActBtns: P.bool.isRequired,
-  onChangeActBtns: P.func.isRequired,
   onSaveData: P.func.isRequired
 }
 
