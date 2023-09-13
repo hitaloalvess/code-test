@@ -1,5 +1,6 @@
 import { useProject } from '@/hooks/useProject';
 import { useContextAuth } from '@/hooks/useAuth';
+import { useParams } from 'react-router';
 
 import ManualButton from './CircleButton/ManualButton';
 import ZoomButton from './CircleButton/ZoomButton';
@@ -11,6 +12,7 @@ import * as A from './styles.module.css';
 const ActionsArea = () => {
 
   const { searchFormHasEnabled } = useContextAuth();
+  const { id: projectId } = useParams();
   const { saveProject } = useProject();
 
 
@@ -25,7 +27,7 @@ const ActionsArea = () => {
       <ZoomButton />
 
       <button
-        onClick={saveProject}
+        onClick={() => saveProject(projectId)}
       >
         Save
       </button>

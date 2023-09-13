@@ -1,5 +1,4 @@
 import { v4 as uuid } from 'uuid';
-import { useState } from 'react';
 import { shallow } from 'zustand/shallow';
 
 import { useStore } from '@/store';
@@ -12,8 +11,6 @@ import { formattedDate } from '@/utils/date-functions';
 
 
 export const useProject = () => {
-
-  const [project, setProject] = useState();
 
   const {
     getFlows,
@@ -112,9 +109,11 @@ export const useProject = () => {
     return newProjects;
   }
 
-  const saveProject = () => {
+  const saveProject = (projectId) => {
 
     const projects = getProjects();
+
+    const project = projects.find(project => project.id === projectId);
 
     const objProject = {
       ...project,
@@ -223,14 +222,12 @@ export const useProject = () => {
           }
         })
       })
-    })
+    });
 
-    setProject(project);
 
   };
 
   return {
-    project,
     createProject,
     getProjects,
     saveProject,
