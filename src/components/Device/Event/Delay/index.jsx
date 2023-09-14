@@ -40,8 +40,8 @@ const Delay = ({
   const [qtdIncomingConn, setQtdIncomingConn] = useState(0)
   const [duration, setDuration] = useState(INITIAL_DURATION);
   const [timeInterval, setTimeInterval] = useState(INITIAL_DURATION);
-  const timeout = useRef(null);
   const setIntervalRef = useRef(null);
+  const timeout = useRef(null);
 
   const connectionReceiver = () => {
     setQtdIncomingConn(prev => prev + 1)

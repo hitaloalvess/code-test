@@ -92,6 +92,7 @@ const And = ({
     });
 
     connsOutput.forEach(conn => {
+      console.log(value);
       conn.deviceTo.defaultBehavior({ value });
     })
   }

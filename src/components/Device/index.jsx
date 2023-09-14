@@ -19,6 +19,7 @@ import Laser from './Exit/Laser';
 import ShakeMotor from './Exit/ShakeMotor';
 import Buzzer from './Exit/Buzzer';
 import Bargraph from './Exit/Bargraph';
+import Timer from './Exit/Timer';
 
 import And from './Conditional/And';
 import Or from './Conditional/Or';
@@ -31,6 +32,7 @@ import Delay from './Event/Delay';
 import Slider from './Event/Slider';
 import PickColor from './Event/PickColor';
 import Loop from './Event/Loop';
+
 
 import {
   deviceContainer,
@@ -82,7 +84,8 @@ const Device = memo(function Device({ device: { ...device } }) {
     loop: Loop,
     counter: Counter,
     soilMoisture: SoilMoisture,
-    rainDetector: RainDetector
+    rainDetector: RainDetector,
+    timer: Timer
   }
 
   const CurrentDevice = devices[device.name];

@@ -1,0 +1,26 @@
+.timerNumber {
+  color: var(--black);
+  font-size: 1rem;
+  font-weight: 900;
+  text-align: center;
+  margin: -60px auto 0 auto;
+}
+
+
+.resetLight{
+  position: relative;
+  z-index: 2;
+  margin: 10px 0 0 0 0;
+}
+
+.resetLightElement {
+  position: relative;
+  width: 8px;
+  height: 8px;
+  margin: 8px 0px 0px 37px;
+  fill: red;
+}
+
+@media (((max-height: 481px) and (orientation: landscape)) or ((max-width: 481px) and (orientation: portrait))) {
+
+}

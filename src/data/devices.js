@@ -15,6 +15,8 @@ import deviceLaser from '@/assets/images/devices/exit/laser.svg';
 import deviceShakeMotor from '@/assets/images/devices/exit/shakeMotor.svg';
 import deviceBuzzer from '@/assets/images/devices/exit/buzzer.svg';
 import deviceBargraph from '@/assets/images/devices/event/eventBase.svg';
+import deviceTimer from '@/assets/images/devices/event/eventBase.svg';
+
 
 //conditional
 import deviceAnd from '@/assets/images/devices/conditional/and.svg';
@@ -202,6 +204,17 @@ export const mockDevices = {
         brightness: 1023
       }
     },
+    {
+      id: 26,
+      imgSrc: deviceTimer,
+      name: 'timer',
+      type: 'virtual',
+      category: 'event',
+      value: {
+        current: 0,
+        max: 0
+      }
+    },
   ],
   event: [
     {
@@ -256,7 +269,7 @@ export const mockDevices = {
         current: 0,
         max: 0
       }
-    },
+    }
   ],
   conditional: [
     {
@@ -368,7 +381,7 @@ export const deviceConnectorRules = {
     connectsTo: ['all']
   },
   and: {
-    acceptedConnections: ['allEntry', 'oneExit'],
+    acceptedConnections: ['allEntry', 'allExit'],
     connectsFrom: ['all'],
     connectsTo: ['all']
   },
@@ -393,6 +406,11 @@ export const deviceConnectorRules = {
     connectsTo: ['all'],
   },
   delay: {
+    acceptedConnections: ['oneEntry', 'allExit'],
+    connectsFrom: ['all'],
+    connectsTo: ['all'],
+  },
+  timer: {
     acceptedConnections: ['oneEntry', 'allExit'],
     connectsFrom: ['all'],
     connectsTo: ['all'],
