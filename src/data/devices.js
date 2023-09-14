@@ -379,7 +379,7 @@ export const mockDevices = {
       }
     },
     {
-      id: 24,
+      id: 26,
       imgSrc: deviceTimer,
       name: 'timer',
       label: 'Cronômetro',
@@ -400,7 +400,7 @@ export const mockDevices = {
         },
         reset: {
           id: null,
-          name: 'reste',
+          name: 'reset',
           type: 'entry',
           x: 0,
           y: 0,

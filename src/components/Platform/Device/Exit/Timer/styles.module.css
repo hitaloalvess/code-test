@@ -1,9 +1,10 @@
 .timerNumber {
+  position: absolute;
+  top: 18px;
   color: var(--black);
-  font-size: 1rem;
-  font-weight: 900;
+  font-size: 26px;
+  font-weight: bold;
   text-align: center;
-  margin: -60px auto 0 auto;
 }
 
 

@@ -14,6 +14,7 @@ import LedMono from '../../Exit/LedMono';
 import Laser from '../../Exit/Laser';
 import ShakeMotor from '../../Exit/ShakeMotor';
 import Buzzer from '../../Exit/Buzzer';
+import Timer from '../../Exit/Timer';
 import Bargraph from '../../Exit/Bargraph';
 
 import And from '../../Conditional/And';
@@ -54,7 +55,8 @@ const DeviceFactory = ({
     pickColor: PickColor,
     counter: Counter,
     soilMoisture: SoilMoisture,
-    rainDetector: RainDetector
+    rainDetector: RainDetector,
+    timer: Timer
   }
 
   const CurrentDevice = devices[data.name];
