@@ -1,0 +1,15 @@
+.btnDeleteAccount {
+  padding: 8px 12px;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+  color: var(--gray-200);
+  background-color: transparent;
+  transition: all 0.3s ease-in-out;
+}
+
+.btnDeleteAccount:hover {
+  color: var(--red);
+  background-color: rgba(255, 20, 80, 0.2);
+}

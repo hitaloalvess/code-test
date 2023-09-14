@@ -1,0 +1,44 @@
+.myProjectsContainer {
+  margin: 60px 0 0 0;
+  padding: 44px 120px;
+}
+
+.myProjectsToolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 44px;
+}
+
+.myProjectsToolbar span {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.myProjectsTitle {
+  font-size: 36px;
+}
+
+
+.myProjectListEmpty {
+  height: 320px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 32px;
+}
+
+.myProjectListEmpty>svg {
+  font-size: 96px;
+  color: var(--yellow);
+}
+
+.myProjectListEmpty span {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}

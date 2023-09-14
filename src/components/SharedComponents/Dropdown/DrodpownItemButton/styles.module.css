@@ -1,0 +1,19 @@
+.itemButton {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-weight: bold;
+  color: var(--black);
+}
+
+.itemButton svg {
+  font-size: 20px;
+  color: var(--blue-900);
+}
+
+.itemButton {
+  width: 100%;
+  border: none;
+  cursor: pointer;
+  background-color: transparent;
+}

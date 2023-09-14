@@ -1,23 +1,23 @@
 /* BUTTONS */
 
 .btn {
-    padding: 12px 32px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-weight: bold;
-    color: var(--white);
-    background-color: var(--gray-100);
+  padding: 12px 32px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  color: var(--white);
+  background-color: var(--gray-200);
 }
 
 /* BUTTONS -- BLUE */
 .btnBlue {
-    background-color: var(--blue);
-    transition: filter 0.3s ease-in-out;
+  background-color: var(--blue);
+  transition: filter 0.3s ease-in-out;
 }
 
 .btnBlue:hover {
-    filter: brightness(0.85);
+  filter: brightness(0.85);
 }
 
 /* BUTTONS -- white */
@@ -36,11 +36,11 @@
 /* BUTTONS -- CANCEL */
 
 .btnCancel {
-    transition: background-color 0.3s ease-in-out;
+  transition: background-color 0.3s ease-in-out;
 }
 
 .btnCancel:hover {
-    background-color: var(--red);
+  background-color: var(--red);
 }
 
 /* COMMON */
@@ -49,22 +49,22 @@
 
 /* INPUTS -- COLOR */
 .inputColor {
-    -webkit-appearance: none;
-    appearance: none;
-    border: none;
-    width: 140px;
-    height: 140px;
-    cursor: pointer;
-    background-color: transparent;
+  -webkit-appearance: none;
+  appearance: none;
+  border: none;
+  width: 140px;
+  height: 140px;
+  cursor: pointer;
+  background-color: transparent;
 }
 
 .inputColor::-webkit-color-swatch-wrapper {
-    padding: 0;
+  padding: 0;
 }
 
 .inputColor::-webkit-color-swatch {
-    border: 2px solid transparent;
-    border-radius: 100px;
+  border: 2px solid transparent;
+  border-radius: 100px;
 }
 
 /* INPUTS -- NUMBER */
@@ -94,41 +94,41 @@
 /* INPUT --RANGE*/
 
 .inputRangeContainer {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-    gap: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 4px;
 }
 
 .inputRangeContainer input[type="range"] {
-    appearance: none;
-    -webkit-appearance: none;
-    width: calc(100% - 30px);
-    height: 8px;
-    border-radius: 24px;
-    background: rgba(28, 28, 32, 0.4);
+  appearance: none;
+  -webkit-appearance: none;
+  width: calc(100% - 30px);
+  height: 8px;
+  border-radius: 24px;
+  background: rgba(28, 28, 32, 0.4);
 }
 
 .inputRangeContainer input[type="range"]::-webkit-slider-thumb {
-    appearance: none;
-    position: relative;
-    cursor: pointer;
-    width: 14px;
-    height: 14px;
-    background-color: #282832;
-    border-radius: 8px;
-    transition: all 0.3s ease-in-out;
+  appearance: none;
+  position: relative;
+  cursor: pointer;
+  width: 14px;
+  height: 14px;
+  background-color: #282832;
+  border-radius: 8px;
+  transition: all 0.3s ease-in-out;
 }
 
 .inputRangeContainer input[type="range"]::-webkit-slider-thumb:hover {
-    transform: scale(1.2);
+  transform: scale(1.2);
 }
 
 .inputValue {
-    width: 36px;
-    white-space: nowrap;
-    font-size: 18px;
-    font-weight: bold;
-    text-align: center;
+  width: 36px;
+  white-space: nowrap;
+  font-size: 18px;
+  font-weight: bold;
+  text-align: center;
 }

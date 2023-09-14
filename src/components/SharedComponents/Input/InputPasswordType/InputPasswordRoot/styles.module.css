@@ -1,0 +1,7 @@
+.inputPassword {
+  text-transform: initial;
+}
+
+.inputPassword::placeholder {
+  text-transform: uppercase;
+}

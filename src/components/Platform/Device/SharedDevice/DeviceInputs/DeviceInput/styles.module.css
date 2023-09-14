@@ -1,0 +1,47 @@
+.container {
+  position: absolute;
+  left: -6px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100px;
+  gap: 4px;
+}
+
+.container input[type="range"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 85px;
+  height: 6px;
+  border-radius: 24px;
+  background: rgba(28, 28, 32, 0.4);
+}
+
+.container input[type="range"]::-webkit-slider-thumb {
+  appearance: none;
+  position: relative;
+  cursor: pointer;
+  width: 10px;
+  height: 10px;
+  background-color: #282832;
+  border-radius: 4px;
+  transition: all 0.3s ease-in-out;
+}
+
+.container input[type="range"]::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+}
+
+.inputValue {
+  white-space: nowrap;
+  font-size: 16px;
+  font-weight: bold;
+  margin: 0 auto;
+}
+
+.showValue {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}

@@ -1,0 +1,70 @@
+.container {
+  display: flex;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.texts {
+  display: flex;
+  align-items: baseline;
+  gap: 2px;
+  flex-wrap: wrap;
+
+}
+
+.btnEnabledModal {
+  font-size: 14px;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+  background-color: transparent;
+  transition: color 0.3s ease-in-out;
+}
+
+.btnEnabledModal:hover {
+  color: var(--blue);
+}
+
+.btnCheck {
+  display: none;
+}
+
+.labelBtnCheck {
+  width: 16px;
+  height: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  border-radius: 2px;
+  background-color: var(--gray-200);
+  transition: background-color 0.3s ease-in-out;
+}
+
+.btnCheck:checked+label {
+  background-color: var(--blue);
+}
+
+.labelBtnCheck svg {
+  font-size: 14px;
+  color: var(--white);
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.btnCheck:checked+label svg {
+  opacity: 1;
+}
+
+@media(max-width: 480px) {
+
+  .btnEnabledModal,
+  .texts {
+    font-size: 12px;
+  }
+
+  .labelBtnCheck {
+    width: 14px;
+    height: 14px;
+  }
+}

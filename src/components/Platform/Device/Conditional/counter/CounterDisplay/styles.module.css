@@ -1,0 +1,57 @@
+.BodyCounterNumbers {
+  position: absolute;
+  top: 25px;
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+  width: 100%;
+  color: var(--white);
+}
+
+.BodyCounterButtons {
+  position: absolute;
+  top: 10px;
+  left: 31px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.counterButton {
+  width: 18px;
+  height: 18px;
+  border: none;
+  cursor: pointer;
+  background-color: transparent;
+  transition: transform 0.3s ease-in-out;
+}
+
+.counterButtonDecrease {
+  width: 18px;
+  height: 18px;
+  border: none;
+  cursor: pointer;
+  background-color: transparent;
+  transition: transform 0.3s ease-in-out;
+  transform: rotate(180deg);
+}
+
+.counterButton:hover {
+  transform: scale(1.1);
+}
+
+.counterButtonDecrease:hover {
+  transform: scale(1.1) rotate(180deg);
+}
+
+
+
+@media (((max-height: 481px) and (orientation: landscape)) or ((max-width: 481px) and (orientation: portrait))) {
+  .delayNumber {
+    color: var(--black);
+    font-size: 14px;
+    font-weight: 900;
+    text-align: center;
+    margin: -48px auto 0 auto;
+  }
+}
