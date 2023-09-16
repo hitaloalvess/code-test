@@ -1,12 +1,12 @@
 import axios from "axios";
 
-export const api = axios.create({
+export const apiAuth = axios.create({
   baseURL: import.meta.env.VITE_BASE_URL
 })
 
 export const setupInterceptors = navigate => {
 
-  api.interceptors.response.use(
+  apiAuth.interceptors.response.use(
     response => response,
     error => {
       if (error.response?.status === 401) {
@@ -15,7 +15,7 @@ export const setupInterceptors = navigate => {
 
           localStorage.removeItem('@Microdigo:token');
           localStorage.removeItem('@Microdigo:user');
-          api.defaults.headers.common.Authorization = undefined;
+          apiAuth.defaults.headers.common.Authorization = undefined;
 
           return navigate('/')
         }
