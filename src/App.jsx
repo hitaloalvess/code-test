@@ -2,6 +2,7 @@ import Modal from 'react-modal';
 import { BrowserRouter } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 import RoutesApp from "./routes"
 import { ModalProvider } from '@/contexts/ModalContext';
@@ -11,37 +12,42 @@ import './styles/global.css';
 
 Modal.setAppElement('#root');
 
+const queryClient = new QueryClient();
 const App = () => {
 
   return (
     <BrowserRouter>
 
-      <ModalProvider>
+      <QueryClientProvider client={queryClient}>
 
-        <AuthProvider>
+        <ModalProvider>
 
-          <ToastContainer
-            position="bottom-center"
-            autoClose={3000}
-            hideProgressBar={false}
-            newestOnTop={false}
-            closeOnClick
-            rtl={false}
-            pauseOnFocusLoss
-            draggable
-            pauseOnHover
-            theme="colored"
-            style={{
-              zIndex: 9999999999,
-            }}
-          />
+          <AuthProvider>
 
-          <RoutesApp />
+            <ToastContainer
+              position="bottom-center"
+              autoClose={3000}
+              hideProgressBar={false}
+              newestOnTop={false}
+              closeOnClick
+              rtl={false}
+              pauseOnFocusLoss
+              draggable
+              pauseOnHover
+              theme="colored"
+              style={{
+                zIndex: 9999999999,
+              }}
+            />
+
+            <RoutesApp />
 
 
-        </AuthProvider>
+          </AuthProvider>
 
-      </ModalProvider>
+        </ModalProvider>
+
+      </QueryClientProvider>
 
     </BrowserRouter>
 

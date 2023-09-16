@@ -1,6 +1,7 @@
 import { v4 as uuid } from 'uuid';
 import { shallow } from 'zustand/shallow';
 
+import { apiMicroCode } from '@/services/apiMicroCode';
 import { useStore } from '@/store';
 import {
   removeHTMLElementRef,
@@ -8,6 +9,7 @@ import {
   replaceStringInFunc
 } from "@/utils/projects-functions";
 import { formattedDate } from '@/utils/date-functions';
+import { useQuery } from '@tanstack/react-query';
 
 
 export const useProject = () => {
@@ -24,9 +26,9 @@ export const useProject = () => {
     createFlow: store.createFlow,
   }), shallow);
 
-  const createProject = (objProject) => {
+  const createProject = async(objProject) => {
 
-    const { userId, name, description, devices, flows } = objProject;
+    const { user, name, description, devices, flows } = objProject;
 
     // Apply transformation on devices and streams object to remove HTMLElements
     // HTML elements are not accepted when serializing to JSON.
@@ -66,11 +68,10 @@ export const useProject = () => {
     const project = {
       id: uuid(),
       name,
-      userId,
       description,
+      user,
       flows: transformFlows,
       devices: transformDevices,
-      created_at: new Date()
     }
 
 
@@ -227,6 +228,7 @@ export const useProject = () => {
 
   };
 
+
   return {
     createProject,
     getProjects,
@@ -235,4 +237,17 @@ export const useProject = () => {
     updateProject,
     loadProject
   }
+}
+
+export async function getProjects(userCpf) {
+  const projects = await apiMicroCode.get(`/projects/user/${userCpf}`);
+
+  return projects;
+}
+
+export const useProjects = (userCpf, projects = null) => {
+  return useQuery(['projects'], () => getProjects(userCpf), {
+    staleTime: 1000 * 60 * 30, //10 minutes
+    initialData: projects
+  })
 }
