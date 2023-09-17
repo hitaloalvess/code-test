@@ -1,82 +1,44 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { MagnifyingGlass, SmileyXEyes } from '@phosphor-icons/react';
 
-import { useProject } from '@/hooks/useProject';
+import { useProject, useQueryProject } from '@/hooks/useProject';
+import { useAuth } from '@/hooks/useAuth';
 
 import { Input } from '@/components/SharedComponents/Input';
 import Header from '@/components/SharedComponents/Header';
 import ProjectCard from '@/components/MyProjects/ProjectCard';
 import NewProjectButton from '@/components/MyProjects/NewProjectButton';
+import ProjectList from '@/components/MyProjects/ProjectList';
 
 import * as MP from './styles.module.css';
-import ProjectList from '../../components/MyProjects/ProjectList';
 
 const MyProjects = () => {
-  const { getProjects, deleteProject, updateProject, createProject } = useProject();
 
-  const [projects, setProjects] = useState([]);
+  const { user } = useAuth();
+  const {
+    createProject,
+    deleteProject,
+    updateProject
+  } = useProject(user.cpf);
+
   const [filter, setFilter] = useState('');
 
+  const { data: projects, isLoading } = useQueryProject(user.cpf);
 
   const filteredProjects = useMemo(() => {
-    if (!filter) return projects;
 
-    const list = projects.filter(project => {
+    if (!projects?.data) return [];
+
+    if (!filter) return projects.data;
+
+    const list = projects?.data.filter(project => {
       return project.name.toLowerCase().includes(filter.toLowerCase());
     })
 
     return list;
   }, [projects, filter]);
 
-  const handleProjectDelete = (projectId) => {
-    deleteProject(projectId);
-
-    setProjects(prevProjects => {
-      const newProjects = prevProjects.filter(project => project.id !== projectId);
-
-      return newProjects;
-    })
-
-  }
-
-  const handleProjectUpdate = (newProject) => {
-    updateProject(newProject);
-
-    setProjects(prevProjects => {
-
-      const newProjects = prevProjects.map(project => {
-
-        if (project.id === newProject.id) {
-
-          return {
-            ...project,
-            name: newProject.name,
-            description: newProject.description
-          }
-        }
-
-        return project;
-      });
-
-      return newProjects;
-    })
-  }
-
-  const handleProjectCreate = (newProject) => {
-    const projectId = createProject(newProject);
-
-    setProjects(prevProjects => [...prevProjects, newProject]);
-
-    return projectId;
-  }
-
   const handleFilterProjects = (event) => setFilter(event.target.value);
-
-
-  useEffect(() => {
-    const projects = getProjects();
-    setProjects(projects)
-  }, []);
 
   return (
     <>
@@ -96,13 +58,14 @@ const MyProjects = () => {
               </>
             </Input.Root>
 
-            <NewProjectButton onCreate={handleProjectCreate} />
+            <NewProjectButton onCreate={createProject} />
           </span>
         </div>
 
         {
-          filteredProjects.length > 0 ?
-            <ProjectList hasProjects={filteredProjects.length > 0}>
+          filteredProjects?.length > 0 || isLoading ?
+
+            <ProjectList hasProjects={filteredProjects?.length > 0}>
 
               {
                 filteredProjects.map(project => (
@@ -112,14 +75,15 @@ const MyProjects = () => {
                       id: project.id,
                       name: project.name,
                       description: project.description,
-                      created_at: project.created_at,
+                      createdAt: project.createdAt,
                     }}
-                    onDelete={handleProjectDelete}
-                    onUpdate={handleProjectUpdate}
+                    onDelete={deleteProject}
+                    onUpdate={updateProject}
                   />
                 ))
               }
             </ProjectList> :
+
             <div className={MP.myProjectListEmpty}>
               <SmileyXEyes weight="fill" />
               <span>

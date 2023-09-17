@@ -45,10 +45,14 @@ const CreateProjectModal = ({
       const newProject = {
         id: project ? project.id : null,
         name,
-        userId: user.id,
+        user: {
+          email: user.email,
+          name: user.name,
+          cpf: user.cpf
+        },
         description,
-        devices: {},
-        flows: {}
+        devices: [],
+        flows: []
       }
 
       handleConfirm(newProject);

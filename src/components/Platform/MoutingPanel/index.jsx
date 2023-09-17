@@ -21,10 +21,10 @@ const MoutingPanel = () => {
   const { id: projectId } = useParams();
 
   const containerRef = useOutletContext();
+  const { loadProject } = useProject();
 
   const { startMove, endMove, moving } = useScroll(containerRef);
 
-  const { loadProject } = useProject();
 
   const {
     insertDevice,
@@ -79,8 +79,7 @@ const MoutingPanel = () => {
       return;
     }
 
-    loadProject(projectId)
-      .catch(error => console.log(error));
+    loadProject(projectId).catch(error => console.log(error));
 
     return () => {
       cleanMoutingPanel();

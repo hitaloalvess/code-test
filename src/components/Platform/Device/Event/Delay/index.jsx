@@ -63,7 +63,6 @@ const Delay = ({
   }
 
   const handleConnections = useCallback(() => {
-    console.log('HANDLE CONNECTIONS');
 
     const flow = findFlowsByDeviceId(flows, id);
 
