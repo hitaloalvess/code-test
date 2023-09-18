@@ -2,6 +2,7 @@
 export const createGlobalPlatformSlice = (set) => ({
   platformContainerRef: null,
   scale: 1,
+  hasUpdate: false,
 
   loadPlatformContainer: (refValue) => {
     set({ platformContainerRef: refValue })
@@ -18,5 +19,9 @@ export const createGlobalPlatformSlice = (set) => ({
       lines: {},
       flowTemp: {}
     })
+  },
+
+  changeHasUpdate: (value) => {
+    set({ hasUpdate: value });
   }
 })

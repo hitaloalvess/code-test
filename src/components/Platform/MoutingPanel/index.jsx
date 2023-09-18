@@ -27,13 +27,21 @@ const MoutingPanel = () => {
 
 
   const {
+    hasUpdate,
+    flows,
+    devices,
     insertDevice,
     repositionDevice,
-    cleanMoutingPanel
+    cleanMoutingPanel,
+    changeHasUpdate,
   } = useStore(store => ({
+    hasUpdate: store.hasUpdate,
+    flows: store.flows,
+    devices: store.devices,
     insertDevice: store.insertDevice,
     repositionDevice: store.repositionDevice,
-    cleanMoutingPanel: store.cleanMoutingPanel
+    cleanMoutingPanel: store.cleanMoutingPanel,
+    changeHasUpdate: store.changeHasUpdate
   }), shallow);
 
   const isFirstRender = useRef(true);
@@ -79,13 +87,27 @@ const MoutingPanel = () => {
       return;
     }
 
-    loadProject(projectId).catch(error => console.log(error));
+    loadProject(projectId)
+      .then(() => changeHasUpdate(false))
+      .catch(error => console.log(error));
 
     return () => {
       cleanMoutingPanel();
     }
   }, [projectId]);
 
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+
+      return;
+    }
+
+
+    if (!hasUpdate) {
+      changeHasUpdate(true);
+    }
+  }, [flows, devices]);
 
   return (
     <div
