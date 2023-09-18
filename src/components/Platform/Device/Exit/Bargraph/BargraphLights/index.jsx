@@ -13,7 +13,7 @@ const BargraphLights = ({ numActiveLights }) => {
           className={BL.ledLight}
         >
           <svg className={BL.ledLightElement}>
-            <circle cx="5" cy="5" r="5" />
+            <circle cx="2" cy="2" r="2" />
           </svg>
         </li>
       ))}

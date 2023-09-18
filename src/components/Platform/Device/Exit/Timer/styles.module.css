@@ -1,24 +1,18 @@
 .timerNumber {
   position: absolute;
-  top: 18px;
+  top: 28px;
   color: var(--black);
-  font-size: 26px;
+  font-size: 10px;
   font-weight: bold;
   text-align: center;
 }
 
-
-.resetLight{
-  position: relative;
+.ledLightElement {
+  position: absolute;
   z-index: 2;
-  margin: 10px 0 0 0 0;
-}
-
-.resetLightElement {
-  position: relative;
-  width: 8px;
-  height: 8px;
-  margin: 8px 0px 0px 37px;
+  width: 4px;
+  height: 4px;
+  top: 52px;
   fill: red;
 }
 
