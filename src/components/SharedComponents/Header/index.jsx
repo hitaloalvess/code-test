@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { HardDrives, XCircle, GameController } from '@phosphor-icons/react';
+import { HardDrives, XCircle, File } from '@phosphor-icons/react';
 
 import { useContextAuth } from '@/hooks/useAuth';
 import logoMicrodigo from '@/assets/images/logo-microdigo.svg';
@@ -73,9 +73,9 @@ const Header = () => {
           (
             <Dropdown.Root>
               <Dropdown.Item>
-                <Dropdown.ItemLink src={'/plataforma'}>
-                  <GameController />
-                  <span>Plataforma</span>
+                <Dropdown.ItemLink src={'/projetos'}>
+                  <File />
+                  <span>Meus projetos</span>
                 </Dropdown.ItemLink>
               </Dropdown.Item>
 

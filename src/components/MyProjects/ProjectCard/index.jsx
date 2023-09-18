@@ -19,7 +19,7 @@ const ProjectCard = ({ data, onDelete, onUpdate }) => {
 
     enableModal({
       typeContent: 'confirmation',
-      title: 'Tem certeza que deseja excluir esse projeto?',
+      subtitle: 'Tem certeza que deseja excluir esse projeto?',
       handleConfirm: async () => {
 
         await onDelete.mutateAsync(id);

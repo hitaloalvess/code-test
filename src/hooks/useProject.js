@@ -5,13 +5,21 @@ import { removeHTMLElementRef } from "@/utils/projects-functions";
 import { useStore } from '@/store';
 import { apiMicroCode } from '@/services/apiMicroCode';
 import { queryClient } from '@/services/queryClient';
+import { formattedDate } from '../utils/date-functions';
 
 
 
 export async function getProjects(userCpf) {
   const projects = await apiMicroCode.get(`/projects/user/${userCpf}`);
 
-  return projects;
+  const transformProjects = projects.data.map(project => {
+    return {
+      ...project,
+      createdAt: formattedDate(project.createdAt)
+    }
+  });
+
+  return transformProjects;
 }
 
 export const useProject = () => {

@@ -27,11 +27,11 @@ const MyProjects = () => {
 
   const filteredProjects = useMemo(() => {
 
-    if (!projects?.data) return [];
+    if (!projects) return [];
 
-    if (!filter) return projects.data;
+    if (!filter) return projects;
 
-    const list = projects?.data.filter(project => {
+    const list = projects.filter(project => {
       return project.name.toLowerCase().includes(filter.toLowerCase());
     })
 

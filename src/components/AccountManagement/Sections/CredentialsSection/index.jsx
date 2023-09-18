@@ -41,7 +41,7 @@ const CredentialsSection = () => {
   const handleClickBtnDeleteAccount = () => {
     enableModal({
       typeContent: 'confirmation',
-      title: 'Tem certeza que deseja excluir sua conta?',
+      subtitle: 'Tem certeza que deseja excluir sua conta?',
       handleConfirm: async () => {
 
         await handleDeleteAccount();
