@@ -7,7 +7,7 @@ import { useStore } from '@/store';
 import { useProject } from '@/hooks/useProject';
 
 import { SpinnerLoader } from '@/components/SharedComponents/SpinnerLoader';
-import CircleButton from "../CircleButton";
+import CircleButton from "..";
 import imgCircleBase from '@/assets/images/buttons/circle-button-base.svg';
 
 
@@ -54,7 +54,10 @@ const SaveButton = () => {
   }, [hasUpdate]);
 
   return (
-    <div className={SB.saveButtonContainer}>
+    <div
+      className={SB.saveButtonContainer}
+      title='Botão de salvamento automático'
+    >
       {
         isLoading ?
           <div className={SB.saveBtnSpinner}>
@@ -66,7 +69,6 @@ const SaveButton = () => {
       <CircleButton
         imgSrc={imgCircleBase}
         name={'save-button'}
-        title='Botão de salvamento automático'
         alt='Imagem do botão de salvamento automatico'
       />
     </div>

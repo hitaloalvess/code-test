@@ -4,9 +4,9 @@ import ManualButton from './CircleButton/ManualButton';
 import ZoomButton from './CircleButton/ZoomButton';
 import FaqButton from './CircleButton/FaqButton';
 import SearchFormButton from './CircleButton/SearchFormButton';
+import SaveButton from './CircleButton/SaveButton';
 
 import * as A from './styles.module.css';
-import SaveButton from './SaveButton';
 
 const ActionsArea = () => {
 

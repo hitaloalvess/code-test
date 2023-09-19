@@ -1,5 +1,9 @@
 .saveButtonContainer {
   position: relative;
+  cursor: pointer;
+}
+
+.saveButtonContainer button {
   pointer-events: none;
 }
 
