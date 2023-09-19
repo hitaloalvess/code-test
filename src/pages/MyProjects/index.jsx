@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { MagnifyingGlass, SmileyXEyes } from '@phosphor-icons/react';
+import { MagnifyingGlass } from '@phosphor-icons/react';
 
 import { useProject, useQueryProject } from '@/hooks/useProject';
 import { useAuth } from '@/hooks/useAuth';
@@ -11,6 +11,7 @@ import NewProjectButton from '@/components/MyProjects/NewProjectButton';
 import ProjectList from '@/components/MyProjects/ProjectList';
 
 import * as MP from './styles.module.css';
+import ProjectsContent from '../../components/MyProjects/ProjectsContent';
 
 const MyProjects = () => {
 
@@ -62,37 +63,29 @@ const MyProjects = () => {
           </span>
         </div>
 
-        {
-          filteredProjects?.length > 0 || isLoading ?
+        <ProjectsContent
+          isLoading={isLoading}
+          hasProjects={filteredProjects?.length > 0}
+        >
+          <ProjectList hasProjects={filteredProjects?.length > 0}>
 
-            <ProjectList hasProjects={filteredProjects?.length > 0}>
-
-              {
-                filteredProjects.map(project => (
-                  <ProjectCard
-                    key={project.id}
-                    data={{
-                      id: project.id,
-                      name: project.name,
-                      description: project.description,
-                      createdAt: project.createdAt,
-                    }}
-                    onDelete={deleteProject}
-                    onUpdate={updateProject}
-                  />
-                ))
-              }
-            </ProjectList> :
-
-            <div className={MP.myProjectListEmpty}>
-              <SmileyXEyes weight="fill" />
-              <span>
-                <h1>Nenhum projeto foi encontrado</h1>
-                <p>Crie um projeto e comece a trabalhar com a Microdigo..</p>
-              </span>
-            </div>
-        }
-
+            {
+              filteredProjects.map(project => (
+                <ProjectCard
+                  key={project.id}
+                  data={{
+                    id: project.id,
+                    name: project.name,
+                    description: project.description,
+                    createdAt: project.createdAt,
+                  }}
+                  onDelete={deleteProject}
+                  onUpdate={updateProject}
+                />
+              ))
+            }
+          </ProjectList>
+        </ProjectsContent>
       </main>
     </>
   );

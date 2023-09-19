@@ -19,26 +19,3 @@
 .myProjectsTitle {
   font-size: 36px;
 }
-
-
-.myProjectListEmpty {
-  height: 320px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 32px;
-}
-
-.myProjectListEmpty>svg {
-  font-size: 96px;
-  color: var(--yellow);
-}
-
-.myProjectListEmpty span {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 8px;
-}
