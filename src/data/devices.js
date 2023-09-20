@@ -570,13 +570,35 @@ export const mockDevices = {
       id: 34,
       imgSrc: deviceLoop,
       name: 'loop',
+      label: 'Loop',
       type: 'virtual',
       category: 'event',
       value: {
-        current: 0,
-        max: 0
+        send: {
+          current: 0,
+          max: 0
+        },
+        duration: 5,
+      },
+      posX: 0,
+      posY: 0,
+      connectors: {
+        receive: {
+          id: null,
+          name: 'receive',
+          type: 'entry',
+          x: 0,
+          y: 0
+        },
+        send: {
+          id: null,
+          name: 'send',
+          type: 'exit',
+          x: 0,
+          y: 0
+        },
       }
-    }
+    },
   ],
   conditional: [
     {
@@ -800,7 +822,7 @@ export const deviceConnectorRules = {
   },
   counter: {
     acceptedConnections: ['oneEntry', 'allExit'],
-    connectsFrom: ['potentiometer', 'ldr', 'loop', 'pushButton', 'slider', 'delay', 'toggle', 'and', 'or', 'physicalPotentiometer', 'physicalLDR'],
+    connectsFrom: ['potentiometer', 'ldr', 'loop', 'pushButton', 'slider', 'delay', 'toggle', 'and', 'or', 'switch', 'physicalPotentiometer', 'physicalLDR'],
     connectsTo: ['all']
   },
   and: {

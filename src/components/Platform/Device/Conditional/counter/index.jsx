@@ -38,14 +38,24 @@ const Counter = ({
   }), shallow);
 
   const [qtdIncomingConn, setQtdIncomingConn] = useState(0)
+  const [loopActive, setLoopActive] = useState(false);
+  const [loopLimit, setLoopLimit] = useState(9999);
 
+
+  const handleSettingUpdate = useCallback((newLoopActive, newLoopLimit) => {
+    setLoopActive(newLoopActive);
+    setLoopLimit(newLoopLimit);
+  }, [loopActive, loopLimit]);
+
+  const handleRestart = () => {
+    redefineBehavior();
+  };
 
   const connectionReceiver = useCallback(() => {
     setQtdIncomingConn(prev => prev + 1)
   }, []);
 
   const handleConnections = () => {
-
     const flow = findFlowsByDeviceId(flows, id);
 
     const connection = flow?.connections.find(conn => {
@@ -57,40 +67,52 @@ const Counter = ({
 
       return;
     }
-
     const device = { ...devices[connection.deviceFrom.id] };
     const deviceValue = device.value[connection.deviceFrom.connector.name];
 
-    let currentValue = deviceValue?.current;
+    const currentValue = deviceValue?.current;
+    let newValue;
 
     if (typeof deviceValue.current === 'boolean') {
-      currentValue = deviceValue?.current ? value.send.current + 1 : value.send.current;
+      if (deviceValue.current)
+        handleIncreaseClick();
     }
+    else
+    {
 
+      if (loopActive)
+      {
+        const x = Math. floor(currentValue / loopLimit);
 
-    const newValue = {
-      ...value,
-      send: {
-        ...value.send,
-        current: currentValue,
+        newValue = {
+          ...value,
+          send: {
+            ...value.send,
+            current:  currentValue - (loopLimit * x),
+            max: 1023,
+          }
+        }
       }
-    }
+      else
+      {
+        newValue = {
+          ...value,
+          send: {
+            ...value.send,
+            current: currentValue,
+            max: 1023,
+          }
+        }
+      }
 
-    if (newValue.send.current === value.send.current) {
-      sendValue();
-
-      return;
-    }
-
-    onSaveData('value', newValue);
+    onSaveData('value', newValue)
     updateDeviceValue(id, { value: newValue });
     updateDeviceValueInFlow({ connectorId: connectors.send.id, newValue });
-
   }
+}
 
 
   const sendValue = () => {
-
     const flow = findFlowsByDeviceId(flows, id);
 
     if (!flow) return;
@@ -98,7 +120,6 @@ const Counter = ({
     const connsOutput = flow.connections.filter(conn => {
       return conn.deviceFrom.id === id
     });
-
 
     connsOutput.forEach(conn => {
       const toConnector = devices[conn.deviceTo.id].connectors[conn.deviceTo.connector.name];
@@ -109,26 +130,43 @@ const Counter = ({
     })
   }
 
+
   const redefineBehavior = useCallback(() => {
     const newValue = {
-      ...value,
-      send: {
-        ...value.send,
-        current: 0,
-        max: 1023,
-      }
+        ...value,
+        send: {
+          ...value.send,
+          current: 0,
+          max: 1023,
+        }
     }
 
     onSaveData('value', newValue)
     updateDeviceValue(id, { value: newValue });
   }, [value]);
 
+
   const handleIncreaseClick = () => {
-    const newValue = {
-      ...value,
-      send: {
-        ...value.send,
-        current: value.send.current + 1
+    let newValue;
+    if(loopActive && value.send.current >= loopLimit - 1) {
+      newValue = {
+        ...value,
+        send: {
+          ...value.send,
+          current: 0
+
+        }
+      }
+    }
+    else
+    {
+      newValue = {
+        ...value,
+        send: {
+          ...value.send,
+          current: value.send.current + 1
+
+        }
       }
     }
 
@@ -139,13 +177,30 @@ const Counter = ({
   };
 
   const handleDecreaseClick = () => {
-    const newValue = {
-      ...value,
-      send: {
-        ...value.send,
-        current: value.send.current - 1
+    let newValue;
+
+    if(value.send.current <= 0) {
+      if(loopActive) {
+        newValue = {
+          ...value,
+          send: {
+            ...value.send,
+            current: loopLimit - 1
+          }
+        }
       }
     }
+    else
+    {
+        newValue = {
+          ...value,
+          send: {
+            ...value.send,
+            current: value.send.current - 1
+          }
+        }
+    }
+
 
     onSaveData('value', newValue)
     updateDeviceValue(id, { value: newValue });
@@ -157,12 +212,11 @@ const Counter = ({
     if (qtdIncomingConn > 0) {
       handleConnections();
     }
-  }, [qtdIncomingConn]);
+  }, [qtdIncomingConn, loopActive, loopLimit]);
 
   useEffect(() => {
     sendValue();
-  }, [value.send.current]);
-
+  }, [value.send.current, loopActive, loopLimit]);
 
   return (
     <>
@@ -188,6 +242,15 @@ const Counter = ({
               id
             }
           }}
+          actionConfig={{
+            typeContent: 'config-counter',
+            onSave: handleSettingUpdate,
+            data: {
+              defaultLoopActive: loopActive,
+              defaultLoopLimit: loopLimit,
+              handleRestart: handleRestart
+            }
+          }}
         />
       </DeviceBody>
 
@@ -198,7 +261,8 @@ const Counter = ({
           {
             data: {
               ...connectors.receive,
-              defaultReceiveBehavior: connectionReceiver
+              defaultReceiveBehavior: connectionReceiver,
+              redefineBehavior: redefineBehavior
             },
             device: { id },
             updateConn: { posX, posY },

@@ -1,17 +1,15 @@
 .loopNumber {
+  position: absolute;
+  top: 18px;
   color: var(--black);
-  font-size: 1.7rem;
-  font-weight: 900;
+  font-size: 26px;
+  font-weight: bold;
   text-align: center;
-  margin: -65px auto 0 auto;
 }
 
 @media (((max-height: 481px) and (orientation: landscape)) or ((max-width: 481px) and (orientation: portrait))) {
   .loopNumber {
-    color: var(--black);
-    font-size: 1.3rem;
-    font-weight: 900;
-    text-align: center;
-    margin: -48px auto 0 auto;
+    top: 14px;
+    font-size: 18px;
   }
 }

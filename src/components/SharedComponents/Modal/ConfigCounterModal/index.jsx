@@ -14,19 +14,19 @@ import {
 import {
   btn,
   btnBlue,
+  btnWhite,
   inputNumber
 } from '@/styles/common.module.css';
 
 const ConfigCounterModal = ({ closeModal, contentData }) => {
-  const { handleSaveConfig, defaultLoopActive, defaultLoopLimit} = contentData;
+  const { handleSaveConfig, defaultLoopActive, defaultLoopLimit, handleRestart} = contentData;
 
     const toggleRef = useRef(null);
     const limitRef = useRef(null);
     const [isLoopActive, setIsLoopActive] = useState(defaultLoopActive);
 
   const handleSave = () => {
-    console.log(limitRef.current);
-    const limit = limitRef.current === null ? 9999 : limitRef.current.value;
+    const limit = limitRef.current === null ? 9999 : Number(limitRef.current.value);
     handleSaveConfig(toggleRef.current.checked, limit);
     closeModal();
   }
@@ -94,6 +94,17 @@ const ConfigCounterModal = ({ closeModal, contentData }) => {
           Salvar
         </button>
       </div>
+
+      <div
+          className={inputArea}
+        >
+          <button
+            className={`${btn} ${btnWhite}`}
+            onClick={handleRestart}
+          >
+            Restart
+          </button>
+        </div>
     </section>
 
   );
@@ -103,8 +114,9 @@ ConfigCounterModal.propTypes = {
   closeModal: P.func.isRequired,
   contentData: P.shape({
     handleSaveConfig: P.func,
-    defaultLoopActive: P.string,
+    defaultLoopActive: P.bool,
     defaultLoopLimit: P.number,
+    handleRestart: P.func
   }).isRequired
 }
 

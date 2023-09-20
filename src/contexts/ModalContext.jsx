@@ -16,6 +16,8 @@ import FaqModal from '@/components/SharedComponents/Modal/FaqModal';
 import TermsOfUseModal from '@/components/SharedComponents/Modal/TermsOfUseModal';
 import InitialIntroPlatformModal from '@/components/SharedComponents/Modal/InitialIntroPlatformModal';
 import CreateProjectModal from "@/components/SharedComponents/Modal/CreateProjectModal";
+import ConfigCounterModal from '@/components/SharedComponents/Modal/ConfigCounterModal';
+import ConfigLoopModal from '@/components/SharedComponents/Modal/ConfigLoopModal';
 
 export const ModalContext = createContext();
 
@@ -33,7 +35,9 @@ const contents = {
   'faq': FaqModal,
   'terms-of-use': TermsOfUseModal,
   'initial-intro-platform': InitialIntroPlatformModal,
-  'create-project': CreateProjectModal
+  'create-project': CreateProjectModal,
+  'config-counter': ConfigCounterModal,
+  'config-loop': ConfigLoopModal,
 }
 
 export const ModalProvider = ({ children }) => {
