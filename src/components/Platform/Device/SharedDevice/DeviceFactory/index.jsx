@@ -27,6 +27,7 @@ import Toggle from '../../Event/Toggle';
 import Delay from '../../Event/Delay';
 import Slider from '../../Event/Slider';
 import PickColor from '../../Event/PickColor';
+import Loop from '../../Event/Loop';
 
 const DeviceFactory = ({
   data, dragRef, onSaveData
@@ -56,7 +57,8 @@ const DeviceFactory = ({
     counter: Counter,
     soilMoisture: SoilMoisture,
     rainDetector: RainDetector,
-    timer: Timer
+    timer: Timer,
+    loop: Loop
   }
 
   const CurrentDevice = devices[data.name];
