@@ -75,28 +75,34 @@ const Toggle = ({
 
     //Calc values
 
+
     if (devicesDbClick.includes(device.name)) {
-      let currentValue = value.send.current;
+      const currentValue = value.send.current;
 
       if (newValue.send.current) {
-        currentValue = currentValue ? false : true
+        value.send.current = value.send.current ? false : true
       }
 
       newValue = {
         ...newValue,
         send: {
           ...newValue.send,
-          current: currentValue
+          current: value.send.current
         }
       };
 
+      const currentNewValue = newValue.send.current;
 
-      onSaveData('value', newValue);
-      updateDeviceValue(id, { value: newValue });
-      updateDeviceValueInFlow({ connectorId: connectors.send.id, newValue });
+        if (currentValue != currentNewValue)
+        {
+          onSaveData('value', newValue);
+          updateDeviceValue(id, { value: newValue });
+          updateDeviceValueInFlow({ connectorId: connectors.send.id, newValue });
+        }
 
       return;
     }
+
 
     if (typeof newValue.send.current === 'boolean') {
       newValue = {
@@ -116,18 +122,22 @@ const Toggle = ({
 
     if (typeof newValue.send.current === 'number') {
 
-      newValue = {
-        ...newValue,
-        send: {
-          ...newValue.send,
-          current: newValue.send.current > 0 ? true : false
+      let currentValue = newValue.send.current > 0 ? true : false;
+
+      if (currentValue != value.send.current) {
+        newValue = {
+          ...newValue,
+          send: {
+            ...newValue.send,
+            current: newValue.send.current > 0 ? true : false
+          }
         }
+
+
+        onSaveData('value', newValue);
+        updateDeviceValue(id, { value: newValue });
+        updateDeviceValueInFlow({ connectorId: connectors.send.id, newValue });
       }
-
-      onSaveData('value', newValue);
-      updateDeviceValue(id, { value: newValue });
-      updateDeviceValueInFlow({ connectorId: connectors.send.id, newValue });
-
       return;
     }
 
