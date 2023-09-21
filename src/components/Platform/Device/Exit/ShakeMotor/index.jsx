@@ -91,7 +91,7 @@ const ShakeMotor = memo(function ShakeMotor({
         name={name}
         imgSrc={imgSrc}
         ref={dragRef}
-        classImg={`${value.current > 0 ? SM.shake : ''}`}
+        classesForImg={`${value.current > 0 ? SM.shake : ''}`}
       >
 
         <p

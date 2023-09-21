@@ -11,10 +11,9 @@ import { useProject } from '@/hooks/useProject';
 import DevicesArea from './DevicesArea';
 import BackgroundGrade from './BackgroundGrade';
 import LinesContainer from './LinesContainer';
-import ActionsArea from './ActionsArea';
 
 
-import { moutingPanelContainer } from './styles.module.css';
+import * as MP from './styles.module.css';
 
 const MoutingPanel = () => {
 
@@ -100,7 +99,7 @@ const MoutingPanel = () => {
 
   return (
     <div
-      className={moutingPanelContainer}
+      className={MP.moutingPanelContainer}
       ref={drop}
       onMouseDown={startMove}
       onMouseUp={endMove}
@@ -112,8 +111,6 @@ const MoutingPanel = () => {
       <LinesContainer />
 
       <BackgroundGrade />
-
-      <ActionsArea />
 
     </div>
   );

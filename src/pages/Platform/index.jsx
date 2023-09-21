@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { Outlet } from 'react-router-dom';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { TouchBackend } from 'react-dnd-touch-backend';
@@ -10,10 +11,9 @@ import { useModal } from '@/hooks/useModal';
 import Header from '@/components/SharedComponents/Header';
 import Sidebar from '@/components/Platform/Sidebar';
 import CustomDragLayer from '@/components/Platform/CustomDragLayer';
+import ActionsArea from '@/components/Platform/ActionsArea';
 
-import { container } from './styles.module.css';
-import { Outlet } from 'react-router-dom';
-
+import * as P from './styles.module.css';
 
 const Platform = () => {
 
@@ -56,14 +56,14 @@ const Platform = () => {
 
   return (
     <DndProvider backend={isMobile ? TouchBackend : HTML5Backend}>
-      <main className={container} ref={attachRef}>
+      <main className={P.container} ref={attachRef}>
         <Header />
 
         <Sidebar />
 
         <Outlet context={containerRef} />
 
-
+        <ActionsArea />
       </main>
 
       {isMobile && <CustomDragLayer />}

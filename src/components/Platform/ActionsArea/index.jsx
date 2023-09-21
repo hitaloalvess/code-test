@@ -14,6 +14,9 @@ const ActionsArea = () => {
 
   return (
     <aside className={A.actionsContainer}>
+
+      <SaveButton />
+
       <ManualButton />
 
       <FaqButton />
@@ -22,7 +25,7 @@ const ActionsArea = () => {
 
       <ZoomButton />
 
-      <SaveButton />
+
     </aside>
   );
 };
