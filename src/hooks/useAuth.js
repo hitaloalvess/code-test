@@ -53,16 +53,18 @@ export const useAuth = () => {
 
   }
 
-  const handleSignOut = () => {
+  const handleSignOut = (event) => {
+    event.preventDefault();
+
     setUser(null);
+
+    apiAuth.defaults.headers.common.Authorization = undefined;
+    clearTimeout(idSearchFormTimeout.current);
+
     localStorage.removeItem('@Microdigo:token');
     localStorage.removeItem('@Microdigo:user');
 
-    apiAuth.defaults.headers.common.Authorization = undefined;
-
-    clearTimeout(idSearchFormTimeout.current);
-
-    return navigate('/');
+    window.location.href = "/";
   }
 
   // const handleSearchForm = () => {
