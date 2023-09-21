@@ -8,7 +8,12 @@ import {
 
 export const createDevicesSlice = (set, get) => ({
   devices: {},
-  dimensionsDeviceArea: { width: 0, height: 0 },
+  dimensionsDeviceArea: {
+    minW: window.innerWidth * 1.5,
+    minH: window.innerHeight * 1.5,
+    width: window.innerWidth * 1.5,
+    height: window.innerHeight * 1.5
+  },
 
   insertDevice: ({ device, dropPos }) => {
     const { platformRef } = get();
@@ -135,12 +140,14 @@ export const createDevicesSlice = (set, get) => ({
   },
 
   updateDimensionsDeviceArea: (dimensions) => {
+    const { dimensionsDeviceArea: { minW, minH } } = get();
 
-    set({
+    set((state) => ({
       dimensionsDeviceArea: {
-        width: dimensions.width,
-        height: dimensions.height
+        ...state.dimensionsDeviceArea,
+        width: dimensions.width < minW ? minW : dimensions.width,
+        height: dimensions.height < minH ? minH : dimensions.height
       }
-    })
+    }))
   }
 })

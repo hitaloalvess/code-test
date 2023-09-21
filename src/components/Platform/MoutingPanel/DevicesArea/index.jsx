@@ -16,7 +16,6 @@ const DevicesArea = () => {
     devices,
     dimensionsDeviceArea,
     updateDimensionsDeviceArea,
-
   } = useStore(store => ({
     devices: store.devices,
     dimensionsDeviceArea: store.dimensionsDeviceArea,
@@ -24,6 +23,7 @@ const DevicesArea = () => {
   }), shallow);
 
   const isFirstRender = useRef(true);
+  const ref = useRef(null);
 
   const deviceListLength = useMemo(() => {
     const legth = Object.values(devices).length;
@@ -46,8 +46,10 @@ const DevicesArea = () => {
     updateDimensionsDeviceArea(dimensionsDeviceArea);
   }, [deviceListLength]);
 
+
   return (
     <div
+      ref={ref}
       className={DA.devicesAreaContainer}
       style={{
         width: `${dimensionsDeviceArea.width + MARGIN_W}px`,
@@ -55,12 +57,14 @@ const DevicesArea = () => {
       }}
     >
       {
-        Object.values(devices).map(device => (
-          <Device
-            key={device.id}
-            device={device}
-          />
-        ))
+        Object.values(devices).map(device => {
+          return (
+            <Device
+              key={device.id}
+              device={device}
+            />
+          )
+        })
       }
     </div >
   );

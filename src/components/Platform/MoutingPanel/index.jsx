@@ -21,10 +21,9 @@ const MoutingPanel = () => {
   const { id: projectId } = useParams();
 
   const containerRef = useOutletContext();
-
   const { loadProject } = useProject();
-
   const { startMove, endMove, moving } = useScroll(containerRef);
+
 
   const {
     hasProjectUpdate,
@@ -69,7 +68,6 @@ const MoutingPanel = () => {
     accept: ['device', 'menu-device'],
     drop: (item, monitor) => deviceDrop(item, monitor),
   }), [devices]);
-
 
   useEffect(() => {
     if (isFirstRender.current) {
