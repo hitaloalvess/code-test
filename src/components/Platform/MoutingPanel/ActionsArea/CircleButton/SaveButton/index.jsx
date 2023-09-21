@@ -23,27 +23,27 @@ const SaveButton = () => {
   const interval = useRef(null);
 
   const {
-    hasUpdate,
-    changeHasUpdate,
+    hasProjectUpdate,
+    changeHasProjectUpdate,
   } = useStore(store => ({
-    hasUpdate: store.hasUpdate,
-    changeHasUpdate: store.changeHasUpdate
+    hasProjectUpdate: store.hasProjectUpdate,
+    changeHasProjectUpdate: store.changeHasProjectUpdate
   }), shallow);
 
   useEffect(() => {
 
     interval.current = setInterval(async () => {
-      if (!hasUpdate) return;
+      if (!hasProjectUpdate) return;
 
       setIsLoading(true);
       saveProject(projectId)
         .then(() => {
           setIsLoading(false);
-          changeHasUpdate(false);
+          changeHasProjectUpdate(false);
         })
         .catch(() => {
           setIsLoading(false);
-          changeHasUpdate(false);
+          changeHasProjectUpdate(false);
         });
 
     }, INTERVAL_UPDATE);
@@ -51,7 +51,7 @@ const SaveButton = () => {
     return () => {
       clearInterval(interval.current);
     }
-  }, [hasUpdate]);
+  }, [hasProjectUpdate]);
 
   return (
     <div

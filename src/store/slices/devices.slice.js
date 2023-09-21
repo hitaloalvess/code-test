@@ -1,12 +1,17 @@
 import { v4 } from 'uuid';
 
 import { calcPositionDevice } from '@/utils/devices-functions';
+import {
+  calcDimensionsDeviceArea,
+  calcDistanceInvalidArea
+} from '@/utils/devices-functions';
 
 export const createDevicesSlice = (set, get) => ({
   devices: {},
+  dimensionsDeviceArea: { width: 0, height: 0 },
 
   insertDevice: ({ device, dropPos }) => {
-    const { platformContainerRef } = get();
+    const { platformRef } = get();
 
     const { width, height } = device.draggedDevice.getBoundingClientRect();
     const { x, y } = dropPos;
@@ -15,7 +20,7 @@ export const createDevicesSlice = (set, get) => ({
       y,
       width,
       height,
-      containerRef: platformContainerRef
+      containerRef: platformRef,
     });
 
 
@@ -61,20 +66,29 @@ export const createDevicesSlice = (set, get) => ({
   },
 
   loadDevice: (device) => {
+    const { sidebarRef } = get();
 
+    const updatedDevice = calcDistanceInvalidArea({
+      sidebarRef,
+      device
+    });
 
     set((state) => ({
       devices: {
         ...state.devices,
         [device.id]: {
-          ...device,
+          ...updatedDevice
         }
       }
     }))
   },
 
   repositionDevice: ({ device, screenPos }) => {
-    const { platformContainerRef } = get();
+    const {
+      platformRef,
+      updateDimensionsDeviceArea,
+      devices,
+    } = get();
     const { id, deviceRef } = device;
 
     const { width, height } = deviceRef.current.getBoundingClientRect();
@@ -85,8 +99,21 @@ export const createDevicesSlice = (set, get) => ({
       y,
       width,
       height,
-      containerRef: platformContainerRef
+      containerRef: platformRef,
     });
+
+
+    const dimensionsDeviceArea = calcDimensionsDeviceArea({
+      ...devices,
+      [id]: {
+        ...devices[id],
+        posX,
+        posY,
+        deviceRef
+      }
+    });
+
+    updateDimensionsDeviceArea(dimensionsDeviceArea);
 
     set((state) => ({
       devices: {
@@ -105,5 +132,15 @@ export const createDevicesSlice = (set, get) => ({
     const { devices } = get();
 
     return devices;
+  },
+
+  updateDimensionsDeviceArea: (dimensions) => {
+
+    set({
+      dimensionsDeviceArea: {
+        width: dimensions.width,
+        height: dimensions.height
+      }
+    })
   }
 })

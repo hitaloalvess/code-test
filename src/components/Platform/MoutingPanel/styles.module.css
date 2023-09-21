@@ -1,6 +1,6 @@
 .moutingPanelContainer {
   position: relative;
-  width: 150vw;
-  height: 150vh;
+  width: fit-content;
+  height: fit-content;
   z-index: 0;
 }

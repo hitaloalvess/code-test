@@ -1,15 +1,15 @@
 import { useEffect, useRef, useState } from 'react';
-import P from 'prop-types';
 import { shallow } from 'zustand/shallow';
 
 import { useStore } from '@/store';
 import { backgroundGrade } from './styles.module.css';
 
 const STEP_ZOOM = 0.05;
-const BackgroundGrade = ({ moutingPanelRef }) => {
+const BackgroundGrade = () => {
 
-  const { scale } = useStore(store => ({
-    scale: store.scale
+  const { scale, dimensionsDeviceArea } = useStore(store => ({
+    scale: store.scale,
+    dimensionsDeviceArea: store.dimensionsDeviceArea
   }), shallow);
 
   const bgGradeRef = useRef(null);
@@ -24,9 +24,8 @@ const BackgroundGrade = ({ moutingPanelRef }) => {
     const bg = bgGradeRef.current;
     const ctx = bg.getContext('2d');
 
-    const { width: containerWidth, height: containerHeight } = moutingPanelRef.current.getBoundingClientRect();
-    bg.width = containerWidth;
-    bg.height = containerHeight;
+    bg.width = dimensionsDeviceArea.width;
+    bg.height = dimensionsDeviceArea.height;
 
     ctx.clearRect(0, 0, (bg.width), (bg.height));
     ctx.fillStyle = CIRCLE_COLOR;
@@ -52,7 +51,7 @@ const BackgroundGrade = ({ moutingPanelRef }) => {
     return () => {
       window.removeEventListener('resize', drawBackground);
     }
-  }, [bgScale]);
+  }, [bgScale, dimensionsDeviceArea.width, dimensionsDeviceArea.height]);
 
   useEffect(() => {
     setBgScale(prevScale => {
@@ -79,9 +78,5 @@ const BackgroundGrade = ({ moutingPanelRef }) => {
     ></canvas>
   );
 };
-
-BackgroundGrade.propTypes = {
-  moutingPanelRef: P.object.isRequired
-}
 
 export default BackgroundGrade;

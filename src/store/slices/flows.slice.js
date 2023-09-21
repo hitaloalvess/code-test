@@ -107,7 +107,8 @@ export const createFlowsSlice = (set, get) => ({
       updateLines,
       saveFlow,
       devices: deviceList,
-      clearFlowTemp
+      clearFlowTemp,
+      deleteLine
     } = get();
 
     const { from, to } = devices;
@@ -180,6 +181,8 @@ export const createFlowsSlice = (set, get) => ({
       !verifConnector({ flows: flows, deviceFrom, deviceTo }) ||
       connsAlreadyConnect
     ) {
+
+      deleteLine(flowTemp.currentLine.id);
 
       return;
     }

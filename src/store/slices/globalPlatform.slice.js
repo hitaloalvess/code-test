@@ -1,11 +1,12 @@
 
 export const createGlobalPlatformSlice = (set) => ({
-  platformContainerRef: null,
   scale: 1,
-  hasUpdate: false,
+  hasProjectUpdate: false,
+  platformRef: null,
+  sidebarRef: null,
 
-  loadPlatformContainer: (refValue) => {
-    set({ platformContainerRef: refValue })
+  loadRef: (key, refValue) => {
+    set({ [key]: refValue })
   },
 
   zoomChange: (value) => {
@@ -21,7 +22,8 @@ export const createGlobalPlatformSlice = (set) => ({
     })
   },
 
-  changeHasUpdate: (value) => {
-    set({ hasUpdate: value });
-  }
+  changeHasProjectUpdate: (value) => {
+    set({ hasProjectUpdate: value });
+  },
+
 })

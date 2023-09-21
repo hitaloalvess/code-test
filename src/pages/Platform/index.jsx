@@ -20,9 +20,9 @@ const Platform = () => {
   const { enableModal } = useModal();
 
   const {
-    loadPlatformContainer
+    loadRef
   } = useStore(store => ({
-    loadPlatformContainer: store.loadPlatformContainer
+    loadRef: store.loadRef
   }), shallow);
 
   const containerRef = useRef(null);
@@ -45,7 +45,7 @@ const Platform = () => {
 
   const attachRef = (el) => {
     containerRef.current = el;
-    loadPlatformContainer(containerRef);
+    loadRef('platformRef', containerRef);
   }
 
   useEffect(() => {

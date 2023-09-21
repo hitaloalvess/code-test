@@ -76,19 +76,40 @@ export const useProject = () => {
 
     const deviceList = Object.values(project.devices).map(async (device) => {
       loadDevice({ ...device });
-      await new Promise(resolve => setTimeout(resolve, 100))
+      await new Promise(resolve => setTimeout(resolve, 250))
     });
 
 
     await Promise.all(deviceList);
 
 
+    const devices = getDevices();
+
+
     Object.values(project.flows).forEach(flow => {
-      flow.connections.forEach(connection => {
+      flow.connections.forEach(({ deviceFrom, deviceTo }) => {
+
+        const from = {
+          ...devices[deviceFrom.id],
+          connector: {
+            ...devices[deviceFrom.id].connectors[deviceFrom.connector.name]
+          }
+        }
+
+        const to = {
+          ...devices[deviceTo.id],
+          connector: {
+            ...devices[deviceTo.id].connectors[deviceTo.connector.name]
+          }
+        }
+
+        delete from.connectors;
+        delete to.connectors;
+
         createFlow({
           devices: {
-            from: connection.deviceFrom,
-            to: connection.deviceTo
+            from,
+            to
           }
         })
       })
@@ -161,7 +182,6 @@ export const useQueryProject = (userCpf) => {
     return getProjects(userCpf);
   }, {
     staleTime: 1000 * 60 * 30, //10 minutes
-    // initialData: projects
   });
 
 }

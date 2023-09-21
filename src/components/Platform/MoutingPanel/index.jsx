@@ -21,38 +21,30 @@ const MoutingPanel = () => {
   const { id: projectId } = useParams();
 
   const containerRef = useOutletContext();
+
   const { loadProject } = useProject();
 
   const { startMove, endMove, moving } = useScroll(containerRef);
 
-
   const {
-    hasUpdate,
+    hasProjectUpdate,
     flows,
     devices,
     insertDevice,
     repositionDevice,
     cleanMoutingPanel,
-    changeHasUpdate,
+    changeHasProjectUpdate,
   } = useStore(store => ({
-    hasUpdate: store.hasUpdate,
+    hasProjectUpdate: store.hasProjectUpdate,
     flows: store.flows,
     devices: store.devices,
     insertDevice: store.insertDevice,
     repositionDevice: store.repositionDevice,
     cleanMoutingPanel: store.cleanMoutingPanel,
-    changeHasUpdate: store.changeHasUpdate
+    changeHasProjectUpdate: store.changeHasProjectUpdate,
   }), shallow);
 
   const isFirstRender = useRef(true);
-
-  const moutingPanelRef = useRef(null);
-
-  const attachRef = (el) => {
-    drop(el);
-    moutingPanelRef.current = el;
-  }
-
 
   const deviceDrop = (item, monitor) => {
 
@@ -73,11 +65,10 @@ const MoutingPanel = () => {
     });
   }
 
-
   const [_, drop] = useDrop(() => ({
     accept: ['device', 'menu-device'],
     drop: (item, monitor) => deviceDrop(item, monitor),
-  }), []);
+  }), [devices]);
 
 
   useEffect(() => {
@@ -88,7 +79,7 @@ const MoutingPanel = () => {
     }
 
     loadProject(projectId)
-      .then(() => changeHasUpdate(false))
+      .then(() => changeHasProjectUpdate(false))
       .catch(error => console.log(error));
 
     return () => {
@@ -104,15 +95,15 @@ const MoutingPanel = () => {
     }
 
 
-    if (!hasUpdate) {
-      changeHasUpdate(true);
+    if (!hasProjectUpdate) {
+      changeHasProjectUpdate(true);
     }
   }, [flows, devices]);
 
   return (
     <div
       className={moutingPanelContainer}
-      ref={attachRef}
+      ref={drop}
       onMouseDown={startMove}
       onMouseUp={endMove}
       onMouseMove={moving}
@@ -122,9 +113,7 @@ const MoutingPanel = () => {
 
       <LinesContainer />
 
-      <BackgroundGrade
-        moutingPanelRef={moutingPanelRef}
-      />
+      <BackgroundGrade />
 
       <ActionsArea />
 
