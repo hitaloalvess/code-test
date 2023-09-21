@@ -1,0 +1,37 @@
+.newProjectBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  min-width: 180px;
+  padding: 12px 24px;
+}
+
+.newProjectBtn svg {
+  font-size: 20px;
+}
+
+@media (max-width: 769px) {
+  .newProjectBtn p {
+    display: none;
+  }
+
+  .newProjectBtn {
+    min-width: auto;
+  }
+}
+
+@media (max-width: 480px) {
+
+  .newProjectBtn {
+    width: 100%;
+  }
+
+  .newProjectBtn p {
+    display: block;
+  }
+
+  .newProjectBtn svg {
+    font-size: 14px;
+  }
+}

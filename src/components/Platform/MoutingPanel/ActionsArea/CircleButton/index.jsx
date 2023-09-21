@@ -20,7 +20,7 @@ CircleButton.propTypes = {
   name: P.string.isRequired,
   imgSrc: P.string.isRequired,
   handleClick: P.func,
-  title: P.string.isRequired
+  title: P.string
 }
 
 export default CircleButton;

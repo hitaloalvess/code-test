@@ -13,9 +13,63 @@
 .myProjectsToolbar span {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   gap: 12px;
+  width: 500px;
 }
 
 .myProjectsTitle {
   font-size: 36px;
+}
+
+.myProjectsToolbar span div:first-of-type {
+  width: 100%;
+}
+
+@media (max-width: 1269px) {
+  .myProjectsContainer {
+    padding: 44px 80px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .myProjectsContainer {
+    padding: 44px;
+  }
+
+  .myProjectsToolbar {
+    flex-direction: column;
+    align-items: start;
+    gap: 18px;
+  }
+
+  .myProjectsToolbar span {
+    width: 100%;
+  }
+
+  .myProjectsToolbar span div:first-of-type {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+
+  .myProjectsContainer {
+    margin: 60px 0 0 0;
+    padding: 44px 24px;
+  }
+
+  .myProjectsToolbar span {
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .myProjectsToolbar span div:first-of-type {
+    width: 100%;
+    min-width: 200px;
+  }
+
+  .myProjectsTitle {
+    font-size: 28px;
+  }
 }

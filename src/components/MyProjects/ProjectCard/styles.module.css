@@ -114,3 +114,10 @@
 .projectCardAction:hover.projectCardActionEdit svg {
   color: var(--yellow-800);
 }
+
+@media (max-width: 480px) {
+  .projectCardContainer {
+    width: 260px;
+
+  }
+}
