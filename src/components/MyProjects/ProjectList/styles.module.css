@@ -1,8 +1,7 @@
 .myProjectsList {
-  width: 100%;
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 24px;
+  justify-content: center;
   align-items: center;
-  justify-content: space-around;
-  flex-wrap: wrap;
-  gap: 24px 0px;
 }
