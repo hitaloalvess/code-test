@@ -21,14 +21,14 @@ const ConnectorsConnector = ({
 }) => {
 
   const {
-    platformContainerRef,
+    platformRef,
     createFlow,
     deleteLine,
     flowTemp,
     repositionConnections,
     scale
   } = useStore(store => ({
-    platformContainerRef: store.platformContainerRef,
+    platformRef: store.platformRef,
     createFlow: store.createFlow,
     deleteLine: store.deleteLine,
     flowTemp: store.flowTemp,
@@ -45,9 +45,9 @@ const ConnectorsConnector = ({
 
 
   useEffect(() => {
-    if (!platformContainerRef?.current) return;
+    if (!platformRef?.current) return;
 
-    const { x, y } = calcPositionConnector(connRef.current, platformContainerRef);
+    const { x, y } = calcPositionConnector(connRef.current, platformRef);
     setPosition({ x, y });
 
     repositionConnections({
@@ -76,7 +76,7 @@ const ConnectorsConnector = ({
       });
     }
 
-  }, [updateConn.posX, updateConn.posY, scale, platformContainerRef.current]);
+  }, [updateConn.posX, updateConn.posY, scale, platformRef.current]);
 
 
   const [{ }, drop] = useDrop(() => ({

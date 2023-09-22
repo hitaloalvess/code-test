@@ -12,7 +12,7 @@ import * as UP from './styles.module.css';
 
 const createProjectSchema = z.object({
   name: z.string().nonempty().trim().max(50, 'Limite máximo de 50 caracteres para o nome do projeto.'),
-  description: z.string().nonempty().trim().max(255, 'Limite máximo de 255 caracteres para a descrição do projeto.'),
+  description: z.string().nonempty().trim().max(120, 'Limite máximo de 120 caracteres para a descrição do projeto.'),
 });
 
 
@@ -45,12 +45,15 @@ const CreateProjectModal = ({
       const newProject = {
         id: project ? project.id : null,
         name,
-        userId: user.id,
+        user: {
+          email: user.email,
+          name: user.name,
+          cpf: user.cpf
+        },
         description,
-        devices: {},
-        flows: {}
+        devices: [],
+        flows: []
       }
-
       handleConfirm(newProject);
 
       closeModal();

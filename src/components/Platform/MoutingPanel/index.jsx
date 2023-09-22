@@ -11,40 +11,38 @@ import { useProject } from '@/hooks/useProject';
 import DevicesArea from './DevicesArea';
 import BackgroundGrade from './BackgroundGrade';
 import LinesContainer from './LinesContainer';
-import ActionsArea from './ActionsArea';
 
 
-import { moutingPanelContainer } from './styles.module.css';
+import * as MP from './styles.module.css';
 
 const MoutingPanel = () => {
 
   const { id: projectId } = useParams();
 
   const containerRef = useOutletContext();
-
+  const { loadProject } = useProject();
   const { startMove, endMove, moving } = useScroll(containerRef);
 
-  const { loadProject } = useProject();
 
   const {
+    hasProjectUpdate,
+    flows,
+    devices,
     insertDevice,
     repositionDevice,
-    cleanMoutingPanel
+    cleanMoutingPanel,
+    changeHasProjectUpdate,
   } = useStore(store => ({
+    hasProjectUpdate: store.hasProjectUpdate,
+    flows: store.flows,
+    devices: store.devices,
     insertDevice: store.insertDevice,
     repositionDevice: store.repositionDevice,
-    cleanMoutingPanel: store.cleanMoutingPanel
+    cleanMoutingPanel: store.cleanMoutingPanel,
+    changeHasProjectUpdate: store.changeHasProjectUpdate,
   }), shallow);
 
   const isFirstRender = useRef(true);
-
-  const moutingPanelRef = useRef(null);
-
-  const attachRef = (el) => {
-    drop(el);
-    moutingPanelRef.current = el;
-  }
-
 
   const deviceDrop = (item, monitor) => {
 
@@ -65,12 +63,10 @@ const MoutingPanel = () => {
     });
   }
 
-
   const [_, drop] = useDrop(() => ({
     accept: ['device', 'menu-device'],
     drop: (item, monitor) => deviceDrop(item, monitor),
-  }), []);
-
+  }), [devices]);
 
   useEffect(() => {
     if (isFirstRender.current) {
@@ -80,6 +76,7 @@ const MoutingPanel = () => {
     }
 
     loadProject(projectId)
+      .then(() => changeHasProjectUpdate(false))
       .catch(error => console.log(error));
 
     return () => {
@@ -87,11 +84,23 @@ const MoutingPanel = () => {
     }
   }, [projectId]);
 
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+
+      return;
+    }
+
+
+    if (!hasProjectUpdate) {
+      changeHasProjectUpdate(true);
+    }
+  }, [flows, devices]);
 
   return (
     <div
-      className={moutingPanelContainer}
-      ref={attachRef}
+      className={MP.moutingPanelContainer}
+      ref={drop}
       onMouseDown={startMove}
       onMouseUp={endMove}
       onMouseMove={moving}
@@ -101,11 +110,7 @@ const MoutingPanel = () => {
 
       <LinesContainer />
 
-      <BackgroundGrade
-        moutingPanelRef={moutingPanelRef}
-      />
-
-      <ActionsArea />
+      <BackgroundGrade />
 
     </div>
   );

@@ -7,7 +7,7 @@ import { useModal } from '@/hooks/useModal';
 import * as PC from './styles.module.css';
 
 const ProjectCard = ({ data, onDelete, onUpdate }) => {
-  const { id, name, created_at, description } = data;
+  const { id, name, createdAt, description } = data;
 
   const { enableModal, disableModal } = useModal();
   const navigate = useNavigate();
@@ -19,10 +19,10 @@ const ProjectCard = ({ data, onDelete, onUpdate }) => {
 
     enableModal({
       typeContent: 'confirmation',
-      title: 'Tem certeza que deseja excluir esse projeto?',
+      subtitle: 'Tem certeza que deseja excluir esse projeto?',
       handleConfirm: async () => {
 
-        onDelete(id);
+        await onDelete.mutateAsync(id);
         disableModal('confirmation');
 
       }
@@ -42,7 +42,7 @@ const ProjectCard = ({ data, onDelete, onUpdate }) => {
       },
       handleConfirm: async (newProject) => {
 
-        onUpdate(newProject);
+        await onUpdate.mutateAsync(newProject);
         disableModal('create-project');
 
       }
@@ -63,7 +63,7 @@ const ProjectCard = ({ data, onDelete, onUpdate }) => {
         <p className={PC.projectCardDescription}>{description}</p>
 
         <div className={PC.projectCardInfo}>
-          <p className={PC.projectCardCreatedAt}>{created_at}</p>
+          <p className={PC.projectCardCreatedAt}>{createdAt}</p>
 
           <span className={PC.projectCardActions}>
             <button
@@ -90,11 +90,11 @@ ProjectCard.propTypes = {
   data: P.shape({
     id: P.string.isRequired,
     name: P.string.isRequired,
-    created_at: P.string.isRequired,
+    createdAt: P.string.isRequired,
     description: P.string.isRequired,
   }).isRequired,
-  onDelete: P.func.isRequired,
-  onUpdate: P.func.isRequired
+  onDelete: P.object.isRequired,
+  onUpdate: P.object.isRequired
 }
 
 export default ProjectCard;

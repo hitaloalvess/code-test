@@ -1,5 +1,5 @@
 import imgFaqButton from '@/assets/images/buttons/faq-button.svg';
-import CircleButton from '../../CircleButton';
+import CircleButton from '..';
 
 import { useModal } from '@/hooks/useModal';
 

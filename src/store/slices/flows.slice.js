@@ -99,6 +99,7 @@ export const createFlowsSlice = (set, get) => ({
 
   createFlow: ({ devices }) => {
 
+
     const {
       flows,
       flowTemp,
@@ -106,8 +107,10 @@ export const createFlowsSlice = (set, get) => ({
       updateLines,
       saveFlow,
       devices: deviceList,
-      clearFlowTemp
+      clearFlowTemp,
+      deleteLine
     } = get();
+
     const { from, to } = devices;
 
     if (from.connector && !to?.connector && !flowTemp.connectorClicked) {
@@ -163,7 +166,8 @@ export const createFlowsSlice = (set, get) => ({
       ...to
     }
 
-    if (from.connector.type === 'entry') {
+
+    if (from?.connector?.type === 'entry') {
       //input device started stream creation
       [deviceFrom, deviceTo] = [deviceTo, deviceFrom];
     }
@@ -177,6 +181,8 @@ export const createFlowsSlice = (set, get) => ({
       !verifConnector({ flows: flows, deviceFrom, deviceTo }) ||
       connsAlreadyConnect
     ) {
+
+      deleteLine(flowTemp.currentLine.id);
 
       return;
     }

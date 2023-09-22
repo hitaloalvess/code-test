@@ -16,7 +16,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'react-toastify';
 
 import { isValidCPF, isValidPhoneNumber, removeSpaces, removeSpecialCharacters } from '@/utils/form-validation-functions';
-import { api } from '@/services/api';
+import { apiAuth } from '@/services/apiAuth';
 import LogoMicrodigo from '@/assets/images/logo-microdigo.svg';
 import Banner from '@/components/SharedComponents/Banner';
 import ButtonAcceptsTerms from '@/components/SignUp/ButtonAcceptsTerms';
@@ -86,7 +86,7 @@ const SignUp = () => {
 
     try {
       setIsLoading(true);
-      await api.post('users', data);
+      await apiAuth.post('users', data);
       toast.success('Usuário cadastrado com sucesso!');
 
       setIsLoading(false);

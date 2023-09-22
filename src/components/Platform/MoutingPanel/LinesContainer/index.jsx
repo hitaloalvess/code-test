@@ -12,13 +12,13 @@ import * as LC from './styles.module.css';
 const LinesContainer = memo(function LinesContainer() {
 
   const {
-    platformContainerRef,
+    platformRef,
     flowTemp,
     lines,
     deleteLine,
     updateLines,
   } = useStore(store => ({
-    platformContainerRef: store.platformContainerRef,
+    platformRef: store.platformRef,
     flowTemp: store.flowTemp,
     lines: store.lines,
     deleteLine: store.deleteLine,
@@ -32,8 +32,8 @@ const LinesContainer = memo(function LinesContainer() {
 
     const { currentLine, from } = flowTemp;
 
-    const scrollLeft = platformContainerRef.current.scrollLeft;
-    const scrollTop = platformContainerRef.current.scrollTop;
+    const scrollLeft = platformRef.current.scrollLeft;
+    const scrollTop = platformRef.current.scrollTop;
 
     updateLines({
       lineId: currentLine.id,

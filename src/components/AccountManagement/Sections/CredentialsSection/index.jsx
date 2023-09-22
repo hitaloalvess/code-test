@@ -1,6 +1,6 @@
 import { Envelope, Lock } from '@phosphor-icons/react';
 
-import { api } from '@/services/api'
+import { apiAuth } from '@/services/apiAuth'
 import { useContextAuth } from '@/hooks/useAuth';
 import { useModal } from '@/hooks/useModal';
 import { Form } from '@/components/SharedComponents/Form';
@@ -29,7 +29,7 @@ const CredentialsSection = () => {
   const handleDeleteAccount = async () => {
     try {
 
-      await api.delete(`/users/${user.id}`);
+      await apiAuth.delete(`/users/${user.id}`);
       toast.success('Conta deletada com sucesso');
 
       handleSignOut();
@@ -41,7 +41,7 @@ const CredentialsSection = () => {
   const handleClickBtnDeleteAccount = () => {
     enableModal({
       typeContent: 'confirmation',
-      title: 'Tem certeza que deseja excluir sua conta?',
+      subtitle: 'Tem certeza que deseja excluir sua conta?',
       handleConfirm: async () => {
 
         await handleDeleteAccount();

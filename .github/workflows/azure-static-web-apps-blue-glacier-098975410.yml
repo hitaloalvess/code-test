@@ -11,6 +11,7 @@ on:
 
 env:
   VITE_BASE_URL: ${{ secrets.VITE_BASE_URL }}
+  VITE_API_MICRO_CODE: ${{ secrets.VITE_API_MICRO_CODE }}
   VITE_MANUAL_URL: ${{ secrets.VITE_MANUAL_URL }}
 
 jobs:

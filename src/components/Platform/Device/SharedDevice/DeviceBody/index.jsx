@@ -6,7 +6,7 @@ import ActionButtons from '../ActionButtons'
 import * as DB from './styles.module.css';
 
 const DeviceBody = forwardRef(function DeviceBody(
-  { name = 'Device', imgSrc, children, ...rest }, ref
+  { name = 'Device', imgSrc, classesForImg = [], children, ...rest }, ref
 ) {
 
   const [activeActBtns, setActiveActBtns] = useState(false);
@@ -44,7 +44,7 @@ const DeviceBody = forwardRef(function DeviceBody(
         src={imgSrc}
         alt={`Device ${name}`}
         loading='lazy'
-        className={rest.classImg ? rest.classImg : ''}
+        className={classesForImg}
       />
 
       {othersChildren}
@@ -60,6 +60,7 @@ const DeviceBody = forwardRef(function DeviceBody(
 DeviceBody.propTypes = {
   name: P.string,
   imgSrc: P.string.isRequired,
+  classesForImg: P.string,
   children: P.oneOfType([
     P.element,
     P.arrayOf(P.element)
