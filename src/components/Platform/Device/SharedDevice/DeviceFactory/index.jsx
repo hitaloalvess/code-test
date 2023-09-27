@@ -14,6 +14,7 @@ import LedMono from '../../Exit/LedMono';
 import Laser from '../../Exit/Laser';
 import ShakeMotor from '../../Exit/ShakeMotor';
 import Buzzer from '../../Exit/Buzzer';
+import Timer from '../../Exit/Timer';
 import Bargraph from '../../Exit/Bargraph';
 
 import And from '../../Conditional/And';
@@ -26,6 +27,7 @@ import Toggle from '../../Event/Toggle';
 import Delay from '../../Event/Delay';
 import Slider from '../../Event/Slider';
 import PickColor from '../../Event/PickColor';
+import Loop from '../../Event/Loop';
 
 const DeviceFactory = ({
   data, dragRef, onSaveData
@@ -54,7 +56,9 @@ const DeviceFactory = ({
     pickColor: PickColor,
     counter: Counter,
     soilMoisture: SoilMoisture,
-    rainDetector: RainDetector
+    rainDetector: RainDetector,
+    timer: Timer,
+    loop: Loop
   }
 
   const CurrentDevice = devices[data.name];

@@ -14,6 +14,7 @@ import deviceLedMono from '@/assets/images/devices/exit/ledMono.svg';
 import deviceLaser from '@/assets/images/devices/exit/laser.svg';
 import deviceShakeMotor from '@/assets/images/devices/exit/shakeMotor.svg';
 import deviceBuzzer from '@/assets/images/devices/exit/buzzer.svg';
+import deviceTimer from '@/assets/images/devices/event/eventBase.svg';
 // import deviceBargraph from '@/assets/images/devices/event/eventBase.svg';
 
 //conditional
@@ -28,6 +29,7 @@ import devicePickColor from '@/assets/images/devices/event/pickcolor.svg';
 import deviceToggle from '@/assets/images/devices/event/toggle.svg';
 import deviceDelay from '@/assets/images/devices/event/delay.svg';
 import deviceSlider from '@/assets/images/devices/event/slider.svg';
+import deviceLoop from '@/assets/images/devices/event/loop.svg';
 
 export const mockDevices = {
   entry: [
@@ -376,6 +378,35 @@ export const mockDevices = {
         }
       }
     },
+    {
+      id: 26,
+      imgSrc: deviceTimer,
+      name: 'timer',
+      label: 'Cronômetro',
+      type: 'virtual',
+      category: 'exit',
+      value: {
+        current: 0
+      },
+      posX: 0,
+      posY: 0,
+      connectors: {
+        active: {
+          id: null,
+          name: 'active',
+          type: 'entry',
+          x: 0,
+          y: 0,
+        },
+        reset: {
+          id: null,
+          name: 'reset',
+          type: 'entry',
+          x: 0,
+          y: 0,
+        },
+      }
+    },
     // {
     //   id: 25,
     //   imgSrc: deviceBargraph,
@@ -515,6 +546,39 @@ export const mockDevices = {
           max: 0
         },
         limit: 1023
+      },
+      posX: 0,
+      posY: 0,
+      connectors: {
+        receive: {
+          id: null,
+          name: 'receive',
+          type: 'entry',
+          x: 0,
+          y: 0
+        },
+        send: {
+          id: null,
+          name: 'send',
+          type: 'exit',
+          x: 0,
+          y: 0
+        },
+      }
+    },
+    {
+      id: 34,
+      imgSrc: deviceLoop,
+      name: 'loop',
+      label: 'Loop',
+      type: 'virtual',
+      category: 'event',
+      value: {
+        send: {
+          current: 0,
+          max: 0
+        },
+        duration: 5,
       },
       posX: 0,
       posY: 0,
@@ -759,11 +823,11 @@ export const deviceConnectorRules = {
   },
   counter: {
     acceptedConnections: ['oneEntry', 'allExit'],
-    connectsFrom: ['potentiometer', 'ldr', 'rainDetector', 'soilMoisture', 'pushButton', 'slider', 'delay', 'toggle', 'and', 'or', 'physicalPotentiometer', 'physicalLDR'],
+    connectsFrom: ['potentiometer', 'ldr', 'loop', 'pushButton', 'slider', 'delay', 'toggle', 'and', 'or', 'switch', 'physicalPotentiometer', 'physicalLDR'],
     connectsTo: ['all']
   },
   and: {
-    acceptedConnections: ['allEntry', 'oneExit'],
+    acceptedConnections: ['allEntry', 'allExit'],
     connectsFrom: ['all'],
     connectsTo: ['all']
   },
@@ -788,6 +852,16 @@ export const deviceConnectorRules = {
     connectsTo: ['all'],
   },
   delay: {
+    acceptedConnections: ['oneEntry', 'allExit'],
+    connectsFrom: ['all'],
+    connectsTo: ['all'],
+  },
+  timer: {
+    acceptedConnections: ['oneEntry', 'allExit'],
+    connectsFrom: ['all'],
+    connectsTo: ['all'],
+  },
+  loop: {
     acceptedConnections: ['oneEntry', 'allExit'],
     connectsFrom: ['all'],
     connectsTo: ['all'],

@@ -1,0 +1,21 @@
+.timerNumber {
+  position: absolute;
+  top: 28px;
+  color: var(--black);
+  font-size: 10px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.ledLightElement {
+  position: absolute;
+  z-index: 2;
+  width: 4px;
+  height: 4px;
+  top: 52px;
+  fill: red;
+}
+
+@media (((max-height: 481px) and (orientation: landscape)) or ((max-width: 481px) and (orientation: portrait))) {
+
+}

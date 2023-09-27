@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useCallback, useState } from 'react';
 import P from 'prop-types';
 import { shallow } from 'zustand/shallow';
 
@@ -8,16 +8,18 @@ import { findFlowsByDeviceId } from '@/utils/flow-functions';
 import ActionButtons from '@/components/Platform/Device/SharedDevice/ActionButtons';
 import Connectors from '@/components/Platform/Device/SharedDevice/Connectors';
 import DeviceBody from '../../SharedDevice/DeviceBody';
-import ToggleIcon from './ToggleIcon';
 
 
-import eventBaseImg from '@/assets/images/devices/event/eventBase.svg';
+import * as L from './styles.module.css';
 
-const devicesDbClick = ['pushButton'];
-const Toggle = ({
+import eventBaseImg from '@/assets/images/devices/event/loopBase.svg';
+
+const INITIAL_DURATION = 5;
+const Loop = ({
   data, dragRef, onSaveData
 }) => {
 
+  const isFirstRender = useRef(true);
   const { id, name, posX, posY, value, connectors } = data;
 
   const {
@@ -32,119 +34,82 @@ const Toggle = ({
     updateDeviceValueInFlow: store.updateDeviceValueInFlow
   }), shallow);
 
-  const isFirstRender = useRef(true);
   const [qtdIncomingConn, setQtdIncomingConn] = useState(0);
 
+  const [timeInterval, setTimeInterval] = useState(INITIAL_DURATION);
+  const timeout = useRef(null);
+  const setIntervalRef = useRef(null);
+
   const connectionReceiver = useCallback(() => {
-    setQtdIncomingConn(prev => prev + 1)
-  }, []);
+    setQtdIncomingConn(prev => prev + 1);
+  }, [])
 
-  const handleConnections = () => {
+  const handleSettingUpdate = useCallback((newDuration) => {
+    const newValue = {
+      ...data.value,
+      duration: newDuration
+    }
+    onSaveData('value', newValue)
+    updateDeviceValue(id, { value: newValue });
+  }, [value.duration]);
 
+  const restartTimer = () => {
+    setTimeInterval(value.duration);
+    clearInterval(setIntervalRef.current);
+    clearTimeout(timeout.current);
+  }
+
+  const handleConnections = useCallback(() => {
+    restartTimer();
     const flow = findFlowsByDeviceId(flows, id);
 
     const connection = flow?.connections.find(conn => {
       return conn.deviceTo.id === id
     });
 
-    if (!flow || !connection) {
-      const value = {
-        ...data.value,
-        send: {
-          current: false
-        }
-      }
+    const connOutput = flow?.connections.filter(conn => {
+      return conn.deviceFrom.id === id
+    });
 
-      onSaveData('value', value)
-      updateDeviceValue(id, { value });
+    if (!flow || !connection || connOutput.length <= 0) return;
 
-      return;
-    }
 
     const device = { ...devices[connection.deviceFrom.id] };
+    const deviceValue = device.value[connection.deviceFrom.connector.name];
 
-    let valueReceived = device.value[connection.deviceFrom.connector.name].current;
 
-
-    let newValue = {
+    const newValue = {
       ...data.value,
       send: {
-        current: valueReceived
+        ...deviceValue
       }
     }
 
     //Calc values
 
+    timeoutTeste(newValue);
 
-    if (devicesDbClick.includes(device.name)) {
-      const currentValue = value.send.current;
-
-      if (newValue.send.current) {
-        value.send.current = value.send.current ? false : true
-      }
-
-      newValue = {
-        ...newValue,
-        send: {
-          ...newValue.send,
-          current: value.send.current
-        }
-      };
-
-      const currentNewValue = newValue.send.current;
-
-        if (currentValue != currentNewValue)
-        {
-          onSaveData('value', newValue);
-          updateDeviceValue(id, { value: newValue });
-          updateDeviceValueInFlow({ connectorId: connectors.send.id, newValue });
-        }
-
-      return;
-    }
+  }, [value.duration, flows, value.send]);
 
 
-    if (typeof newValue.send.current === 'boolean') {
-      newValue = {
-        ...newValue,
-        send: {
-          ...newValue.send,
-          current: newValue.send.current && !data.value.send.current ? true : false
-        }
-      }
+  const timeoutTeste = (newValue) => {
+    restartTimer();
+    setIntervalRef.current = setInterval(() => {
+      setTimeInterval(prevTime => prevTime - 1);
+    }, 1000);
 
+    timeout.current = setTimeout(() => {
       onSaveData('value', newValue);
       updateDeviceValue(id, { value: newValue });
       updateDeviceValueInFlow({ connectorId: connectors.send.id, newValue });
+      sendValue();
 
-      return;
-    }
-
-    if (typeof newValue.send.current === 'number') {
-
-      let currentValue = newValue.send.current > 0 ? true : false;
-
-      if (currentValue != value.send.current) {
-        newValue = {
-          ...newValue,
-          send: {
-            ...newValue.send,
-            current: newValue.send.current > 0 ? true : false
-          }
-        }
-
-
-        onSaveData('value', newValue);
-        updateDeviceValue(id, { value: newValue });
-        updateDeviceValueInFlow({ connectorId: connectors.send.id, newValue });
-      }
-      return;
-    }
-
+      timeoutTeste(newValue);
+    }, value.duration * 1000);
   }
 
-
   const sendValue = () => {
+
     const flow = findFlowsByDeviceId(flows, id);
 
     if (!flow) return;
@@ -155,9 +120,28 @@ const Toggle = ({
 
     connsOutput.forEach(conn => {
       const toConnector = devices[conn.deviceTo.id].connectors[conn.deviceTo.connector.name];
-      toConnector.defaultReceiveBehavior({ value: value.send.current });
+      toConnector.defaultReceiveBehavior({
+        value: value.send.current, max: value.send.max
+      });
     })
   }
+
+  const redefineBehavior = useCallback(() => {
+    restartTimer();
+
+    const value = {
+      ...data.value,
+      send: {
+        current: 0,
+        max: 0
+      }
+    }
+
+    onSaveData('value', value)
+    updateDeviceValue(id, { value });
+
+  }, []);
+
 
   useEffect(() => {
     if (isFirstRender.current) {
@@ -165,7 +149,6 @@ const Toggle = ({
 
       return;
     }
-
 
     if (qtdIncomingConn > 0) {
       handleConnections();
@@ -180,7 +163,17 @@ const Toggle = ({
     }
 
     sendValue();
-  }, [value]);
+  }, [value.send.current]);
+
+
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+
+      return;
+    }
+    restartTimer();
+  }, [value.duration]);
 
 
   return (
@@ -193,7 +186,9 @@ const Toggle = ({
         ref={dragRef}
       >
 
-        <ToggleIcon active={value.send.current} />
+        <p className={L.loopNumber}>
+          {timeInterval}
+        </p>
 
         <ActionButtons
           orientation='bottom'
@@ -204,9 +199,16 @@ const Toggle = ({
               id
             }
           }}
+          actionConfig={{
+            typeContent: 'config-loop',
+            onSave: handleSettingUpdate,
+            data: {
+              handleRestart: restartTimer,
+              defaultDuration: value.duration,
+            }
+          }}
         />
       </DeviceBody>
-
 
       <Connectors
         type='doubleTypes'
@@ -214,7 +216,8 @@ const Toggle = ({
           {
             data: {
               ...connectors.receive,
-              defaultReceiveBehavior: connectionReceiver
+              defaultReceiveBehavior: connectionReceiver,
+              redefineBehavior
             },
             device: { id },
             updateConn: { posX, posY },
@@ -225,7 +228,8 @@ const Toggle = ({
           {
             data: {
               ...connectors.send,
-              defaultSendBehavior: connectionReceiver
+              defaultSendBehavior: connectionReceiver,
+              redefineBehavior
             },
             device: { id },
             updateConn: { posX, posY },
@@ -239,11 +243,10 @@ const Toggle = ({
   );
 };
 
-
-Toggle.propTypes = {
+Loop.propTypes = {
   data: P.object.isRequired,
   dragRef: P.func.isRequired,
   onSaveData: P.func.isRequired
 }
 
-export default Toggle;
+export default Loop;

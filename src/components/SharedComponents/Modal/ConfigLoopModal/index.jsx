@@ -2,8 +2,8 @@ import { useRef } from "react";
 import P from 'prop-types';
 
 import {
-  configDelayContent,
-  configDelayTitle,
+  configLoopContent,
+  configLoopTitle,
   inputsArea,
   inputArea,
   labelInput
@@ -16,7 +16,7 @@ import {
   btnWhite
 } from '@/styles/common.module.css';
 
-const ConfigDelayModal = ({ closeModal, contentData }) => {
+const ConfigLoopModal = ({ closeModal, contentData }) => {
   const { handleSaveConfig, handleRestart, defaultDuration } = contentData;
 
   const durationRef = useRef(null);
@@ -33,13 +33,13 @@ const ConfigDelayModal = ({ closeModal, contentData }) => {
 
 
     <section
-      className={configDelayContent}
+      className={configLoopContent}
     >
       <header>
         <h1
-          className={configDelayTitle}
+          className={configLoopTitle}
         >
-          Delay
+          Loop
         </h1>
       </header>
 
@@ -50,15 +50,15 @@ const ConfigDelayModal = ({ closeModal, contentData }) => {
           className={inputArea}
         >
           <label
-            htmlFor='delayDuration'
+            htmlFor='loopDuration'
             className={labelInput}
           >
-            Tempo de duração do delay:
+            Tempo de duração do loop:
           </label>
 
           <input
             type="number"
-            id='delayDuration'
+            id='loopDuration'
             min = "0"
             max = "999"
             className={inputNumber}
@@ -91,7 +91,7 @@ const ConfigDelayModal = ({ closeModal, contentData }) => {
   );
 };
 
-ConfigDelayModal.propTypes = {
+ConfigLoopModal.propTypes = {
   closeModal: P.func.isRequired,
   contentData: P.shape({
     handleSaveConfig: P.func,
@@ -100,4 +100,4 @@ ConfigDelayModal.propTypes = {
   }).isRequired
 }
 
-export default ConfigDelayModal;
+export default ConfigLoopModal;
