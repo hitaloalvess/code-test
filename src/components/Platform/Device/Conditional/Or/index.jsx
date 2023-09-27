@@ -36,6 +36,8 @@ const Or = ({
   }), shallow);
 
   const [qtdIncomingConn, setQtdIncomingConn] = useState(0);
+  const [previousValues, setPreviousValues] = useState();
+  const [currentColor, setSetCurrentColor] = useState();
 
   const connectionReceiver = useCallback(() => {
     setQtdIncomingConn(prev => prev + 1)
@@ -50,7 +52,8 @@ const Or = ({
       const value = {
         ...data.value,
         send: {
-          current: false
+          current: false,
+          color: undefined
         }
       }
 
@@ -69,14 +72,20 @@ const Or = ({
       const device = { ...devices[conn.deviceFrom.id] };
 
       let value = device.value[conn.deviceFrom.connector.name]?.current;
+      let color = device.value[conn.deviceFrom.connector.name]?.color;
 
-      return [...acc, {
-        idConnection: conn.id,
-        value,
-      }];
+      if (color != undefined)
+        return [...acc, {
+          idConnection: conn.id,
+          value,
+          color
+        }];
 
+        return [...acc, {
+          idConnection: conn.id,
+          value
+        }];
     }, []);
-
 
     //Calc values
     if (values.length <= 0) {
@@ -96,18 +105,43 @@ const Or = ({
     const incomingConnsValues = values.map(connInput => !connInput.value === false);
     const allValidValues = incomingConnsValues.some(value => value === true);
 
+    const trueValues = values.filter(value=> value.value === true || value.value > 0);
+    let newColor = currentColor;
+
+    if (trueValues.length > 0) {
+      if(trueValues?.length == previousValues?.length) {
+        for (var i = 0; i < trueValues.length; i++) {
+          if (trueValues[i].color != previousValues[i].color || trueValues[i].value != previousValues[i].value) {
+            newColor = trueValues[i].color != undefined ? trueValues[i].color : currentColor;
+            setSetCurrentColor(newColor);
+          }
+        }
+      }
+      else {
+        if (trueValues?.length < previousValues?.length) {
+          newColor = trueValues[trueValues.length - 1].color != undefined ? trueValues[trueValues.length - 1].color : currentColor;
+          setSetCurrentColor(newColor);
+        } else if (trueValues?.length > previousValues?.length) {
+          const teste = trueValues.filter (element => !previousValues.find(valueRef => valueRef.idConnection === element.idConnection));
+          newColor = teste[0]?.color != undefined ? teste[0]?.color : currentColor;
+          setSetCurrentColor(newColor);
+        }
+      }
+    }
+
+    setPreviousValues(trueValues);
+
     const value = {
       ...data.value,
       send: {
         current: allValidValues,
+        color: newColor
       }
     }
 
     onSaveData('value', value);
     updateDeviceValue(id, { value });
     updateDeviceValueInFlow({ connectorId: connectors.send.id, newValue: value })
-
-
   }
 
   const sendValue = () => {
@@ -121,7 +155,12 @@ const Or = ({
 
     connsOutput.forEach(conn => {
       const toConnector = devices[conn.deviceTo.id].connectors[conn.deviceTo.connector.name];
-      toConnector.defaultReceiveBehavior({ value: value.send.current });
+      if(value.send.color !== undefined){
+        toConnector.defaultReceiveBehavior({ value: value.send.current, color: value.send.color});
+      }
+      else{
+        toConnector.defaultReceiveBehavior({ value: value.send.current});
+      }
     })
   }
 
@@ -151,7 +190,7 @@ const Or = ({
     }
 
     sendValue();
-  }, [value.send.current]);
+  }, [value.send.current, currentColor]);
 
 
   return (
