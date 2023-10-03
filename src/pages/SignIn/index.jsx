@@ -16,8 +16,8 @@ import { SpinnerLoader } from '@/components/SharedComponents/SpinnerLoader';
 import * as S from './styles.module.css';
 
 const signInSchema = z.object({
-  email: z.string().email('Por favor, informe um email válido.'),
-  password: z.string().min(4, { message: 'Por favor, insira uma senha válida.' })
+  email: z.string().trim().email('Por favor, informe um email válido.'),
+  password: z.string().trim().min(4, { message: 'Por favor, insira uma senha válida.' })
 }).required();
 
 const SignIn = () => {
