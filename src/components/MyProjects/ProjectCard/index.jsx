@@ -40,9 +40,8 @@ const ProjectCard = ({ data, onDelete, onUpdate }) => {
         name,
         description,
       },
-      handleConfirm: async (newProject) => {
-
-        await onUpdate.mutateAsync(newProject);
+      handleConfirm: async (data) => {
+        await onUpdate.mutateAsync(data);
         disableModal('create-project');
 
       }

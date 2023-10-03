@@ -30,11 +30,12 @@ const CredentialsSection = () => {
     try {
 
       await apiAuth.delete(`/users/${user.id}`);
+
       toast.success('Conta deletada com sucesso');
 
       handleSignOut();
     } catch (error) {
-      toast.error(error.response.data.message);
+      toast.error(error);
     }
   }
 
@@ -42,9 +43,9 @@ const CredentialsSection = () => {
     enableModal({
       typeContent: 'confirmation',
       subtitle: 'Tem certeza que deseja excluir sua conta?',
-      handleConfirm: async () => {
+      handleConfirm: () => {
 
-        await handleDeleteAccount();
+        handleDeleteAccount();
         disableModal('confirmation');
 
       }

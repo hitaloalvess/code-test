@@ -4,7 +4,6 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import P from 'prop-types';
 
-import { useAuth } from '@/hooks/useAuth';
 import { Form } from '@/components/SharedComponents/Form';
 import { Input } from '@/components/SharedComponents/Input';
 
@@ -21,7 +20,6 @@ const CreateProjectModal = ({
 }) => {
   const { title, project, handleConfirm } = contentData;
 
-  const { user } = useAuth();
 
   const isFirstRender = useRef(true);
   const [hasCompletedFields, setHasCompletedFields] = useState(true);
@@ -42,19 +40,13 @@ const CreateProjectModal = ({
 
     try {
 
-      const newProject = {
+      const data = {
         id: project ? project.id : null,
         name,
-        user: {
-          email: user.email,
-          name: user.name,
-          cpf: user.cpf
-        },
-        description,
-        devices: [],
-        flows: []
+        description
       }
-      handleConfirm(newProject);
+
+      handleConfirm(data);
 
       closeModal();
 

@@ -6,8 +6,7 @@ import { useStore } from '@/store';
 import { apiMicroCode } from '@/services/apiMicroCode';
 import { queryClient } from '@/services/queryClient';
 import { formattedDate } from '../utils/date-functions';
-
-
+import { useContextAuth } from '@/hooks/useAuth';
 
 export async function getProjects(userCpf) {
   const projects = await apiMicroCode.get(`/projects/user/${userCpf}`);
@@ -24,6 +23,7 @@ export async function getProjects(userCpf) {
 
 export const useProject = () => {
 
+  const { user } = useContextAuth();
   const {
     getFlows,
     getDevices,
@@ -37,7 +37,19 @@ export const useProject = () => {
   }), shallow);
 
   const createProject = useMutation(
-    async (newProject) => {
+    async (data) => {
+
+      const newProject = {
+        ...data,
+        user: {
+          email: user.email,
+          name: user.name,
+          cpf: user.cpf
+        },
+        devices: [],
+        flows: []
+      }
+
       const response = await apiMicroCode.post(`/projects`, newProject);
 
       return response.data;
@@ -50,8 +62,10 @@ export const useProject = () => {
   )
 
   const updateProject = useMutation(
-    async (newProject) => {
-      const response = await apiMicroCode.put(`/projects/${newProject.id}`, newProject);
+    async (data) => {
+      const newProject = { ...data }
+
+      const response = await apiMicroCode.put(`/projects/${data.id}`, newProject);
 
       return response.data;
     },
@@ -59,6 +73,56 @@ export const useProject = () => {
       onSuccess: () => queryClient.invalidateQueries('projects'),
     }
   );
+
+  const saveProject =  async (data) => {
+      let newProject = {
+        ...data,
+        devices: getDevices(),
+        flows: getFlows(),
+      }
+
+      // Apply transformation on devices and streams object to remove HTMLElements
+      // HTML elements are not accepted when serializing to JSON.
+      const transformDevices = Object.values(newProject.devices).map(device => {
+        const newDevice = removeHTMLElementRef(device);
+
+        return newDevice;
+      });
+
+      const transformFlows = Object.entries(newProject.flows).reduce((acc, value) => {
+        const objValue = value[1];
+
+        const connections = objValue.connections.map(connection => {
+
+          const newDeviceFrom = removeHTMLElementRef(connection.deviceFrom);
+          const newDeviceTo = removeHTMLElementRef(connection.deviceTo);
+
+          return {
+            ...connection,
+            deviceFrom: newDeviceFrom,
+            deviceTo: newDeviceTo
+          };
+        });
+
+        return [
+          ...acc,
+          {
+            ...objValue,
+            connections
+          }
+        ]
+      }, []);
+
+      newProject = {
+        ...newProject,
+        devices: transformDevices,
+        flows: transformFlows
+      }
+
+      const response = await apiMicroCode.put(`/projects/${data.id}`, newProject);
+
+      return response.data;
+    };
 
   const deleteProject = useMutation(
     async (projectId) => {
@@ -117,56 +181,6 @@ export const useProject = () => {
 
 
   };
-
-
-  const saveProject = async (projectId) => {
-    let newProject = {
-      id: projectId,
-      devices: getDevices(),
-      flows: getFlows(),
-    }
-
-    // Apply transformation on devices and streams object to remove HTMLElements
-    // HTML elements are not accepted when serializing to JSON.
-    const transformDevices = Object.values(newProject.devices).map(device => {
-      const newDevice = removeHTMLElementRef(device);
-
-      return newDevice;
-    });
-
-    const transformFlows = Object.entries(newProject.flows).reduce((acc, value) => {
-      const objValue = value[1];
-
-      const connections = objValue.connections.map(connection => {
-
-        const newDeviceFrom = removeHTMLElementRef(connection.deviceFrom);
-        const newDeviceTo = removeHTMLElementRef(connection.deviceTo);
-
-        return {
-          ...connection,
-          deviceFrom: newDeviceFrom,
-          deviceTo: newDeviceTo
-        };
-      });
-
-      return [
-        ...acc,
-        {
-          ...objValue,
-          connections
-        }
-      ]
-    }, []);
-
-    newProject = {
-      ...newProject,
-      devices: transformDevices,
-      flows: transformFlows
-    }
-
-    await updateProject.mutateAsync(newProject);
-  }
-
 
   return {
     createProject,

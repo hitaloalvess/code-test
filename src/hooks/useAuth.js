@@ -54,7 +54,7 @@ export const useAuth = () => {
   }
 
   const handleSignOut = (event) => {
-    event.preventDefault();
+    if(event) event.preventDefault();
 
     setUser(null);
 

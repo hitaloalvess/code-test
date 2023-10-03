@@ -9,20 +9,18 @@ import * as NPB from './styles.module.css';
 import { toast } from 'react-toastify';
 
 const NewProjectButton = ({ onCreate }) => {
-
   const { enableModal } = useModal();
 
   const handleNewProject = async () => {
     enableModal({
       typeContent: 'create-project',
       title: 'Novo projeto',
-      handleConfirm: async (newProject) => {
+      handleConfirm: async (data) => {
         try {
-
-          await onCreate.mutateAsync(newProject);
+          await onCreate.mutateAsync(data);
 
         } catch (error) {
-          toast.error(error.response.data.message);
+          toast.error(error);
         }
 
       }

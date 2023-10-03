@@ -13,9 +13,9 @@ import imgCircleBase from '@/assets/images/buttons/circle-button-base.svg';
 
 import * as SB from './styles.module.css';
 
-const INTERVAL_UPDATE = 1000 * 30; //30 seconds
+const INTERVAL_UPDATE = 1000 * 10; //10 seconds
 const SaveButton = () => {
-  const { id: projectId } = useParams();
+  const { id } = useParams();
 
   const { saveProject } = useProject();
 
@@ -35,16 +35,18 @@ const SaveButton = () => {
     interval.current = setInterval(async () => {
       if (!hasProjectUpdate) return;
 
-      setIsLoading(true);
-      saveProject(projectId)
-        .then(() => {
-          setIsLoading(false);
-          changeHasProjectUpdate(false);
-        })
-        .catch(() => {
-          setIsLoading(false);
-          changeHasProjectUpdate(false);
-        });
+
+      try{
+        setIsLoading(true);
+        await saveProject({ id });
+
+        setIsLoading(false);
+        changeHasProjectUpdate(false);
+      }catch(error){
+        console.log(error);
+        setIsLoading(false);
+        changeHasProjectUpdate(false);
+      }
 
     }, INTERVAL_UPDATE);
 
