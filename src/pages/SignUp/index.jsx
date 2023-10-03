@@ -32,7 +32,7 @@ const signUpSchema = z.object({
   email: z.string().email('Por favor, informe um email válido.'),
   password: z.string().min(8, { message: 'Senha deve ter no mínimo 8 caracteres' })
     .refine((value) => {
-      const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$%^&+=!_])[A-Za-z\d@#$%^&+=!_]+$/
+      const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$%^&+=!_.])[A-Za-z\d@#$%^&+=!_.]+$/
       return regex.test(value)
     }, {
       message: 'Senha deve conter caracteres especiais, números, letras maiúsculas e minúsculas'
@@ -202,7 +202,7 @@ const SignUp = () => {
                     icon={<Phone fontSize={20} className={'text-gray-100'} />}
                   />
                   <Input.TextMaskType
-                    placeholder={"+55 (00) 00000-0000"}
+                    placeholder={"(00) 00000-0000"}
                     maskChange={handleChangeValue}
                     {...register('phone')}
                   />
