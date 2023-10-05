@@ -10,7 +10,6 @@ import {
   findFlowByConnectionId
 } from "@/utils/flow-functions";
 
-const categoriesTwoConns = ['entry', 'conditional', 'event'];
 export const createFlowsSlice = (set, get) => ({
   flows: {},
   flowTemp: {},
@@ -19,13 +18,10 @@ export const createFlowsSlice = (set, get) => ({
     const { flows, executeFlow } = get();
     const { deviceFrom, deviceTo } = connection;
 
-    const fromHasFlow = categoriesTwoConns.includes(deviceFrom.category) ?
-      findFlowsByDeviceId(flows, deviceFrom.id) :
-      findFlowByConnectorId(flows, deviceFrom.connector.id);
+    const fromHasFlow = findFlowsByDeviceId(flows, deviceFrom.id);
 
-    const toHasFlow = categoriesTwoConns.includes(deviceTo.category) ?
-      findFlowsByDeviceId(flows, deviceTo.id) :
-      findFlowByConnectorId(flows, deviceTo.connector.id);
+    const toHasFlow = findFlowsByDeviceId(flows, deviceTo.id);
+
 
     let newFlows = {};
 
@@ -39,7 +35,7 @@ export const createFlowsSlice = (set, get) => ({
         connections: [
           ...groupConns,
           connection
-        ]
+        ],
       }
 
       newFlows = {
