@@ -71,19 +71,18 @@ const PickColor = ({
 
     if (!flow || !connection) {
       redefineBehavior();
-
       return;
     }
 
 
     const device = { ...devices[connection.deviceFrom.id] };
-    const deviceValue = device.value[connection.deviceFrom.connector.name];
+    const deviceValue = device.value[connection.deviceFrom.connector.name].current;
 
     const newValue = {
       ...data.value,
       send: {
         ...data.value.send,
-        ...deviceValue
+        current: deviceValue
       }
     }
 
