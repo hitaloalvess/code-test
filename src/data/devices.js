@@ -802,19 +802,19 @@ export const deviceConnectorRules = {
     connectsFrom: ['all']
   },
   buzzer: {
-    acceptedConnections: ['allEntry'],
+    acceptedConnections: ['oneEntry'],
     connectsFrom: ['potentiometer', 'ldr', 'rainDetector', 'soilMoisture', 'pushButton', 'counter', 'and', 'or', 'not', 'if', 'toggle', 'slider', 'delay', 'switch', 'physicalPotentiometer', 'physicalLDR']
   },
   shakeMotor: {
-    acceptedConnections: ['allEntry'],
+    acceptedConnections: ['oneEntry'],
     connectsFrom: ['potentiometer', 'ldr', 'rainDetector', 'soilMoisture', 'pushButton', 'counter', 'and', 'or', 'not', 'if', 'toggle', 'slider', 'delay', 'switch', 'physicalPotentiometer', 'physicalLDR']
   },
   ledMono: {
-    acceptedConnections: ['allEntry'],
+    acceptedConnections: ['oneEntry'],
     connectsFrom: ['all']
   },
   laser: {
-    acceptedConnections: ['allEntry'],
+    acceptedConnections: ['oneEntry'],
     connectsFrom: ['all']
   },
   bargraph: {
