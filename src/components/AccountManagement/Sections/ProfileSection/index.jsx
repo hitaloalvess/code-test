@@ -1,6 +1,5 @@
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useForm } from 'react-hook-form';
 import { Cake, Flag, PhoneCall, User } from '@phosphor-icons/react';
@@ -33,7 +32,6 @@ const ProfileSection = () => {
 
   const { user } = useContextAuth();
 
-  const navigate = useNavigate();
   const { handleSubmit, register, setValue, formState: { errors } } = useForm({
     resolver: zodResolver(signUpSchema),
     shouldFocusError: false
@@ -46,6 +44,7 @@ const ProfileSection = () => {
     const transformNasc = new Date(formData.nasc);
 
     const data = {
+      ...user,
       ...formData,
       phone: transformPhone,
       nasc: transformNasc
@@ -53,10 +52,9 @@ const ProfileSection = () => {
 
     try {
 
-      await apiAuth.patch(`/users/update/${user.id}`, data);
+      console.log({ data });
+      await apiAuth.put(`/users/update/${user.id}`, data);
       toast.success('Usuário atualizado com sucesso!');
-
-      return navigate('/');
 
     } catch (error) {
       toast.error(error.response.data.message);
