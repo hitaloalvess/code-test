@@ -641,8 +641,9 @@ export const mockDevices = {
       category: 'conditional',
       value: {
         send: {
-          current: false
-        }
+          current: false,
+          color: '#39394E'
+        },
       },
       posX: 0,
       posY: 0,
@@ -797,23 +798,23 @@ export const deviceConnectorRules = {
     connectsTo: ['if']
   },
   led: {
-    acceptedConnections: ['allEntry'],
+    acceptedConnections: ['oneEntry'],
     connectsFrom: ['all']
   },
   buzzer: {
-    acceptedConnections: ['allEntry'],
+    acceptedConnections: ['oneEntry'],
     connectsFrom: ['potentiometer', 'ldr', 'rainDetector', 'soilMoisture', 'pushButton', 'counter', 'and', 'or', 'not', 'if', 'toggle', 'slider', 'delay', 'switch', 'physicalPotentiometer', 'physicalLDR']
   },
   shakeMotor: {
-    acceptedConnections: ['allEntry'],
+    acceptedConnections: ['oneEntry'],
     connectsFrom: ['potentiometer', 'ldr', 'rainDetector', 'soilMoisture', 'pushButton', 'counter', 'and', 'or', 'not', 'if', 'toggle', 'slider', 'delay', 'switch', 'physicalPotentiometer', 'physicalLDR']
   },
   ledMono: {
-    acceptedConnections: ['allEntry'],
+    acceptedConnections: ['oneEntry'],
     connectsFrom: ['all']
   },
   laser: {
-    acceptedConnections: ['allEntry'],
+    acceptedConnections: ['oneEntry'],
     connectsFrom: ['all']
   },
   bargraph: {
@@ -831,7 +832,7 @@ export const deviceConnectorRules = {
     connectsTo: ['all']
   },
   or: {
-    acceptedConnections: ['allEntry', 'oneExit'],
+    acceptedConnections: ['allEntry', 'allExit'],
     connectsFrom: ['all'],
     connectsTo: ['all'],
   },
@@ -868,7 +869,7 @@ export const deviceConnectorRules = {
   pickColor: {
     acceptedConnections: ['oneEntry', 'allExit'],
     connectsFrom: ['all'],
-    connectsTo: ['led', 'physicalLED'],
+    connectsTo: ['or','led', 'physicalLED'],
   },
   slider: {
     acceptedConnections: ['oneEntry', 'allExit'],
