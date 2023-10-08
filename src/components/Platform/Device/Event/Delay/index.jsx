@@ -63,10 +63,11 @@ const Delay = ({
   }
 
   const handleConnections = useCallback(() => {
+    restartTimer();
 
     const flow = findFlowsByDeviceId(flows, id);
 
-    const connection = flow?.connections.find(conn => {
+    const connectionInput = flow?.connections.find(conn => {
       return conn.deviceTo.id === id
     });
 
@@ -74,23 +75,14 @@ const Delay = ({
       return conn.deviceFrom.id === id
     });
 
-    if (!flow || !connection || connOutput.length <= 0) return;
+    if (!flow || !connectionInput || connOutput.length <= 0) return;
+
+    handleTimerAction();
+
+  }, [value.duration, flows, value.send]);
 
 
-    const device = { ...devices[connection.deviceFrom.id] };
-    const deviceValue = device.value[connection.deviceFrom.connector.name];
-
-
-    const newValue = {
-      ...data.value,
-      send: {
-        ...deviceValue
-      }
-    }
-
-    //Calc values
-
-    restartTimer();
+  const handleTimerAction = () => {
 
     setIntervalRef.current = setInterval(() => {
       setTimeInterval(prevTime => prevTime - 1);
@@ -99,31 +91,46 @@ const Delay = ({
 
     timeout.current = setTimeout(() => {
 
+      const flow = findFlowsByDeviceId(flows, id);
+
+      if (!flow) return;
+
+      const connectionInput = flow?.connections.find(conn => {
+        return conn.deviceTo.id === id
+      });
+
+      const connsOutput = flow.connections.filter(conn => {
+        return conn.deviceFrom.id === id
+      });
+
+      const device = { ...devices[connectionInput.deviceFrom.id] };
+      const deviceValue = device.value[connectionInput.deviceFrom.connector.name];
+
+
+      const newValue = {
+        ...data.value,
+        send: {
+          ...deviceValue
+        }
+      }
+
+      connsOutput.forEach(conn => {
+        const toConnector = devices[conn.deviceTo.id].connectors[conn.deviceTo.connector.name];
+        toConnector.defaultReceiveBehavior({
+          value: newValue.send.current, max: newValue.send.max
+        });
+      })
+
       onSaveData('value', newValue);
       updateDeviceValue(id, { value: newValue });
       updateDeviceValueInFlow({ connectorId: connectors.send.id, newValue });
 
       restartTimer();
     }, value.duration * 1000);
-  }, [value.duration, flows, value.send]);
 
-  const sendValue = () => {
 
-    const flow = findFlowsByDeviceId(flows, id);
-
-    if (!flow) return;
-
-    const connsOutput = flow.connections.filter(conn => {
-      return conn.deviceFrom.id === id
-    });
-
-    connsOutput.forEach(conn => {
-      const toConnector = devices[conn.deviceTo.id].connectors[conn.deviceTo.connector.name];
-      toConnector.defaultReceiveBehavior({
-        value: value.send.current, max: value.send.max
-      });
-    })
   }
+
 
   const redefineBehavior = useCallback(() => {
     restartTimer();
@@ -154,16 +161,6 @@ const Delay = ({
     }
   }, [qtdIncomingConn]);
 
-  useEffect(() => {
-    if (isFirstRender.current) {
-      isFirstRender.current = false;
-
-      return;
-    }
-
-    sendValue();
-  }, [value.send.current]);
-
 
   useEffect(() => {
     if (isFirstRender.current) {
@@ -174,6 +171,19 @@ const Delay = ({
     restartTimer();
   }, [value.duration]);
 
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+
+      return;
+    }
+
+    return () => {
+      console.log('Destruindo delay');
+      clearInterval(setIntervalRef.current);
+      clearTimeout(timeout.current);
+    }
+  }, [])
 
   return (
     <>

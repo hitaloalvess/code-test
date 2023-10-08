@@ -132,6 +132,14 @@ const Buzzer = memo(function Buzzer({
 
   }, [value.active]);
 
+  useEffect(() => {
+
+    return () => {
+      audio.pause();
+      clearTimeout(timeoutStopAudio.current);
+    }
+  }, [])
+
 
   return (
     <>

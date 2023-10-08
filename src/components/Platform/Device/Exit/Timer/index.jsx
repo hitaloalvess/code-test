@@ -32,11 +32,11 @@ const Timer = memo(function ShakeMotor({
     updateDeviceValueInFlow: store.updateDeviceValueInFlow
   }), shallow);
 
-     const [timeSecond, setTimeSecond] = useState(0);
-     const [timeMinute, setTimeMinute] = useState(0);
-     const [isResetEnable, setIsResetEnable] = useState(0);
-     const [isTimerEnable,setIsTimerEnable ] = useState(0);
-     const setIntervalRef = useRef(null);
+  const [timeSecond, setTimeSecond] = useState(0);
+  const [timeMinute, setTimeMinute] = useState(0);
+  const [isResetEnable, setIsResetEnable] = useState(0);
+  const [isTimerEnable, setIsTimerEnable] = useState(0);
+  const setIntervalRef = useRef(null);
 
   const handleResetConnector = (valueReceived) => {
     const { value: newValue } = valueReceived;
@@ -44,7 +44,7 @@ const Timer = memo(function ShakeMotor({
     const objValue = {
       ...value,
       current: typeof newValue === 'boolean' ?
-      newValue : (newValue == 0 ? false : true),
+        newValue : (newValue == 0 ? false : true),
       type: typeof newValue,
     }
 
@@ -57,7 +57,7 @@ const Timer = memo(function ShakeMotor({
     const objValue = {
       ...value,
       current: typeof newValue === 'boolean' ?
-      newValue : (newValue == 0 ? false : true),
+        newValue : (newValue == 0 ? false : true),
       type: typeof newValue,
     }
 
@@ -76,13 +76,12 @@ const Timer = memo(function ShakeMotor({
   const enableTimer = () => {
     clearInterval(setIntervalRef.current);
     setIntervalRef.current = setInterval(() => {
-        setTimeSecond(prevTime => prevTime + 1);
+      setTimeSecond(prevTime => prevTime + 1);
     }, 1000);
   }
 
-  const  disableTimer = () => {
-    if (isResetEnable)
-    {
+  const disableTimer = () => {
+    if (isResetEnable) {
       setTimeMinute(0);
       setTimeSecond(0);
     }
@@ -104,18 +103,23 @@ const Timer = memo(function ShakeMotor({
   }, [isTimerEnable, isResetEnable]);
 
   useEffect(() => {
-    if (timeSecond == 60)
-    {
+    if (timeSecond == 60) {
       setTimeSecond(0);
       setTimeMinute(prevTime => prevTime + 1);
     }
 
-    if (timeMinute == 99)
-    {
+    if (timeMinute == 99) {
       isTimerEnable
       clearInterval(setIntervalRef.current);
     }
   }, [timeSecond, isTimerEnable]);
+
+  useEffect(() => {
+
+    return () => {
+      clearInterval(setIntervalRef.current);
+    }
+  }, []);
 
   return (
     <>
@@ -126,12 +130,12 @@ const Timer = memo(function ShakeMotor({
       >
 
         <p className={T.timerNumber}>
-        {timeMinute < 10 ? "0" + timeMinute : timeMinute} : {timeSecond < 10 ? "0" + timeSecond : timeSecond}
+          {timeMinute < 10 ? "0" + timeMinute : timeMinute} : {timeSecond < 10 ? "0" + timeSecond : timeSecond}
         </p>
 
         {(isResetEnable ? <svg className={T.ledLightElement}>
-            <circle cx="2" cy="2" r="2" />
-          </svg> : '')}
+          <circle cx="2" cy="2" r="2" />
+        </svg> : '')}
 
 
         <ActionButtons
