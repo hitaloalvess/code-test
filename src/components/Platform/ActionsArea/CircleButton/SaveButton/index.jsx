@@ -30,35 +30,45 @@ const SaveButton = () => {
     changeHasProjectUpdate: store.changeHasProjectUpdate
   }), shallow);
 
+
+  const handleSave = async () => {
+    if (!hasProjectUpdate) return;
+
+
+    try {
+      setIsLoading(true);
+      await saveProject({ id });
+
+      setIsLoading(false);
+      changeHasProjectUpdate(false);
+    } catch (error) {
+      console.log(error);
+      setIsLoading(false);
+      changeHasProjectUpdate(false);
+    }
+
+  }
+
   useEffect(() => {
 
-    interval.current = setInterval(async () => {
-      if (!hasProjectUpdate) return;
-
-
-      try{
-        setIsLoading(true);
-        await saveProject({ id });
-
-        setIsLoading(false);
-        changeHasProjectUpdate(false);
-      }catch(error){
-        console.log(error);
-        setIsLoading(false);
-        changeHasProjectUpdate(false);
-      }
-
-    }, INTERVAL_UPDATE);
+    interval.current = setInterval(() => handleSave().catch(err => console.log(err)), INTERVAL_UPDATE);
 
     return () => {
       clearInterval(interval.current);
     }
   }, [hasProjectUpdate]);
 
+
+
   return (
-    <div
-      className={SB.saveButtonContainer}
+
+    <CircleButton
+      imgSrc={imgCircleBase}
+      name={'save-button'}
+      alt='Imagem do botão de salvamento automatico'
       title='Botão de salvamento automático'
+      handleClick={() => handleSave().catch(err => console.log(err))
+      }
     >
       {
         isLoading ?
@@ -67,13 +77,7 @@ const SaveButton = () => {
           </div> :
           <CloudCheck className={SB.saveBtnIcon} />
       }
-
-      <CircleButton
-        imgSrc={imgCircleBase}
-        name={'save-button'}
-        alt='Imagem do botão de salvamento automatico'
-      />
-    </div>
+    </CircleButton>
   );
 };
 

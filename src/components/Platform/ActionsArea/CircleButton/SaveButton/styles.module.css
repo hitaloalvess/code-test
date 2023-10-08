@@ -1,10 +1,13 @@
-.saveButtonContainer {
+/* .saveButtonContainer {
   position: relative;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
 }
 
 .saveButtonContainer button {
   pointer-events: none;
-}
+} */
+
 
 .saveBtnSpinner,
 .saveBtnIcon,
