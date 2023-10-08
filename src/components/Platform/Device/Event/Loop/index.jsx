@@ -60,7 +60,6 @@ const Loop = ({
   }
 
   const handleConnections = useCallback(() => {
-    restartTimer();
     const flow = findFlowsByDeviceId(flows, id);
 
     const connection = flow?.connections.find(conn => {
@@ -73,6 +72,34 @@ const Loop = ({
 
     if (!flow || !connection || connOutput.length <= 0) return;
 
+    handleTimerAction();
+
+
+  }, [flows]);
+
+
+  const handleTimerAction = () => {
+
+    restartTimer();
+
+    setIntervalRef.current = setInterval(() => {
+      setTimeInterval(prevTime => prevTime - 1);
+    }, 1000);
+
+    timeout.current = setTimeout(() => {
+
+      restartTimer();
+      sendValue();
+      handleTimerAction();
+    }, value.duration * 1000);
+  }
+
+  const sendValue = () => {
+    const flow = findFlowsByDeviceId(flows, id);
+
+    const connection = flow?.connections.find(conn => {
+      return conn.deviceTo.id === id
+    });
 
     const device = { ...devices[connection.deviceFrom.id] };
     const deviceValue = device.value[connection.deviceFrom.connector.name];
@@ -85,34 +112,6 @@ const Loop = ({
       }
     }
 
-    //Calc values
-
-    timeoutTeste(newValue);
-
-  }, [value.duration, flows, value.send]);
-
-
-  const timeoutTeste = (newValue) => {
-    restartTimer();
-    setIntervalRef.current = setInterval(() => {
-      setTimeInterval(prevTime => prevTime - 1);
-    }, 1000);
-
-    timeout.current = setTimeout(() => {
-      onSaveData('value', newValue);
-      updateDeviceValue(id, { value: newValue });
-      updateDeviceValueInFlow({ connectorId: connectors.send.id, newValue });
-      sendValue();
-
-      timeoutTeste(newValue);
-    }, value.duration * 1000);
-  }
-
-  const sendValue = () => {
-
-    const flow = findFlowsByDeviceId(flows, id);
-
-    if (!flow) return;
 
     const connsOutput = flow.connections.filter(conn => {
       return conn.deviceFrom.id === id
@@ -121,9 +120,16 @@ const Loop = ({
     connsOutput.forEach(conn => {
       const toConnector = devices[conn.deviceTo.id].connectors[conn.deviceTo.connector.name];
       toConnector.defaultReceiveBehavior({
-        value: value.send.current, max: value.send.max
+        value: newValue.send.current, max: newValue.send.max
       });
     })
+
+    if (newValue.send.current !== value.send.current) {
+      onSaveData('value', newValue);
+      updateDeviceValue(id, { value: newValue });
+      updateDeviceValueInFlow({ connectorId: connectors.send.id, newValue });
+    }
+
   }
 
   const redefineBehavior = useCallback(() => {
@@ -154,16 +160,6 @@ const Loop = ({
       handleConnections();
     }
   }, [qtdIncomingConn]);
-
-  useEffect(() => {
-    if (isFirstRender.current) {
-      isFirstRender.current = false;
-
-      return;
-    }
-
-    sendValue();
-  }, [value.send.current]);
 
 
   useEffect(() => {
