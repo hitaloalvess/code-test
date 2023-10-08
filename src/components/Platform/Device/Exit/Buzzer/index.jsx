@@ -42,6 +42,7 @@ const Buzzer = memo(function Buzzer({
 
   const handleEnableSound = () => {
     audio.loop = true;
+    audio.autoplay = true;
     audio.play();
   };
 
@@ -87,6 +88,7 @@ const Buzzer = memo(function Buzzer({
     }
 
     const newValue = {
+      ...data.value,
       ...objValue,
       active: objValue.current !== 0
     }
@@ -103,7 +105,9 @@ const Buzzer = memo(function Buzzer({
       active: false,
       current: 0,
       max: 0,
-      type: null
+      type: null,
+      duration: 4,
+      volume: 0.5,
     }
 
     onSaveData('value', value)
