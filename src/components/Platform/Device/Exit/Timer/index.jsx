@@ -125,14 +125,19 @@ const Timer = memo(function ShakeMotor({
         ref={dragRef}
       >
 
-        <p className={T.timerNumber}>
-        {timeMinute < 10 ? "0" + timeMinute : timeMinute} : {timeSecond < 10 ? "0" + timeSecond : timeSecond}
-        </p>
+      <p className={T.timerNumber}>
+      {timeMinute < 10 ? "0" + timeMinute : timeMinute} : {timeSecond < 10 ? "0" + timeSecond : timeSecond}
+      </p>
 
-        {(isResetEnable ? <svg className={T.ledLightElement}>
-            <circle cx="2" cy="2" r="2" />
-          </svg> : '')}
-
+      <>
+          {
+            !!isResetEnable && (
+              <svg className={T.ledLightElement}>
+                <circle cx="2" cy="2" r="2" />
+              </svg>
+            )
+          }
+        </>
 
         <ActionButtons
           orientation='bottom'
