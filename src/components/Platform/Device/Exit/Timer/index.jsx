@@ -12,7 +12,7 @@ import * as T from './styles.module.css';
 
 import imgSrc from '@/assets/images/devices/exit/timerBase.svg';
 
-const Timer = memo(function ShakeMotor({
+const Timer = memo(function Timer({
   data, dragRef, onSaveData
 }) {
   const {
@@ -133,10 +133,15 @@ const Timer = memo(function ShakeMotor({
           {timeMinute < 10 ? "0" + timeMinute : timeMinute} : {timeSecond < 10 ? "0" + timeSecond : timeSecond}
         </p>
 
-        {(isResetEnable ? <svg className={T.ledLightElement}>
-          <circle cx="2" cy="2" r="2" />
-        </svg> : '')}
-
+        <>
+          {
+            !!isResetEnable && (
+              <svg className={T.timerElement}>
+                <circle cx="2" cy="2" r="2" />
+              </svg>
+            )
+          }
+        </>
 
         <ActionButtons
           orientation='bottom'

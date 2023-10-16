@@ -74,55 +74,55 @@ export const useProject = () => {
     }
   );
 
-  const saveProject =  async (data) => {
-      let newProject = {
-        ...data,
-        devices: getDevices(),
-        flows: getFlows(),
-      }
+  const saveProject = async (data) => {
+    let newProject = {
+      ...data,
+      devices: getDevices(),
+      flows: getFlows(),
+    }
 
-      // Apply transformation on devices and streams object to remove HTMLElements
-      // HTML elements are not accepted when serializing to JSON.
-      const transformDevices = Object.values(newProject.devices).map(device => {
-        const newDevice = removeHTMLElementRef(device);
+    // Apply transformation on devices and streams object to remove HTMLElements
+    // HTML elements are not accepted when serializing to JSON.
+    const transformDevices = Object.values(newProject.devices).map(device => {
+      const newDevice = removeHTMLElementRef(device);
 
-        return newDevice;
+      return newDevice;
+    });
+
+    const transformFlows = Object.entries(newProject.flows).reduce((acc, value) => {
+      const objValue = value[1];
+
+      const connections = objValue.connections.map(connection => {
+
+        const newDeviceFrom = removeHTMLElementRef(connection.deviceFrom);
+        const newDeviceTo = removeHTMLElementRef(connection.deviceTo);
+
+        return {
+          ...connection,
+          deviceFrom: newDeviceFrom,
+          deviceTo: newDeviceTo
+        };
       });
 
-      const transformFlows = Object.entries(newProject.flows).reduce((acc, value) => {
-        const objValue = value[1];
+      return [
+        ...acc,
+        {
+          ...objValue,
+          connections
+        }
+      ]
+    }, []);
 
-        const connections = objValue.connections.map(connection => {
+    newProject = {
+      ...newProject,
+      devices: transformDevices,
+      flows: transformFlows
+    }
 
-          const newDeviceFrom = removeHTMLElementRef(connection.deviceFrom);
-          const newDeviceTo = removeHTMLElementRef(connection.deviceTo);
+    const response = await apiMicroCode.put(`/projects/${data.id}`, newProject);
 
-          return {
-            ...connection,
-            deviceFrom: newDeviceFrom,
-            deviceTo: newDeviceTo
-          };
-        });
-
-        return [
-          ...acc,
-          {
-            ...objValue,
-            connections
-          }
-        ]
-      }, []);
-
-      newProject = {
-        ...newProject,
-        devices: transformDevices,
-        flows: transformFlows
-      }
-
-      const response = await apiMicroCode.put(`/projects/${data.id}`, newProject);
-
-      return response.data;
-    };
+    return response.data;
+  };
 
   const deleteProject = useMutation(
     async (projectId) => {

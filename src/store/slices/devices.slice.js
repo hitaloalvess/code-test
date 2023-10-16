@@ -58,6 +58,7 @@ export const createDevicesSlice = (set, get) => ({
   },
 
   updateDeviceValue: (deviceId, newValues) => {
+    if (!deviceId) return;
 
     set((state) => ({
       devices: {
@@ -72,6 +73,8 @@ export const createDevicesSlice = (set, get) => ({
 
   loadDevice: (device) => {
     const { sidebarRef } = get();
+
+    if (!Object.hasOwn(device, 'id')) return;
 
     const updatedDevice = calcDistanceInvalidArea({
       sidebarRef,
