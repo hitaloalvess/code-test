@@ -42,7 +42,6 @@ const SaveButton = () => {
       setIsLoading(false);
       changeHasProjectUpdate(false);
     } catch (error) {
-      console.log(error);
       setIsLoading(false);
       changeHasProjectUpdate(false);
     }

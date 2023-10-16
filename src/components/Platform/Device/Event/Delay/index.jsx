@@ -179,7 +179,6 @@ const Delay = ({
     }
 
     return () => {
-      console.log('Destruindo delay');
       clearInterval(setIntervalRef.current);
       clearTimeout(timeout.current);
     }

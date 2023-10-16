@@ -52,7 +52,6 @@ const ProfileSection = () => {
 
     try {
 
-      console.log({ data });
       await apiAuth.put(`/users/update/${user.id}`, data);
       toast.success('Usuário atualizado com sucesso!');
 
