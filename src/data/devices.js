@@ -14,7 +14,7 @@ import deviceLedMono from '@/assets/images/devices/exit/ledMono.svg';
 import deviceLaser from '@/assets/images/devices/exit/laser.svg';
 import deviceShakeMotor from '@/assets/images/devices/exit/shakeMotor.svg';
 import deviceBuzzer from '@/assets/images/devices/exit/buzzer.svg';
-import deviceTimer from '@/assets/images/devices/event/eventBase.svg';
+import deviceTimer from '@/assets/images/devices/exit/timer.svg';
 // import deviceBargraph from '@/assets/images/devices/event/eventBase.svg';
 
 //conditional
