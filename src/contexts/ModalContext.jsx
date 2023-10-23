@@ -55,7 +55,14 @@ export const ModalProvider = ({ children }) => {
 
   };
 
-  const disableModal = (typeContent) => {
+  const disableModal = (typeContent = null) => {
+
+    if (!typeContent) {
+      setListEnabledModals([]);
+
+      return;
+    }
+
     const newModals = listEnabledModals.filter(modal => modal.typeContent !== typeContent);
 
     setListEnabledModals(newModals);
