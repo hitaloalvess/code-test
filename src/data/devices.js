@@ -741,6 +741,8 @@ export const mockDevices = {
           current: 0,
           max: 1023
         },
+        loopActive: false,
+        loopLimit: 9999
       },
       posX: 0,
       posY: 0,
@@ -823,7 +825,7 @@ export const deviceConnectorRules = {
   },
   counter: {
     acceptedConnections: ['oneEntry', 'allExit'],
-    connectsFrom: ['potentiometer', 'ldr', 'loop', 'pushButton', 'slider', 'delay', 'toggle', 'and', 'or', 'switch', 'physicalPotentiometer', 'physicalLDR'],
+    connectsFrom: ['potentiometer', 'if', 'ldr', 'loop', 'pushButton', 'slider', 'delay', 'toggle', 'and', 'or', 'switch', 'physicalPotentiometer', 'physicalLDR'],
     connectsTo: ['all']
   },
   and: {
