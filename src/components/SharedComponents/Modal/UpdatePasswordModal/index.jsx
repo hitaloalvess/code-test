@@ -5,7 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'react-toastify';
 import P from 'prop-types';
 
-import { apiAuth } from '@/services/apiAuth';
+import { apiAuth } from '@/services/api';
 import { Form } from '@/components/SharedComponents/Form';
 import { Input } from '@/components/SharedComponents/Input';
 import { InputPassword } from '@/components/SharedComponents/Input/InputPasswordType';
