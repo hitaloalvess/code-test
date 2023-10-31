@@ -6,16 +6,16 @@ import {
   configSliderTitle,
   inputsArea,
   inputArea,
-  labelInput
+  labelInput,
+  inputColor
 } from './styles.module.css';
 
 import {
-  inputColor,
   btn,
   btnBlue
 } from '@/styles/common.module.css';
 
-const ConfigPickColorModal = ({ closeModal, contentData }) => {
+const ConfigStickyNoteModal = ({ closeModal, contentData }) => {
   const { handleSaveConfig, defaultColor } = contentData;
 
   const colorRef = useRef(null);
@@ -38,7 +38,7 @@ const ConfigPickColorModal = ({ closeModal, contentData }) => {
         <h1
           className={configSliderTitle}
         >
-          Pick Color
+          Bloco de Notas
         </h1>
       </header>
 
@@ -49,7 +49,7 @@ const ConfigPickColorModal = ({ closeModal, contentData }) => {
           className={inputArea}
         >
           <label
-            htmlFor='pickColor'
+            htmlFor='stickyNote'
             className={labelInput}
           >
             Selecione a cor desejada:
@@ -57,11 +57,24 @@ const ConfigPickColorModal = ({ closeModal, contentData }) => {
 
           <input
             type="color"
-            id='pickColor'
+            id='stickyNote
+            '
+            list="stickyNoteList"
             className={inputColor}
             defaultValue={defaultColor}
             ref={colorRef}
           />
+          <datalist id="stickyNoteList">
+            <option value="#F5B9B9">Rosa</option>
+            <option value="#f5efb9">Amarelo</option>
+            <option value="#b6a8e3">Lilás</option>
+            <option value="#aec3cf">Azul</option>
+            <option value="#a5d3bd">Verde Água</option>
+            <option value="#b9d3a5">Verde</option>
+            <option value="#ddc59c">Laranja</option>
+            <option value="#cd7777">Vermelho</option>
+            <option value="#779acd">Azul Escuro</option>
+          </datalist>
         </div>
       </div>
 
@@ -77,7 +90,7 @@ const ConfigPickColorModal = ({ closeModal, contentData }) => {
   );
 };
 
-ConfigPickColorModal.propTypes = {
+ConfigStickyNoteModal.propTypes = {
   closeModal: P.func.isRequired,
   contentData: P.shape({
     handleSaveConfig: P.func,
@@ -85,4 +98,4 @@ ConfigPickColorModal.propTypes = {
   }).isRequired
 }
 
-export default ConfigPickColorModal;
+export default ConfigStickyNoteModal;

@@ -6,7 +6,7 @@ import ActionButtons from '../ActionButtons'
 import * as DB from './styles.module.css';
 
 const DeviceBody = forwardRef(function DeviceBody(
-  { name = 'Device', imgSrc, classesForImg = [], children, ...rest }, ref
+  { name = 'Device', imgSrc, classesForBody=[], classesForImg = [], children, ...rest }, ref
 ) {
 
   const [activeActBtns, setActiveActBtns] = useState(false);
@@ -33,7 +33,7 @@ const DeviceBody = forwardRef(function DeviceBody(
 
   return (
     <div
-      className={DB.deviceBody}
+      className={`${DB.deviceBody} ${classesForBody.join(' ')}`}
       ref={ref}
       onMouseEnter={() => handleActBtns(true)}
       onMouseLeave={() => handleActBtns(false)}
@@ -61,6 +61,7 @@ DeviceBody.propTypes = {
   name: P.string,
   imgSrc: P.string.isRequired,
   classesForImg: P.string,
+  classesForBody: P.arrayOf(P.string),
   children: P.oneOfType([
     P.element,
     P.arrayOf(P.element)

@@ -31,6 +31,9 @@ import deviceDelay from '@/assets/images/devices/event/delay.svg';
 import deviceSlider from '@/assets/images/devices/event/slider.svg';
 import deviceLoop from '@/assets/images/devices/event/loop.svg';
 
+//tool
+import deviceStickynote from '@/assets/images/devices/tool/stickyNote.svg'
+
 export const mockDevices = {
   entry: [
     {
@@ -763,6 +766,22 @@ export const mockDevices = {
         },
       }
     }
+  ],
+  tool: [
+    {
+      id: 45,
+      imgSrc: deviceStickynote,
+      name: 'stickynote',
+      label: 'Bloco de Notas',
+      type: 'virtual',
+      category: 'tool',
+      value: {
+        text: '',
+        color: '#F5B9B9'
+      },
+      posX: 0,
+      posY: 0
+    }
   ]
 };
 
@@ -876,6 +895,11 @@ export const deviceConnectorRules = {
   slider: {
     acceptedConnections: ['oneEntry', 'allExit'],
     connectsFrom: ['potentiometer', 'dht', 'ldr', 'rainDetector', 'soilMoisture', 'counter', 'slider', 'physicalPotentiometer', 'physicalLDR', 'physicalDHT'],
+    connectsTo: ['all'],
+  },
+  sticknote: {
+    acceptedConnections: ['oneEntry', 'allExit'],
+    connectsFrom: ['all'],
     connectsTo: ['all'],
   },
 }

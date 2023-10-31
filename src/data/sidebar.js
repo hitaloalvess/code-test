@@ -22,4 +22,9 @@ export const mockMenuButtons = [{
     id: 4,
     imgSrc: btnEvent,
     typeArea: 'event'
+},
+{
+    id: 5,
+    imgSrc: btnEvent,
+    typeArea: 'tool'
 }]
