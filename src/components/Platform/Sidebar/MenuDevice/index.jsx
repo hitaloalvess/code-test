@@ -67,7 +67,10 @@ const MenuDevice = ({ device }) => {
 
 MenuDevice.propTypes = {
   device: P.shape({
-    id: P.number.isRequired,
+    id: P.oneOfType([
+      P.string,
+      P.number
+    ]).isRequired,
     name: P.string.isRequired,
     label: P.string.isRequired,
     imgSrc: P.string.isRequired,

@@ -18,7 +18,7 @@ import InitialIntroPlatformModal from '@/components/SharedComponents/Modal/Initi
 import CreateProjectModal from "@/components/SharedComponents/Modal/CreateProjectModal";
 import ConfigCounterModal from '@/components/SharedComponents/Modal/ConfigCounterModal';
 import ConfigLoopModal from '@/components/SharedComponents/Modal/ConfigLoopModal';
-
+import ConnectDevice from '@/components/SharedComponents/Modal/ConnectDeviceModal';
 export const ModalContext = createContext();
 
 const contents = {
@@ -38,6 +38,7 @@ const contents = {
   'create-project': CreateProjectModal,
   'config-counter': ConfigCounterModal,
   'config-loop': ConfigLoopModal,
+  'connect-device': ConnectDevice
 }
 
 export const ModalProvider = ({ children }) => {
