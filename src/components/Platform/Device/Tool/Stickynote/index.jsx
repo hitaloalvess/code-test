@@ -26,13 +26,22 @@ const Stickynote = memo(function Led({
     updateDeviceValue: store.updateDeviceValue,
   }), shallow);
 
-
-const [charLimit] = useState(512);
-const [remainingChars, setRemainingChars] = useState(charLimit - value.text.length);
+const CHAR_LIMIT = 512;
+const [remainingChars, setRemainingChars] = useState(CHAR_LIMIT - value.text.length);
 const textArea = useRef();
-const charactersCount = useRef();
 
-  const teste = () => {
+const handleSettingUpdate = useCallback((newColor) => {
+  const newValue = {
+    ...data.value,
+      color: newColor
+  }
+
+  onSaveData('value', newValue)
+  updateDeviceValue(id, { value: newValue });
+
+}, [value]);
+
+  const handleOnInput = () => {
     console.log(value);
     const newValue = {
       ...data.value,
@@ -41,20 +50,9 @@ const charactersCount = useRef();
     onSaveData('value', newValue)
     updateDeviceValue(id, { value: newValue });
 
-    setRemainingChars(charLimit - textArea.current.value.length)
+    setRemainingChars(CHAR_LIMIT - textArea.current.value.length)
   }
 
-  const handleSettingUpdate = useCallback((newColor) => {
-    const newValue = {
-      ...data.value,
-        color: newColor
-    }
-
-    console.log(value.color);
-    onSaveData('value', newValue)
-    updateDeviceValue(id, { value: newValue });
-
-  }, [value]);
 
   return (
     <>
@@ -65,8 +63,8 @@ const charactersCount = useRef();
         ref={dragRef}
       >
         <div className = {S.note} style={{backgroundColor: value.color}}>
-          <textarea ref = {textArea} className={S.inputText}  maxLength={charLimit} onInput={teste} defaultValue = {value.text}></textarea>
-          <p ref = {charactersCount} className={S.charactersCount}>{remainingChars}</p>
+          <textarea ref = {textArea} className={S.inputText}  maxLength={CHAR_LIMIT} onInput={handleOnInput} defaultValue = {value.text}></textarea>
+          <p className={S.charactersCount}>{remainingChars}</p>
         </div>
 
 
