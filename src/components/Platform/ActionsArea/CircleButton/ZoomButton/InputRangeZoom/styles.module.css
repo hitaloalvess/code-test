@@ -37,8 +37,8 @@
 @media (orientation: landscape) {
   .inputZoom {
     top: auto;
-    width: 120px;
-    bottom: -100px;
+    width: 106px;
+    bottom: -60px;
     transform: translateX(40px) rotate(-90deg);
   }
 
