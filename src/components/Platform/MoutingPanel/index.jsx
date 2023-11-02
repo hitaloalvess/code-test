@@ -69,11 +69,6 @@ const MoutingPanel = () => {
   }), [devices]);
 
   useEffect(() => {
-    if (isFirstRender.current) {
-      isFirstRender.current = false;
-
-      return;
-    }
 
     loadProject(projectId)
       .then(() => changeHasProjectUpdate(false))
