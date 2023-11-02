@@ -1,115 +1,148 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import P from 'prop-types';
-import { Trash } from '@phosphor-icons/react';
+import { shallow } from 'zustand/shallow';
 
-import { useModal } from '@/hooks/useModal';
-import { useFlow } from '@/hooks/useFlow';
-import { useDevices } from '@/hooks/useDevices';
-import Connector from '@/components/Platform/Connector';
-import ActionButton from '@/components/Platform/ActionButton';
+import { useStore } from '@/store';
 import { findFlowsByDeviceId } from '@/utils/flow-functions';
 
-import {
-  deviceBody,
-  actionButtonsContainer,
-  actionButtonsContainerBottom,
-  connectorsContainer,
-  connectorsContainerExit,
-  connectorsContainerEntry
-} from '../../styles.module.css';
+import ActionButtons from '@/components/Platform/Device/SharedDevice/ActionButtons';
+import Connectors from '@/components/Platform/Device/SharedDevice/Connectors';
+import DeviceBody from '../../SharedDevice/DeviceBody';
+import ToggleIcon from './ToggleIcon';
 
-import {
-  toggleInput,
-  toggleLabel
-} from './styles.module.css';
 
 import eventBaseImg from '@/assets/images/devices/event/eventBase.svg';
 
 const devicesDbClick = ['pushButton'];
 const Toggle = ({
-  dragRef, device, updateValue
+  data, dragRef, onSaveData
 }) => {
 
-  const { id, name, posX, posY } = device;
-  const { deleteDevice, devices } = useDevices();
-  const { deleteDeviceConnections, flows } = useFlow();
-  const { enableModal, disableModal } = useModal();
+  const { id, name, posX, posY, value, connectors } = data;
 
-  const [value, setValue] = useState(false);
-  const [connectionValue, setConnectionValue] = useState({});
+  const {
+    flows,
+    devices,
+    updateDeviceValue,
+    updateDeviceValueInFlow
+  } = useStore(store => ({
+    flows: store.flows,
+    devices: store.devices,
+    updateDeviceValue: store.updateDeviceValue,
+    updateDeviceValueInFlow: store.updateDeviceValueInFlow
+  }), shallow);
+
+  const isFirstRender = useRef(true);
   const [qtdIncomingConn, setQtdIncomingConn] = useState(0);
 
-  const connectionReceiver = () => {
+  const connectionReceiver = useCallback(() => {
     setQtdIncomingConn(prev => prev + 1)
-  }
+  }, []);
 
   const handleConnections = () => {
 
     const flow = findFlowsByDeviceId(flows, id);
 
-    if (!flow) {
-      updateValue(setValue, id, false);
-
-      return;
-    }
-
-    const incomingConns = flow.connections.filter(conn => {
+    const connection = flow?.connections.find(conn => {
       return conn.deviceTo.id === id
     });
 
-    const value = incomingConns.reduce((acc, conn) => {
-      const device = devices.find(device => device.id === conn.deviceFrom.id);
-
-      let value = device.value.current;
-
-      if ([undefined, null].includes(value)) {
-        //If device.value.current undefined or null, structure equal boolean (true or false) or object -> ex: {temperature:{..}, humidity:{...}
-        value = typeof device.value === 'boolean' ? device.value : device.value[conn.deviceFrom.connector.name]?.current
+    if (!flow || !connection) {
+      const value = {
+        ...data.value,
+        send: {
+          current: false
+        }
       }
-      return {
-        idConnection: conn.id,
-        name: device.name,
-        value
+
+      onSaveData('value', value)
+      updateDeviceValue(id, { value });
+
+      return;
+    }
+
+    const device = { ...devices[connection.deviceFrom.id] };
+
+    let valueReceived = device.value[connection.deviceFrom.connector.name].current;
+
+
+    let newValue = {
+      ...data.value,
+      send: {
+        current: valueReceived
+      }
+    }
+
+    //Calc values
+
+
+    if (devicesDbClick.includes(device.name)) {
+      const currentValue = value.send.current;
+
+      if (newValue.send.current) {
+        value.send.current = value.send.current ? false : true
+      }
+
+      newValue = {
+        ...newValue,
+        send: {
+          ...newValue.send,
+          current: value.send.current
+        }
       };
-    }, {});
 
-    setConnectionValue(value);
+      const currentNewValue = newValue.send.current;
 
-  }
-
-  const calcValues = () => {
-    if (!Object.hasOwn(connectionValue, 'idConnection')) {
-      updateValue(setValue, id, false);
+        if (currentValue != currentNewValue)
+        {
+          onSaveData('value', newValue);
+          updateDeviceValue(id, { value: newValue });
+          updateDeviceValueInFlow({ connectorId: connectors.send.id, newValue });
+        }
 
       return;
     }
-    const currentValue = connectionValue.value;
 
-    if (devicesDbClick.includes(connectionValue.name)) {
-      let newValue = value;
-      if (currentValue) {
-        newValue = value ? false : true;
+
+    if (typeof newValue.send.current === 'boolean') {
+      newValue = {
+        ...newValue,
+        send: {
+          ...newValue.send,
+          current: newValue.send.current && !data.value.send.current ? true : false
+        }
       }
 
-      updateValue(setValue, id, newValue);
+      onSaveData('value', newValue);
+      updateDeviceValue(id, { value: newValue });
+      updateDeviceValueInFlow({ connectorId: connectors.send.id, newValue });
+
       return;
     }
 
-    if (typeof currentValue === 'boolean') {
-      const newValue = currentValue && !value ? true : false;
+    if (typeof newValue.send.current === 'number') {
 
-      updateValue(setValue, id, newValue);
-      return;
-    }
+      let currentValue = newValue.send.current > 0 ? true : false;
 
-    if (typeof currentValue === 'number') {
-      const newValue = currentValue > 0 ? true : false
+      if (currentValue != value.send.current) {
+        newValue = {
+          ...newValue,
+          send: {
+            ...newValue.send,
+            current: newValue.send.current > 0 ? true : false
+          }
+        }
 
-      updateValue(setValue, id, newValue);
+
+        onSaveData('value', newValue);
+        updateDeviceValue(id, { value: newValue });
+        updateDeviceValueInFlow({ connectorId: connectors.send.id, newValue });
+      }
       return;
     }
 
   }
+
 
   const sendValue = () => {
     const flow = findFlowsByDeviceId(flows, id);
@@ -121,113 +154,96 @@ const Toggle = ({
     });
 
     connsOutput.forEach(conn => {
-      conn.deviceTo.defaultBehavior({ value });
+      const toConnector = devices[conn.deviceTo.id].connectors[conn.deviceTo.connector.name];
+      toConnector.defaultReceiveBehavior({ value: value.send.current });
     })
   }
 
-  const redefineBehavior = () => setConnectionValue({});
-
-  const getValue = () => ({ value });
-
   useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+
+      return;
+    }
+
+
     if (qtdIncomingConn > 0) {
       handleConnections();
     }
   }, [qtdIncomingConn]);
 
   useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+
+      return;
+    }
+
     sendValue();
   }, [value]);
 
-  useEffect(() => {
-    calcValues();
-  }, [connectionValue])
 
   return (
     <>
-      <div
-        className={deviceBody}
+
+
+      <DeviceBody
+        name={name}
+        imgSrc={eventBaseImg}
         ref={dragRef}
       >
-        <input
-          type="checkbox"
-          checked={value}
-          className={toggleInput}
-          readOnly={true}
-        />
-        <label className={toggleLabel}></label>
 
-        <img
-          src={eventBaseImg}
-          alt={`Device ${name}`}
-          loading='lazy'
-        />
-      </div>
+        <ToggleIcon active={value.send.current} />
 
-      <div
-        className={`${connectorsContainer} ${connectorsContainerEntry}`}
-      >
-        <Connector
-          name={'toggleInputData'}
-          type={'entry'}
-          device={{
-            id,
-            defaultBehavior: connectionReceiver,
-            redefineBehavior,
-            containerRef: device.containerRef
-          }}
-          updateConn={{ posX, posY }}
-        />
-
-      </div>
-
-      <div
-        className={`${connectorsContainer} ${connectorsContainerExit}`}
-      >
-        <Connector
-          name={'toggleOutputData'}
-          type={'exit'}
-          device={{
-            id,
-            defaultBehavior: getValue,
-            redefineBehavior,
-            containerRef: device.containerRef
-          }}
-          updateConn={{ posX, posY }}
-        />
-
-      </div>
-
-      <div
-        className={
-          `${actionButtonsContainer} ${actionButtonsContainerBottom}`
-        }
-      >
-        <ActionButton
-          onClick={() => enableModal({
-            typeContent: 'confirmation',
+        <ActionButtons
+          orientation='bottom'
+          actionDelete={{
             title: 'Cuidado',
             subtitle: 'Tem certeza que deseja excluir o componente?',
-            handleConfirm: () => {
-              deleteDeviceConnections(id);
-              deleteDevice(id);
-              disableModal('confirmation');
+            data: {
+              id
             }
-          })}
-        >
-          <Trash />
-        </ActionButton>
+          }}
+        />
+      </DeviceBody>
 
-      </div>
+
+      <Connectors
+        type='doubleTypes'
+        exitConnectors={[
+          {
+            data: {
+              ...connectors.receive,
+              defaultReceiveBehavior: connectionReceiver
+            },
+            device: { id },
+            updateConn: { posX, posY },
+            handleChangeData: onSaveData
+          },
+        ]}
+        entryConnectors={[
+          {
+            data: {
+              ...connectors.send,
+              defaultSendBehavior: connectionReceiver
+            },
+            device: { id },
+            updateConn: { posX, posY },
+            handleChangeData: onSaveData
+          },
+        ]}
+
+      />
+
     </>
   );
 };
 
 
 Toggle.propTypes = {
-  device: P.object.isRequired,
+  data: P.object.isRequired,
   dragRef: P.func.isRequired,
-  updateValue: P.func.isRequired
+  onSaveData: P.func.isRequired
 }
 
 export default Toggle;

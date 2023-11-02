@@ -1,0 +1,17 @@
+.timerNumber {
+  position: absolute;
+  top: 28px;
+  color: var(--black);
+  font-size: 10px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.timerElement {
+  position: absolute;
+  z-index: 2;
+  width: 4px;
+  height: 4px;
+  top: 52px;
+  fill: var(--red);
+}

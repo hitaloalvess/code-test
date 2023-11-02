@@ -1,143 +1,120 @@
-import { memo, useRef, useState } from 'react';
+import { memo, useEffect } from 'react';
 import P from 'prop-types';
-import { Trash } from '@phosphor-icons/react';
+import { shallow } from 'zustand/shallow';
 
-import { useDevices } from '@/hooks/useDevices';
-import { useFlow } from '@/hooks/useFlow';
-import { useModal } from '@/hooks/useModal';
-import ActionButton from '@/components/Platform/ActionButton';
-import Connector from '@/components/Platform/Connector';
+import { useStore } from '@/store';
 
-import {
-  deviceBody,
-  inputRangeDeviceContainer,
-  inputValue,
-  actionButtonsContainer,
-  actionButtonsContainerLeft,
-  connectorsContainer,
-  connectorsContainerExit
-} from '../../styles.module.css';
+import ActionButtons from '@/components/Platform/Device/SharedDevice/ActionButtons';
+import Connectors from '@/components/Platform/Device/SharedDevice/Connectors';
+import DeviceInputs from '../../SharedDevice/DeviceInputs';
+import DeviceBody from '../../SharedDevice/DeviceBody';
 
-const MAX_VALUE = 1023;
+const MIN_LUMINOSITY = 0;
+const MAX_LUMINOSITY = 1023;
+
 const Ldr = memo(function Ldr({
-  device, dragRef, updateValue
+  data, dragRef, onSaveData
 }) {
 
-  const { id, imgSrc, name, posX, posY } = device;
-  const { deleteDevice } = useDevices();
-  const { executeFlow, deleteDeviceConnections } = useFlow();
-  const { enableModal, disableModal } = useModal();
+  const { id, imgSrc, name, posX, posY } = data;
 
-  const [lumenConnectorId, setLumenConnectorId] = useState('');
+  const {
+    executeFlow,
+    updateDeviceValue,
+    updateDeviceValueInFlow
+  } = useStore(store => ({
+    executeFlow: store.executeFlow,
+    updateDeviceValue: store.updateDeviceValue,
+    updateDeviceValueInFlow: store.updateDeviceValueInFlow
+  }), shallow);
 
-  const inputRef = useRef(null);
+  const handleOnInput = (event, name) => {
+    const inputValue = Number(event.target.value);
 
-  const showValueRef = useRef(null);
+    const value = {
+      ...data.value,
+      [`${name}`]: {
+        ...data.value[`${name}`],
+        current: inputValue,
+      }
+    }
 
-  const getLuminosity = () => {
-    return {
-      value: Number(inputRef.current.value),
-      max: MAX_VALUE
-    };
+    onSaveData('value', value);
+    updateDeviceValue(id, { value })
+
   }
 
-  const handleOnInput = () => {
-    const temperatureValue = Number(inputRef.current.value);
+  useEffect(() => {
 
-    showValueRef.current.innerHTML = temperatureValue;
 
-    updateValue(null, id, {
-      current: temperatureValue,
-      max: MAX_VALUE
-    });
+    updateDeviceValueInFlow({ connectorId: data.connectors.luminosity.id, newValue: data.value.luminosity })
 
-    executeFlow({ connectorId: lumenConnectorId, fromBehaviorCallback: getLuminosity });
-  }
+    executeFlow({ connectorId: data.connectors.luminosity.id });
 
-  const handleChangeLumenConnector = (value) => {
-    setLumenConnectorId(value);
-  }
+  }, [data.value.luminosity.current]);
 
   return (
 
     <>
 
-      <div className={inputRangeDeviceContainer}>
-        <input
-          type="range"
-          min="0"
-          max="1023"
-          step="1"
-          defaultValue={0}
-          onInput={handleOnInput}
-          ref={inputRef}
-        />
-        <p
-          className={inputValue}
-          ref={showValueRef}
-        >0</p>
-      </div>
+      <DeviceInputs
+        inputs={[
+          {
+            data: {
+              minValue: MIN_LUMINOSITY,
+              maxValue: MAX_LUMINOSITY,
+              step: 1,
+              defaultValue: data.value.luminosity.current,
+              onInput: (event) => handleOnInput(event, 'luminosity'),
+            },
+          }
+        ]}
+      />
 
-      <div
-        className={deviceBody}
+      <DeviceBody
+        name={name}
+        imgSrc={imgSrc}
         ref={dragRef}
       >
 
-        <img
-          src={imgSrc}
-          alt={`Device ${name}`}
-          loading='lazy'
-        />
-      </div>
 
-      <div
-        className={`${connectorsContainer} ${connectorsContainerExit}`}
-      >
-        <Connector
-          name={'luminosity'}
-          type={'exit'}
-          device={{
-            id,
-            defaultBehavior: getLuminosity,
-            containerRef: device.containerRef
-          }}
-          updateConn={{ posX, posY }}
-          handleChangeId={handleChangeLumenConnector}
-        />
-
-      </div>
-
-
-
-      <div
-        className={
-          `${actionButtonsContainer} ${actionButtonsContainerLeft}`
-        }
-      >
-        <ActionButton
-          onClick={() => enableModal({
-            typeContent: 'confirmation',
+        <ActionButtons
+          orientation='left'
+          actionDelete={{
             title: 'Cuidado',
             subtitle: 'Tem certeza que deseja excluir o componente?',
-            handleConfirm: () => {
-              deleteDeviceConnections(id);
-              deleteDevice(id);
-              disableModal('confirmation');
+            data: {
+              id
             }
-          })}
-        >
-          <Trash />
-        </ActionButton>
+          }}
+        />
 
-      </div>
+
+      </DeviceBody>
+
+      <Connectors
+        type='exits'
+        exitConnectors={[
+          {
+            data: data.connectors.luminosity,
+            device: {
+              id,
+              containerRef: data.containerRef
+            },
+            updateConn: { posX, posY },
+            handleChangeData: onSaveData
+          }
+        ]}
+      />
+
     </>
   );
 });
 
 Ldr.propTypes = {
-  device: P.object.isRequired,
   dragRef: P.func.isRequired,
-  updateValue: P.func.isRequired
+  data: P.object.isRequired,
+  onSaveData: P.func.isRequired
 }
 
 export default Ldr;

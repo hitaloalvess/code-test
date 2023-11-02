@@ -1,3 +1,40 @@
+export const calcDistanceInvalidArea = ({
+  sidebarRef, device
+}) => {
+
+  const {
+    width: sidebarX,
+    height: sidebarHeight,
+  } = sidebarRef.current.getBoundingClientRect();
+
+  const { posX: deviceX, posY: deviceY } = device;
+  const isMobile = sidebarHeight < sidebarX ? true : false;
+
+  if (!isMobile && deviceX < sidebarX) {
+    const newConnectors = Object.values(device.connectors)
+      .reduce((objConnectors, connector) => {
+
+        return {
+          ...objConnectors,
+          [connector.name]: {
+            ...connector,
+            x: connector.x + sidebarX,
+          }
+        }
+
+      }, {});
+
+    return {
+      ...device,
+      posX: deviceX + sidebarX,
+      posY: deviceY,
+      connectors: { ...newConnectors }
+    }
+  }
+
+  return device;
+
+}
 export const calcPositionDevice = ({ x, y, width, height, containerRef }) => {
   const deviceCenterWidth = width / 2;
   const deviceCenterHeight = height / 2;
@@ -8,6 +45,22 @@ export const calcPositionDevice = ({ x, y, width, height, containerRef }) => {
   return [
     (x - deviceCenterWidth) + scrollX,
     (y - deviceCenterHeight) + scrollY];
+}
+
+export const calcDimensionsDeviceArea = (devices) => {
+
+  const maxDimensions = Object.values(devices).reduce((dimensions, device) => {
+
+    const newWidth = Math.max(dimensions.width, device.posX);
+    const newHeight = Math.max(dimensions.height, device.posY);
+
+    return {
+      width: newWidth,
+      height: newHeight
+    };
+  }, { width: 0, height: 0 });
+
+  return maxDimensions;
 }
 
 // DEVICE DHT

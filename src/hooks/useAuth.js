@@ -2,7 +2,7 @@
 import { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { api } from '@/services/api';
+import { apiAuth } from '@/services/apiAuth';
 import { toast } from "react-toastify";
 import { AuthContext } from '@/contexts/AuthContext';
 // import { useModal } from '@/hooks/useModal';
@@ -31,7 +31,7 @@ export const useAuth = () => {
 
       setIsLoading(true);
 
-      const { data: { acessToken: token, user } } = await api.post('/auth/signin', {
+      const { data: { acessToken: token, user } } = await apiAuth.post('/auth/signin', {
         email, password
       });
 
@@ -41,9 +41,9 @@ export const useAuth = () => {
       setUser(user);
       setIsLoading(false);
 
-      api.defaults.headers.Authorization = `Bearer ${token}`;
+      apiAuth.defaults.headers.Authorization = `Bearer ${token}`;
 
-      return navigate('/platform');
+      return navigate('/projetos');
 
     } catch (error) {
       toast.error(error.response.data.message);
@@ -53,16 +53,18 @@ export const useAuth = () => {
 
   }
 
-  const handleSignOut = () => {
+  const handleSignOut = (event) => {
+    if(event) event.preventDefault();
+
     setUser(null);
+
+    apiAuth.defaults.headers.common.Authorization = undefined;
+    clearTimeout(idSearchFormTimeout.current);
+
     localStorage.removeItem('@Microdigo:token');
     localStorage.removeItem('@Microdigo:user');
 
-    api.defaults.headers.common.Authorization = undefined;
-
-    clearTimeout(idSearchFormTimeout.current);
-
-    return navigate('/');
+    window.location.href = "/";
   }
 
   // const handleSearchForm = () => {
@@ -85,7 +87,7 @@ export const useAuth = () => {
 
     if (isAuthenticated) {
       const token = localStorage.getItem('@Microdigo:token');
-      api.defaults.headers.common.Authorization = `Bearer ${JSON.parse(token)}`;
+      apiAuth.defaults.headers.common.Authorization = `Bearer ${JSON.parse(token)}`;
 
       // idSearchFormTimeout.current = setTimeout(handleSearchForm, TIME_ACTIVATE_SEARCH_FORM);
 

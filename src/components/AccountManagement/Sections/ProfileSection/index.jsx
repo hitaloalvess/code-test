@@ -1,15 +1,14 @@
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useForm } from 'react-hook-form';
 import { Cake, Flag, PhoneCall, User } from '@phosphor-icons/react';
 
-import { api } from '@/services/api';
+import { apiAuth } from '@/services/apiAuth';
 import { useContextAuth } from '@/hooks/useAuth';
 import { isValidPhoneNumber, removeSpaces, removeSpecialCharacters } from '@/utils/form-validation-functions';
-import { Form } from '@/components/shared/Form';
-import { Input } from '@/components/shared/Input';
+import { Form } from '@/components/SharedComponents/Form';
+import { Input } from '@/components/SharedComponents/Input';
 
 import * as S from '../styles.module.css';
 
@@ -33,7 +32,6 @@ const ProfileSection = () => {
 
   const { user } = useContextAuth();
 
-  const navigate = useNavigate();
   const { handleSubmit, register, setValue, formState: { errors } } = useForm({
     resolver: zodResolver(signUpSchema),
     shouldFocusError: false
@@ -46,6 +44,7 @@ const ProfileSection = () => {
     const transformNasc = new Date(formData.nasc);
 
     const data = {
+      ...user,
       ...formData,
       phone: transformPhone,
       nasc: transformNasc
@@ -53,10 +52,8 @@ const ProfileSection = () => {
 
     try {
 
-      await api.patch(`/users/update/${user.id}`, data);
+      await apiAuth.put(`/users/update/${user.id}`, data);
       toast.success('Usuário atualizado com sucesso!');
-
-      return navigate('/');
 
     } catch (error) {
       toast.error(error.response.data.message);

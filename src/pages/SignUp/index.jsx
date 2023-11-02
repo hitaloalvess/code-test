@@ -16,14 +16,14 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'react-toastify';
 
 import { isValidCPF, isValidPhoneNumber, removeSpaces, removeSpecialCharacters } from '@/utils/form-validation-functions';
-import { api } from '@/services/api';
+import { apiAuth } from '@/services/apiAuth';
 import LogoMicrodigo from '@/assets/images/logo-microdigo.svg';
-import Banner from '@/components/shared/Banner';
+import Banner from '@/components/SharedComponents/Banner';
 import ButtonAcceptsTerms from '@/components/SignUp/ButtonAcceptsTerms';
-import { Form } from '@/components/shared/Form';
-import { Input } from '@/components/shared/Input';
-import { InputPassword } from '@/components/shared/Input/InputPasswordType';
-import { SpinnerLoader } from '@/components/shared/SpinnerLoader';
+import { Form } from '@/components/SharedComponents/Form';
+import { Input } from '@/components/SharedComponents/Input';
+import { InputPassword } from '@/components/SharedComponents/Input/InputPasswordType';
+import { SpinnerLoader } from '@/components/SharedComponents/SpinnerLoader';
 
 import * as S from './styles.module.css';
 
@@ -32,7 +32,7 @@ const signUpSchema = z.object({
   email: z.string().email('Por favor, informe um email válido.'),
   password: z.string().min(8, { message: 'Senha deve ter no mínimo 8 caracteres' })
     .refine((value) => {
-      const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$%^&+=!_])[A-Za-z\d@#$%^&+=!_]+$/
+      const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$%^&+=!_.])[A-Za-z\d@#$%^&+=!_.]+$/
       return regex.test(value)
     }, {
       message: 'Senha deve conter caracteres especiais, números, letras maiúsculas e minúsculas'
@@ -86,7 +86,7 @@ const SignUp = () => {
 
     try {
       setIsLoading(true);
-      await api.post('users', data);
+      await apiAuth.post('users', data);
       toast.success('Usuário cadastrado com sucesso!');
 
       setIsLoading(false);
@@ -202,7 +202,7 @@ const SignUp = () => {
                     icon={<Phone fontSize={20} className={'text-gray-100'} />}
                   />
                   <Input.TextMaskType
-                    placeholder={"+55 (00) 00000-0000"}
+                    placeholder={"(00) 00000-0000"}
                     maskChange={handleChangeValue}
                     {...register('phone')}
                   />

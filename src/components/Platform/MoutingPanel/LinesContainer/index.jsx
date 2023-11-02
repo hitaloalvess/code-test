@@ -1,27 +1,39 @@
+/* eslint-disable no-unused-vars */
+import { memo } from 'react';
 import { useDrop } from 'react-dnd';
-import { forwardRef } from 'react';
+import { shallow } from 'zustand/shallow';
 
-import { useFlow } from '@/hooks/useFlow';
+import { useStore } from '@/store';
 import Line from './Line';
 
-import { lines } from './styles.module.css';
+import * as LC from './styles.module.css';
 
-const LinesContainer = forwardRef(function LinesContainer(props, ref) {
+
+const LinesContainer = memo(function LinesContainer() {
+
   const {
+    platformRef,
     flowTemp,
-    connectionLines,
+    lines,
     deleteLine,
     updateLines,
-    deleteConnection
-  } = useFlow();
+  } = useStore(store => ({
+    platformRef: store.platformRef,
+    flowTemp: store.flowTemp,
+    lines: store.lines,
+    deleteLine: store.deleteLine,
+    updateLines: store.updateLines,
+    deleteConnection: store.deleteConnection
+  }), shallow)
 
   const handleMouseMove = ({ mousePosX, mousePosY }) => {
+
     if (!flowTemp.connectorClicked) return;
 
     const { currentLine, from } = flowTemp;
 
-    const scrollLeft = ref.current.scrollLeft;
-    const scrollTop = ref.current.scrollTop;
+    const scrollLeft = platformRef.current.scrollLeft;
+    const scrollTop = platformRef.current.scrollTop;
 
     updateLines({
       lineId: currentLine.id,
@@ -39,7 +51,6 @@ const LinesContainer = forwardRef(function LinesContainer(props, ref) {
     });
   };
 
-  // eslint-disable-next-line no-unused-vars
   const [_, drop] = useDrop(() => ({
     accept: ['connector'],
     hover: (_, monitor) => {
@@ -50,23 +61,23 @@ const LinesContainer = forwardRef(function LinesContainer(props, ref) {
         mousePosY
       });
     },
-    drop: () => deleteLine({ id: flowTemp.currentLine.id })
+    drop: () => deleteLine(flowTemp.currentLine.id)
 
   }), [flowTemp]);
 
   return (
     <div
-      id={lines}
+      className={LC.lines}
       ref={drop}
+      id='lines'
     >
-      {connectionLines.map(({ id, fromPos, toPos, idConnection }) => (
+      {Object.values(lines).map(({ id, fromPos, toPos, idConnection }) => (
         <Line
           key={id}
           id={id}
           fromPos={fromPos}
           toPos={toPos}
           idConnection={idConnection}
-          deleteLine={deleteConnection}
         />
       ))}
     </div>

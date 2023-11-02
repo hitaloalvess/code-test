@@ -1,5 +1,5 @@
 export const isValidPhoneNumber = (phoneNumber) => {
-  const phoneRegex = /^\+55 \(\d{2}\) \d{5}-\d{4}$/;
+  const phoneRegex = /^\(\d{2}\) \d{5}-\d{4}$/;
   return phoneRegex.test(phoneNumber);
 }
 
@@ -21,7 +21,6 @@ export const applyMask = (typeMask, value) => {
       .replace(/(\d{3})(\d{1,2})$/, '$1-$2'),
 
     phone: (value) => value.replace(/\D/g, '')
-      .replace(/(\d{2})(\d)/, '+$1 $2')
       .replace(/(\d{2})(\d)/, '($1) $2')
       .replace(/(\d{4})(\d{4})$/, '$1-$2')
   }

@@ -1,23 +1,29 @@
 import { useEffect, useRef } from 'react';
+import { Outlet } from 'react-router-dom';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { TouchBackend } from 'react-dnd-touch-backend';
 import { isMobile } from 'react-device-detect';
+import { shallow } from 'zustand/shallow';
 
-import { DevicesProvider } from '@/contexts/DevicesContext';
-import { FlowProvider } from '@/contexts/FlowContext';
+import { useStore } from '@/store';
 import { useModal } from '@/hooks/useModal';
-import Header from '@/components/shared/Header';
+import Header from '@/components/SharedComponents/Header';
 import Sidebar from '@/components/Platform/Sidebar';
-import MoutingPanel from '@/components/Platform/MoutingPanel';
 import CustomDragLayer from '@/components/Platform/CustomDragLayer';
+import ActionsArea from '@/components/Platform/ActionsArea';
 
-import { container } from './styles.module.css';
-
+import * as P from './styles.module.css';
 
 const Platform = () => {
 
   const { enableModal } = useModal();
+
+  const {
+    loadRef
+  } = useStore(store => ({
+    loadRef: store.loadRef
+  }), shallow);
 
   const containerRef = useRef(null);
 
@@ -37,6 +43,11 @@ const Platform = () => {
 
   }
 
+  const attachRef = (el) => {
+    containerRef.current = el;
+    loadRef('platformRef', containerRef);
+  }
+
   useEffect(() => {
 
     handleEnableInitialIntroModal();
@@ -45,19 +56,15 @@ const Platform = () => {
 
   return (
     <DndProvider backend={isMobile ? TouchBackend : HTML5Backend}>
-      <DevicesProvider>
-        <FlowProvider>
-          <main className={container} ref={containerRef}>
-            <Header />
+      <main className={P.container} ref={attachRef}>
+        <Header />
 
-            <Sidebar />
+        <Sidebar />
 
-            <MoutingPanel ref={containerRef} />
+        <Outlet context={containerRef} />
 
-
-          </main>
-        </FlowProvider>
-      </DevicesProvider>
+        <ActionsArea />
+      </main>
 
       {isMobile && <CustomDragLayer />}
     </DndProvider>

@@ -12,11 +12,12 @@
 }
 
 :root {
-  --background: #e5e5e5;
+  --background: #fffffe;
   --red: #ff1450;
   --blue-900: #004bc8;
   --blue: #0078ff;
-  --yellow-900: #b88019;
+  --yellow-900: #905E18;
+  --yellow-800: #b88019;
   --yellow-800: #d29422;
   --yellow-600: #fe9700;
   --yellow: #ffbe00;
@@ -26,7 +27,8 @@
   --white-100: #f2f2f2;
   --white-200: #efefef;
   --gray-50: #d9d9d9;
-  --gray-100: #929292;
+  --gray-100: #e5e5e5;
+  --gray-200: #929292;
   --green: #14ae5c;
 }
 

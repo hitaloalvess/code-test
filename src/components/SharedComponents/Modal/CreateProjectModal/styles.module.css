@@ -1,0 +1,30 @@
+.content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 24px;
+  width: 480px;
+  padding: 32px;
+  outline: none;
+  border: none;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 18px;
+}
+
+@media (((max-height: 481px) and (orientation: landscape)) or ((max-width: 481px) and (orientation: portrait))) {
+  /* MOBILE */
+
+  .content {
+    width: 320px;
+    padding: 24px;
+    gap: 32px;
+  }
+
+}

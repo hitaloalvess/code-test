@@ -1,233 +1,207 @@
 
 import { memo, useCallback, useEffect, useRef, useState } from 'react';
-import { Trash, Gear } from '@phosphor-icons/react';
 import P from 'prop-types';
+import { shallow } from 'zustand/shallow';
 
-import { useDevices } from '@/hooks/useDevices';
-import { useFlow } from '@/hooks/useFlow';
-import { useModal } from '@/hooks/useModal';
-import ActionButton from '@/components/Platform/ActionButton';
-import Connector from '@/components/Platform/Connector';
+import { useStore } from '@/store';
+import ActionButtons from '@/components/Platform/Device/SharedDevice/ActionButtons';
+import Connectors from '@/components/Platform/Device/SharedDevice/Connectors';
+import DeviceBody from '../../SharedDevice/DeviceBody';
+import BuzzerIcon from './BuzzerIcon';
 
 import buzzerAudio from '@/assets/audio/audio-buzzer.mp3';
 
-import {
-  deviceBody,
-  actionButtonsContainer,
-  actionButtonsContainerRight,
-  connectorsContainer,
-  connectorsContainerEntry
-} from '../../styles.module.css';
-
-import {
-  buzzerIconOff,
-  buzzerIconOn
-} from './styles.module.css';
 
 const Buzzer = memo(function Buzzer({
-  dragRef, device, updateValue
+  data, dragRef, onSaveData
 }) {
-  const { id, imgSrc, name, posX, posY } = device;
-  const { deleteDevice } = useDevices();
-  const { deleteDeviceConnections } = useFlow();
-  const { enableModal, disableModal } = useModal();
 
-  const [audio] = useState(new Audio(buzzerAudio));
-  const [value, setValue] = useState(device.value);
-  const [valueTemp, setValueTemp] = useState({
-    active: false,
-    current: 0,
-    max: 0,
-    type: null
-  });
-
+  const isFirstRender = useRef(true);
   const timeoutStopAudio = useRef(null);
 
-  const enableSound = () => {
+  const {
+    id,
+    imgSrc,
+    name,
+    posX,
+    posY,
+    value,
+    connectors,
+  } = data;
+
+  const {
+    updateDeviceValue,
+    updateDeviceValueInFlow
+  } = useStore(store => ({
+    updateDeviceValue: store.updateDeviceValue,
+    updateDeviceValueInFlow: store.updateDeviceValueInFlow
+  }), shallow);
+
+  const [audio] = useState(new Audio(buzzerAudio));
+
+
+  const handleEnableSound = () => {
     audio.loop = true;
+    audio.autoplay = true;
     audio.play();
   };
 
-  const disableSound = () => {
+  const handleDisableSound = () => {
     audio.pause();
     audio.loop = false;
 
-    setValueTemp({
-      ...valueTemp,
+    const newValue = {
+      ...value,
       active: false
-    })
+    }
 
     clearTimeout(timeoutStopAudio.current);
+
+    onSaveData('value', newValue)
+    updateDeviceValue(id, { value: newValue });
+
   }
 
   const handleSettingUpdate = useCallback((newDuration, newVolume) => {
 
-    updateValue(setValue, id, {
+    audio.volume = newVolume;
+
+    const newValue = {
       ...value,
       duration: newDuration,
       volume: newVolume
-    });
+    }
+
+    onSaveData('value', newValue)
+    updateDeviceValue(id, { value: newValue });
 
   }, [value.duration, value.volume]);
 
-  const defaultBehavior = (valueReceived) => {
-    const { value: newValue, max } = valueReceived;
+  const defaultReceiveBehavior = useCallback((valueReceived) => {
+    const { value, max } = valueReceived;
 
     const objValue = {
-      current: typeof newValue === 'boolean' ?
-        (newValue ? 1023 : 0) : newValue,
-      max: typeof newValue === 'boolean' ? 1023 : max,
-      type: typeof newValue
+      current: typeof value === 'boolean' ?
+        (value ? 1023 : 0) : value,
+      max: typeof value === 'boolean' ? 1023 : max,
+      type: typeof value
     }
 
-    setValueTemp({
+    const newValue = {
+      ...data.value,
       ...objValue,
       active: objValue.current !== 0
-    })
-  };
+    }
 
-  const redefineBehavior = () => {
+    onSaveData('value', newValue);
+    updateDeviceValue(id, { value: newValue });
+    updateDeviceValueInFlow({ connectorId: connectors.frequency.id, newValue })
 
-    updateValue(setValue, id, {
-      ...device.value
-    });
+  }, [connectors]);
 
-    setValueTemp({
+  const redefineBehavior = useCallback(() => {
+
+    const value = {
       active: false,
       current: 0,
       max: 0,
-      type: null
-    })
-  }
+      type: null,
+      duration: 4,
+      volume: 0.5,
+    }
+
+    onSaveData('value', value)
+
+    updateDeviceValue(id, { value });
+
+  }, []);
 
 
   useEffect(() => {
 
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
 
-    const { current, max, type } = valueTemp;
-    if (valueTemp.active) {
-
-      updateValue(setValue, id, {
-        ...value,
-        current, max, type,
-        active: true
-      });
-
-      enableSound();
-
-      timeoutStopAudio.current = setTimeout(() => disableSound(), value.duration * 1000);
-
+      return;
     }
-    else {
-      updateValue(setValue, id, {
-        ...value,
-        current, max, type,
-        active: false
-      });
 
-      disableSound();
+    if (value.active) {
+      handleEnableSound();
+      timeoutStopAudio.current = setTimeout(() => handleDisableSound(), value.duration * 1000);
 
+      return;
     }
-  }, [valueTemp.active]);
 
+    handleDisableSound();
+
+  }, [value.active]);
 
   useEffect(() => {
 
-    const { current, max, type } = valueTemp;
+    return () => {
+      audio.pause();
+      clearTimeout(timeoutStopAudio.current);
+    }
+  }, [])
 
-    audio.volume = value.volume;
-
-    updateValue(setValue, id, {
-      ...value,
-      current, max, type,
-      active: false
-    });
-
-    disableSound();
-
-  }, [value.volume, value.duration]);
 
   return (
     <>
-      <div
-        className={deviceBody}
+
+
+      <DeviceBody
+        name={name}
+        imgSrc={imgSrc}
         ref={dragRef}
       >
-        <svg
-          className={valueTemp.active ? buzzerIconOn : buzzerIconOff}
-          width="20"
-          height="20"
-          viewBox="0 0 20 20"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M19.4961 0.241341C19.8125 0.475691 20 0.850652 20 1.24514V4.05734V14.3688C20 16.0951 18.3203 17.4934 16.25 17.4934C14.1797 17.4934 12.5 16.0951 12.5 14.3688C12.5 12.6424 14.1797 11.2441 16.25 11.2441C16.6875 11.2441 17.1094 11.3066 17.5 11.4238V5.73686L7.5 8.73654V16.8685C7.5 18.5949 5.82031 19.9932 3.75 19.9932C1.67969 19.9932 0 18.5949 0 16.8685C0 15.1421 1.67969 13.7438 3.75 13.7438C4.1875 13.7438 4.60938 13.8063 5 13.9235V7.80695V4.99475C5 4.44402 5.36328 3.95579 5.89063 3.79565L18.3906 0.0460493C18.7695 -0.06722 19.1797 0.00308507 19.4961 0.241341Z"
-            fill="#282832"
-          />
-        </svg>
 
-        <img
-          src={imgSrc}
-          alt={`Device ${name}`}
-          loading='lazy'
-        />
-      </div>
-      <div
-        className={`${connectorsContainer} ${connectorsContainerEntry}`}
-      >
-        <Connector
-          name={'boolean'}
-          type={'entry'}
-          device={{
-            id,
-            defaultBehavior,
-            redefineBehavior,
-            containerRef: device.containerRef
-          }}
-          updateConn={{ posX, posY }}
-        />
-      </div>
+        <BuzzerIcon active={value.active} />
 
-      <div
-        className={
-          `${actionButtonsContainer} ${actionButtonsContainerRight}`
-        }
-      >
-        <ActionButton
-          onClick={() => enableModal({
-            typeContent: 'confirmation',
+        <ActionButtons
+          orientation='right'
+          actionDelete={{
             title: 'Cuidado',
             subtitle: 'Tem certeza que deseja excluir o componente?',
-            handleConfirm: () => {
-              deleteDeviceConnections(id);
-              deleteDevice(id);
-              disableModal('confirmation');
+            data: {
+              id
             }
-          })}
-        >
-          <Trash />
-        </ActionButton>
-
-        <ActionButton
-          onClick={() => enableModal({
+          }}
+          actionConfig={{
             typeContent: 'config-buzzer',
-            handleSaveConfig: handleSettingUpdate,
-            defaultDuration: value.duration,
-            defaultVolume: value.volume
-          })}
-        >
-          <Gear />
-        </ActionButton>
-      </div >
+            onSave: handleSettingUpdate,
+            data: {
+              defaultDuration: value.duration,
+              defaultVolume: value.volume
+            }
+          }}
+        />
+      </DeviceBody>
+
+      <Connectors
+        type='entrys'
+        exitConnectors={[
+          {
+            data: {
+              ...connectors.frequency,
+              defaultReceiveBehavior,
+              redefineBehavior
+            },
+            device: { id },
+            updateConn: { posX, posY },
+            handleChangeData: onSaveData
+          },
+        ]}
+      />
+
+
     </>
   );
 });
 
 Buzzer.propTypes = {
+  data: P.object.isRequired,
   dragRef: P.func.isRequired,
-  device: P.object.isRequired,
-  updateValue: P.func.isRequired
+  onSaveData: P.func.isRequired
 }
 
 export default Buzzer;

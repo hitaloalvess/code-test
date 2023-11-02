@@ -1,0 +1,54 @@
+.container {
+  position: absolute;
+  top: -24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 44px;
+  min-height: 96px;
+  gap: 8px;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+  pointer-events: none;
+}
+
+.left {
+  left: -44px;
+}
+
+.right {
+  right: -44px;
+  align-items: flex-end;
+}
+
+.bottom {
+  flex-direction: row;
+  top: auto;
+  bottom: -28px;
+  min-height: 16px;
+  width: 112px;
+}
+
+.container.active {
+  opacity: 0.5;
+  pointer-events: auto;
+}
+
+
+.container:hover.active {
+  opacity: 1;
+}
+
+
+@media ((max-height: 481px) and (orientation: landscape)) or ((max-width: 481px) and (orientation: portrait)) {
+  .right {
+    right: -36px;
+    align-items: flex-end;
+  }
+
+  .container.active {
+    opacity: 1;
+  }
+
+
+}

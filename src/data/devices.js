@@ -14,6 +14,7 @@ import deviceLedMono from '@/assets/images/devices/exit/ledMono.svg';
 import deviceLaser from '@/assets/images/devices/exit/laser.svg';
 import deviceShakeMotor from '@/assets/images/devices/exit/shakeMotor.svg';
 import deviceBuzzer from '@/assets/images/devices/exit/buzzer.svg';
+import deviceTimer from '@/assets/images/devices/exit/timer.svg';
 // import deviceBargraph from '@/assets/images/devices/event/eventBase.svg';
 
 //conditional
@@ -28,6 +29,10 @@ import devicePickColor from '@/assets/images/devices/event/pickcolor.svg';
 import deviceToggle from '@/assets/images/devices/event/toggle.svg';
 import deviceDelay from '@/assets/images/devices/event/delay.svg';
 import deviceSlider from '@/assets/images/devices/event/slider.svg';
+import deviceLoop from '@/assets/images/devices/event/loop.svg';
+
+//tool
+import deviceStickynote from '@/assets/images/devices/tool/stickyNote.svg'
 
 export const mockDevices = {
   entry: [
@@ -39,9 +44,33 @@ export const mockDevices = {
       type: 'virtual',
       category: 'entry',
       value: {
-        current: 0,
-        max: 1023
+        temperature: {
+          current: 0,
+          max: 50
+        },
+        humidity: {
+          current: 0,
+          max: 1023
+        }
       },
+      posX: 0,
+      posY: 0,
+      connectors: {
+        temperature: {
+          id: null,
+          type: 'exit',
+          name: 'temperature',
+          x: 0,
+          y: 0
+        },
+        humidity: {
+          id: null,
+          type: 'exit',
+          name: 'humidity',
+          x: 0,
+          y: 0
+        }
+      }
     },
     {
       id: 11,
@@ -50,7 +79,22 @@ export const mockDevices = {
       label: 'Sensor infravermelho',
       type: 'virtual',
       category: 'entry',
-      value: 'FF12F3'
+      value: {
+        code: {
+          current: 'FF12F3'
+        }
+      },
+      posX: 0,
+      posY: 0,
+      connectors: {
+        code: {
+          id: null,
+          name: 'code',
+          type: 'exit',
+          x: 0,
+          y: 0
+        }
+      }
     },
     {
       id: 12,
@@ -60,8 +104,21 @@ export const mockDevices = {
       type: 'virtual',
       category: 'entry',
       value: {
-        current: 0,
-        max: 1023
+        luminosity: {
+          current: 0,
+          max: 1023
+        }
+      },
+      posX: 0,
+      posY: 0,
+      connectors: {
+        luminosity: {
+          id: null,
+          name: 'luminosity',
+          type: 'exit',
+          x: 0,
+          y: 0
+        }
       }
     },
     {
@@ -72,8 +129,21 @@ export const mockDevices = {
       type: 'virtual',
       category: 'entry',
       value: {
-        current: 0,
-        max: 1023
+        resistance: {
+          current: 0,
+          max: 1023
+        }
+      },
+      posX: 0,
+      posY: 0,
+      connectors: {
+        resistance: {
+          id: null,
+          name: 'resistance',
+          type: 'exit',
+          x: 0,
+          y: 0
+        }
       }
     },
     {
@@ -83,7 +153,22 @@ export const mockDevices = {
       label: 'Botão',
       type: 'virtual',
       category: 'entry',
-      value: false
+      value: {
+        state: {
+          current: false
+        }
+      },
+      posX: 0,
+      posY: 0,
+      connectors: {
+        state: {
+          id: null,
+          name: 'state',
+          type: 'exit',
+          x: 0,
+          y: 0
+        }
+      }
     },
     {
       id: 15,
@@ -92,31 +177,73 @@ export const mockDevices = {
       label: 'Switch',
       type: 'virtual',
       category: 'entry',
-      value: false
+      value: {
+        state: {
+          current: false
+        }
+      },
+      posX: 0,
+      posY: 0,
+      connectors: {
+        state: {
+          id: null,
+          name: 'state',
+          type: 'exit',
+          x: 0,
+          y: 0
+        }
+      }
+
     },
     // {
     //   id: 16,
     //   imgSrc: deviceRainDetector,
     //   name: 'rainDetector',
-    // label: 'Sensor de radiação',
+    //   label: 'Sensor de radiação',
     //   type: 'virtual',
     //   category: 'entry',
     //   value: {
-    //     current: 0,
-    //     max: 1023
+    //     radiation: {
+    //       current: 0,
+    //       max: 1023
+    //     }
     //   },
+    //   posX: 0,
+    //   posY: 0,
+    //   connectors: {
+    //     radiation: {
+    //       id: null,
+    //       name: 'radiation',
+    //       type: 'exit',
+    //       x: 0,
+    //       y: 0
+    //     }
+    //   }
     // },
     // {
     //   id: 17,
     //   imgSrc: deviceSoilMoisture,
     //   name: 'soilMoisture',
-    // label: 'Sensor de humidade do solo',
+    //   label: 'Sensor de humidade do solo',
     //   type: 'virtual',
     //   category: 'entry',
     //   value: {
-    //     current: 0,
-    //     max: 1023
+    //     humidity: {
+    //       current: 0,
+    //       max: 1023
+    //     }
     //   },
+    //   posX: 0,
+    //   posY: 0,
+    //   connectors: {
+    //     humidity: {
+    //       id: null,
+    //       name: 'humidity',
+    //       type: 'exit',
+    //       x: 0,
+    //       y: 0
+    //     }
+    //   }
     // }
   ],
   exit: [
@@ -135,6 +262,17 @@ export const mockDevices = {
         color: '#ff1450',
         opacity: 0,
         brightness: 1023
+      },
+      posX: 0,
+      posY: 0,
+      connectors: {
+        brightness: {
+          id: null,
+          name: 'brightness',
+          type: 'entry',
+          x: 0,
+          y: 0
+        }
       }
     },
     {
@@ -151,6 +289,17 @@ export const mockDevices = {
         type: null,
         opacity: 0,
         brightness: 1023
+      },
+      posX: 0,
+      posY: 0,
+      connectors: {
+        lumen: {
+          id: null,
+          name: 'lumen',
+          type: 'entry',
+          x: 0,
+          y: 0
+        }
       }
     },
     {
@@ -167,6 +316,17 @@ export const mockDevices = {
         type: null,
         opacity: 0,
         brightness: 1023
+      },
+      posX: 0,
+      posY: 0,
+      connectors: {
+        intensity: {
+          id: null,
+          name: 'intensity',
+          type: 'entry',
+          x: 0,
+          y: 0
+        }
       }
     },
     {
@@ -181,6 +341,17 @@ export const mockDevices = {
         current: 0,
         max: 0,
         type: null
+      },
+      posX: 0,
+      posY: 0,
+      connectors: {
+        vibration: {
+          id: null,
+          name: 'vibration',
+          type: 'entry',
+          x: 0,
+          y: 0
+        }
       }
     },
     {
@@ -197,6 +368,46 @@ export const mockDevices = {
         type: null,
         duration: 4,
         volume: 0.5,
+      },
+      posX: 0,
+      posY: 0,
+      connectors: {
+        frequency: {
+          id: null,
+          name: 'frequency',
+          type: 'entry',
+          x: 0,
+          y: 0,
+        }
+      }
+    },
+    {
+      id: 26,
+      imgSrc: deviceTimer,
+      name: 'timer',
+      label: 'Cronômetro',
+      type: 'virtual',
+      category: 'exit',
+      value: {
+        current: 0
+      },
+      posX: 0,
+      posY: 0,
+      connectors: {
+        active: {
+          id: null,
+          name: 'active',
+          type: 'entry',
+          x: 0,
+          y: 0,
+        },
+        reset: {
+          id: null,
+          name: 'reset',
+          type: 'entry',
+          x: 0,
+          y: 0,
+        },
       }
     },
     // {
@@ -213,6 +424,17 @@ export const mockDevices = {
     //     type: null,
     //     opacity: 0,
     //     brightness: 1023
+    //   },
+    //   posX: 0,
+    //   posY: 0,
+    //   connectors: {
+    //     lumen: {
+    //       id: null,
+    //       name: 'lumen',
+    //       type: 'entry',
+    //       x: 0,
+    //       y: 0
+    //     }
     //   }
     // },
   ],
@@ -225,9 +447,29 @@ export const mockDevices = {
       type: 'virtual',
       category: 'event',
       value: {
-        current: 0,
-        max: 0,
-        color: '#39394E'
+        send: {
+          current: 0,
+          max: 0,
+          color: '#39394E'
+        }
+      },
+      posX: 0,
+      posY: 0,
+      connectors: {
+        receive: {
+          id: null,
+          name: 'receive',
+          type: 'entry',
+          x: 0,
+          y: 0
+        },
+        send: {
+          id: null,
+          name: 'send',
+          type: 'exit',
+          x: 0,
+          y: 0
+        },
       }
     },
     {
@@ -237,7 +479,29 @@ export const mockDevices = {
       label: 'Toggle',
       type: 'virtual',
       category: 'event',
-      value: false
+      value: {
+        send: {
+          current: false
+        }
+      },
+      posX: 0,
+      posY: 0,
+      connectors: {
+        receive: {
+          id: null,
+          name: 'receive',
+          type: 'entry',
+          x: 0,
+          y: 0
+        },
+        send: {
+          id: null,
+          name: 'send',
+          type: 'exit',
+          x: 0,
+          y: 0
+        },
+      }
     },
     {
       id: 32,
@@ -247,8 +511,29 @@ export const mockDevices = {
       type: 'virtual',
       category: 'event',
       value: {
-        current: 0,
-        max: 0
+        send: {
+          current: 0,
+          max: 0
+        },
+        duration: 5,
+      },
+      posX: 0,
+      posY: 0,
+      connectors: {
+        receive: {
+          id: null,
+          name: 'receive',
+          type: 'entry',
+          x: 0,
+          y: 0
+        },
+        send: {
+          id: null,
+          name: 'send',
+          type: 'exit',
+          x: 0,
+          y: 0
+        },
       }
     },
     {
@@ -259,8 +544,62 @@ export const mockDevices = {
       type: 'virtual',
       category: 'event',
       value: {
-        current: 0,
-        max: 0
+        send: {
+          current: 0,
+          max: 0
+        },
+        limit: 1023
+      },
+      posX: 0,
+      posY: 0,
+      connectors: {
+        receive: {
+          id: null,
+          name: 'receive',
+          type: 'entry',
+          x: 0,
+          y: 0
+        },
+        send: {
+          id: null,
+          name: 'send',
+          type: 'exit',
+          x: 0,
+          y: 0
+        },
+      }
+    },
+    {
+      id: 34,
+      imgSrc: deviceLoop,
+      name: 'loop',
+      label: 'Loop',
+      type: 'virtual',
+      category: 'event',
+      value: {
+        send: {
+          current: 0,
+          max: 0
+        },
+        duration: 5,
+      },
+      posX: 0,
+      posY: 0,
+      connectors: {
+        receive: {
+          id: null,
+          name: 'receive',
+          type: 'entry',
+          x: 0,
+          y: 0
+        },
+        send: {
+          id: null,
+          name: 'send',
+          type: 'exit',
+          x: 0,
+          y: 0
+        },
       }
     },
   ],
@@ -272,7 +611,29 @@ export const mockDevices = {
       label: 'And',
       type: 'virtual',
       category: 'conditional',
-      value: false
+      value: {
+        send: {
+          current: false
+        },
+      },
+      posX: 0,
+      posY: 0,
+      connectors: {
+        receive: {
+          id: null,
+          name: 'receive',
+          type: 'entry',
+          x: 0,
+          y: 0
+        },
+        send: {
+          id: null,
+          name: 'send',
+          type: 'exit',
+          x: 0,
+          y: 0
+        },
+      }
     },
     {
       id: 41,
@@ -281,7 +642,30 @@ export const mockDevices = {
       label: 'Or',
       type: 'virtual',
       category: 'conditional',
-      value: false
+      value: {
+        send: {
+          current: false,
+          color: '#39394E'
+        },
+      },
+      posX: 0,
+      posY: 0,
+      connectors: {
+        receive: {
+          id: null,
+          name: 'receive',
+          type: 'entry',
+          x: 0,
+          y: 0
+        },
+        send: {
+          id: null,
+          name: 'send',
+          type: 'exit',
+          x: 0,
+          y: 0
+        },
+      }
     },
     {
       id: 42,
@@ -290,7 +674,29 @@ export const mockDevices = {
       label: 'Not',
       type: 'virtual',
       category: 'conditional',
-      value: false
+      value: {
+        send: {
+          current: false
+        }
+      },
+      posX: 0,
+      posY: 0,
+      connectors: {
+        receive: {
+          id: null,
+          name: 'receive',
+          type: 'entry',
+          x: 0,
+          y: 0
+        },
+        send: {
+          id: null,
+          name: 'send',
+          type: 'exit',
+          x: 0,
+          y: 0
+        },
+      }
     },
     {
       id: 43,
@@ -299,7 +705,32 @@ export const mockDevices = {
       label: 'If',
       type: 'virtual',
       category: 'conditional',
-      value: false
+      value: {
+        send: {
+          current: false,
+        },
+        simbol: '=',
+        connectionType: 'number',
+        numberDisplay: 0
+      },
+      posX: 0,
+      posY: 0,
+      connectors: {
+        receive: {
+          id: null,
+          name: 'receive',
+          type: 'entry',
+          x: 0,
+          y: 0
+        },
+        send: {
+          id: null,
+          name: 'send',
+          type: 'exit',
+          x: 0,
+          y: 0
+        },
+      }
     },
     {
       id: 44,
@@ -309,9 +740,47 @@ export const mockDevices = {
       type: 'virtual',
       category: 'conditional',
       value: {
-        current: 0,
-        max: 0
+        send: {
+          current: 0,
+          max: 1023
+        },
+        loopActive: false,
+        loopLimit: 9999
+      },
+      posX: 0,
+      posY: 0,
+      connectors: {
+        receive: {
+          id: null,
+          name: 'receive',
+          type: 'entry',
+          x: 0,
+          y: 0
+        },
+        send: {
+          id: null,
+          name: 'send',
+          type: 'exit',
+          x: 0,
+          y: 0
+        },
       }
+    }
+  ],
+  tool: [
+    {
+      id: 45,
+      imgSrc: deviceStickynote,
+      name: 'stickynote',
+      label: 'Bloco de Notas',
+      type: 'virtual',
+      category: 'tool',
+      value: {
+        text: '',
+        color: '#F5B9B9'
+      },
+      posX: 0,
+      posY: 0
     }
   ]
 };
@@ -350,41 +819,41 @@ export const deviceConnectorRules = {
     connectsTo: ['if']
   },
   led: {
-    acceptedConnections: ['allEntry'],
+    acceptedConnections: ['oneEntry'],
     connectsFrom: ['all']
   },
   buzzer: {
-    acceptedConnections: ['allEntry'],
-    connectsFrom: ['potentiometer', 'ldr', 'pushButton', 'counter', 'and', 'or', 'not', 'if', 'toggle', 'slider', 'delay', 'switch', 'physicalPotentiometer', 'physicalLDR']
+    acceptedConnections: ['oneEntry'],
+    connectsFrom: ['potentiometer', 'ldr', 'rainDetector', 'soilMoisture', 'pushButton', 'counter', 'and', 'or', 'not', 'if', 'toggle', 'slider', 'delay', 'switch', 'physicalPotentiometer', 'physicalLDR']
   },
   shakeMotor: {
-    acceptedConnections: ['allEntry'],
-    connectsFrom: ['potentiometer', 'ldr', 'pushButton', 'counter', 'and', 'or', 'not', 'if', 'toggle', 'slider', 'delay', 'switch', 'physicalPotentiometer', 'physicalLDR']
+    acceptedConnections: ['oneEntry'],
+    connectsFrom: ['potentiometer', 'ldr', 'rainDetector', 'soilMoisture', 'pushButton', 'counter', 'and', 'or', 'not', 'if', 'toggle', 'slider', 'delay', 'switch', 'physicalPotentiometer', 'physicalLDR']
   },
   ledMono: {
-    acceptedConnections: ['allEntry'],
+    acceptedConnections: ['oneEntry'],
     connectsFrom: ['all']
   },
   laser: {
-    acceptedConnections: ['allEntry'],
+    acceptedConnections: ['oneEntry'],
     connectsFrom: ['all']
   },
   bargraph: {
     acceptedConnections: ['oneEntry'],
-    connectsFrom: ['potentiometer', 'dht', 'ldr', 'counter', 'slider', 'physicalPotentiometer', 'physicalLDR', 'physicalDHT'],
+    connectsFrom: ['potentiometer', 'dht', 'ldr', 'rainDetector', 'soilMoisture', 'counter', 'slider', 'physicalPotentiometer', 'physicalLDR', 'physicalDHT'],
   },
   counter: {
     acceptedConnections: ['oneEntry', 'allExit'],
-    connectsFrom: ['potentiometer', 'ldr', 'pushButton', 'slider', 'delay', 'toggle', 'and', 'or', 'physicalPotentiometer', 'physicalLDR'],
+    connectsFrom: ['potentiometer', 'if', 'ldr', 'loop', 'pushButton', 'slider', 'delay', 'toggle', 'and', 'or', 'switch', 'physicalPotentiometer', 'physicalLDR'],
     connectsTo: ['all']
   },
   and: {
-    acceptedConnections: ['allEntry', 'oneExit'],
+    acceptedConnections: ['allEntry', 'allExit'],
     connectsFrom: ['all'],
     connectsTo: ['all']
   },
   or: {
-    acceptedConnections: ['allEntry', 'oneExit'],
+    acceptedConnections: ['allEntry', 'allExit'],
     connectsFrom: ['all'],
     connectsTo: ['all'],
   },
@@ -408,14 +877,29 @@ export const deviceConnectorRules = {
     connectsFrom: ['all'],
     connectsTo: ['all'],
   },
+  timer: {
+    acceptedConnections: ['oneEntry', 'allExit'],
+    connectsFrom: ['all'],
+    connectsTo: ['all'],
+  },
+  loop: {
+    acceptedConnections: ['oneEntry', 'allExit'],
+    connectsFrom: ['all'],
+    connectsTo: ['all'],
+  },
   pickColor: {
     acceptedConnections: ['oneEntry', 'allExit'],
     connectsFrom: ['all'],
-    connectsTo: ['led', 'physicalLED'],
+    connectsTo: ['or','led', 'physicalLED'],
   },
   slider: {
     acceptedConnections: ['oneEntry', 'allExit'],
-    connectsFrom: ['potentiometer', 'dht', 'ldr', 'counter', 'slider', 'physicalPotentiometer', 'physicalLDR', 'physicalDHT'],
+    connectsFrom: ['potentiometer', 'dht', 'ldr', 'rainDetector', 'soilMoisture', 'counter', 'slider', 'physicalPotentiometer', 'physicalLDR', 'physicalDHT'],
+    connectsTo: ['all'],
+  },
+  sticknote: {
+    acceptedConnections: ['oneEntry', 'allExit'],
+    connectsFrom: ['all'],
     connectsTo: ['all'],
   },
 }

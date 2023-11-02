@@ -1,0 +1,55 @@
+.confirmationModalContent {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 44px;
+  padding: 32px 64px;
+  outline: none;
+  border: none;
+  max-width: 600px;
+}
+
+.confirmationModalHeader {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 18px;
+}
+
+.confirmationModalHeader svg {
+  width: 100px;
+  height: 100px;
+  color: var(--yellow);
+}
+
+.confirmationModalTitle {
+  font-size: 32px;
+  text-align: center;
+  color: var(--yellow);
+}
+
+.confirmationModalMsg {
+  font-size: 16px;
+}
+
+.confirmModalActions {
+  display: flex;
+  gap: 24px;
+}
+
+
+@media (((max-height: 481px) and (orientation: landscape)) or ((max-width: 481px) and (orientation: portrait))) {
+  /* MOBILE */
+
+  .confirmationModalContent {
+    padding: 24px 32px;
+    gap: 32px;
+    max-width: 320px;
+  }
+
+  .confirmModalActions {
+    gap: 12px;
+  }
+}

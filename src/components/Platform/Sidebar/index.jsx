@@ -1,9 +1,9 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { useDrop } from 'react-dnd';
+import { shallow } from 'zustand/shallow';
 
+import { useStore } from '@/store';
 import { useModal } from '@/hooks/useModal';
-import { useDevices } from '@/hooks/useDevices';
-import { useFlow } from '@/hooks/useFlow';
 import SidebarArea from './SidebarArea';
 import MenuButtons from './MenuButtons';
 
@@ -11,8 +11,15 @@ import { menu } from './styles.module.css';
 
 const Sidebar = () => {
   const { enableModal, disableModal } = useModal();
-  const { deleteDeviceConnections, flows } = useFlow();
-  const { devices, deleteDevice } = useDevices();
+  const sidebarRef = useRef(null);
+
+  const {
+    deleteDeviceConnections,
+    loadRef,
+  } = useStore(store => ({
+    deleteDeviceConnections: store.deleteDeviceConnections,
+    loadRef: store.loadRef,
+  }), shallow);
 
   const [currentArea, setCurrentArea] = useState('entry');
 
@@ -24,8 +31,7 @@ const Sidebar = () => {
         title: 'Cuidado',
         subtitle: 'Tem certeza que deseja excluir o componente?',
         handleConfirm: () => {
-          deleteDeviceConnections(item.id);
-          deleteDevice(item.id);
+          deleteDeviceConnections({ deviceId: item.id });
           disableModal('confirmation');
         }
       })
@@ -33,16 +39,22 @@ const Sidebar = () => {
     collect: (monitor) => ({
       isOver: !!monitor.isOver()
     })
-  }), [devices, flows]);
+  }), []);
 
   const handleSelectArea = (currentArea) => {
     setCurrentArea(currentArea);
   }
 
+  const attachRef = (el) => {
+    drop(el);
+    sidebarRef.current = el;
+    loadRef('sidebarRef', sidebarRef);
+  }
+
   return (
     <nav
       className={menu}
-      ref={drop}
+      ref={attachRef}
     >
       <MenuButtons
         handleSelectArea={handleSelectArea}

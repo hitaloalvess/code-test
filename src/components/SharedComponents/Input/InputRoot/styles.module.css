@@ -1,0 +1,29 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 4px 0;
+}
+
+.content {
+  position: relative;
+  width: 100%;
+  min-width: 200px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 24px;
+  border-radius: 4px;
+  border: 2px solid var(--white-200);
+  background-color: var(--white);
+}
+
+.content svg {
+  color: var(--gray-200);
+}
+
+.messageError {
+  color: var(--red);
+  font-size: 12px;
+  line-height: 16px;
+}

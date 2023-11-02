@@ -1,0 +1,5 @@
+.devicesAreaContainer {
+  position: relative;
+  min-width: 150vw;
+  min-height: 150vh;
+}

@@ -1,266 +1,260 @@
 import { useEffect, useRef, useCallback, useState } from 'react';
 import P from 'prop-types';
-import { Trash, Gear } from '@phosphor-icons/react';
+import { shallow } from 'zustand/shallow';
 
-import { useModal } from '@/hooks/useModal';
-import { useFlow } from '@/hooks/useFlow';
-import { useDevices } from '@/hooks/useDevices';
-import Connector from '@/components/Platform/Connector';
-import ActionButton from '@/components/Platform/ActionButton';
+import { useStore } from '@/store';
 import { findFlowsByDeviceId } from '@/utils/flow-functions';
 
-import {
-  deviceBody,
-  actionButtonsContainer,
-  actionButtonsContainerBottom,
-  connectorsContainer,
-  connectorsContainerExit,
-  connectorsContainerEntry
-} from '../../styles.module.css';
+import ActionButtons from '@/components/Platform/Device/SharedDevice/ActionButtons';
+import Connectors from '@/components/Platform/Device/SharedDevice/Connectors';
+import DeviceBody from '../../SharedDevice/DeviceBody';
 
-import {
-  delayNumber
-} from './styles.module.css';
+
+import * as D from './styles.module.css';
 
 import eventBaseImg from '@/assets/images/devices/event/eventBase.svg';
 
 const INITIAL_DURATION = 5;
 const Delay = ({
-  dragRef, device, updateValue
+  data, dragRef, onSaveData
 }) => {
 
-  const { id, name, posX, posY } = device;
-  const { deleteDevice, devices } = useDevices();
-  const { deleteDeviceConnections, flows } = useFlow();
-  const { enableModal, disableModal } = useModal();
+  const isFirstRender = useRef(true);
+  const { id, name, posX, posY, value, connectors } = data;
 
-  const [value, setValue] = useState(device.value);
-  const [connectionValue, setConnectionValue] = useState([]);
-  const [qtdIncomingConn, setQtdIncomingConn] = useState(0)
-  const [duration, setDuration] = useState(INITIAL_DURATION);
+  const {
+    flows,
+    devices,
+    updateDeviceValue,
+    updateDeviceValueInFlow
+  } = useStore(store => ({
+    flows: store.flows,
+    devices: store.devices,
+    updateDeviceValue: store.updateDeviceValue,
+    updateDeviceValueInFlow: store.updateDeviceValueInFlow
+  }), shallow);
+
+  const [qtdIncomingConn, setQtdIncomingConn] = useState(0);
+
   const [timeInterval, setTimeInterval] = useState(INITIAL_DURATION);
   const timeout = useRef(null);
   const setIntervalRef = useRef(null);
 
-  const connectionReceiver = () => {
-    setQtdIncomingConn(prev => prev + 1)
-  }
+  const connectionReceiver = useCallback(() => {
+
+    setQtdIncomingConn(prev => prev + 1);
+  }, [])
 
   const handleSettingUpdate = useCallback((newDuration) => {
-    setDuration(newDuration);
-  }, [duration]);
+
+    const newValue = {
+      ...data.value,
+      duration: newDuration
+    }
+    onSaveData('value', newValue)
+    updateDeviceValue(id, { value: newValue });
+  }, [value.duration]);
 
   const restartTimer = () => {
-    setTimeInterval(duration);
+
+    setTimeInterval(value.duration);
     clearInterval(setIntervalRef.current);
     clearTimeout(timeout.current);
   }
 
-  const handleConnections = () => {
+  const handleConnections = useCallback(() => {
+    restartTimer();
 
     const flow = findFlowsByDeviceId(flows, id);
 
-    if (!flow) {
-      updateValue(setValue, id, { value: 0, max: 0 });
-
-      return;
-    }
-
-    const connection = flow.connections.find(conn => {
+    const connectionInput = flow?.connections.find(conn => {
       return conn.deviceTo.id === id
     });
 
-    if (!connection) return;
+    const connOutput = flow?.connections.filter(conn => {
+      return conn.deviceFrom.id === id
+    });
 
-    const device = devices.find(device => device.id === connection.deviceFrom.id);
+    if (!flow || !connectionInput || connOutput.length <= 0) return;
 
-    let value = device.value.current;
-    let max = 0;
+    handleTimerAction();
 
-    if ([undefined, null].includes(value)) {
-      //If device.value.current undefined or null, structure equal boolean (true or false) or object -> ex: {temperature:{..}, humidity:{...}
-      value = typeof device.value === 'boolean' ? device.value : device.value[connection.deviceFrom.connector.name]?.current
-      max = typeof device.value === 'boolean' ? device.value : device.value[connection.deviceFrom.connector.name]?.max
-    }
+  }, [value.duration, flows, value.send]);
 
-    const objValue = {
-      idConnection: connection.id,
-      value,
-      max
-    }
 
-    setConnectionValue(objValue);
+  const handleTimerAction = () => {
+
+    setIntervalRef.current = setInterval(() => {
+      setTimeInterval(prevTime => prevTime - 1);
+
+    }, 1000);
+
+    timeout.current = setTimeout(() => {
+
+      const flow = findFlowsByDeviceId(flows, id);
+
+      if (!flow) return;
+
+      const connectionInput = flow?.connections.find(conn => {
+        return conn.deviceTo.id === id
+      });
+
+      const connsOutput = flow.connections.filter(conn => {
+        return conn.deviceFrom.id === id
+      });
+
+      const device = { ...devices[connectionInput.deviceFrom.id] };
+      const deviceValue = device.value[connectionInput.deviceFrom.connector.name];
+
+
+      const newValue = {
+        ...data.value,
+        send: {
+          ...deviceValue
+        }
+      }
+
+      connsOutput.forEach(conn => {
+        const toConnector = devices[conn.deviceTo.id].connectors[conn.deviceTo.connector.name];
+        toConnector.defaultReceiveBehavior({
+          value: newValue.send.current, max: newValue.send.max
+        });
+      })
+
+      onSaveData('value', newValue);
+      updateDeviceValue(id, { value: newValue });
+      updateDeviceValueInFlow({ connectorId: connectors.send.id, newValue });
+
+      restartTimer();
+    }, value.duration * 1000);
+
+
   }
 
-  const calcValues = () => {
-    if (!Object.hasOwn(connectionValue, 'idConnection')) {
-      updateValue(setValue, id, { current: 0, max: 0 });
+
+  const redefineBehavior = useCallback(() => {
+    restartTimer();
+
+    const value = {
+      ...data.value,
+      send: {
+        current: 0,
+        max: 0
+      }
+    }
+
+    onSaveData('value', value)
+    updateDeviceValue(id, { value });
+
+  }, []);
+
+
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
 
       return;
     }
 
-    const flow = findFlowsByDeviceId(flows, id);
-
-    if (!flow) return;
-
-    const connOutput = flow.connections.filter(conn => {
-      return conn.deviceFrom.id === id
-    });
-
-    if (connOutput.length <= 0) return;
-
-    restartTimer();
-
-    setIntervalRef.current = setInterval(() => {
-      setTimeInterval(prevTime => prevTime - 1);
-    }, 1000);
-
-    timeout.current = setTimeout(() => {
-      setValue(connectionValue.value)
-
-      updateValue(setValue, id, { current: connectionValue.value, max: connectionValue.max });
-
-      restartTimer();
-    }, duration * 1000);
-  }
-
-  const sendValue = () => {
-
-    const flow = findFlowsByDeviceId(flows, id);
-
-    if (!flow) return;
-
-    const connsOutput = flow.connections.filter(conn => {
-      return conn.deviceFrom.id === id
-    });
-
-    connsOutput.forEach(conn => {
-      conn.deviceTo.defaultBehavior({
-        value: value.current,
-        max: value.max
-      });
-    })
-  }
-
-  const redefineBehavior = () => {
-    restartTimer();
-    setConnectionValue({});
-  }
-
-  const getValue = () => ({ value: value.current, max: value.max });
-
-  useEffect(() => {
     if (qtdIncomingConn > 0) {
       handleConnections();
     }
   }, [qtdIncomingConn]);
 
-  useEffect(() => {
-    sendValue();
-  }, [value]);
 
   useEffect(() => {
-    calcValues();
-  }, [connectionValue]);
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
 
-  useEffect(() => {
+      return;
+    }
     restartTimer();
-  }, [duration]);
+  }, [value.duration]);
+
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+
+      return;
+    }
+
+    return () => {
+      clearInterval(setIntervalRef.current);
+      clearTimeout(timeout.current);
+    }
+  }, [])
 
   return (
     <>
-      <div
-        className={deviceBody}
+
+
+      <DeviceBody
+        name={name}
+        imgSrc={eventBaseImg}
         ref={dragRef}
       >
-        <img
-          src={eventBaseImg}
-          alt={`Device ${name}`}
-          loading='lazy'
-        />
-        <p className={delayNumber}>
+
+        <p className={D.delayNumber}>
           {timeInterval}
         </p>
-      </div>
 
-      <div
-        className={`${connectorsContainer} ${connectorsContainerEntry}`}
-      >
-        <Connector
-          name={'delayInputData'}
-          type={'entry'}
-          device={{
-            id,
-            defaultBehavior: connectionReceiver,
-            redefineBehavior,
-            containerRef: device.containerRef
-          }}
-          updateConn={{ posX, posY }}
-        />
-
-      </div>
-
-      <div
-        className={`${connectorsContainer} ${connectorsContainerExit}`}
-      >
-        <Connector
-          name={'delayOutputData'}
-          type={'exit'}
-          device={{
-            id,
-            defaultBehavior: () => {
-              connectionReceiver();
-
-              return getValue();
-            },
-            redefineBehavior,
-            containerRef: device.containerRef
-          }}
-          updateConn={{ posX, posY }}
-        />
-
-      </div>
-
-      <div
-        className={
-          `${actionButtonsContainer} ${actionButtonsContainerBottom}`
-        }
-      >
-        <ActionButton
-          onClick={() => enableModal({
-            typeContent: 'confirmation',
+        <ActionButtons
+          orientation='bottom'
+          actionDelete={{
             title: 'Cuidado',
             subtitle: 'Tem certeza que deseja excluir o componente?',
-            handleConfirm: () => {
-              deleteDeviceConnections(id);
-              deleteDevice(id);
-              disableModal('confirmation');
+            data: {
+              id
             }
-          })}
-        >
-          <Trash />
-        </ActionButton>
-
-        <ActionButton
-          onClick={() => enableModal({
+          }}
+          actionConfig={{
             typeContent: 'config-delay',
-            handleSaveConfig: handleSettingUpdate,
-            handleRestart: restartTimer,
-            defaultDuration: duration,
-          })}
-        >
-          <Gear />
-        </ActionButton>
-      </div >
+            onSave: handleSettingUpdate,
+            data: {
+              handleRestart: restartTimer,
+              defaultDuration: value.duration,
+            }
+          }}
+        />
+      </DeviceBody>
+
+      <Connectors
+        type='doubleTypes'
+        exitConnectors={[
+          {
+            data: {
+              ...connectors.receive,
+              defaultReceiveBehavior: connectionReceiver,
+              redefineBehavior
+            },
+            device: { id },
+            updateConn: { posX, posY },
+            handleChangeData: onSaveData
+          },
+        ]}
+        entryConnectors={[
+          {
+            data: {
+              ...connectors.send,
+              defaultSendBehavior: connectionReceiver,
+              redefineBehavior
+            },
+            device: { id },
+            updateConn: { posX, posY },
+            handleChangeData: onSaveData
+          },
+        ]}
+
+      />
+
     </>
   );
 };
 
-
 Delay.propTypes = {
-  device: P.object.isRequired,
+  data: P.object.isRequired,
   dragRef: P.func.isRequired,
-  updateValue: P.func.isRequired
+  onSaveData: P.func.isRequired
 }
 
 export default Delay;

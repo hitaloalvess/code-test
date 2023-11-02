@@ -1,11 +1,11 @@
 import { Envelope, Lock } from '@phosphor-icons/react';
 
-import { api } from '@/services/api'
+import { apiAuth } from '@/services/apiAuth'
 import { useContextAuth } from '@/hooks/useAuth';
 import { useModal } from '@/hooks/useModal';
-import { Form } from '@/components/shared/Form';
-import { Input } from '@/components/shared/Input';
-import { InputPassword } from '@/components/shared/Input/InputPasswordType';
+import { Form } from '@/components/SharedComponents/Form';
+import { Input } from '@/components/SharedComponents/Input';
+import { InputPassword } from '@/components/SharedComponents/Input/InputPasswordType';
 
 import * as A from '../styles.module.css';
 import * as C from './styles.module.css';
@@ -29,22 +29,23 @@ const CredentialsSection = () => {
   const handleDeleteAccount = async () => {
     try {
 
-      await api.delete(`/users/${user.id}`);
+      await apiAuth.delete(`/users/${user.id}`);
+
       toast.success('Conta deletada com sucesso');
 
       handleSignOut();
     } catch (error) {
-      toast.error(error.response.data.message);
+      toast.error(error);
     }
   }
 
   const handleClickBtnDeleteAccount = () => {
     enableModal({
       typeContent: 'confirmation',
-      title: 'Tem certeza que deseja excluir sua conta?',
-      handleConfirm: async () => {
+      subtitle: 'Tem certeza que deseja excluir sua conta?',
+      handleConfirm: () => {
 
-        await handleDeleteAccount();
+        handleDeleteAccount();
         disableModal('confirmation');
 
       }

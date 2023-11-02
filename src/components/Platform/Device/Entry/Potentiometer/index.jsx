@@ -1,138 +1,118 @@
-import { memo, useRef, useState } from 'react';
+import { memo, useEffect } from 'react';
 import P from 'prop-types';
-import { Trash } from '@phosphor-icons/react';
+import { shallow } from 'zustand/shallow';
 
-import { useDevices } from '@/hooks/useDevices';
-import { useFlow } from '@/hooks/useFlow';
-import { useModal } from '@/hooks/useModal';
-import ActionButton from '@/components/Platform/ActionButton';
-import Connector from '@/components/Platform/Connector';
+import { useStore } from '@/store';
+import ActionButtons from '@/components/Platform/Device/SharedDevice/ActionButtons';
+import Connectors from '@/components/Platform/Device/SharedDevice/Connectors';
+import DeviceInputs from '../../SharedDevice/DeviceInputs';
+import DeviceBody from '../../SharedDevice/DeviceBody';
 
-import {
-  deviceBody,
-  inputRangeDeviceContainer,
-  inputValue,
-  actionButtonsContainer,
-  actionButtonsContainerLeft,
-  connectorsContainer,
-  connectorsContainerExit
-} from '../../styles.module.css';
+const MIN_RESISTANCE = 0;
+const MAX_RESISTANCE = 1023;
 
-const MAX_VALUE = 1023;
 const Potentiometer = memo(function Potentiometer({
-  dragRef, device, updateValue
+  dragRef, data, onSaveData
 }) {
 
-  const { id, imgSrc, name, posX, posY } = device;
-  const { deleteDevice } = useDevices();
-  const { executeFlow, deleteDeviceConnections } = useFlow();
-  const { enableModal, disableModal } = useModal();
-  const [connectorId, setConnectorId] = useState('');
+  const { id, imgSrc, name, posX, posY } = data;
 
-  const inputRef = useRef(null);
-  const showValueRef = useRef(null);
+  const {
+    executeFlow,
+    updateDeviceValue,
+    updateDeviceValueInFlow
+  } = useStore(store => ({
+    executeFlow: store.executeFlow,
+    updateDeviceValue: store.updateDeviceValue,
+    updateDeviceValueInFlow: store.updateDeviceValueInFlow
+  }), shallow);
 
-  const getResistance = () => {
-    return {
-      value: Number(inputRef.current.value),
-      max: MAX_VALUE
-    };
+  const handleOnInput = (event, name) => {
+    const inputValue = Number(event.target.value);
+
+    const value = {
+      ...data.value,
+      [`${name}`]: {
+        ...data.value[`${name}`],
+        current: inputValue,
+      }
+    }
+
+    onSaveData('value', value);
+    updateDeviceValue(id, { value })
   }
 
-  const handleOnInput = () => {
-    const inputValue = Number(inputRef.current.value);
-    showValueRef.current.innerHTML = inputValue;
 
-    updateValue(null, id, {
-      current: inputValue,
-      max: MAX_VALUE
-    });
+  useEffect(() => {
 
-    executeFlow({ connectorId, fromBehaviorCallback: getResistance });
+    updateDeviceValueInFlow({ connectorId: data.connectors.resistance.id, newValue: data.value.resistance })
 
-  }
+    executeFlow({ connectorId: data.connectors.resistance.id });
 
-  const handleChangeConnector = (value) => {
-    setConnectorId(value);
-  }
+  }, [data.value.resistance.current]);
 
   return (
 
     <>
-      <div className={inputRangeDeviceContainer}
-      >
-        <input
-          type="range"
-          min="0"
-          max="1023"
-          step="1"
-          defaultValue={0}
-          onInput={handleOnInput}
-          ref={inputRef}
-        />
-        <p
-          className={inputValue}
-          ref={showValueRef}
-        >0</p>
-      </div>
+      <DeviceInputs
+        inputs={[
+          {
+            data: {
+              minValue: MIN_RESISTANCE,
+              maxValue: MAX_RESISTANCE,
+              step: 1,
+              defaultValue: data.value.resistance.current,
+              onInput: (event) => handleOnInput(event, 'resistance'),
+            },
+          }
+        ]}
+      />
 
-      <div
-        className={deviceBody}
+
+      <DeviceBody
+        name={name}
+        imgSrc={imgSrc}
         ref={dragRef}
       >
 
-        <img
-          src={imgSrc}
-          alt={`Device ${name}`}
-          loading='lazy'
-        />
-      </div>
 
-      <div
-        className={`${connectorsContainer} ${connectorsContainerExit}`}
-      >
-        <Connector
-          name={'resistance'}
-          type={'exit'}
-          device={{
-            id,
-            defaultBehavior: getResistance,
-            containerRef: device.containerRef
-          }}
-          updateConn={{ posX, posY }}
-          handleChangeId={handleChangeConnector}
-        />
-      </div>
-
-      <div
-        className={
-          `${actionButtonsContainer} ${actionButtonsContainerLeft}`
-        }
-      >
-        <ActionButton
-          onClick={() => enableModal({
-            typeContent: 'confirmation',
+        <ActionButtons
+          orientation='left'
+          actionDelete={{
             title: 'Cuidado',
             subtitle: 'Tem certeza que deseja excluir o componente?',
-            handleConfirm: () => {
-              deleteDeviceConnections(id);
-              deleteDevice(id);
-              disableModal('confirmation');
+            data: {
+              id
             }
-          })}
-        >
-          <Trash />
-        </ActionButton>
+          }}
+        />
 
-      </div>
+
+      </DeviceBody>
+
+      <Connectors
+        type='exits'
+        exitConnectors={[
+          {
+            data: data.connectors.resistance,
+            device: {
+              id,
+              containerRef: data.containerRef
+            },
+            updateConn: { posX, posY },
+            handleChangeData: onSaveData
+          }
+        ]}
+      />
+
     </>
   );
 });
 
 Potentiometer.propTypes = {
   dragRef: P.func.isRequired,
-  device: P.object.isRequired,
-  updateValue: P.func.isRequired
+  data: P.object.isRequired,
+  onSaveData: P.func.isRequired
 }
 
 export default Potentiometer;
