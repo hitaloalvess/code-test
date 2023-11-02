@@ -27,7 +27,7 @@ MenuButton.propTypes = {
   src: P.string.isRequired,
   active: P.bool.isRequired,
   onClick: P.func.isRequired,
-  textTitle: P.func.isRequired
+  textTitle: P.string.isRequired
 }
 
 export default MenuButton;
