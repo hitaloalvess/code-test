@@ -10,13 +10,14 @@ const MenuButtons = ({ handleSelectArea, area }) => {
     <div className={menuButtons}>
       <ul>
         {
-          mockMenuButtons.map(({ id, imgSrc, typeArea }) => (
+          mockMenuButtons.map(({ id, imgSrc, typeArea, title }) => (
             <li key={id}>
               <MenuButton
                 type={typeArea}
                 src={imgSrc}
                 active={typeArea === area}
                 onClick={handleSelectArea}
+                textTitle={title}
               />
             </li>
           ))
