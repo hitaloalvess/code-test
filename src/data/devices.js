@@ -31,47 +31,8 @@ import deviceDelay from '@/assets/images/devices/event/delay.svg';
 import deviceSlider from '@/assets/images/devices/event/slider.svg';
 import deviceLoop from '@/assets/images/devices/event/loop.svg';
 
-export const deviceImgs = {
-  ldr: deviceLdr,
-  potentiometer: devicePotentiometer,
-  switch: deviceSwitch,
-  pushButton: devicePushButton,
-  dht: deviceDht,
-  infrared: deviceInfrared,
-  // soilMoisture: deviceSoilMoisture,
-  // rainDetector: deviceRainDetector,
-  led: deviceLed,
-  ledMono: deviceLedMono,
-  laser: deviceLaser,
-  shakeMotor: deviceShakeMotor,
-  buzzer: deviceBuzzer,
-  timer: deviceTimer,
-  // bargraph: deviceBarhraph,
-  and: deviceAnd,
-  or: deviceOr,
-  not: deviceNot,
-  if: deviceIf,
-  counter: deviceCounter,
-  pickColor: devicePickColor,
-  toggle: deviceToggle,
-  delay: deviceDelay,
-  slider: deviceSlider,
-  loop: deviceLoop
-}
-
-export const deviceTypes = [
-  { id: 1, name: 'Buzzer', category: 'exit' },
-  { id: 2, name: 'Dht', category: 'entry'  },
-  { id: 3, name: 'Infrared', category: 'entry' },
-  { id: 4, name: 'Laser', category: 'exit' },
-  { id: 5, name: 'Ldr', category: 'entry' },
-  { id: 6, name: 'Led', category: 'exit' },
-  { id: 7, name: 'Led Mono', category: 'exit' },
-  { id: 8, name: 'Potentiometer', category: 'entry' },
-  { id: 9, name: 'Push Button', category: 'entry' },
-  { id: 10, name: 'Switch', category: 'entry' },
-  { id: 11, name: 'Shake Motor', category: 'exit' },
-]
+//tool
+import deviceStickynote from '@/assets/images/devices/tool/stickyNote.svg'
 
 export const mockDevices = {
   entry: [
@@ -783,6 +744,8 @@ export const mockDevices = {
           current: 0,
           max: 1023
         },
+        loopActive: false,
+        loopLimit: 9999
       },
       posX: 0,
       posY: 0,
@@ -804,7 +767,22 @@ export const mockDevices = {
       }
     }
   ],
-  hardware: []
+  tool: [
+    {
+      id: 45,
+      imgSrc: deviceStickynote,
+      name: 'stickynote',
+      label: 'Bloco de Notas',
+      type: 'virtual',
+      category: 'tool',
+      value: {
+        text: '',
+        color: '#F5B9B9'
+      },
+      posX: 0,
+      posY: 0
+    }
+  ]
 };
 
 export const deviceConnectorRules = {
@@ -866,7 +844,7 @@ export const deviceConnectorRules = {
   },
   counter: {
     acceptedConnections: ['oneEntry', 'allExit'],
-    connectsFrom: ['potentiometer', 'ldr', 'loop', 'pushButton', 'slider', 'delay', 'toggle', 'and', 'or', 'switch', 'physicalPotentiometer', 'physicalLDR'],
+    connectsFrom: ['potentiometer', 'if', 'ldr', 'loop', 'pushButton', 'slider', 'delay', 'toggle', 'and', 'or', 'switch', 'physicalPotentiometer', 'physicalLDR'],
     connectsTo: ['all']
   },
   and: {
@@ -917,6 +895,11 @@ export const deviceConnectorRules = {
   slider: {
     acceptedConnections: ['oneEntry', 'allExit'],
     connectsFrom: ['potentiometer', 'dht', 'ldr', 'rainDetector', 'soilMoisture', 'counter', 'slider', 'physicalPotentiometer', 'physicalLDR', 'physicalDHT'],
+    connectsTo: ['all'],
+  },
+  sticknote: {
+    acceptedConnections: ['oneEntry', 'allExit'],
+    connectsFrom: ['all'],
     connectsTo: ['all'],
   },
 }

@@ -38,14 +38,19 @@ const Counter = ({
   }), shallow);
 
   const [qtdIncomingConn, setQtdIncomingConn] = useState(0)
-  const [loopActive, setLoopActive] = useState(false);
-  const [loopLimit, setLoopLimit] = useState(9999);
-
 
   const handleSettingUpdate = useCallback((newLoopActive, newLoopLimit) => {
-    setLoopActive(newLoopActive);
-    setLoopLimit(newLoopLimit);
-  }, [loopActive, loopLimit]);
+    const newValue = {
+      ...data.value,
+      loopActive: newLoopActive,
+      loopLimit: newLoopLimit
+    }
+
+    onSaveData('value', newValue)
+    updateDeviceValue(id, { value: newValue });
+
+    setQtdIncomingConn(prev => prev + 1);
+  }, [value.loopActive, value.loopLimit]);
 
   const handleRestart = () => {
     redefineBehavior();
@@ -80,15 +85,15 @@ const Counter = ({
     else
     {
 
-      if (loopActive)
+      if (value.loopActive)
       {
-        const x = Math. floor(currentValue / loopLimit);
+        const x = Math. floor(currentValue / value.loopLimit);
 
         newValue = {
           ...value,
           send: {
             ...value.send,
-            current:  currentValue - (loopLimit * x),
+            current:  currentValue - (value.loopLimit * x),
             max: 1023,
           }
         }
@@ -138,7 +143,10 @@ const Counter = ({
           ...value.send,
           current: 0,
           max: 1023,
-        }
+        },
+        loopActive: false,
+        loopLimit: 9999
+
     }
 
     onSaveData('value', newValue)
@@ -148,7 +156,7 @@ const Counter = ({
 
   const handleIncreaseClick = () => {
     let newValue;
-    if(loopActive && value.send.current >= loopLimit - 1) {
+    if(value.loopActive && value.send.current >= value.loopLimit - 1) {
       newValue = {
         ...value,
         send: {
@@ -180,12 +188,12 @@ const Counter = ({
     let newValue;
 
     if(value.send.current <= 0) {
-      if(loopActive) {
+      if(value.loopActive) {
         newValue = {
           ...value,
           send: {
             ...value.send,
-            current: loopLimit - 1
+            current: value.loopLimit - 1
           }
         }
       }
@@ -212,11 +220,11 @@ const Counter = ({
     if (qtdIncomingConn > 0) {
       handleConnections();
     }
-  }, [qtdIncomingConn, loopActive, loopLimit]);
+  }, [qtdIncomingConn, value.loopActive, value.loopLimit]);
 
   useEffect(() => {
     sendValue();
-  }, [value.send.current, loopActive, loopLimit]);
+  }, [value.send.current, value.loopActive, value.loopLimit]);
 
   return (
     <>
@@ -246,8 +254,8 @@ const Counter = ({
             typeContent: 'config-counter',
             onSave: handleSettingUpdate,
             data: {
-              defaultLoopActive: loopActive,
-              defaultLoopLimit: loopLimit,
+              defaultLoopActive: value.loopActive,
+              defaultLoopLimit: value.loopLimit,
               handleRestart: handleRestart
             }
           }}
