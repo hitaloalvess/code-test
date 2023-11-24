@@ -3,8 +3,8 @@ import P from 'prop-types';
 import { shallow } from 'zustand/shallow';
 import { Thermometer, Drop } from '@phosphor-icons/react';
 
-// import { useAuth } from '@/hooks/useAuth';
-// import { socket } from '@/services/websocket';
+import { useAuth } from '@/hooks/useAuth';
+import { socket } from '@/services/websocket';
 import { useStore } from '@/store';
 import { formulasForTransformation, transformHumidityValue } from '@/utils/devices-functions';
 
@@ -19,8 +19,8 @@ const PhysicalDht = memo(function Dht({
   data, dragRef, onSaveData
 }) {
   const isFirstRender = useRef(true);
-  // const { user } = useAuth();
-  const { id, imgSrc, name, posX, posY /*, mac, typeId*/ } = data;
+  const { user } = useAuth();
+  const { id, imgSrc, name, posX, posY , mac } = data;
 
   const {
     executeFlow,
@@ -42,22 +42,22 @@ const PhysicalDht = memo(function Dht({
   }, [scaleType]);
 
 
-  // useEffect(() => {
+  useEffect(() => {
 
-  //   socket.emit('sensor/update/activation', {
-  //     mac, cpf: user.cpf, active: true
-  //   });
+    socket.emit('sensor/update/activation', {
+      mac, cpf: user.cpf, active: true
+    });
 
-  //   socket.on(`${user.cpf}/sensor/${typeId}/${mac}`, (data) => {
-  //     console.log({ data });
-  //   })
+    // socket.on(`${user.cpf}/sensor/${typeId}/${mac}`, (data) => {
+    //   console.log({ data });
+    // })
 
-  //   return () => {
-  //     socket.emit('sensor/update/activation', {
-  //       mac, cpf: user.cpf, active: false
-  //     })
-  //   }
-  // }, []);
+    return () => {
+      socket.emit('sensor/update/activation', {
+        mac, cpf: user.cpf, active: false
+      })
+    }
+  }, []);
 
   useEffect(() => {
     if(isFirstRender.current){
