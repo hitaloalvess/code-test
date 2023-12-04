@@ -602,6 +602,38 @@ export const mockDevices = {
         },
       }
     },
+    {
+      id: 35,
+      imgSrc: deviceDelay,
+      name: 'passValue',
+      label: 'Passa valores',
+      type: 'virtual',
+      category: 'event',
+      value: {
+        send: {
+          current: 5,
+        },
+        sendValue: false,
+      },
+      posX: 0,
+      posY: 0,
+      connectors: {
+        receive: {
+          id: null,
+          name: 'receive',
+          type: 'entry',
+          x: 0,
+          y: 0
+        },
+        send: {
+          id: null,
+          name: 'send',
+          type: 'exit',
+          x: 0,
+          y: 0
+        },
+      }
+    },
   ],
   conditional: [
     {
@@ -844,7 +876,7 @@ export const deviceConnectorRules = {
   },
   counter: {
     acceptedConnections: ['oneEntry', 'allExit'],
-    connectsFrom: ['potentiometer', 'if', 'ldr', 'loop', 'pushButton', 'slider', 'delay', 'toggle', 'and', 'or', 'switch', 'physicalPotentiometer', 'physicalLDR'],
+    connectsFrom: ['all'],
     connectsTo: ['all']
   },
   and: {
@@ -895,6 +927,11 @@ export const deviceConnectorRules = {
   slider: {
     acceptedConnections: ['oneEntry', 'allExit'],
     connectsFrom: ['potentiometer', 'dht', 'ldr', 'rainDetector', 'soilMoisture', 'counter', 'slider', 'physicalPotentiometer', 'physicalLDR', 'physicalDHT'],
+    connectsTo: ['all'],
+  },
+  passValue: {
+    acceptedConnections: ['oneEntry', 'allExit'],
+    connectsFrom: ['all'],
     connectsTo: ['all'],
   },
   sticknote: {
