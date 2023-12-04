@@ -42,7 +42,6 @@ const handleSettingUpdate = useCallback((newColor) => {
 }, [value]);
 
   const handleOnInput = () => {
-    console.log(value);
     const newValue = {
       ...data.value,
       text: textArea.current.value
