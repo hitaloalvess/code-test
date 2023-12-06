@@ -21,7 +21,7 @@ import deviceTimer from '@/assets/images/devices/exit/timer.svg';
 import deviceAnd from '@/assets/images/devices/conditional/and.svg';
 import deviceOr from '@/assets/images/devices/conditional/or.svg';
 import deviceNot from '@/assets/images/devices/conditional/not.svg';
-import deviceIf from '@/assets/images/devices/conditional/if.svg';
+import deviceComparator from '@/assets/images/devices/conditional/comparator.svg';
 import deviceCounter from '@/assets/images/devices/conditional/counter/counter.svg';
 
 //event
@@ -732,9 +732,9 @@ export const mockDevices = {
     },
     {
       id: 43,
-      imgSrc: deviceIf,
-      name: 'if',
-      label: 'If',
+      imgSrc: deviceComparator,
+      name: 'comparator',
+      label: 'Comparador',
       type: 'virtual',
       category: 'conditional',
       value: {
@@ -848,7 +848,7 @@ export const deviceConnectorRules = {
   },
   infrared: {
     acceptedConnections: ['AllExit'],
-    connectsTo: ['if']
+    connectsTo: ['comparator']
   },
   led: {
     acceptedConnections: ['oneEntry'],
@@ -856,11 +856,11 @@ export const deviceConnectorRules = {
   },
   buzzer: {
     acceptedConnections: ['oneEntry'],
-    connectsFrom: ['potentiometer', 'ldr', 'rainDetector', 'soilMoisture', 'pushButton', 'counter', 'and', 'or', 'not', 'if', 'toggle', 'slider', 'delay', 'switch', 'physicalPotentiometer', 'physicalLDR']
+    connectsFrom: ['potentiometer', 'ldr', 'rainDetector', 'soilMoisture', 'pushButton', 'counter', 'and', 'or', 'not', 'comparator', 'toggle', 'slider', 'delay', 'switch', 'physicalPotentiometer', 'physicalLDR']
   },
   shakeMotor: {
     acceptedConnections: ['oneEntry'],
-    connectsFrom: ['potentiometer', 'ldr', 'rainDetector', 'soilMoisture', 'pushButton', 'counter', 'and', 'or', 'not', 'if', 'toggle', 'slider', 'delay', 'switch', 'physicalPotentiometer', 'physicalLDR']
+    connectsFrom: ['potentiometer', 'ldr', 'rainDetector', 'soilMoisture', 'pushButton', 'counter', 'and', 'or', 'not', 'comparator', 'toggle', 'slider', 'delay', 'switch', 'physicalPotentiometer', 'physicalLDR']
   },
   ledMono: {
     acceptedConnections: ['oneEntry'],
@@ -894,7 +894,7 @@ export const deviceConnectorRules = {
     connectsFrom: ['all'],
     connectsTo: ['all'],
   },
-  if: {
+  comparator: {
     acceptedConnections: ['oneEntry', 'allExit'],
     connectsFrom: ['all'],
     connectsTo: ['all'],

@@ -23,7 +23,7 @@ const defaultValuesOfType = {
   'string': 'FF12F3'
 }
 
-const If = ({
+const Comparator = ({
   data, dragRef, onSaveData
 }) => {
   const {
@@ -267,7 +267,7 @@ const If = ({
             }
           }}
           actionConfig={{
-            typeContent: 'config-if',
+            typeContent: 'config-comparator',
             onSave: handleSettingUpdate,
             data: {
               defaultSimbol: value.simbol,
@@ -312,10 +312,10 @@ const If = ({
 };
 
 
-If.propTypes = {
+Comparator.propTypes = {
   data: P.object.isRequired,
   dragRef: P.func.isRequired,
   onSaveData: P.func.isRequired
 }
 
-export default If;
+export default Comparator;

@@ -8,7 +8,7 @@ import ConfigBuzzerModal from '@/components/SharedComponents/Modal/ConfigBuzzerM
 import ConfigSliderModal from '@/components/SharedComponents/Modal/ConfigSliderModal';
 import ConfirmationModal from '@/components/SharedComponents/Modal/ConfirmationModal';
 import ConfigDhtModal from '@/components/SharedComponents/Modal/ConfigDhtModal';
-import ConfigIfModal from '@/components/SharedComponents/Modal/ConfigIfModal';
+import ConfigComparatorModal from '@/components/SharedComponents/Modal/ConfigComparatorModal';
 import ConfigPickColorModal from '@/components/SharedComponents/Modal/ConfigPickColorModal';
 import UpdatePasswordModal from '@/components/SharedComponents/Modal/UpdatePasswordModal';
 import SearchFormModal from '@/components/SharedComponents/Modal/SearchFormModal';
@@ -30,7 +30,7 @@ const contents = {
   'config-delay': ConfigDelayModal,
   'config-slider': ConfigSliderModal,
   'config-dht': ConfigDhtModal,
-  'config-if': ConfigIfModal,
+  'config-comparator': ConfigComparatorModal,
   'config-pickColor': ConfigPickColorModal,
   'update-password': UpdatePasswordModal,
   'search-form': SearchFormModal,
