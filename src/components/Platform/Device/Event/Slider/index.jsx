@@ -187,8 +187,8 @@ const Slider = ({
         exitConnectors={[
           {
             data: {
-              ...connectors.receive,
-              defaultReceiveBehavior: connectionReceiver
+              ...connectors.send,
+              defaultSendBehavior: connectionReceiver
             },
             device: { id },
             updateConn: { posX, posY },
@@ -197,9 +197,10 @@ const Slider = ({
         ]}
         entryConnectors={[
           {
+
             data: {
-              ...connectors.send,
-              defaultSendBehavior: connectionReceiver
+              ...connectors.receive,
+              defaultReceiveBehavior: connectionReceiver
             },
             device: { id },
             updateConn: { posX, posY },

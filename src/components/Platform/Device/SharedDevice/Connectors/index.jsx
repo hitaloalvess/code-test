@@ -9,10 +9,33 @@ const Connectors = memo(function Connectors({
   type, entryConnectors = null, exitConnectors = null
 }) {
 
+  console.log({
+    type, exitConnectors, entryConnectors
+  })
   return (
     <ConnectorsContainer typeContainer={type}>
 
       <>
+
+      {
+          !!entryConnectors && (
+            <ConnectorsContent>
+              {
+                entryConnectors.map((connector, index) => (
+
+                  <ConnectorsConnector
+                    key={index}
+                    data={connector.data}
+                    device={connector.device}
+                    updateConn={connector.updateConn}
+                    handleChangeData={connector.handleChangeData}
+                  />
+
+                ))
+              }
+            </ConnectorsContent>
+          )
+        }
 
         {
           !!exitConnectors && (
@@ -35,25 +58,7 @@ const Connectors = memo(function Connectors({
           )
         }
 
-        {
-          !!entryConnectors && (
-            <ConnectorsContent>
-              {
-                entryConnectors.map((connector, index) => (
 
-                  <ConnectorsConnector
-                    key={index}
-                    data={connector.data}
-                    device={connector.device}
-                    updateConn={connector.updateConn}
-                    handleChangeData={connector.handleChangeData}
-                  />
-
-                ))
-              }
-            </ConnectorsContent>
-          )
-        }
       </>
 
 
