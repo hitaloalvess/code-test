@@ -38,7 +38,7 @@ const PushButton = memo(function PushButton({
   const handleClick = (newValue, name) => {
     const value = {
       ...data.value,
-      [name]: {
+      [`${name}`]: {
         ...data.value[`${name}`],
         current: newValue,
       }

@@ -143,10 +143,7 @@ const Counter = ({
           ...value.send,
           current: 0,
           max: 1023,
-        },
-        loopActive: false,
-        loopLimit: 9999
-
+        }
     }
 
     onSaveData('value', newValue)

@@ -19,7 +19,7 @@ import CreateProjectModal from "@/components/SharedComponents/Modal/CreateProjec
 import ConfigCounterModal from '@/components/SharedComponents/Modal/ConfigCounterModal';
 import ConfigLoopModal from '@/components/SharedComponents/Modal/ConfigLoopModal';
 import ConfigStickyNoteModal from '@/components/SharedComponents/Modal/ConfigStickyNoteModal';
-
+import ConfigPassValueModal from '@/components/SharedComponents/Modal/ConfigPassValueModal';
 
 export const ModalContext = createContext();
 
@@ -41,6 +41,7 @@ const contents = {
   'config-counter': ConfigCounterModal,
   'config-loop': ConfigLoopModal,
   'config-stickyNote': ConfigStickyNoteModal,
+  'config-passValue': ConfigPassValueModal,
 }
 
 export const ModalProvider = ({ children }) => {

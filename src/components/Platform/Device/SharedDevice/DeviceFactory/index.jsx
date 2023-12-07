@@ -28,6 +28,7 @@ import Delay from '../../Event/Delay';
 import Slider from '../../Event/Slider';
 import PickColor from '../../Event/PickColor';
 import Loop from '../../Event/Loop';
+import PassValue from '../../Event/PassValue';
 
 import Stickynote from '../../Tool/Stickynote';
 
@@ -61,7 +62,8 @@ const DeviceFactory = ({
     rainDetector: RainDetector,
     timer: Timer,
     loop: Loop,
-    stickynote: Stickynote
+    stickynote: Stickynote,
+    passValue: PassValue
   }
 
   const CurrentDevice = devices[data.name];
