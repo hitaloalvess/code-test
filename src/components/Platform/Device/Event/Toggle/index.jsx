@@ -213,8 +213,8 @@ const Toggle = ({
         exitConnectors={[
           {
             data: {
-              ...connectors.receive,
-              defaultReceiveBehavior: connectionReceiver
+              ...connectors.send,
+              defaultSendBehavior: connectionReceiver
             },
             device: { id },
             updateConn: { posX, posY },
@@ -223,9 +223,10 @@ const Toggle = ({
         ]}
         entryConnectors={[
           {
+
             data: {
-              ...connectors.send,
-              defaultSendBehavior: connectionReceiver
+              ...connectors.receive,
+              defaultReceiveBehavior: connectionReceiver
             },
             device: { id },
             updateConn: { posX, posY },

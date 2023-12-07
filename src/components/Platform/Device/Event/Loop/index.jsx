@@ -218,8 +218,8 @@ const Loop = ({
         exitConnectors={[
           {
             data: {
-              ...connectors.receive,
-              defaultReceiveBehavior: connectionReceiver,
+              ...connectors.send,
+              defaultSendBehavior: connectionReceiver,
               redefineBehavior
             },
             device: { id },
@@ -229,9 +229,10 @@ const Loop = ({
         ]}
         entryConnectors={[
           {
+
             data: {
-              ...connectors.send,
-              defaultSendBehavior: connectionReceiver,
+              ...connectors.receive,
+              defaultReceiveBehavior: connectionReceiver,
               redefineBehavior
             },
             device: { id },

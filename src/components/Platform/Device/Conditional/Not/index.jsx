@@ -157,9 +157,7 @@ const Not = ({
         exitConnectors={[
           {
             data: {
-              ...connectors.receive,
-              defaultReceiveBehavior: connectionReceiver,
-              redefineBehavior
+              ...connectors.send,
             },
             device: { id },
             updateConn: { posX, posY },
@@ -169,7 +167,9 @@ const Not = ({
         entryConnectors={[
           {
             data: {
-              ...connectors.send,
+              ...connectors.receive,
+              defaultReceiveBehavior: connectionReceiver,
+              redefineBehavior
             },
             device: { id },
             updateConn: { posX, posY },
