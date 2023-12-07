@@ -22,6 +22,7 @@ import deviceAnd from '@/assets/images/devices/conditional/and.svg';
 import deviceOr from '@/assets/images/devices/conditional/or.svg';
 import deviceNot from '@/assets/images/devices/conditional/not.svg';
 import deviceComparator from '@/assets/images/devices/conditional/comparator.svg';
+import deviceIf from '@/assets/images/devices/conditional/comparator.svg';
 import deviceCounter from '@/assets/images/devices/conditional/counter/counter.svg';
 
 //event
@@ -797,11 +798,52 @@ export const mockDevices = {
           y: 0
         },
       }
-    }
+    },
+    {
+      id: 45,
+      imgSrc: deviceIf,
+      name: 'if',
+      label: 'If',
+      type: 'virtual',
+      category: 'conditional',
+      value: {
+        send: {
+          current: false,
+        },
+        simbol: '=',
+        connectionType: 'number',
+        numberDisplay: 0
+      },
+      posX: 0,
+      posY: 0,
+      connectors: {
+        receive: {
+          id: null,
+          name: 'receive',
+          type: 'entry',
+          x: 0,
+          y: 0
+        },
+        send: {
+          id: null,
+          name: 'send',
+          type: 'exit',
+          x: 0,
+          y: 0
+        },
+        send2: {
+          id: null,
+          name: 'send',
+          type: 'exit',
+          x: 0,
+          y: 0
+        },
+      }
+    },
   ],
   tool: [
     {
-      id: 45,
+      id: 51,
       imgSrc: deviceStickynote,
       name: 'stickynote',
       label: 'Bloco de Notas',
@@ -848,7 +890,7 @@ export const deviceConnectorRules = {
   },
   infrared: {
     acceptedConnections: ['AllExit'],
-    connectsTo: ['comparator']
+    connectsTo: ['comparator', 'if']
   },
   led: {
     acceptedConnections: ['oneEntry'],
@@ -856,11 +898,11 @@ export const deviceConnectorRules = {
   },
   buzzer: {
     acceptedConnections: ['oneEntry'],
-    connectsFrom: ['potentiometer', 'ldr', 'rainDetector', 'soilMoisture', 'pushButton', 'counter', 'and', 'or', 'not', 'comparator', 'toggle', 'slider', 'delay', 'switch', 'physicalPotentiometer', 'physicalLDR']
+    connectsFrom: ['potentiometer', 'ldr', 'rainDetector', 'soilMoisture', 'pushButton', 'counter', 'and', 'or', 'not', 'comparator', 'if', 'toggle', 'slider', 'delay', 'switch', 'physicalPotentiometer', 'physicalLDR']
   },
   shakeMotor: {
     acceptedConnections: ['oneEntry'],
-    connectsFrom: ['potentiometer', 'ldr', 'rainDetector', 'soilMoisture', 'pushButton', 'counter', 'and', 'or', 'not', 'comparator', 'toggle', 'slider', 'delay', 'switch', 'physicalPotentiometer', 'physicalLDR']
+    connectsFrom: ['potentiometer', 'ldr', 'rainDetector', 'soilMoisture', 'pushButton', 'counter', 'and', 'or', 'not', 'comparator', 'if', 'toggle', 'slider', 'delay', 'switch', 'physicalPotentiometer', 'physicalLDR']
   },
   ledMono: {
     acceptedConnections: ['oneEntry'],
@@ -895,6 +937,11 @@ export const deviceConnectorRules = {
     connectsTo: ['all'],
   },
   comparator: {
+    acceptedConnections: ['oneEntry', 'allExit'],
+    connectsFrom: ['all'],
+    connectsTo: ['all'],
+  },
+  if: {
     acceptedConnections: ['oneEntry', 'allExit'],
     connectsFrom: ['all'],
     connectsTo: ['all'],

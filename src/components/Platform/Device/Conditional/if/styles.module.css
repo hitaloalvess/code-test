@@ -1,9 +1,10 @@
-.comparatorNumber {
+.ifNumber {
   position: absolute;
   width: 64px;
-  top: 28px;
+  top: 14px;
   left: 8px;
   font-size: 14px;
+  line-height: 22px;
   font-weight: bold;
   text-align: center;
   color: var(--black);
@@ -11,9 +12,10 @@
 }
 
 @media (((max-height: 481px) and (orientation: landscape)) or ((max-width: 481px) and (orientation: portrait))) {
-  .comparatorNumber {
-    top: 18px;
-    left: -2px;
-    font-size: 14px;
+  .ifNumber {
+    top: 12px;
+    left: -3px;
+    line-height: 13px;
+    font-size: 11px;
   }
 }

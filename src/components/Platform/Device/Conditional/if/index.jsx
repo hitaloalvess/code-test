@@ -11,7 +11,7 @@ import DeviceBody from '../../SharedDevice/DeviceBody';
 
 
 import {
-  comparatorNumber
+  ifNumber
 } from './styles.module.css';
 
 
@@ -23,7 +23,7 @@ const defaultValuesOfType = {
   'string': 'FF12F3'
 }
 
-const Comparator = ({
+const If = ({
   data, dragRef, onSaveData
 }) => {
   const {
@@ -253,8 +253,9 @@ const Comparator = ({
         ref={dragRef}
       >
 
-        <p className={comparatorNumber}>
-          {`${value.simbol} ${value.numberDisplay}`}
+        <p className={ifNumber}>
+         if {`${value.simbol} ${value.numberDisplay}`} <br />
+         else
         </p>
 
         <ActionButtons
@@ -277,7 +278,6 @@ const Comparator = ({
           }}
         />
       </DeviceBody>
-
       <Connectors
         type='doubleTypes'
         exitConnectors={[
@@ -291,6 +291,16 @@ const Comparator = ({
             updateConn: { posX, posY },
             handleChangeData: onSaveData
           },
+          {
+            data: {
+              ...connectors.receive,
+              defaultReceiveBehavior: connectionReceiver,
+              redefineBehavior
+            },
+            device: { id },
+            updateConn: { posX, posY },
+            handleChangeData: onSaveData
+          }
         ]}
         entryConnectors={[
           {
@@ -302,20 +312,18 @@ const Comparator = ({
             device: { id },
             updateConn: { posX, posY },
             handleChangeData: onSaveData
-          },
+          }
         ]}
-
       />
-
     </>
   );
 };
 
 
-Comparator.propTypes = {
+If.propTypes = {
   data: P.object.isRequired,
   dragRef: P.func.isRequired,
   onSaveData: P.func.isRequired
 }
 
-export default Comparator;
+export default If;

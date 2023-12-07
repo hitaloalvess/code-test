@@ -22,6 +22,7 @@ import Or from '../../Conditional/Or';
 import Not from '../../Conditional/Not';
 import Comparator from '../../Conditional/Comparator';
 import Counter from '../../Conditional/Counter';
+import If from '../../Conditional/If';
 
 import Toggle from '../../Event/Toggle';
 import Delay from '../../Event/Delay';
@@ -53,6 +54,7 @@ const DeviceFactory = ({
     or: Or,
     not: Not,
     comparator: Comparator,
+    if: If,
     toggle: Toggle,
     delay: Delay,
     slider: Slider,
