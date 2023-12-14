@@ -182,8 +182,7 @@ const And = ({
         exitConnectors={[
           {
             data: {
-              ...connectors.receive,
-              defaultReceiveBehavior: connectionReceiver,
+              ...connectors.send,
               redefineBehavior
             },
             device: { id },
@@ -194,7 +193,8 @@ const And = ({
         entryConnectors={[
           {
             data: {
-              ...connectors.send,
+              ...connectors.receive,
+              defaultReceiveBehavior: connectionReceiver,
               redefineBehavior
             },
             device: { id },

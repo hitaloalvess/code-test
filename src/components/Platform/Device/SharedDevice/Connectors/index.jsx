@@ -14,6 +14,26 @@ const Connectors = memo(function Connectors({
 
       <>
 
+      {
+          !!entryConnectors && (
+            <ConnectorsContent>
+              {
+                entryConnectors.map((connector, index) => (
+
+                  <ConnectorsConnector
+                    key={index}
+                    data={connector.data}
+                    device={connector.device}
+                    updateConn={connector.updateConn}
+                    handleChangeData={connector.handleChangeData}
+                  />
+
+                ))
+              }
+            </ConnectorsContent>
+          )
+        }
+
         {
           !!exitConnectors && (
             <ConnectorsContent>
@@ -35,25 +55,7 @@ const Connectors = memo(function Connectors({
           )
         }
 
-        {
-          !!entryConnectors && (
-            <ConnectorsContent>
-              {
-                entryConnectors.map((connector, index) => (
 
-                  <ConnectorsConnector
-                    key={index}
-                    data={connector.data}
-                    device={connector.device}
-                    updateConn={connector.updateConn}
-                    handleChangeData={connector.handleChangeData}
-                  />
-
-                ))
-              }
-            </ConnectorsContent>
-          )
-        }
       </>
 
 

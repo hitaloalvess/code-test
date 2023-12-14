@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback, useRef } from 'react';
+import { useEffect, useRef, useCallback, useState } from 'react';
 import P from 'prop-types';
 import { shallow } from 'zustand/shallow';
 
@@ -10,22 +10,17 @@ import Connectors from '@/components/Platform/Device/SharedDevice/Connectors';
 import DeviceBody from '../../SharedDevice/DeviceBody';
 
 
-import eventBaseImg from '@/assets/images/devices/event/eventBase.svg';
-import PickColorIcon from './PickColorIcon';
+import * as D from './styles.module.css';
 
-const PickColor = ({
+import eventBaseImg from '@/assets/images/devices/event/eventBase.svg';
+
+
+const PassValue = ({
   data, dragRef, onSaveData
 }) => {
 
   const isFirstRender = useRef(true);
-  const {
-    id,
-    name,
-    posX,
-    posY,
-    value,
-    connectors,
-  } = data;
+  const { id, name, posX, posY, value, connectors } = data;
 
   const {
     flows,
@@ -40,61 +35,85 @@ const PickColor = ({
   }), shallow);
 
   const [qtdIncomingConn, setQtdIncomingConn] = useState(0);
-
+  const [currentValue, setCurrentValue] = useState(value.send.current);
 
   const connectionReceiver = useCallback(() => {
-    setQtdIncomingConn(prev => prev + 1)
-  }, []);
 
-  const handleSettingUpdate = useCallback((newColor) => {
+    setQtdIncomingConn(prev => prev + 1);
+  }, [])
+
+  const handleSettingUpdate = useCallback((newCurrentValue) => {
+    setCurrentValue(newCurrentValue);
+
     const newValue = {
-      ...value,
       send: {
-        ...value.send,
-        color: newColor
-      }
+        current: newCurrentValue,
+      },
+      sendValue: value.sendValue,
     }
 
     onSaveData('value', newValue)
     updateDeviceValue(id, { value: newValue });
-
-  }, [value]);
+  }, [value.send.current]);
 
 
   const handleConnections = () => {
 
     const flow = findFlowsByDeviceId(flows, id);
 
-    const connection = flow.connections.find(conn => {
+    const connection = flow?.connections.find(conn => {
       return conn.deviceTo.id === id
     });
 
     if (!flow || !connection) {
-      redefineBehavior();
+      const value = {
+        ...data.value,
+        send: {
+          current: false
+        }
+      }
+
+      onSaveData('value', value)
+      updateDeviceValue(id, { value });
+
       return;
     }
 
-
     const device = { ...devices[connection.deviceFrom.id] };
-    const deviceValue = device.value[connection.deviceFrom.connector.name].current;
 
-    const newValue = {
-      ...data.value,
-      send: {
-        ...data.value.send,
-        current: deviceValue
-      }
+    let valueReceived = device.value[connection.deviceFrom.connector.name].current;
+
+    //Calc values
+
+    let currentValueSend;
+    if (typeof valueReceived === 'boolean') {
+
+      currentValueSend = valueReceived;
+
+    }
+    else if (typeof valueReceived === 'number') {
+
+      currentValueSend = valueReceived > 0 ? true : false;
+
     }
 
+    if (currentValueSend == true) {
+        const newValue = {
+          send: {
+            current: currentValue,
+          },
+          sendValue: currentValueSend,
+        }
 
-    onSaveData('value', newValue)
-    updateDeviceValue(id, { value: newValue });
-    updateDeviceValueInFlow({ connectorId: connectors.send.id, newValue });
-
+      onSaveData('value', newValue);
+      updateDeviceValue(id, { value: newValue });
+      updateDeviceValueInFlow({ connectorId: connectors.send.id, newValue });
+      sendValue();
+    }
+    return;
   };
 
   const sendValue = () => {
-
     const flow = findFlowsByDeviceId(flows, id);
 
     if (!flow) return;
@@ -103,30 +122,17 @@ const PickColor = ({
       return conn.deviceFrom.id === id
     });
 
-
     connsOutput.forEach(conn => {
       const toConnector = devices[conn.deviceTo.id].connectors[conn.deviceTo.connector.name];
       toConnector.defaultReceiveBehavior({
-        value: value.send.current,
-        max: value.send.max,
-        color: value.send.color
+        value: value.send.current
       });
     })
-  }
+  };
 
   const redefineBehavior = useCallback(() => {
-    const newValue = {
-      ...value,
-      send: {
-        ...value.send,
-        current: 0,
-        max: 0,
-      }
-    }
 
-    onSaveData('value', newValue)
-    updateDeviceValue(id, { value: newValue });
-  }, [value]);
+  }, []);
 
 
   useEffect(() => {
@@ -141,27 +147,17 @@ const PickColor = ({
     }
   }, [qtdIncomingConn]);
 
-  useEffect(() => {
-    if (isFirstRender.current) {
-      isFirstRender.current = false;
-
-      return;
-    }
-
-    sendValue();
-  }, [value]);
-
-
   return (
     <>
-
       <DeviceBody
         name={name}
         imgSrc={eventBaseImg}
         ref={dragRef}
       >
 
-        <PickColorIcon color={value.send.color} />
+        <p className={D.delayNumber}>
+          {currentValue}
+        </p>
 
         <ActionButtons
           orientation='bottom'
@@ -173,23 +169,21 @@ const PickColor = ({
             }
           }}
           actionConfig={{
-            typeContent: 'config-pickColor',
+            typeContent: 'config-passValue',
             onSave: handleSettingUpdate,
             data: {
-              defaultColor: value.send.color,
+              defaultValueSet: currentValue,
             }
           }}
         />
       </DeviceBody>
-
-
       <Connectors
         type='doubleTypes'
         exitConnectors={[
           {
             data: {
-              ...connectors.send,
-              defaultSendBehavior: connectionReceiver,
+              ...connectors.receive,
+              defaultReceiveBehavior: connectionReceiver,
               redefineBehavior
             },
             device: { id },
@@ -199,10 +193,9 @@ const PickColor = ({
         ]}
         entryConnectors={[
           {
-
             data: {
-              ...connectors.receive,
-              defaultReceiveBehavior: connectionReceiver,
+              ...connectors.send,
+              defaultSendBehavior: connectionReceiver,
               redefineBehavior
             },
             device: { id },
@@ -217,11 +210,10 @@ const PickColor = ({
   );
 };
 
-
-PickColor.propTypes = {
+PassValue.propTypes = {
   data: P.object.isRequired,
   dragRef: P.func.isRequired,
   onSaveData: P.func.isRequired
 }
 
-export default PickColor;
+export default PassValue;

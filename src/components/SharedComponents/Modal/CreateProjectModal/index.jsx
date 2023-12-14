@@ -40,10 +40,16 @@ const CreateProjectModal = ({
 
     try {
 
-      const data = {
-        id: project ? project.id : null,
+      let data = {
         name,
         description
+      }
+
+      if(project?.id){
+        data = {
+          ...data,
+          id: project.id,
+        }
       }
 
       handleConfirm(data);
@@ -52,7 +58,7 @@ const CreateProjectModal = ({
 
 
     } catch (error) {
-      (error);
+      console.log(error);
     }
 
   }

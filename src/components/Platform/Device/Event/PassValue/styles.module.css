@@ -1,0 +1,16 @@
+.delayNumber {
+  position: absolute;
+  top: 18px;
+  color: var(--black);
+  font-size: 26px;
+  font-weight: bold;
+  text-align: center;
+  /* margin: -65px auto 0 auto; */
+}
+
+@media (((max-height: 481px) and (orientation: landscape)) or ((max-width: 481px) and (orientation: portrait))) {
+  .delayNumber {
+    top: 14px;
+    font-size: 18px;
+  }
+}

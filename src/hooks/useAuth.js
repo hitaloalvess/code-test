@@ -16,29 +16,29 @@ export const useAuth = () => {
   const isFirstRender = useRef(true);
   const idSearchFormTimeout = useRef(null);
 
-  const [user, setUser] = useState(() => {
-    const user = localStorage.getItem('@Microdigo:user');
+  const [person, setPerson] = useState(() => {
+    const person = localStorage.getItem('@Microdigo:person');
 
-    return JSON.parse(user);
+    return JSON.parse(person);
   });
   const [isLoading, setIsLoading] = useState(false);
   const [searchFormHasEnabled /*, setSearchFormHasEnabled*/] = useState(true);
 
-  const isAuthenticated = useMemo(() => !!user, [user]);
+  const isAuthenticated = useMemo(() => !!person, [person]);
 
   const handleSignIn = async ({ email, password }) => {
     try {
 
       setIsLoading(true);
 
-      const { data: { acessToken: token, user } } = await apiAuth.post('/auth/signin', {
+      const { data: { acessToken: token, person } } = await apiAuth.post('/auth/signin', {
         email, password
       });
 
       localStorage.setItem('@Microdigo:token', JSON.stringify(token));
-      localStorage.setItem('@Microdigo:user', JSON.stringify(user));
+      localStorage.setItem('@Microdigo:person', JSON.stringify(person));
 
-      setUser(user);
+      setPerson(person);
       setIsLoading(false);
 
       apiAuth.defaults.headers.Authorization = `Bearer ${token}`;
@@ -56,13 +56,13 @@ export const useAuth = () => {
   const handleSignOut = (event) => {
     if(event) event.preventDefault();
 
-    setUser(null);
+    setPerson(null);
 
     apiAuth.defaults.headers.common.Authorization = undefined;
     clearTimeout(idSearchFormTimeout.current);
 
     localStorage.removeItem('@Microdigo:token');
-    localStorage.removeItem('@Microdigo:user');
+    localStorage.removeItem('@Microdigo:person');
 
     window.location.href = "/";
   }
@@ -95,7 +95,7 @@ export const useAuth = () => {
   }, [isAuthenticated]);
 
   return {
-    user,
+    person,
     isAuthenticated,
     searchFormHasEnabled,
     isLoading,

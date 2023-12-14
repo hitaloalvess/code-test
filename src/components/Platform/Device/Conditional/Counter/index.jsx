@@ -143,10 +143,7 @@ const Counter = ({
           ...value.send,
           current: 0,
           max: 1023,
-        },
-        loopActive: false,
-        loopLimit: 9999
-
+        }
     }
 
     onSaveData('value', newValue)
@@ -268,9 +265,8 @@ const Counter = ({
         exitConnectors={[
           {
             data: {
-              ...connectors.receive,
-              defaultReceiveBehavior: connectionReceiver,
-              redefineBehavior: redefineBehavior
+              ...connectors.send,
+              defaultSendBehavior: connectionReceiver
             },
             device: { id },
             updateConn: { posX, posY },
@@ -280,8 +276,9 @@ const Counter = ({
         entryConnectors={[
           {
             data: {
-              ...connectors.send,
-              defaultSendBehavior: connectionReceiver
+              ...connectors.receive,
+              defaultReceiveBehavior: connectionReceiver,
+              redefineBehavior: redefineBehavior
             },
             device: { id },
             updateConn: { posX, posY },

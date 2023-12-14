@@ -13,7 +13,7 @@ import { toast } from 'react-toastify';
 
 const CredentialsSection = () => {
 
-  const { user, handleSignOut } = useContextAuth();
+  const { person, handleSignOut } = useContextAuth();
   const { enableModal, disableModal } = useModal();
 
   const handleUpdatePassword = () => {
@@ -29,7 +29,7 @@ const CredentialsSection = () => {
   const handleDeleteAccount = async () => {
     try {
 
-      await apiAuth.delete(`/users/${user.id}`);
+      await apiAuth.delete(`/persons/${person.id}`);
 
       toast.success('Conta deletada com sucesso');
 
@@ -80,7 +80,7 @@ const CredentialsSection = () => {
             id='email'
             placeholder={"Email"}
             disabled={true}
-            defaultValue={user.email}
+            defaultValue={person.email}
           />
         </Input.Root>
       </Form.Row>
