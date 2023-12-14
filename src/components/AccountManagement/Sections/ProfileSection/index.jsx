@@ -17,9 +17,9 @@ const signUpSchema = z.object({
   name: z.string().nonempty('Nome é obrigatório'),
   phone: z.string().nonempty('Telefone é obrigatório'),
   genre: z.string().nonempty('Campo gênero é obrigatório'),
-  nasc: z.string().nonempty('Data é obrigatório').pipe(z.coerce.date()),
+  birth: z.string().nonempty('Data é obrigatório').pipe(z.coerce.date()),
   country: z.string().nonempty('País é obrigatório'),
-  state: z.string().nonempty('Estado é obrigatório'),
+  district: z.string().nonempty('Estado é obrigatório'),
   city: z.string().nonempty('Cidade é obrigatório'),
 })
   .refine(({ phone }) => isValidPhoneNumber(phone), {
@@ -30,7 +30,7 @@ const signUpSchema = z.object({
 
 const ProfileSection = () => {
 
-  const { user } = useContextAuth();
+  const { person } = useContextAuth();
 
   const { handleSubmit, register, setValue, formState: { errors } } = useForm({
     resolver: zodResolver(signUpSchema),
@@ -41,18 +41,18 @@ const ProfileSection = () => {
 
   const handleSubmitForm = async (formData) => {
     const transformPhone = removeSpaces(removeSpecialCharacters(formData.phone));
-    const transformNasc = new Date(formData.nasc);
+    const transformNasc = new Date(formData.birth);
 
     const data = {
-      ...user,
+      // ...person,
       ...formData,
       phone: transformPhone,
-      nasc: transformNasc
+      birth: transformNasc
     }
 
     try {
 
-      await apiAuth.put(`/users/update/${user.id}`, data);
+      await apiAuth.put(`persons/user/${person.id}`, data);
       toast.success('Usuário atualizado com sucesso!');
 
     } catch (error) {
@@ -83,7 +83,7 @@ const ProfileSection = () => {
               <Input.TextType
                 id={'Nome'}
                 placeholder={"Nome completo"}
-                defaultValue={user.name}
+                defaultValue={person.name}
                 {...register('name')}
               />
             </Input.Root>
@@ -103,7 +103,7 @@ const ProfileSection = () => {
               <Input.TextMaskType
                 id={'cpf'}
                 placeholder={"Digite seu cpf"}
-                defaultValue={user.cpf}
+                defaultValue={person.user.cpf}
                 name={'cpf'}
                 disabled={true}
                 maskChange={handleChangeValue}
@@ -128,7 +128,7 @@ const ProfileSection = () => {
               <Input.TextMaskType
                 id={'phone'}
                 placeholder={"+55 (00) 00000-0000"}
-                defaultValue={user.phone}
+                defaultValue={person.phone}
                 maskChange={handleChangeValue}
                 {...register('phone')}
               />
@@ -151,8 +151,8 @@ const ProfileSection = () => {
                 <Input.SelectType
                   id={'genre'}
                   defaultOptTxt='Selecione seu gênero'
-                  options={['masculino', 'feminino', 'outro']}
-                  defaultValue={user.genre}
+                  options={['MASCULINO', 'FEMININO']}
+                  defaultValue={person.genre}
                   hasIconSibling={false}
                   {...register('genre')}
                 />
@@ -163,18 +163,18 @@ const ProfileSection = () => {
             <Form.Column>
               <Form.Label
                 text='Data de nascimento'
-                id={'nasc'}
+                id={'birth'}
               />
               <Input.Root
-                error={errors.nasc}
+                error={errors.birth}
               >
                 <Input.Icon
                   icon={<Cake />}
                 />
                 <Input.DateType
-                  id={'nasc'}
-                  defaultValue={user.nasc}
-                  {...register('nasc')}
+                  id={'birth'}
+                  defaultValue={person.birth}
+                  {...register('birth')}
                 />
               </Input.Root>
             </Form.Column>
@@ -198,7 +198,7 @@ const ProfileSection = () => {
                 <Input.TextType
                   id={'country'}
                   placeholder={"Digite seu país"}
-                  defaultValue={user.country}
+                  defaultValue={person.country}
                   {...register('country')}
                 />
               </Input.Root>
@@ -208,19 +208,19 @@ const ProfileSection = () => {
             <Form.Column>
               <Form.Label
                 text='Estado'
-                id={'state'}
+                id={'district'}
               />
               <Input.Root
-                error={errors.state}
+                error={errors.district}
               >
                 <Input.Icon
                   icon={<Flag />}
                 />
                 <Input.TextType
-                  id={'state'}
+                  id={'district'}
                   placeholder={"Digite seu estado"}
-                  defaultValue={user.state}
-                  {...register('state')}
+                  defaultValue={person.district}
+                  {...register('district')}
                 />
               </Input.Root>
             </Form.Column>
@@ -239,7 +239,7 @@ const ProfileSection = () => {
                 <Input.TextType
                   id={'city'}
                   placeholder={"Digite sua cidade"}
-                  defaultValue={user.city}
+                  defaultValue={person.city}
                   {...register('city')}
                 />
               </Input.Root>

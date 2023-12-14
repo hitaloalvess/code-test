@@ -23,7 +23,7 @@ export async function getProjects(userCpf) {
 
 export const useProject = () => {
 
-  const { user } = useContextAuth();
+  const { person } = useContextAuth();
   const {
     getFlows,
     getDevices,
@@ -42,9 +42,9 @@ export const useProject = () => {
       const newProject = {
         ...data,
         user: {
-          email: user.email,
-          name: user.name,
-          cpf: user.cpf
+          email: person.email,
+          name: person.name,
+          document: person?.user ? person.user.cpf : person.user?.ra
         },
         devices: [],
         flows: []

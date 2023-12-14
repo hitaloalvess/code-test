@@ -47,9 +47,9 @@ const signUpSchema = z.object({
       message: 'Telefone inválido'
     }),
   genre: z.string().nonempty('Campo gênero é obrigatório'),
-  nasc: z.string().nonempty('Data é obrigatório').pipe(z.coerce.date()),
+  birth: z.string().nonempty('Data é obrigatório').pipe(z.coerce.date()),
   country: z.string().nonempty('País é obrigatório'),
-  state: z.string().nonempty('Estado é obrigatório'),
+  district: z.string().nonempty('Estado é obrigatório'),
   city: z.string().nonempty('Cidade é obrigatório'),
 })
   .refine(({ password, confirm_password }) => password === confirm_password, {
@@ -80,13 +80,13 @@ const SignUp = () => {
       ...formData,
       cpf: transformCPF,
       phone: transformPhone,
-      nasc: transformNasc
+      birth: transformNasc
     }
     delete data.confirm_password;
 
     try {
       setIsLoading(true);
-      await apiAuth.post('users', data);
+      await apiAuth.post('persons/user', data);
       toast.success('Usuário cadastrado com sucesso!');
 
       setIsLoading(false);
@@ -217,14 +217,14 @@ const SignUp = () => {
 
                   <Input.SelectType
                     defaultOptTxt='Selecione seu gênero'
-                    options={['MASCULINO', 'FEMININO', 'OUTRO']}
+                    options={['MASCULINO', 'FEMININO']}
                     hasIconSibling={false}
                     {...register('genre')}
                   />
                 </Input.Root>
 
                 <Input.Root
-                  error={errors.nasc}
+                  error={errors.birth}
                 >
                   <Input.Icon
                     icon={<Cake fontSize={20}
@@ -232,7 +232,7 @@ const SignUp = () => {
                     />}
                   />
                   <Input.DateType
-                    {...register('nasc')}
+                    {...register('birth')}
                   />
                 </Input.Root>
 
@@ -254,14 +254,14 @@ const SignUp = () => {
 
 
                 <Input.Root
-                  error={errors.state}
+                  error={errors.district}
                 >
                   <Input.Icon
                     icon={<Flag fontSize={20} className={'text-gray-100'} />}
                   />
                   <Input.TextType
                     placeholder={"Digite seu estado"}
-                    {...register('state')}
+                    {...register('district')}
                   />
                 </Input.Root>
 

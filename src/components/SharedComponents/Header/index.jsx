@@ -12,7 +12,7 @@ import * as H from './styles.module.css';
 
 const Header = () => {
 
-  const { handleSignOut, user } = useContextAuth();
+  const { handleSignOut, person } = useContextAuth();
   const [enabledMenu, setEnabledMenu] = useState('');
 
   const handleShortenName = (name) => {
@@ -34,12 +34,12 @@ const Header = () => {
 
   }
   const userNameTransform = useMemo(() => {
-    const name = user.name;
+    const name = person.name;
 
     const shortedName = handleShortenName(name);
 
     return shortedName;
-  }, [user.name]);
+  }, [person.name]);
 
 
   const handleEnableMenu = (typeMenu) => {

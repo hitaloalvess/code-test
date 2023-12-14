@@ -8,7 +8,7 @@ export const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
 
   const {
-    user,
+    person,
     isAuthenticated,
     isLoading,
     searchFormHasEnabled,
@@ -18,7 +18,7 @@ export const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider value={{
-      user,
+      person,
       isAuthenticated,
       isLoading,
       searchFormHasEnabled,
