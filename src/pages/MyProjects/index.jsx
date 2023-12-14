@@ -15,16 +15,16 @@ import ProjectsContent from '../../components/MyProjects/ProjectsContent';
 
 const MyProjects = () => {
 
-  const { user } = useAuth();
+  const { person } = useAuth();
   const {
     createProject,
     deleteProject,
     updateProject
-  } = useProject(user.cpf);
+  } = useProject(person.user.cpf);
 
   const [filter, setFilter] = useState('');
 
-  const { data: projects, isLoading } = useQueryProject(user.cpf);
+  const { data: projects, isLoading } = useQueryProject(person.user.cpf);
 
   const filteredProjects = useMemo(() => {
 

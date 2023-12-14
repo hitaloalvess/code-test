@@ -9,9 +9,6 @@ const Connectors = memo(function Connectors({
   type, entryConnectors = null, exitConnectors = null
 }) {
 
-  console.log({
-    type, exitConnectors, entryConnectors
-  })
   return (
     <ConnectorsContainer typeContainer={type}>
 
