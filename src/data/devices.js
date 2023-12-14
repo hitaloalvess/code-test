@@ -807,8 +807,11 @@ export const mockDevices = {
       type: 'virtual',
       category: 'conditional',
       value: {
-        send: {
+        sendIf: {
           current: false,
+        },
+        sendElse: {
+          current: true,
         },
         simbol: '=',
         connectionType: 'number',
@@ -824,16 +827,16 @@ export const mockDevices = {
           x: 0,
           y: 0
         },
-        send: {
+        sendIf: {
           id: null,
-          name: 'send',
+          name: 'sendIf',
           type: 'exit',
           x: 0,
           y: 0
         },
-        send2: {
+        sendElse: {
           id: null,
-          name: 'send',
+          name: 'sendElse',
           type: 'exit',
           x: 0,
           y: 0
