@@ -31,6 +31,7 @@ import deviceToggle from '@/assets/images/devices/event/toggle.svg';
 import deviceDelay from '@/assets/images/devices/event/delay.svg';
 import deviceSlider from '@/assets/images/devices/event/slider.svg';
 import deviceLoop from '@/assets/images/devices/event/loop.svg';
+import devicePassValue from '@/assets/images/devices/event/passValue.svg';
 
 //tool
 import deviceStickynote from '@/assets/images/devices/tool/stickyNote.svg'
@@ -605,7 +606,7 @@ export const mockDevices = {
     },
     {
       id: 35,
-      imgSrc: deviceDelay,
+      imgSrc: devicePassValue,
       name: 'passValue',
       label: 'Passa valores',
       type: 'virtual',

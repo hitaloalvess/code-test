@@ -59,7 +59,7 @@ const ConfigPassValueModal = ({ closeModal, contentData }) => {
             type="number"
             id='valueSet'
             min = "0"
-            max = "999"
+            max = "9999"
             className={inputNumber}
             defaultValue={defaultValueSet}
             ref={valueRef}
