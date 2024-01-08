@@ -42,9 +42,15 @@ const Counter = ({
   const handleSettingUpdate = useCallback((newLoopActive, newLoopLimit) => {
     const newValue = {
       ...data.value,
+      send: {
+        ...value.send,
+        current: newLoopActive ? (value.send.current > newLoopLimit ? newLoopLimit - 1 : value.send.current) : value.send.current,
+        max: newLoopActive ? newLoopLimit : 1023,
+      },
       loopActive: newLoopActive,
       loopLimit: newLoopLimit
     }
+
 
     onSaveData('value', newValue)
     updateDeviceValue(id, { value: newValue });
@@ -88,13 +94,12 @@ const Counter = ({
       if (value.loopActive)
       {
         const x = Math. floor(currentValue / value.loopLimit);
-
         newValue = {
           ...value,
           send: {
             ...value.send,
             current:  currentValue - (value.loopLimit * x),
-            max: 1023,
+            max: value.send.max,
           }
         }
       }
@@ -105,7 +110,7 @@ const Counter = ({
           send: {
             ...value.send,
             current: currentValue,
-            max: 1023,
+            max: value.send.max,
           }
         }
       }
@@ -142,7 +147,7 @@ const Counter = ({
         send: {
           ...value.send,
           current: 0,
-          max: 1023,
+          max: value.send.max,
         }
     }
 
@@ -158,8 +163,8 @@ const Counter = ({
         ...value,
         send: {
           ...value.send,
-          current: 0
-
+          current: 0,
+          max: value.send.max,
         }
       }
     }
@@ -169,8 +174,8 @@ const Counter = ({
         ...value,
         send: {
           ...value.send,
-          current: value.send.current + 1
-
+          current: value.send.current + 1,
+          max: value.send.max,
         }
       }
     }
@@ -190,7 +195,8 @@ const Counter = ({
           ...value,
           send: {
             ...value.send,
-            current: value.loopLimit - 1
+            current: value.loopLimit - 1,
+            max: value.send.max,
           }
         }
       }
@@ -201,7 +207,8 @@ const Counter = ({
           ...value,
           send: {
             ...value.send,
-            current: value.send.current - 1
+            current: value.send.current - 1,
+            max: value.send.max,
           }
         }
     }
