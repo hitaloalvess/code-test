@@ -76,13 +76,16 @@ const PickColor = ({
 
 
     const device = { ...devices[connection.deviceFrom.id] };
-    const deviceValue = device.value[connection.deviceFrom.connector.name].current;
+    const deviceValueCurrent = device.value[connection.deviceFrom.connector.name].current;
+    const deviceValueMax  = device.value[connection.deviceFrom.connector.name].max;
 
+    console.log (device.value);
     const newValue = {
       ...data.value,
       send: {
         ...data.value.send,
-        current: deviceValue
+        current: deviceValueCurrent,
+        max: deviceValueMax
       }
     }
 
@@ -102,7 +105,6 @@ const PickColor = ({
     const connsOutput = flow.connections.filter(conn => {
       return conn.deviceFrom.id === id
     });
-
 
     connsOutput.forEach(conn => {
       const toConnector = devices[conn.deviceTo.id].connectors[conn.deviceTo.connector.name];
