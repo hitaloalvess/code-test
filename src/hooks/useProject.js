@@ -7,11 +7,12 @@ import { apiMicroCode } from '@/services/apiMicroCode';
 import { queryClient } from '@/services/queryClient';
 import { formattedDate } from '../utils/date-functions';
 import { useContextAuth } from '@/hooks/useAuth';
+import { toast } from 'react-toastify';
 
-export async function getProjects(userCpf) {
-  const projects = await apiMicroCode.get(`/projects/user/${userCpf}`);
+export async function getProjects(personId) {
+  const { data: { projects } } = await apiMicroCode.get(`/projects/user/${personId}`);
 
-  const transformProjects = projects.data.map(project => {
+  const transformProjects = projects.map(project => {
     return {
       ...project,
       createdAt: formattedDate(project.createdAt)
@@ -41,21 +42,18 @@ export const useProject = () => {
 
       const newProject = {
         ...data,
-        user: {
-          email: person.email,
-          name: person.name,
-          document: person?.user ? person.user.cpf : person.user?.ra
-        },
+        personId: person.id,
         devices: [],
         flows: []
       }
 
-      const response = await apiMicroCode.post(`/projects`, newProject);
+      const { data: { project }} = await apiMicroCode.post(`/projects`, newProject);
 
-      return response.data;
+      return project;
     },
     {
       onSuccess: () => {
+        toast.success('Projeto criado com sucesso.');
         return queryClient.invalidateQueries('projects');
       },
     }
@@ -65,12 +63,15 @@ export const useProject = () => {
     async (data) => {
       const newProject = { ...data }
 
-      const response = await apiMicroCode.put(`/projects/${data.id}`, newProject);
+      const { data: { project }} = await apiMicroCode.put(`/projects/${data.id}`, newProject);
 
-      return response.data;
+      return project;
     },
     {
-      onSuccess: () => queryClient.invalidateQueries('projects'),
+      onSuccess: () => {
+        toast.success('Projeto atualizado com sucesso.');
+        return queryClient.invalidateQueries('projects')
+      },
     }
   );
 
@@ -126,17 +127,21 @@ export const useProject = () => {
 
   const deleteProject = useMutation(
     async (projectId) => {
-      const response = await apiMicroCode.delete(`/projects/${projectId}`);
+      const { data:{ project }} = await apiMicroCode.delete(`/projects/${projectId}`);
 
-      return response.data;
+      return project;
     },
     {
-      onSuccess: () => queryClient.invalidateQueries('projects'),
+      onSuccess: () => {
+        toast.error('Projeto deletado com sucesso.');
+        return queryClient.invalidateQueries('projects');
+      },
+      onError: (error) => toast.error(error.message)
     }
   );
 
   const loadProject = async (projectId) => {
-    const { data: project } = await apiMicroCode.get(`/projects/${projectId}`);
+    const { data: { project } } = await apiMicroCode.get(`/projects/${projectId}`);
 
     const deviceList = Object.values(project.devices).map(async (device) => {
       loadDevice({ ...device });
@@ -191,9 +196,9 @@ export const useProject = () => {
   }
 }
 
-export const useQueryProject = (userCpf) => {
+export const useQueryProject = (personId) => {
   return useQuery(['projects'], () => {
-    return getProjects(userCpf);
+    return getProjects(personId);
   }, {
     staleTime: 1000 * 60 * 30, //10 minutes
   });
