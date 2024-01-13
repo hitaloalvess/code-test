@@ -84,6 +84,11 @@ export const useAuth = () => {
 
   //   setSearchFormHasEnabled(true);
   // }
+  const handleUpdatePerson = (person) => {
+
+    setPerson(person);
+    localStorage.setItem('@Microdigo:person', JSON.stringify(person));
+  };
 
   useEffect(() => {
     if (isFirstRender.current) {
@@ -112,6 +117,7 @@ export const useAuth = () => {
     isLoading,
     handleSignIn,
     handleSignOut,
+    handleUpdatePerson
   }
 }
 

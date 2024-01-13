@@ -78,7 +78,7 @@ const UpdatePasswordModal = ({
 
     try {
 
-      await apiAuth.patch('persons/update/password', data);
+      await apiAuth.patch('/credentials/password', data);
       toast.success('Senha atualizada com sucesso!');
 
       closeModal();

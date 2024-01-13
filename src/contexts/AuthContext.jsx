@@ -14,6 +14,7 @@ export const AuthProvider = ({ children }) => {
     searchFormHasEnabled,
     handleSignIn,
     handleSignOut,
+    handleUpdatePerson
   } = useAuth();
 
   return (
@@ -24,6 +25,7 @@ export const AuthProvider = ({ children }) => {
       searchFormHasEnabled,
       handleSignIn,
       handleSignOut,
+      handleUpdatePerson
     }}>
       {children}
     </AuthContext.Provider>

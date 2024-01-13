@@ -19,7 +19,7 @@ const MyProjects = () => {
     createProject,
     deleteProject,
     updateProject
-  } = useProject();
+  } = useProject(person.id);
 
   const [filter, setFilter] = useState('');
 

@@ -29,7 +29,7 @@ const CredentialsSection = () => {
   const handleDeleteAccount = async () => {
     try {
 
-      await apiAuth.delete(`/persons/${person.id}`);
+      await apiAuth.delete(`/${person.type}s/${person.id}`);
 
       toast.success('Conta deletada com sucesso');
 
