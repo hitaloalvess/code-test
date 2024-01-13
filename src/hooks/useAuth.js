@@ -16,34 +16,33 @@ export const useAuth = () => {
   const isFirstRender = useRef(true);
   const idSearchFormTimeout = useRef(null);
 
-  const [person, setPerson] = useState(() => {
-    const person = localStorage.getItem('@Microdigo:person');
-
-    return JSON.parse(person);
-  });
+  const [person, setPerson] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [searchFormHasEnabled /*, setSearchFormHasEnabled*/] = useState(true);
 
   const isAuthenticated = useMemo(() => !!person, [person]);
+
+  const handleGetProfile = async () => {
+    const { data: { person } } = await apiAuth.get('/me');
+    setPerson(person);
+  }
 
   const handleSignIn = async ({ email, password }) => {
     try {
 
       setIsLoading(true);
 
-      const { data: { acessToken: token, person } } = await apiAuth.post('/auth/signin', {
+      const { data: { token } } = await apiAuth.post('/sessions', {
         email, password
       });
 
       localStorage.setItem('@Microdigo:token', JSON.stringify(token));
-      localStorage.setItem('@Microdigo:person', JSON.stringify(person));
+      apiAuth.defaults.headers.common.Authorization = `Bearer ${token}`;
 
-      setPerson(person);
+      await handleGetProfile();
       setIsLoading(false);
 
-      apiAuth.defaults.headers.Authorization = `Bearer ${token}`;
-
-      return navigate('/projetos');
+      navigate('/projetos');
 
     } catch (error) {
       toast.error(error.response.data.message);
@@ -62,7 +61,7 @@ export const useAuth = () => {
     clearTimeout(idSearchFormTimeout.current);
 
     localStorage.removeItem('@Microdigo:token');
-    localStorage.removeItem('@Microdigo:person');
+    // localStorage.removeItem('@Microdigo:person');
 
     window.location.href = "/";
   }
@@ -79,20 +78,27 @@ export const useAuth = () => {
   // }
 
   useEffect(() => {
-    if (isFirstRender.current) {
+  if (isFirstRender.current) {
       isFirstRender.current = false;
 
       return;
     }
 
-    if (isAuthenticated) {
-      const token = localStorage.getItem('@Microdigo:token');
+    const token = localStorage.getItem('@Microdigo:token');
+
+    if(token){
       apiAuth.defaults.headers.common.Authorization = `Bearer ${JSON.parse(token)}`;
 
-      // idSearchFormTimeout.current = setTimeout(handleSearchForm, TIME_ACTIVATE_SEARCH_FORM);
+      try{
+        handleGetProfile();
+
+        return navigate('/projetos');
+      }catch(error){
+        toast.error(error?.message);
+      }
 
     }
-  }, [isAuthenticated]);
+  },[])
 
   return {
     person,

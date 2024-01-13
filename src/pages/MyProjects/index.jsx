@@ -14,7 +14,7 @@ import * as MP from './styles.module.css';
 import ProjectsContent from '../../components/MyProjects/ProjectsContent';
 
 const MyProjects = () => {
-
+  console.log('DENTRO DE MY PROJECTS');
   const { person } = useAuth();
   const {
     createProject,
