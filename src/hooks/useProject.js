@@ -133,7 +133,7 @@ export const useProject = () => {
     },
     {
       onSuccess: () => {
-        toast.error('Projeto deletado com sucesso.');
+        toast.success('Projeto deletado com sucesso.');
         return queryClient.invalidateQueries('projects');
       },
       onError: (error) => toast.error(error.message)
