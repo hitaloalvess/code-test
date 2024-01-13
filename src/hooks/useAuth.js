@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { apiAuth } from '@/services/apiAuth';
 import { toast } from "react-toastify";
 import { AuthContext } from '@/contexts/AuthContext';
+// import { apiMicroCode } from '../services/apiMicroCode';
 // import { useModal } from '@/hooks/useModal';
 
 
@@ -16,15 +17,21 @@ export const useAuth = () => {
   const isFirstRender = useRef(true);
   const idSearchFormTimeout = useRef(null);
 
-  const [person, setPerson] = useState(null);
+  const [person, setPerson] = useState(() => {
+    const person = localStorage.getItem('@Microdigo:person');
+
+    return JSON.parse(person);
+  });
   const [isLoading, setIsLoading] = useState(false);
   const [searchFormHasEnabled /*, setSearchFormHasEnabled*/] = useState(true);
-
   const isAuthenticated = useMemo(() => !!person, [person]);
 
   const handleGetProfile = async () => {
     const { data: { person } } = await apiAuth.get('/me');
+
     setPerson(person);
+
+    return person;
   }
 
   const handleSignIn = async ({ email, password }) => {
@@ -37,9 +44,10 @@ export const useAuth = () => {
       });
 
       localStorage.setItem('@Microdigo:token', JSON.stringify(token));
-      apiAuth.defaults.headers.common.Authorization = `Bearer ${token}`;
 
-      await handleGetProfile();
+      const person = await handleGetProfile();
+      localStorage.setItem('@Microdigo:person', JSON.stringify(person));
+
       setIsLoading(false);
 
       navigate('/projetos');
@@ -61,7 +69,7 @@ export const useAuth = () => {
     clearTimeout(idSearchFormTimeout.current);
 
     localStorage.removeItem('@Microdigo:token');
-    // localStorage.removeItem('@Microdigo:person');
+    localStorage.removeItem('@Microdigo:person');
 
     window.location.href = "/";
   }
@@ -78,7 +86,7 @@ export const useAuth = () => {
   // }
 
   useEffect(() => {
-  if (isFirstRender.current) {
+    if (isFirstRender.current) {
       isFirstRender.current = false;
 
       return;
@@ -87,12 +95,9 @@ export const useAuth = () => {
     const token = localStorage.getItem('@Microdigo:token');
 
     if(token){
-      apiAuth.defaults.headers.common.Authorization = `Bearer ${JSON.parse(token)}`;
 
       try{
-        handleGetProfile();
-
-        return navigate('/projetos');
+        handleGetProfile().catch(error => console.log(error));
       }catch(error){
         toast.error(error?.message);
       }
