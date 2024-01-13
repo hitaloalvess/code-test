@@ -1,5 +1,10 @@
 import { useRef } from "react";
 import P from 'prop-types';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import { Input } from '@/components/SharedComponents/Input';
+import { Form } from '@/components/SharedComponents/Form'
 
 import {
   configContent,
@@ -11,8 +16,6 @@ import {
 
 import {
   inputNumber,
-  btn,
-  btnBlue
 } from '@/styles/common.module.css';
 
 const ConfigPassValueModal = ({ closeModal, contentData }) => {
@@ -20,16 +23,27 @@ const ConfigPassValueModal = ({ closeModal, contentData }) => {
 
   const valueRef = useRef(null);
 
-  const handleSave = () => {
-    const newValue = Number(valueRef.current.value);
 
-    handleSaveConfig(newValue);
+  const inputValue = z.object({
+    value: z.string().transform(value => Number(value)).pipe(z.number().min(0, {message: 'Inserir valor maior ou igual a 0'}).max(9999, {message: 'Inserir valor menor ou igual a 9999'}))
+  }).required();
+
+  const {
+    handleSubmit,
+    register,
+    formState: { errors }
+  } = useForm({
+    shouldFocusError: false,
+    resolver: zodResolver(inputValue)
+  });
+
+  const handleSubmitForm = async ({ value }) => {
+    handleSaveConfig(Number(value));
 
     closeModal();
   }
 
   return (
-
 
     <section
       className={configContent}
@@ -42,6 +56,7 @@ const ConfigPassValueModal = ({ closeModal, contentData }) => {
         </h1>
       </header>
 
+      <Form.Root onSubmit={handleSubmit(handleSubmitForm)}>
       <div
         className={inputsArea}
       >
@@ -55,26 +70,28 @@ const ConfigPassValueModal = ({ closeModal, contentData }) => {
             Escolha o valor que será passado:
           </label>
 
-          <input
-            type="number"
-            id='valueSet'
-            min = "0"
-            max = "999"
-            className={inputNumber}
-            defaultValue={defaultValueSet}
-            ref={valueRef}
-          />
+          <Input.Root
+            error = {errors.value}
+            classNames = {inputNumber}
+          >
+            <input
+              type="number"
+              id='valueSet'
+              className={inputNumber}
+              defaultValue={defaultValueSet}
+              ref={valueRef}
+              {...register('value')}
+            />
+          </Input.Root>
         </div>
       </div>
 
       <div>
-        <button
-          className={`${btn} ${btnBlue}`}
-          onClick={handleSave}
-        >
-          Salvar
-        </button>
+        <Form.ButtonSubmit>
+              <p>Salvar</p>
+        </Form.ButtonSubmit>
       </div>
+      </Form.Root>
     </section>
   );
 };

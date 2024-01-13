@@ -21,7 +21,8 @@ import deviceTimer from '@/assets/images/devices/exit/timer.svg';
 import deviceAnd from '@/assets/images/devices/conditional/and.svg';
 import deviceOr from '@/assets/images/devices/conditional/or.svg';
 import deviceNot from '@/assets/images/devices/conditional/not.svg';
-import deviceIf from '@/assets/images/devices/conditional/if.svg';
+import deviceComparator from '@/assets/images/devices/conditional/comparator.svg';
+import deviceIf from '@/assets/images/devices/conditional/comparator.svg';
 import deviceCounter from '@/assets/images/devices/conditional/counter/counter.svg';
 
 //event
@@ -30,6 +31,7 @@ import deviceToggle from '@/assets/images/devices/event/toggle.svg';
 import deviceDelay from '@/assets/images/devices/event/delay.svg';
 import deviceSlider from '@/assets/images/devices/event/slider.svg';
 import deviceLoop from '@/assets/images/devices/event/loop.svg';
+import devicePassValue from '@/assets/images/devices/event/passValue.svg';
 
 //tool
 import deviceStickynote from '@/assets/images/devices/tool/stickyNote.svg'
@@ -604,7 +606,7 @@ export const mockDevices = {
     },
     {
       id: 35,
-      imgSrc: deviceDelay,
+      imgSrc: devicePassValue,
       name: 'passValue',
       label: 'Passa valores',
       type: 'virtual',
@@ -732,9 +734,9 @@ export const mockDevices = {
     },
     {
       id: 43,
-      imgSrc: deviceIf,
-      name: 'if',
-      label: 'If',
+      imgSrc: deviceComparator,
+      name: 'comparator',
+      label: 'Comparador',
       type: 'virtual',
       category: 'conditional',
       value: {
@@ -797,11 +799,55 @@ export const mockDevices = {
           y: 0
         },
       }
-    }
+    },
+    {
+      id: 45,
+      imgSrc: deviceIf,
+      name: 'if',
+      label: 'If',
+      type: 'virtual',
+      category: 'conditional',
+      value: {
+        sendIf: {
+          current: false,
+        },
+        sendElse: {
+          current: true,
+        },
+        simbol: '=',
+        connectionType: 'number',
+        numberDisplay: 0
+      },
+      posX: 0,
+      posY: 0,
+      connectors: {
+        receive: {
+          id: null,
+          name: 'receive',
+          type: 'entry',
+          x: 0,
+          y: 0
+        },
+        sendIf: {
+          id: null,
+          name: 'sendIf',
+          type: 'exit',
+          x: 0,
+          y: 0
+        },
+        sendElse: {
+          id: null,
+          name: 'sendElse',
+          type: 'exit',
+          x: 0,
+          y: 0
+        },
+      }
+    },
   ],
   tool: [
     {
-      id: 45,
+      id: 51,
       imgSrc: deviceStickynote,
       name: 'stickynote',
       label: 'Bloco de Notas',
@@ -848,7 +894,7 @@ export const deviceConnectorRules = {
   },
   infrared: {
     acceptedConnections: ['AllExit'],
-    connectsTo: ['if']
+    connectsTo: ['comparator', 'if']
   },
   led: {
     acceptedConnections: ['oneEntry'],
@@ -856,11 +902,11 @@ export const deviceConnectorRules = {
   },
   buzzer: {
     acceptedConnections: ['oneEntry'],
-    connectsFrom: ['potentiometer', 'ldr', 'rainDetector', 'soilMoisture', 'pushButton', 'counter', 'and', 'or', 'not', 'if', 'toggle', 'slider', 'delay', 'switch', 'physicalPotentiometer', 'physicalLDR']
+    connectsFrom: ['potentiometer', 'ldr', 'rainDetector', 'soilMoisture', 'pushButton', 'counter', 'and', 'or', 'not', 'comparator', 'if', 'toggle', 'slider', 'delay', 'switch', 'physicalPotentiometer', 'physicalLDR']
   },
   shakeMotor: {
     acceptedConnections: ['oneEntry'],
-    connectsFrom: ['potentiometer', 'ldr', 'rainDetector', 'soilMoisture', 'pushButton', 'counter', 'and', 'or', 'not', 'if', 'toggle', 'slider', 'delay', 'switch', 'physicalPotentiometer', 'physicalLDR']
+    connectsFrom: ['potentiometer', 'ldr', 'rainDetector', 'soilMoisture', 'pushButton', 'counter', 'and', 'or', 'not', 'comparator', 'if', 'toggle', 'slider', 'delay', 'switch', 'physicalPotentiometer', 'physicalLDR']
   },
   ledMono: {
     acceptedConnections: ['oneEntry'],
@@ -890,6 +936,11 @@ export const deviceConnectorRules = {
     connectsTo: ['all'],
   },
   not: {
+    acceptedConnections: ['oneEntry', 'allExit'],
+    connectsFrom: ['all'],
+    connectsTo: ['all'],
+  },
+  comparator: {
     acceptedConnections: ['oneEntry', 'allExit'],
     connectsFrom: ['all'],
     connectsTo: ['all'],

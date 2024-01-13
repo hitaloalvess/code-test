@@ -16,7 +16,7 @@ import {
   selectBox
 } from '@/styles/common.module.css';
 
-const ConfigIfModal = ({ closeModal, contentData }) => {
+const ConfigComparatorModal = ({ closeModal, contentData }) => {
   const { handleSaveConfig, defaultSimbol, defaultValue, connectionType } = contentData;
 
   const refDefaultSimbol = useRef(null);
@@ -67,7 +67,7 @@ const ConfigIfModal = ({ closeModal, contentData }) => {
         <h1
           className={configIfTitle}
         >
-          IF
+          Comparador
         </h1>
       </header>
 
@@ -135,7 +135,7 @@ const ConfigIfModal = ({ closeModal, contentData }) => {
   );
 };
 
-ConfigIfModal.propTypes = {
+ConfigComparatorModal.propTypes = {
   closeModal: P.func.isRequired,
   contentData: P.shape({
     handleSaveConfig: P.func,
@@ -149,4 +149,4 @@ ConfigIfModal.propTypes = {
   }).isRequired
 }
 
-export default ConfigIfModal;
+export default ConfigComparatorModal;

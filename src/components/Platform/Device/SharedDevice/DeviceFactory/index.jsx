@@ -20,8 +20,9 @@ import Bargraph from '../../Exit/Bargraph';
 import And from '../../Conditional/And';
 import Or from '../../Conditional/Or';
 import Not from '../../Conditional/Not';
-import If from '../../Conditional/If';
+import Comparator from '../../Conditional/Comparator';
 import Counter from '../../Conditional/Counter';
+import If from '../../Conditional/If';
 
 import Toggle from '../../Event/Toggle';
 import Delay from '../../Event/Delay';
@@ -52,6 +53,7 @@ const DeviceFactory = ({
     and: And,
     or: Or,
     not: Not,
+    comparator: Comparator,
     if: If,
     toggle: Toggle,
     delay: Delay,

@@ -12,6 +12,15 @@
     font-weight: bold;
 }
 
+.warningMessage{
+  font-size: 12px;
+  color: red;
+}
+
+.disabled {
+  display: none;
+}
+
 .inputsArea,
 .inputArea {
     display: flex;

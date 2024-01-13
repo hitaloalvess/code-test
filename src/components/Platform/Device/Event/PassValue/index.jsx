@@ -10,9 +10,9 @@ import Connectors from '@/components/Platform/Device/SharedDevice/Connectors';
 import DeviceBody from '../../SharedDevice/DeviceBody';
 
 
-import * as D from './styles.module.css';
+import * as Pv from './styles.module.css';
 
-import eventBaseImg from '@/assets/images/devices/event/eventBase.svg';
+import eventBaseImg from '@/assets/images/devices/event/passValueBase.svg';
 
 
 const PassValue = ({
@@ -155,7 +155,7 @@ const PassValue = ({
         ref={dragRef}
       >
 
-        <p className={D.delayNumber}>
+        <p className={Pv.passValueNumber}>
           {currentValue}
         </p>
 
@@ -182,8 +182,8 @@ const PassValue = ({
         exitConnectors={[
           {
             data: {
-              ...connectors.receive,
-              defaultReceiveBehavior: connectionReceiver,
+              ...connectors.send,
+              defaultSendBehavior: connectionReceiver,
               redefineBehavior
             },
             device: { id },
@@ -194,8 +194,8 @@ const PassValue = ({
         entryConnectors={[
           {
             data: {
-              ...connectors.send,
-              defaultSendBehavior: connectionReceiver,
+              ...connectors.receive,
+              defaultReceiveBehavior: connectionReceiver,
               redefineBehavior
             },
             device: { id },

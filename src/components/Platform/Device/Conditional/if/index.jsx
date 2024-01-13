@@ -39,12 +39,13 @@ const If = ({
     flows,
     devices,
     updateDeviceValue,
-    updateDeviceValueInFlow
+    updateDeviceValueInFlow,
   } = useStore(store => ({
     flows: store.flows,
     devices: store.devices,
     updateDeviceValue: store.updateDeviceValue,
-    updateDeviceValueInFlow: store.updateDeviceValueInFlow
+    updateDeviceValueInFlow: store.updateDeviceValueInFlow,
+    executeFlow: store.executeFlow,
   }), shallow);
 
   const isFirstRender = useRef(true);
@@ -98,7 +99,6 @@ const If = ({
 
 
   const handleConnections = () => {
-
     const flow = findFlowsByDeviceId(flows, id);
 
     const connection = flow?.connections.find(conn => {
@@ -149,11 +149,20 @@ const If = ({
       ...connection,
       value: { ...objValue }
     });
-
   }
 
-  const calcValues = () => {
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
 
+      return;
+    }
+
+    handleConnections();
+
+  }, [qtdIncomingConn]);
+
+  const calcValues = () => {
     if (!Object.hasOwn(connectionValue, 'id')) {
       return;
     }
@@ -170,15 +179,17 @@ const If = ({
 
     if (!operationType) return;
 
-
     const newValue = {
       ...data.value,
-      send: {
-        current: operationType(connectionValue.value.current)
+      sendIf: {
+        current: operationType(connectionValue.value.current),
+      },
+      sendElse: {
+        current: operationType(connectionValue.value.current) == true ? false : true,
       }
     }
 
-    if (newValue.send.current === data.value.send.current) {
+    if (newValue.sendIf.current === data.value.sendIf.current) {
       sendValue();
 
       return;
@@ -186,39 +197,9 @@ const If = ({
 
     onSaveData('value', newValue)
     updateDeviceValue(id, { value: newValue });
-    updateDeviceValueInFlow({ connectorId: connectors.send.id, newValue })
+    updateDeviceValueInFlow({ connectorId: connectors.sendIf.id, newValue: newValue.sendIf})
+    updateDeviceValueInFlow({ connectorId: connectors.sendElse.id, newValue: newValue.sendElse})
   }
-
-  const sendValue = () => {
-    const flow = findFlowsByDeviceId(flows, id);
-
-    if (!flow) return;
-
-    const connsOutput = flow.connections.filter(conn => {
-      return conn.deviceFrom.id === id
-    });
-
-    connsOutput.forEach(conn => {
-      const toConnector = devices[conn.deviceTo.id].connectors[conn.deviceTo.connector.name];
-      toConnector.defaultReceiveBehavior({ value: value.send.current });
-    })
-  }
-
-  const redefineBehavior = useCallback(() => {
-    setQtdIncomingConn(prev => prev + 1);
-  }, []);
-
-
-  useEffect(() => {
-    if (isFirstRender.current) {
-      isFirstRender.current = false;
-
-      return;
-    }
-
-    handleConnections();
-
-  }, [qtdIncomingConn]);
 
   useEffect(() => {
 
@@ -233,6 +214,34 @@ const If = ({
   }, [connectionValue, value.numberDisplay, value.simbol]);
 
 
+  const sendValue = () => {
+    const flow = findFlowsByDeviceId(flows, id);
+
+    if (!flow) return;
+
+    const connsOutput = flow.connections.filter(conn => {
+      return conn.deviceFrom.id === id
+    });
+
+    const connsIf= connsOutput.filter(conn => {
+      return conn.deviceFrom.connector.id === data.connectors.sendIf.id
+    });
+
+    const connsElse= connsOutput.filter(conn => {
+      return conn.deviceFrom.connector.id === data.connectors.sendElse.id
+    });
+
+    connsIf.forEach(conn => {
+      const toConnector = devices[conn.deviceTo.id].connectors[conn.deviceTo.connector.name];
+      toConnector.defaultReceiveBehavior({ value: value.sendIf.current});
+    })
+
+    connsElse.forEach(conn => {
+      const toConnector = devices[conn.deviceTo.id].connectors[conn.deviceTo.connector.name];
+      toConnector.defaultReceiveBehavior({ value: value.sendElse.current});
+    })
+  }
+
   useEffect(() => {
     if (isFirstRender.current) {
       isFirstRender.current = false;
@@ -241,7 +250,7 @@ const If = ({
     }
 
     sendValue();
-  }, [value.send.current]);
+  }, [value.sendElse.current, value.sendIf.current]);
 
 
   return (
@@ -254,7 +263,8 @@ const If = ({
       >
 
         <p className={ifNumber}>
-          {`${value.simbol} ${value.numberDisplay}`}
+         if {`${value.simbol} ${value.numberDisplay}`} <br />
+         else
         </p>
 
         <ActionButtons
@@ -267,7 +277,7 @@ const If = ({
             }
           }}
           actionConfig={{
-            typeContent: 'config-if',
+            typeContent: 'config-comparator',
             onSave: handleSettingUpdate,
             data: {
               defaultSimbol: value.simbol,
@@ -277,36 +287,40 @@ const If = ({
           }}
         />
       </DeviceBody>
-
       <Connectors
         type='doubleTypes'
         exitConnectors={[
           {
             data: {
-              ...connectors.send,
-              defaultSendBehavior: connectionReceiver,
-              redefineBehavior
+              ...connectors.sendIf,
+              defaultSendBehavior: connectionReceiver
             },
             device: { id },
             updateConn: { posX, posY },
             handleChangeData: onSaveData
           },
+          {
+            data: {
+              ...connectors.sendElse,
+              defaultSendBehavior: connectionReceiver
+            },
+            device: { id },
+            updateConn: { posX, posY },
+            handleChangeData: onSaveData
+          }
         ]}
         entryConnectors={[
           {
             data: {
               ...connectors.receive,
-              defaultReceiveBehavior: connectionReceiver,
-              redefineBehavior
+              defaultReceiveBehavior: connectionReceiver
             },
             device: { id },
             updateConn: { posX, posY },
             handleChangeData: onSaveData
-          },
+          }
         ]}
-
       />
-
     </>
   );
 };

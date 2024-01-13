@@ -78,7 +78,6 @@ const And = ({
 
     }, []);
 
-
     //Calc values
     if (values.length <= 0) {
       const value = {

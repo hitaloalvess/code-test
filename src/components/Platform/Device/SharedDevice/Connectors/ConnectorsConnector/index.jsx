@@ -36,7 +36,6 @@ const ConnectorsConnector = ({
     scale: store.scale
   }), shallow);
 
-
   const connRef = useRef(null);
   const [id] = useState(() => data?.id || `${data.name}-${uuid()}`);
   const [position, setPosition] = useState({

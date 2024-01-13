@@ -1,4 +1,4 @@
-.ifNumber {
+.comparatorNumber {
   position: absolute;
   width: 64px;
   top: 28px;
@@ -11,7 +11,7 @@
 }
 
 @media (((max-height: 481px) and (orientation: landscape)) or ((max-width: 481px) and (orientation: portrait))) {
-  .ifNumber {
+  .comparatorNumber {
     top: 18px;
     left: -2px;
     font-size: 14px;
