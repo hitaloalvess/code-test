@@ -10,7 +10,7 @@ import { useContextAuth } from '@/hooks/useAuth';
 import { toast } from 'react-toastify';
 
 export async function getProjects(personId) {
-  console.log(personId);
+
   const { data: { projects } } = await apiMicroCode.get(`/projects/user/${personId}`);
 
   const transformProjects = projects.map(project => {

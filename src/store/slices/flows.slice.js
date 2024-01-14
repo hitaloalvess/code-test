@@ -95,7 +95,6 @@ export const createFlowsSlice = (set, get) => ({
 
   createFlow: ({ devices }) => {
 
-
     const {
       flows,
       flowTemp,
@@ -143,7 +142,6 @@ export const createFlowsSlice = (set, get) => ({
 
     if (!from || !to) return;
 
-    //checks if the device is not wanting to connect with itself
     if (from.id === to.id) return;
 
     let deviceFrom = { ...deviceList[`${from.id}`] };
@@ -177,8 +175,7 @@ export const createFlowsSlice = (set, get) => ({
       !verifConnector({ flows: flows, deviceFrom, deviceTo }) ||
       connsAlreadyConnect
     ) {
-
-      deleteLine(flowTemp.currentLine.id);
+      deleteLine(flowTemp.currentLine?.id);
 
       return;
     }

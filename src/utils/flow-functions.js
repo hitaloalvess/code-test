@@ -168,13 +168,10 @@ export const verifConnector = ({ flows, deviceFrom, deviceTo }) => {
     qtdToInputConnections > 0
   );
 
+  if(fromConnCategory === toConnCategory) return false;
+
   const connectionBetweenFromAndToIsValid = deviceConnectorRules[fromName]?.connectsTo.some(item => ['all', toName].includes(item))
-  const connectionBetweenToAndFromIsValid = deviceConnectorRules[toName].connectsFrom.some(item => ['all', fromName].includes(item));
-
-
-  if (fromConnCategory === 'exit' && deviceConnectorRules === 'exit') return false;
-
-  if (fromConnCategory === 'entry' && deviceConnectorRules === 'entry') return false;
+  const connectionBetweenToAndFromIsValid = deviceConnectorRules[toName]?.connectsFrom.some(item => ['all', fromName].includes(item));
 
   if (deviceFromIsInvalid || deviceToIsInvalid) return false;
 
