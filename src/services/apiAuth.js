@@ -4,7 +4,23 @@ export const apiAuth = axios.create({
   baseURL: import.meta.env.VITE_BASE_URL
 })
 
-export const setupInterceptors = navigate => {
+
+apiAuth.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('@Microdigo:token');
+
+    if(token){
+      config.headers.Authorization = `Bearer ${JSON.parse(token)}`
+    }
+
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+)
+
+export const setupInterceptorsApiAuth = navigate => {
 
   apiAuth.interceptors.response.use(
     response => response,

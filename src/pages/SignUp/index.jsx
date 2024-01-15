@@ -74,7 +74,7 @@ const SignUp = () => {
   const handleSubmitForm = async (formData) => {
     const transformCPF = removeSpecialCharacters(formData.cpf);
     const transformPhone = removeSpaces(removeSpecialCharacters(formData.phone));
-    const transformNasc = new Date(formData.nasc)
+    const transformNasc = new Date(formData.birth)
 
     const data = {
       ...formData,
@@ -86,7 +86,7 @@ const SignUp = () => {
 
     try {
       setIsLoading(true);
-      await apiAuth.post('persons/user', data);
+      await apiAuth.post('/users', data);
       toast.success('Usuário cadastrado com sucesso!');
 
       setIsLoading(false);

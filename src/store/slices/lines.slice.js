@@ -37,6 +37,8 @@ export const createLinesSlice = (set, get) => ({
   deleteLine: (lineId) => {
     const { clearFlowTemp } = get();
 
+    if(!lineId) return ;
+
     const { lines } = get();
 
     const newLines = { ...lines };

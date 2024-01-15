@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { apiAuth } from '@/services/apiAuth';
 import { toast } from "react-toastify";
 import { AuthContext } from '@/contexts/AuthContext';
+// import { apiMicroCode } from '../services/apiMicroCode';
 // import { useModal } from '@/hooks/useModal';
 
 
@@ -23,27 +24,33 @@ export const useAuth = () => {
   });
   const [isLoading, setIsLoading] = useState(false);
   const [searchFormHasEnabled /*, setSearchFormHasEnabled*/] = useState(true);
-
   const isAuthenticated = useMemo(() => !!person, [person]);
+
+  const handleGetProfile = async () => {
+    const { data: { person } } = await apiAuth.get('/me');
+
+    setPerson(person);
+
+    return person;
+  }
 
   const handleSignIn = async ({ email, password }) => {
     try {
 
       setIsLoading(true);
 
-      const { data: { acessToken: token, person } } = await apiAuth.post('/auth/signin', {
+      const { data: { token } } = await apiAuth.post('/sessions', {
         email, password
       });
 
       localStorage.setItem('@Microdigo:token', JSON.stringify(token));
+
+      const person = await handleGetProfile();
       localStorage.setItem('@Microdigo:person', JSON.stringify(person));
 
-      setPerson(person);
       setIsLoading(false);
 
-      apiAuth.defaults.headers.Authorization = `Bearer ${token}`;
-
-      return navigate('/projetos');
+      navigate('/projetos');
 
     } catch (error) {
       toast.error(error.response.data.message);
@@ -77,6 +84,11 @@ export const useAuth = () => {
 
   //   setSearchFormHasEnabled(true);
   // }
+  const handleUpdatePerson = (person) => {
+
+    setPerson(person);
+    localStorage.setItem('@Microdigo:person', JSON.stringify(person));
+  };
 
   useEffect(() => {
     if (isFirstRender.current) {
@@ -85,14 +97,18 @@ export const useAuth = () => {
       return;
     }
 
-    if (isAuthenticated) {
-      const token = localStorage.getItem('@Microdigo:token');
-      apiAuth.defaults.headers.common.Authorization = `Bearer ${JSON.parse(token)}`;
+    const token = localStorage.getItem('@Microdigo:token');
 
-      // idSearchFormTimeout.current = setTimeout(handleSearchForm, TIME_ACTIVATE_SEARCH_FORM);
+    if(token){
+
+      try{
+        handleGetProfile().catch(error => console.log(error));
+      }catch(error){
+        toast.error(error?.message);
+      }
 
     }
-  }, [isAuthenticated]);
+  },[])
 
   return {
     person,
@@ -101,6 +117,7 @@ export const useAuth = () => {
     isLoading,
     handleSignIn,
     handleSignOut,
+    handleUpdatePerson
   }
 }
 

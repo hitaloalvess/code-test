@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 import { MagnifyingGlass } from '@phosphor-icons/react';
 
 import { useProject, useQueryProject } from '@/hooks/useProject';
-import { useAuth } from '@/hooks/useAuth';
+import { useContextAuth } from '@/hooks/useAuth';
 
 import { Input } from '@/components/SharedComponents/Input';
 import Header from '@/components/SharedComponents/Header';
@@ -14,17 +14,16 @@ import * as MP from './styles.module.css';
 import ProjectsContent from '../../components/MyProjects/ProjectsContent';
 
 const MyProjects = () => {
-
-  const { person } = useAuth();
+  const { person } = useContextAuth();
   const {
     createProject,
     deleteProject,
     updateProject
-  } = useProject(person.user.cpf);
+  } = useProject(person.id);
 
   const [filter, setFilter] = useState('');
 
-  const { data: projects, isLoading } = useQueryProject(person.user.cpf);
+  const { data: projects, isLoading } = useQueryProject(person.id);
 
   const filteredProjects = useMemo(() => {
 

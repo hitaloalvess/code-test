@@ -119,7 +119,7 @@ const ConnectorsConnector = ({
     end: (item, monitor) => {
       if (!monitor.didDrop()) {
         //dropped in invalid local
-        deleteLine(flowTemp.currentLine.id)
+        deleteLine(flowTemp.currentLine?.id)
       }
     }
   }), [position, flowTemp]);

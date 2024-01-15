@@ -30,7 +30,7 @@ const signUpSchema = z.object({
 
 const ProfileSection = () => {
 
-  const { person } = useContextAuth();
+  const { person, handleUpdatePerson } = useContextAuth();
 
   const { handleSubmit, register, setValue, formState: { errors } } = useForm({
     resolver: zodResolver(signUpSchema),
@@ -39,24 +39,26 @@ const ProfileSection = () => {
 
   const handleChangeValue = (nameField, value) => setValue(nameField, value, { shouldValidate: true })
 
-  const handleSubmitForm = async (formData) => {
-    const transformPhone = removeSpaces(removeSpecialCharacters(formData.phone));
-    const transformNasc = new Date(formData.birth);
+  const handleSubmitForm = async (params) => {
+    const transformPhone = removeSpaces(removeSpecialCharacters(params.phone));
+    const transformNasc = new Date(params.birth);
 
-    const data = {
+    const formData = {
       // ...person,
-      ...formData,
+      ...params,
       phone: transformPhone,
       birth: transformNasc
     }
 
     try {
 
-      await apiAuth.put(`persons/user/${person.id}`, data);
+      const { data } = await apiAuth.put(`/${person.type}s/${person.id}`, formData);
+
+      handleUpdatePerson(data.person);
       toast.success('Usuário atualizado com sucesso!');
 
     } catch (error) {
-      toast.error(error.response.data.message);
+      toast.error(error.message);
     }
   }
 
