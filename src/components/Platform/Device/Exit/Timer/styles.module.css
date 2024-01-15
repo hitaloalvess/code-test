@@ -15,3 +15,14 @@
   top: 52px;
   fill: var(--red);
 }
+
+@media (((max-height: 481px) and (orientation: landscape)) or ((max-width: 481px) and (orientation: portrait))) {
+  .timerNumber {
+    position: absolute;
+    top: 20px;
+    color: var(--black);
+    font-size: 7px;
+    font-weight: bold;
+    text-align: center;
+  }
+}
