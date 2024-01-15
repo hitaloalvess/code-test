@@ -22,7 +22,7 @@ import deviceAnd from '@/assets/images/devices/conditional/and.svg';
 import deviceOr from '@/assets/images/devices/conditional/or.svg';
 import deviceNot from '@/assets/images/devices/conditional/not.svg';
 import deviceComparator from '@/assets/images/devices/conditional/comparator.svg';
-import deviceIf from '@/assets/images/devices/conditional/comparator.svg';
+import deviceIf from '@/assets/images/devices/conditional/if/if.svg';
 import deviceCounter from '@/assets/images/devices/conditional/counter/counter.svg';
 
 //event
