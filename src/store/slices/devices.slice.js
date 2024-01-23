@@ -20,6 +20,9 @@ export const createDevicesSlice = (set, get) => ({
 
     const { width, height } = device.draggedDevice.getBoundingClientRect();
     const { x, y } = dropPos;
+
+    console.log(x, y);
+
     const [posX, posY] = calcPositionDevice({
       x,
       y,
@@ -28,10 +31,7 @@ export const createDevicesSlice = (set, get) => ({
       containerRef: platformRef,
     });
 
-
-    delete device.draggedDevice;
     const id = v4();
-
 
     set((state) => ({
       devices: {
