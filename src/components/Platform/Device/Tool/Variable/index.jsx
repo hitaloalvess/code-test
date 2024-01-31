@@ -22,19 +22,43 @@ const Variable = ({
   const isFirstRender = useRef(true);
   const { id, name, posX, posY, value, connectors } = data;
 
+
   const {
     flows,
     devices,
     updateDeviceValue,
-    updateDeviceValueInFlow,
-    getGroupByName
+    getGroupByName,
+    changeDeviceGroupValue,
+    devicesGroups,
   } = useStore(store => ({
     flows: store.flows,
     devices: store.devices,
     updateDeviceValue: store.updateDeviceValue,
-    updateDeviceValueInFlow: store.updateDeviceValueInFlow,
-    getGroupByName: store.getGroupByName
+    getGroupByName: store.getGroupByName,
+    changeDeviceGroupValue: store.changeDeviceGroupValue,
+    devicesGroups: store.devicesGroups
   }), shallow);
+
+  useEffect(() => {
+
+    if (!value.groupName) return;
+
+    const group = getGroupByName(value.groupName);
+
+
+    const newValue = {
+      ...data.value,
+      send: {
+        current: group.value
+      }
+    }
+
+    setValueDisplay(group.value);
+    onSaveData('value', newValue);
+    updateDeviceValue(id, { value: newValue });
+    sendValue();
+  }, [devicesGroups[value.groupName]])
+
 
   const [qtdIncomingConn, setQtdIncomingConn] = useState(0);
   const [valueDisplay, setValueDisplay] = useState(value.send.current);
@@ -60,34 +84,6 @@ const Variable = ({
   const handleConnections = () => {
     const flow = findFlowsByDeviceId(flows, id);
 
-    const group = getGroupByName(value.groupName);
-    const groupDevices = group.devices
-
-    group.value = 10;
-    console.log(group);
-
-
-    groupDevices.forEach(element => {
-      console.log('Id do grupo: ', element);
-      console.log('Device do grupo: ', devices[element]);
-
-      if (devices[element]?.value.send == undefined ){
-        console.log('---');
-      }
-      else{
-        console.log('Dispositivo que entrou: ', devices[element])
-
-        const value = {
-          ...data.value,
-          send: {
-            current: group.value
-          }
-        }
-
-        updateDeviceValue(element, { value });
-      }
-    });
-
     const connection = flow?.connections.find(conn => {
       return conn.deviceTo.id === id
     });
@@ -105,26 +101,12 @@ const Variable = ({
 
       return;
     }
-    //Calc values
 
     const device = { ...devices[connection.deviceFrom.id] };
     let valueReceived = device.value[connection.deviceFrom.connector.name].current;
 
-    //Calc values
+    changeDeviceGroupValue(value.groupName, valueReceived)
 
-    const newValue = {
-      ...data.value,
-      send: {
-        current: valueReceived
-      }
-    }
-
-
-    setValueDisplay(valueReceived);
-    onSaveData('value', newValue);
-    updateDeviceValue(id, { value: newValue });
-    updateDeviceValueInFlow({ connectorId: connectors.send.id, newValue });
-    sendValue();
   };
 
 
@@ -149,14 +131,6 @@ const Variable = ({
 
   }, []);
 
-  const handleChangeValue = () => {
-    console.log('Valor alterado: ' + value.send.current + ' em ' + id)
-  };
-
-  useEffect(() => {
-    handleChangeValue();
-  }, [value.send.current]);
-
   useEffect(() => {
     if (isFirstRender.current) {
       isFirstRender.current = false;
@@ -178,7 +152,7 @@ const Variable = ({
       >
 
         <p className={Pv.passValueNumber}>
-         {valueDisplay}
+          {valueDisplay}
         </p>
 
         <ActionButtons
