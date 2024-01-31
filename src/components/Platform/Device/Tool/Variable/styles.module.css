@@ -1,0 +1,16 @@
+.passValueNumber {
+  position: absolute;
+  top: 22px;
+  color: var(--black);
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+  /* margin: -65px auto 0 auto; */
+}
+
+@media (((max-height: 481px) and (orientation: landscape)) or ((max-width: 481px) and (orientation: portrait))) {
+  .passValueNumber {
+    top: 9px;
+    font-size: 18px;
+  }
+}
