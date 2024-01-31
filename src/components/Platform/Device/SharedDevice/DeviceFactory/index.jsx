@@ -67,11 +67,8 @@ const DeviceFactory = ({
     timer: Timer,
     loop: Loop,
     stickynote: Stickynote,
-<<<<<<< HEAD
-    passValue: PassValue
-=======
+    passValue: PassValue,
     physicalDht: PhysicalDht,
->>>>>>> 7a2019264d451ac65a5bb752410677b560a19515
   }
 
   const CurrentDevice = devices[data.name];
