@@ -33,6 +33,8 @@ import PassValue from '../../Event/PassValue';
 
 import Stickynote from '../../Tool/Stickynote';
 
+import PhysicalDht from '../../Physical/Dht';
+
 const DeviceFactory = ({
   data, dragRef, onSaveData
 }) => {
@@ -65,7 +67,11 @@ const DeviceFactory = ({
     timer: Timer,
     loop: Loop,
     stickynote: Stickynote,
+<<<<<<< HEAD
     passValue: PassValue
+=======
+    physicalDht: PhysicalDht,
+>>>>>>> 7a2019264d451ac65a5bb752410677b560a19515
   }
 
   const CurrentDevice = devices[data.name];

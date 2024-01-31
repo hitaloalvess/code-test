@@ -1,0 +1,31 @@
+.content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 360px;
+  gap: 24px;
+  padding: 32px;
+  outline: none;
+  border: none;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 18px;
+}
+
+
+@media (((max-height: 481px) and (orientation: landscape)) or ((max-width: 481px) and (orientation: portrait))) {
+  /* MOBILE */
+
+  .confirmationModalContent {
+    padding: 24px 32px;
+    gap: 32px;
+    max-width: 320px;
+  }
+
+}

@@ -1,0 +1,28 @@
+.btnConnectContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+  border: none;
+  cursor: pointer;
+  margin: 18px 0;
+  background-color: transparent;
+}
+
+.btnIcon {
+  width: 32px;
+  height: 32px;
+}
+
+.btnConnectContainer,
+.btnIcon {
+  color: var(--black);
+  transition: color 0.3s ease-in-out;
+}
+
+
+.btnConnectContainer:hover,
+.btnConnectContainer:hover .btnIcon {
+  color: var(--blue);
+}

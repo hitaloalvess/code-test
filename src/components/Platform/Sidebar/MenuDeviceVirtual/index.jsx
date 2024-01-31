@@ -8,7 +8,7 @@ import { isMobile } from 'react-device-detect';
 import { deviceItemContent, deviceItemContainer, deviceItemLabel } from './styles.module.css';
 
 const PRESSED_BREAK = 0.09; //90 ms
-const MenuDevice = ({ device }) => {
+const MenuDeviceVirtual = ({ device }) => {
 
   const [refDevice, setRefDevice] = useState(null);
   const [canDrag, setCanDrag] = useState(() => isMobile ? false : true);
@@ -65,9 +65,12 @@ const MenuDevice = ({ device }) => {
   );
 };
 
-MenuDevice.propTypes = {
+MenuDeviceVirtual.propTypes = {
   device: P.shape({
-    id: P.number.isRequired,
+    id: P.oneOfType([
+      P.string,
+      P.number
+    ]).isRequired,
     name: P.string.isRequired,
     label: P.string.isRequired,
     imgSrc: P.string.isRequired,
@@ -76,4 +79,4 @@ MenuDevice.propTypes = {
   })
 }
 
-export default MenuDevice;
+export default MenuDeviceVirtual;

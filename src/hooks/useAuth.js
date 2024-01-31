@@ -2,7 +2,7 @@
 import { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { apiAuth } from '@/services/apiAuth';
+import { apiAuth } from '@/services/api';
 import { toast } from "react-toastify";
 import { AuthContext } from '@/contexts/AuthContext';
 // import { apiMicroCode } from '../services/apiMicroCode';
@@ -61,7 +61,7 @@ export const useAuth = () => {
   }
 
   const handleSignOut = (event) => {
-    if(event) event.preventDefault();
+    if (event) event.preventDefault();
 
     setPerson(null);
 

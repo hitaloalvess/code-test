@@ -1,32 +1,18 @@
 import { Trash } from '@phosphor-icons/react';
-import { mockDevices } from '@/data/devices.js';
 import P from 'prop-types';
 
-import MenuDevice from '../MenuDevice';
+import * as SA from './styles.module.css';
+const SidebarArea = ({ activeTrashArea, children }) => {
 
-import { container, trashArea, devicesList } from './styles.module.css';
-
-const SidebarArea = ({ area, activeTrashArea }) => {
   return (
-    <div className={container}>
+    <div className={SA.container}>
 
-      <div className={devicesList}>
-        <ul
-        >
-          {
-            mockDevices[area]
-              .map((device) => (
-                <MenuDevice
-                  key={device.id}
-                  device={device}
-                />
-              ))
-          }
-        </ul>
+      <div className={SA.devicesList}>
+        <ul>{children}</ul>
       </div>
       {activeTrashArea && (
         <div
-          className={trashArea}
+          className={SA.trashArea}
         >
           <Trash />
         </div>
@@ -36,8 +22,12 @@ const SidebarArea = ({ area, activeTrashArea }) => {
 };
 
 SidebarArea.propTypes = {
-  area: P.string.isRequired,
-  activeTrashArea: P.bool.isRequired
+  activeTrashArea: P.bool.isRequired,
+  onAddDeviceInSidebar: P.func.isRequired,
+  children: P.oneOfType([
+    P.element,
+    P.arrayOf(P.element),
+  ])
 }
 
 export default SidebarArea;

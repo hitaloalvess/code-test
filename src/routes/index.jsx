@@ -3,7 +3,7 @@ import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 
 import PlatformGuard from './CustomRoutes/PlatformGuard';
 import PrivateRoutes from './CustomRoutes/PrivateRoutes';
-import { setupInterceptorsApiAuth } from '@/services/apiAuth';
+import { setupInterceptorsApiAuth } from '@/services/api';
 import { setupInterceptorsApiMicroCode } from '@/services/apiMicroCode';
 import SignIn from '@/pages/SignIn';
 import SignUp from '@/pages/SignUp';

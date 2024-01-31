@@ -1,6 +1,6 @@
 import { Envelope, Lock } from '@phosphor-icons/react';
 
-import { apiAuth } from '@/services/apiAuth'
+import { apiAuth } from '@/services/api'
 import { useContextAuth } from '@/hooks/useAuth';
 import { useModal } from '@/hooks/useModal';
 import { Form } from '@/components/SharedComponents/Form';

@@ -3,7 +3,7 @@ import { shallow } from 'zustand/shallow';
 
 import { removeHTMLElementRef } from "@/utils/projects-functions";
 import { useStore } from '@/store';
-import { apiMicroCode } from '@/services/apiMicroCode';
+import { apiMicroCode } from '@/services/api';
 import { queryClient } from '@/services/queryClient';
 import { formattedDate } from '../utils/date-functions';
 import { useContextAuth } from '@/hooks/useAuth';

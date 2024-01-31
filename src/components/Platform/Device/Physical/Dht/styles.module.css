@@ -1,0 +1,42 @@
+.thermometerIcon,
+.dropIcon {
+  font-size: 20px;
+}
+
+.thermometerIcon {
+  fill: var(--red);
+}
+
+.dropIcon {
+  fill: var(--blue);
+}
+
+
+.showValueContainer{
+  width: 100%;
+  position: absolute;
+  left: 2px;
+  top: -56px;
+  height: fit-content;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.showValue {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+  font-size: 16px;
+  font-weight: bold;
+  margin: 0 auto;
+}
+
+@media(max-width: 768px) {
+  .inputContainerDht:hover input {
+    width: 60px !important;
+  }
+}
