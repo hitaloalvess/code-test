@@ -3,7 +3,7 @@ import { shallow } from 'zustand/shallow';
 
 import { removeHTMLElementRef } from "@/utils/projects-functions";
 import { useStore } from '@/store';
-import { apiMicroCode } from '@/services/api';
+import { apiMicroCode } from '@/services/apiMicroCode';
 import { queryClient } from '@/services/queryClient';
 import { formattedDate } from '../utils/date-functions';
 import { useContextAuth } from '@/hooks/useAuth';
@@ -48,7 +48,7 @@ export const useProject = () => {
         flows: []
       }
 
-      const { data: { project }} = await apiMicroCode.post(`/projects`, newProject);
+      const { data: { project } } = await apiMicroCode.post(`/projects`, newProject);
 
       return project;
     },
@@ -64,7 +64,7 @@ export const useProject = () => {
     async (data) => {
       const newProject = { ...data }
 
-      const { data: { project }} = await apiMicroCode.put(`/projects/${data.id}`, newProject);
+      const { data: { project } } = await apiMicroCode.put(`/projects/${data.id}`, newProject);
 
       return project;
     },
@@ -128,7 +128,7 @@ export const useProject = () => {
 
   const deleteProject = useMutation(
     async (projectId) => {
-      const { data:{ project }} = await apiMicroCode.delete(`/projects/${projectId}`);
+      const { data: { project } } = await apiMicroCode.delete(`/projects/${projectId}`);
 
       return project;
     },
