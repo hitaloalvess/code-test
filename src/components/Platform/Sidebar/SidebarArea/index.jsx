@@ -1,15 +1,41 @@
 import { Trash } from '@phosphor-icons/react';
-import P from 'prop-types';
+import { useSidebar } from '@/hooks/useSidebar';
+
+import MenuDeviceVirtual from '../MenuDeviceVirtual';
+import MenuDevicePhysical from '../MenuDevicePhysical';
+import ButtonConnect from '../ButtonConnect';
 
 import * as SA from './styles.module.css';
-const SidebarArea = ({ activeTrashArea, children }) => {
+const SidebarArea = () => {
+
+  const { activeTrashArea, devices, currentArea, handleStatusHardwareDevice } = useSidebar();
 
   return (
     <div className={SA.container}>
 
       <div className={SA.devicesList}>
-        <ul>{children}</ul>
+        <ul>{
+          Object.values(devices[currentArea]).map((device) => (
+            device.type === 'virtual' ?
+              <MenuDeviceVirtual
+                key={device.id}
+                device={device}
+              /> :
+              <MenuDevicePhysical
+                key={device.id}
+                device={device}
+                onUpdateStatus={handleStatusHardwareDevice}
+              />
+          ))
+        }
+
+          {
+            currentArea === 'hardware' &&
+            <ButtonConnect />
+          }
+        </ul>
       </div>
+
       {activeTrashArea && (
         <div
           className={SA.trashArea}
@@ -17,17 +43,8 @@ const SidebarArea = ({ activeTrashArea, children }) => {
           <Trash />
         </div>
       )}
+
     </div>
   );
 };
-
-SidebarArea.propTypes = {
-  activeTrashArea: P.bool.isRequired,
-  onAddDeviceInSidebar: P.func.isRequired,
-  children: P.oneOfType([
-    P.element,
-    P.arrayOf(P.element),
-  ])
-}
-
 export default SidebarArea;
