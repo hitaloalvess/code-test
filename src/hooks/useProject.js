@@ -3,7 +3,7 @@ import { shallow } from 'zustand/shallow';
 
 import { removeHTMLElementRef } from "@/utils/projects-functions";
 import { useStore } from '@/store';
-import { apiMicroCode } from '@/services/apiMicroCode';
+import { apiMicrocode } from '@/services/apiMicrocode';
 import { queryClient } from '@/services/queryClient';
 import { formattedDate } from '../utils/date-functions';
 import { useContextAuth } from '@/hooks/useAuth';
@@ -11,7 +11,7 @@ import { toast } from 'react-toastify';
 
 export async function getProjects(personId) {
 
-  const { data: { projects } } = await apiMicroCode.get(`/projects/user/${personId}`);
+  const { data: { projects } } = await apiMicrocode.get(`/projects/user/${personId}`);
 
   const transformProjects = projects.map(project => {
     return {
@@ -48,7 +48,7 @@ export const useProject = () => {
         flows: []
       }
 
-      const { data: { project } } = await apiMicroCode.post(`/projects`, newProject);
+      const { data: { project } } = await apiMicrocode.post(`/projects`, newProject);
 
       return project;
     },
@@ -64,7 +64,7 @@ export const useProject = () => {
     async (data) => {
       const newProject = { ...data }
 
-      const { data: { project } } = await apiMicroCode.put(`/projects/${data.id}`, newProject);
+      const { data: { project } } = await apiMicrocode.put(`/projects/${data.id}`, newProject);
 
       return project;
     },
@@ -121,14 +121,14 @@ export const useProject = () => {
       flows: transformFlows
     }
 
-    const response = await apiMicroCode.put(`/projects/${data.id}`, newProject);
+    const response = await apiMicrocode.put(`/projects/${data.id}`, newProject);
 
     return response.data;
   };
 
   const deleteProject = useMutation(
     async (projectId) => {
-      const { data: { project } } = await apiMicroCode.delete(`/projects/${projectId}`);
+      const { data: { project } } = await apiMicrocode.delete(`/projects/${projectId}`);
 
       return project;
     },
@@ -142,7 +142,7 @@ export const useProject = () => {
   );
 
   const loadProject = async (projectId) => {
-    const { data: { project } } = await apiMicroCode.get(`/projects/${projectId}`);
+    const { data: { project } } = await apiMicrocode.get(`/projects/${projectId}`);
 
     const deviceList = Object.values(project.devices).map(async (device) => {
       loadDevice({ ...device });

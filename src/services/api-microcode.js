@@ -1,11 +1,11 @@
 import axios from "axios";
 
-export const apiMicroCode = axios.create({
+export const apiMicrocode = axios.create({
   baseURL: import.meta.env.VITE_API_MICRO_CODE
 
 })
 
-apiMicroCode.interceptors.request.use(
+apiMicrocode.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('@Microdigo:token');
 
@@ -22,7 +22,7 @@ apiMicroCode.interceptors.request.use(
 
 export const setupInterceptorsApiMicroCode = navigate => {
 
-  apiMicroCode.interceptors.response.use(
+  apiMicrocode.interceptors.response.use(
     response => response,
     error => {
       if (error.response?.status === 401) {
@@ -30,7 +30,7 @@ export const setupInterceptorsApiMicroCode = navigate => {
         if (error.response.data?.message === 'Token inválido') {
 
           localStorage.removeItem('@Microdigo:token');
-          apiMicroCode.defaults.headers.common.Authorization = undefined;
+          apiMicrocode.defaults.headers.common.Authorization = undefined;
 
           return navigate('/')
         }
