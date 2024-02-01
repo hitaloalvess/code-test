@@ -12,7 +12,7 @@ import DeviceBody from '../../SharedDevice/DeviceBody';
 const MIN_RADIATION = 0;
 const MAX_RADIATION = 1023;
 
-const RainDetector = memo(function RainDetector({
+const Rain = memo(function Rain({
   dragRef, data, onSaveData
 }) {
 
@@ -122,10 +122,10 @@ const RainDetector = memo(function RainDetector({
   );
 });
 
-RainDetector.propTypes = {
+Rain.propTypes = {
   dragRef: P.func.isRequired,
   data: P.object.isRequired,
   onSaveData: P.func.isRequired
 }
 
-export default RainDetector;
+export default Rain;

@@ -6,7 +6,7 @@ import devicePushButton from '@/assets/images/devices/entry/pushButtonOff.svg';
 import deviceClimate from '@/assets/images/devices/entry/climate.svg';
 import deviceInfrared from '@/assets/images/devices/entry/infrared.svg';
 // import deviceSoilMoisture from '@/assets/images/devices/event/eventBase.svg';
-// import deviceRainDetector from '@/assets/images/devices/event/eventBase.svg';
+// import deviceRain from '@/assets/images/devices/event/eventBase.svg';
 
 //exit
 import deviceLed from '@/assets/images/devices/exit/led.svg';
@@ -213,8 +213,8 @@ export const mockDevices = {
     },
     // {
     //   id: 16,
-    //   imgSrc: deviceRainDetector,
-    //   name: 'rainDetector',
+    //   imgSrc: deviceRain,
+    //   name: 'rain',
     //   label: 'Sensor de radiação',
     //   type: 'virtual',
     //   category: 'entry',
@@ -899,7 +899,7 @@ export const deviceConnectorRules = {
     acceptedConnections: ['allExit'],
     connectsTo: ['all']
   },
-  rainDetector: {
+  rain: {
     acceptedConnections: ['allExit'],
     connectsTo: ['all']
   },
@@ -917,11 +917,11 @@ export const deviceConnectorRules = {
   },
   buzzer: {
     acceptedConnections: ['oneEntry'],
-    connectsFrom: ['potentiometer', 'photoresist', 'rainDetector', 'soilMoisture', 'pushButton', 'counter', 'and', 'or', 'not', 'comparator', 'if', 'toggle', 'slider', 'delay', 'switch', 'physicalPotentiometer', 'physicalLDR']
+    connectsFrom: ['potentiometer', 'photoresist', 'rain', 'soilMoisture', 'pushButton', 'counter', 'and', 'or', 'not', 'comparator', 'if', 'toggle', 'slider', 'delay', 'switch', 'physicalPotentiometer', 'physicalLDR']
   },
   shakeMotor: {
     acceptedConnections: ['oneEntry'],
-    connectsFrom: ['potentiometer', 'photoresist', 'rainDetector', 'soilMoisture', 'pushButton', 'counter', 'and', 'or', 'not', 'comparator', 'if', 'toggle', 'slider', 'delay', 'switch', 'physicalPotentiometer', 'physicalLDR']
+    connectsFrom: ['potentiometer', 'photoresist', 'rain', 'soilMoisture', 'pushButton', 'counter', 'and', 'or', 'not', 'comparator', 'if', 'toggle', 'slider', 'delay', 'switch', 'physicalPotentiometer', 'physicalLDR']
   },
   ledMono: {
     acceptedConnections: ['oneEntry'],
@@ -933,7 +933,7 @@ export const deviceConnectorRules = {
   },
   bargraph: {
     acceptedConnections: ['oneEntry'],
-    connectsFrom: ['potentiometer', 'climate', 'photoresist', 'rainDetector', 'soilMoisture', 'counter', 'slider', 'physicalPotentiometer', 'physicalLDR', 'physicalCLIMATE'],
+    connectsFrom: ['potentiometer', 'climate', 'photoresist', 'rain', 'soilMoisture', 'counter', 'slider', 'physicalPotentiometer', 'physicalLDR', 'physicalCLIMATE'],
   },
   counter: {
     acceptedConnections: ['oneEntry', 'allExit'],
@@ -992,7 +992,7 @@ export const deviceConnectorRules = {
   },
   slider: {
     acceptedConnections: ['oneEntry', 'allExit'],
-    connectsFrom: ['potentiometer', 'climate', 'photoresist', 'rainDetector', 'soilMoisture', 'counter', 'slider', 'physicalPotentiometer', 'physicalLDR', 'physicalCLIMATE'],
+    connectsFrom: ['potentiometer', 'climate', 'photoresist', 'rain', 'soilMoisture', 'counter', 'slider', 'physicalPotentiometer', 'physicalLDR', 'physicalCLIMATE'],
     connectsTo: ['all'],
   },
   passValue: {
