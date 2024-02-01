@@ -239,7 +239,7 @@ export const mockDevices = {
     // {
     //   id: 17,
     //   imgSrc: deviceSoilMoisture,
-    //   name: 'soilMoisture',
+    //   name: 'soil',
     //   label: 'Sensor de humidade do solo',
     //   type: 'virtual',
     //   category: 'entry',
@@ -895,7 +895,7 @@ export const deviceConnectorRules = {
     acceptedConnections: ['allExit'],
     connectsTo: ['all']
   },
-  soilMoisture: {
+  soil: {
     acceptedConnections: ['allExit'],
     connectsTo: ['all']
   },
@@ -917,11 +917,11 @@ export const deviceConnectorRules = {
   },
   buzzer: {
     acceptedConnections: ['oneEntry'],
-    connectsFrom: ['potentiometer', 'photoresist', 'rain', 'soilMoisture', 'pushButton', 'counter', 'and', 'or', 'not', 'comparator', 'if', 'toggle', 'slider', 'delay', 'switch', 'physicalPotentiometer', 'physicalLDR']
+    connectsFrom: ['potentiometer', 'photoresist', 'rain', 'soil', 'pushButton', 'counter', 'and', 'or', 'not', 'comparator', 'if', 'toggle', 'slider', 'delay', 'switch', 'physicalPotentiometer', 'physicalLDR']
   },
   shakeMotor: {
     acceptedConnections: ['oneEntry'],
-    connectsFrom: ['potentiometer', 'photoresist', 'rain', 'soilMoisture', 'pushButton', 'counter', 'and', 'or', 'not', 'comparator', 'if', 'toggle', 'slider', 'delay', 'switch', 'physicalPotentiometer', 'physicalLDR']
+    connectsFrom: ['potentiometer', 'photoresist', 'rain', 'soil', 'pushButton', 'counter', 'and', 'or', 'not', 'comparator', 'if', 'toggle', 'slider', 'delay', 'switch', 'physicalPotentiometer', 'physicalLDR']
   },
   ledMono: {
     acceptedConnections: ['oneEntry'],
@@ -933,7 +933,7 @@ export const deviceConnectorRules = {
   },
   bargraph: {
     acceptedConnections: ['oneEntry'],
-    connectsFrom: ['potentiometer', 'climate', 'photoresist', 'rain', 'soilMoisture', 'counter', 'slider', 'physicalPotentiometer', 'physicalLDR', 'physicalCLIMATE'],
+    connectsFrom: ['potentiometer', 'climate', 'photoresist', 'rain', 'soil', 'counter', 'slider', 'physicalPotentiometer', 'physicalLDR', 'physicalCLIMATE'],
   },
   counter: {
     acceptedConnections: ['oneEntry', 'allExit'],
@@ -992,7 +992,7 @@ export const deviceConnectorRules = {
   },
   slider: {
     acceptedConnections: ['oneEntry', 'allExit'],
-    connectsFrom: ['potentiometer', 'climate', 'photoresist', 'rain', 'soilMoisture', 'counter', 'slider', 'physicalPotentiometer', 'physicalLDR', 'physicalCLIMATE'],
+    connectsFrom: ['potentiometer', 'climate', 'photoresist', 'rain', 'soil', 'counter', 'slider', 'physicalPotentiometer', 'physicalLDR', 'physicalCLIMATE'],
     connectsTo: ['all'],
   },
   passValue: {

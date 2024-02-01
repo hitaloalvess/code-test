@@ -6,7 +6,7 @@ import Potentiometer from '../../Entry/Potentiometer';
 import Switch from '../../Entry/Switch';
 import PushButton from '../../Entry/PushButton';
 import Infrared from '../../Entry/Infrared';
-import SoilMoisture from '../../Entry/SoilMoisture';
+import Soil from '../../Entry/Soil';
 import Rain from '../../Entry/Rain';
 
 import Led from '../../Exit/Led';
@@ -62,7 +62,7 @@ const DeviceFactory = ({
     slider: Slider,
     pickColor: PickColor,
     counter: Counter,
-    soilMoisture: SoilMoisture,
+    soil: Soil,
     rain: Rain,
     timer: Timer,
     loop: Loop,

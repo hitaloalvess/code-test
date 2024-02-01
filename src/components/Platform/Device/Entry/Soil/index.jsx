@@ -12,7 +12,7 @@ import DeviceBody from '../../SharedDevice/DeviceBody';
 const MIN_HUMIDITY = 0;
 const MAX_HUMIDITY = 1023;
 
-const RainDetector = memo(function RainDetector({
+const Soil = memo(function Soil({
   dragRef, data, onSaveData
 }) {
 
@@ -122,10 +122,10 @@ const RainDetector = memo(function RainDetector({
   );
 });
 
-RainDetector.propTypes = {
+Soil.propTypes = {
   dragRef: P.func.isRequired,
   data: P.object.isRequired,
   onSaveData: P.func.isRequired
 }
 
-export default RainDetector;
+export default Soil;
