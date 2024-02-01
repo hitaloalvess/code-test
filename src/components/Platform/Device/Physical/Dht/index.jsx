@@ -4,7 +4,7 @@ import { shallow } from 'zustand/shallow';
 import { Thermometer, Drop } from '@phosphor-icons/react';
 
 import { useAuth } from '@/hooks/useAuth';
-import { socket } from '@/services/websocket';
+import { socket } from '@/services/socket';
 import { useStore } from '@/store';
 import { formulasForTransformation, transformHumidityValue } from '@/utils/devices-functions';
 

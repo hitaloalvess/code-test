@@ -5,7 +5,7 @@ import { useDrag } from 'react-dnd';
 import P from 'prop-types';
 import { isMobile } from 'react-device-detect';
 
-import { socket } from '@/services/websocket';
+import { socket } from '@/services/socket';
 import { useAuth } from '@/hooks/useAuth';
 
 import * as MDP from './styles.module.css';
