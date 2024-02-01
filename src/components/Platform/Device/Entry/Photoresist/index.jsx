@@ -12,7 +12,7 @@ import DeviceBody from '../../SharedDevice/DeviceBody';
 const MIN_LUMINOSITY = 0;
 const MAX_LUMINOSITY = 1023;
 
-const Ldr = memo(function Ldr({
+const Photoresist = memo(function Photoresist({
   data, dragRef, onSaveData
 }) {
 
@@ -111,10 +111,10 @@ const Ldr = memo(function Ldr({
   );
 });
 
-Ldr.propTypes = {
+Photoresist.propTypes = {
   dragRef: P.func.isRequired,
   data: P.object.isRequired,
   onSaveData: P.func.isRequired
 }
 
-export default Ldr;
+export default Photoresist;

@@ -1,5 +1,5 @@
 import BannerImg from '@/assets/images/banner.webp';
-import DeviceImageLDR from '@/assets/images/devices/entry/ldr.svg';
+import DeviceImageLDR from '@/assets/images/devices/entry/photoresist.svg';
 import DeviceImagePotentiometer from '@/assets/images/devices/entry/potentiometer.svg';
 import DeviceImageLED from '@/assets/images/devices/exit/led.svg';
 import { DeviceCard } from './DeviceCard';

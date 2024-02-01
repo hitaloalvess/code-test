@@ -1,7 +1,7 @@
 import P from 'prop-types';
 
 import Climate from '../../Entry/Climate';
-import Ldr from '../../Entry/Ldr';
+import Photoresist from '../../Entry/Photoresist';
 import Potentiometer from '../../Entry/Potentiometer';
 import Switch from '../../Entry/Switch';
 import PushButton from '../../Entry/PushButton';
@@ -41,7 +41,7 @@ const DeviceFactory = ({
 
   const devices = {
     climate: Climate,
-    ldr: Ldr,
+    photoresist: Photoresist,
     potentiometer: Potentiometer,
     pushButton: PushButton,
     switch: Switch,

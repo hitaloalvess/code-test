@@ -1,5 +1,5 @@
 //entry
-import deviceLdr from '@/assets/images/devices/entry/ldr.svg';
+import deviceLdr from '@/assets/images/devices/entry/photoresist.svg';
 import devicePotentiometer from '@/assets/images/devices/entry/potentiometer.svg';
 import deviceSwitch from '@/assets/images/devices/entry/switchOff.svg';
 import devicePushButton from '@/assets/images/devices/entry/pushButtonOff.svg';
@@ -41,7 +41,7 @@ export const deviceTypes = [
   { id: 2, name: 'Climate', category: 'entry'  },
   { id: 3, name: 'Infrared', category: 'entry' },
   { id: 4, name: 'Laser', category: 'exit' },
-  { id: 5, name: 'Ldr', category: 'entry' },
+  { id: 5, name: 'Photoresist', category: 'entry' },
   { id: 6, name: 'Led', category: 'exit' },
   { id: 7, name: 'Led Mono', category: 'exit' },
   { id: 8, name: 'Potentiometer', category: 'entry' },
@@ -115,7 +115,7 @@ export const mockDevices = {
     {
       id: 12,
       imgSrc: deviceLdr,
-      name: 'ldr',
+      name: 'photoresist',
       label: 'Sensor de luz',
       type: 'virtual',
       category: 'entry',
@@ -887,7 +887,7 @@ export const deviceConnectorRules = {
     acceptedConnections: ['allExit'],
     connectsTo: ['all']
   },
-  ldr: {
+  photoresist: {
     acceptedConnections: ['allExit'],
     connectsTo: ['all']
   },
@@ -917,11 +917,11 @@ export const deviceConnectorRules = {
   },
   buzzer: {
     acceptedConnections: ['oneEntry'],
-    connectsFrom: ['potentiometer', 'ldr', 'rainDetector', 'soilMoisture', 'pushButton', 'counter', 'and', 'or', 'not', 'comparator', 'if', 'toggle', 'slider', 'delay', 'switch', 'physicalPotentiometer', 'physicalLDR']
+    connectsFrom: ['potentiometer', 'photoresist', 'rainDetector', 'soilMoisture', 'pushButton', 'counter', 'and', 'or', 'not', 'comparator', 'if', 'toggle', 'slider', 'delay', 'switch', 'physicalPotentiometer', 'physicalLDR']
   },
   shakeMotor: {
     acceptedConnections: ['oneEntry'],
-    connectsFrom: ['potentiometer', 'ldr', 'rainDetector', 'soilMoisture', 'pushButton', 'counter', 'and', 'or', 'not', 'comparator', 'if', 'toggle', 'slider', 'delay', 'switch', 'physicalPotentiometer', 'physicalLDR']
+    connectsFrom: ['potentiometer', 'photoresist', 'rainDetector', 'soilMoisture', 'pushButton', 'counter', 'and', 'or', 'not', 'comparator', 'if', 'toggle', 'slider', 'delay', 'switch', 'physicalPotentiometer', 'physicalLDR']
   },
   ledMono: {
     acceptedConnections: ['oneEntry'],
@@ -933,7 +933,7 @@ export const deviceConnectorRules = {
   },
   bargraph: {
     acceptedConnections: ['oneEntry'],
-    connectsFrom: ['potentiometer', 'climate', 'ldr', 'rainDetector', 'soilMoisture', 'counter', 'slider', 'physicalPotentiometer', 'physicalLDR', 'physicalCLIMATE'],
+    connectsFrom: ['potentiometer', 'climate', 'photoresist', 'rainDetector', 'soilMoisture', 'counter', 'slider', 'physicalPotentiometer', 'physicalLDR', 'physicalCLIMATE'],
   },
   counter: {
     acceptedConnections: ['oneEntry', 'allExit'],
@@ -992,7 +992,7 @@ export const deviceConnectorRules = {
   },
   slider: {
     acceptedConnections: ['oneEntry', 'allExit'],
-    connectsFrom: ['potentiometer', 'climate', 'ldr', 'rainDetector', 'soilMoisture', 'counter', 'slider', 'physicalPotentiometer', 'physicalLDR', 'physicalCLIMATE'],
+    connectsFrom: ['potentiometer', 'climate', 'photoresist', 'rainDetector', 'soilMoisture', 'counter', 'slider', 'physicalPotentiometer', 'physicalLDR', 'physicalCLIMATE'],
     connectsTo: ['all'],
   },
   passValue: {
