@@ -15,7 +15,7 @@ import DeviceBody from '../../SharedDevice/DeviceBody';
 import * as PD from './styles.module.css';
 
 const MAX_HUMIDITY = 1023;
-const PhysicalDht = memo(function Dht({
+const PhysicalClimate = memo(function Climate({
   data, dragRef, onSaveData
 }) {
   const isFirstRender = useRef(true);
@@ -124,7 +124,7 @@ const PhysicalDht = memo(function Dht({
             }
           }}
           actionConfig={{
-            typeContent: 'config-dht',
+            typeContent: 'config-climate',
             onSave: handleSettingUpdate,
             data: {
               scaleTypeDefault: scaleType
@@ -164,10 +164,10 @@ const PhysicalDht = memo(function Dht({
   );
 });
 
-PhysicalDht.propTypes = {
+PhysicalClimate.propTypes = {
   data: P.object.isRequired,
   dragRef: P.func.isRequired,
   onSaveData: P.func.isRequired
 }
 
-export default PhysicalDht;
+export default PhysicalClimate;

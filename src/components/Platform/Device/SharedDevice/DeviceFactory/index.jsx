@@ -1,6 +1,6 @@
 import P from 'prop-types';
 
-import Dht from '../../Entry/Dht';
+import Climate from '../../Entry/Climate';
 import Ldr from '../../Entry/Ldr';
 import Potentiometer from '../../Entry/Potentiometer';
 import Switch from '../../Entry/Switch';
@@ -33,14 +33,14 @@ import PassValue from '../../Event/PassValue';
 
 import Stickynote from '../../Tool/Stickynote';
 
-import PhysicalDht from '../../Physical/Dht';
+import PhysicalClimate from '../../Physical/Climate';
 
 const DeviceFactory = ({
   data, dragRef, onSaveData
 }) => {
 
   const devices = {
-    dht: Dht,
+    climate: Climate,
     ldr: Ldr,
     potentiometer: Potentiometer,
     pushButton: PushButton,
@@ -68,7 +68,7 @@ const DeviceFactory = ({
     loop: Loop,
     stickynote: Stickynote,
     passValue: PassValue,
-    physicalDht: PhysicalDht,
+    physicalClimate: PhysicalClimate,
   }
 
   const CurrentDevice = devices[data.name];

@@ -60,7 +60,7 @@ const If = ({
 
   const handleSpecialDeviceValues = (deviceData, objValue) => {
     const devices = {
-      'dht': (deviceData, objValue) => {
+      'climate': (deviceData, objValue) => {
 
         const { connector } = deviceData;
         const { current, max } = objValue;

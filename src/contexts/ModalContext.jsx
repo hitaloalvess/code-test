@@ -7,7 +7,7 @@ import ConfigDelayModal from '@/components/SharedComponents/Modal/ConfigDelayMod
 import ConfigBuzzerModal from '@/components/SharedComponents/Modal/ConfigBuzzerModal';
 import ConfigSliderModal from '@/components/SharedComponents/Modal/ConfigSliderModal';
 import ConfirmationModal from '@/components/SharedComponents/Modal/ConfirmationModal';
-import ConfigDhtModal from '@/components/SharedComponents/Modal/ConfigDhtModal';
+import ConfigClimateModal from '@/components/SharedComponents/Modal/ConfigClimateModal';
 import ConfigComparatorModal from '@/components/SharedComponents/Modal/ConfigComparatorModal';
 import ConfigPickColorModal from '@/components/SharedComponents/Modal/ConfigPickColorModal';
 import UpdatePasswordModal from '@/components/SharedComponents/Modal/UpdatePasswordModal';
@@ -29,7 +29,7 @@ const contents = {
   'config-buzzer': ConfigBuzzerModal,
   'config-delay': ConfigDelayModal,
   'config-slider': ConfigSliderModal,
-  'config-dht': ConfigDhtModal,
+  'config-climate': ConfigClimateModal,
   'config-comparator': ConfigComparatorModal,
   'config-pickColor': ConfigPickColorModal,
   'update-password': UpdatePasswordModal,

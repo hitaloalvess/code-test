@@ -83,7 +83,7 @@ export const transformDeviceName = (name, tranformType) => {
   return selectTransformType(name);
 }
 
-// DEVICE DHT
+// DEVICE CLIMATE
 export const formulasForTransformation = {
   celsius: (temp) => {
     const convertedValue = Number(temp);

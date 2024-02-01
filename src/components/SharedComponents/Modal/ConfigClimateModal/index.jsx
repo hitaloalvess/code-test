@@ -14,7 +14,7 @@ import {
   btnBlue,
 } from '@/styles/common.module.css';
 
-const ConfigDhtModal = ({ closeModal, contentData }) => {
+const ConfigClimateModal = ({ closeModal, contentData }) => {
   const { handleSaveConfig, scaleTypeDefault } = contentData;
 
   const scaleTypeRef = useRef(null);
@@ -35,7 +35,7 @@ const ConfigDhtModal = ({ closeModal, contentData }) => {
         <h1
           className={configLedTitle}
         >
-          DHT
+          CLIMATE
         </h1>
       </header>
 
@@ -46,7 +46,7 @@ const ConfigDhtModal = ({ closeModal, contentData }) => {
           className={inputArea}
         >
           <label
-            htmlFor=' dhtScale'
+            htmlFor=' climateScale'
             className={labelInput}
           >
             Selecione uma escala de temperatura:
@@ -54,7 +54,7 @@ const ConfigDhtModal = ({ closeModal, contentData }) => {
 
           <select
             ref={scaleTypeRef}
-            className="dhtSelect"
+            className="climateSelect"
             defaultValue={scaleTypeDefault}
           >
             <option value="celsius">Celsius</option>
@@ -77,7 +77,7 @@ const ConfigDhtModal = ({ closeModal, contentData }) => {
   );
 };
 
-ConfigDhtModal.propTypes = {
+ConfigClimateModal.propTypes = {
   closeModal: P.func.isRequired,
   contentData: P.shape({
     handleSaveConfig: P.func,
@@ -85,4 +85,4 @@ ConfigDhtModal.propTypes = {
   }).isRequired
 }
 
-export default ConfigDhtModal;
+export default ConfigClimateModal;

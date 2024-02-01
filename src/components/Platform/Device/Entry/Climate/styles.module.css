@@ -11,13 +11,13 @@
   fill: var(--blue);
 }
 
-.inputDht {
+.inputClimate {
   opacity: 1;
   transition: transform 0.2s ease-in-out, width 0.2s ease-in-out;
 }
 
 
-.inputDht:hover {
+.inputClimate:hover {
   opacity: 1;
   position: relative;
   transform: translateX(0);
@@ -25,20 +25,20 @@
   height: 6px;
 }
 
-.inputContainerDht {
+.inputContainerClimate {
   position: relative;
   top: 0;
   display: flex;
   justify-content: center;
 }
 
-.inputContainerDht input {
+.inputContainerClimate input {
   width: 0px !important;
   opacity: 0;
   pointer-events: none;
 }
 
-.inputContainerDht:hover input {
+.inputContainerClimate:hover input {
   width: 80px !important;
   opacity: 1;
   pointer-events: all;
@@ -46,7 +46,7 @@
 
 
 @media(max-width: 768px) {
-  .inputContainerDht:hover input {
+  .inputContainerClimate:hover input {
     width: 60px !important;
   }
 }

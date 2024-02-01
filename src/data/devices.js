@@ -3,7 +3,7 @@ import deviceLdr from '@/assets/images/devices/entry/ldr.svg';
 import devicePotentiometer from '@/assets/images/devices/entry/potentiometer.svg';
 import deviceSwitch from '@/assets/images/devices/entry/switchOff.svg';
 import devicePushButton from '@/assets/images/devices/entry/pushButtonOff.svg';
-import deviceDht from '@/assets/images/devices/entry/dht.svg';
+import deviceClimate from '@/assets/images/devices/entry/climate.svg';
 import deviceInfrared from '@/assets/images/devices/entry/infrared.svg';
 // import deviceSoilMoisture from '@/assets/images/devices/event/eventBase.svg';
 // import deviceRainDetector from '@/assets/images/devices/event/eventBase.svg';
@@ -38,7 +38,7 @@ import deviceStickynote from '@/assets/images/devices/tool/stickyNote.svg'
 
 export const deviceTypes = [
   { id: 1, name: 'Buzzer', category: 'exit' },
-  { id: 2, name: 'Dht', category: 'entry'  },
+  { id: 2, name: 'Climate', category: 'entry'  },
   { id: 3, name: 'Infrared', category: 'entry' },
   { id: 4, name: 'Laser', category: 'exit' },
   { id: 5, name: 'Ldr', category: 'entry' },
@@ -54,8 +54,8 @@ export const mockDevices = {
   entry: [
     {
       id: 10,
-      imgSrc: deviceDht,
-      name: 'dht',
+      imgSrc: deviceClimate,
+      name: 'climate',
       label: 'Sensor de temperatura',
       type: 'virtual',
       category: 'entry',
@@ -883,7 +883,7 @@ export const deviceConnectorRules = {
     acceptedConnections: ['allExit'],
     connectsTo: ['all']
   },
-  dht: {
+  climate: {
     acceptedConnections: ['allExit'],
     connectsTo: ['all']
   },
@@ -933,7 +933,7 @@ export const deviceConnectorRules = {
   },
   bargraph: {
     acceptedConnections: ['oneEntry'],
-    connectsFrom: ['potentiometer', 'dht', 'ldr', 'rainDetector', 'soilMoisture', 'counter', 'slider', 'physicalPotentiometer', 'physicalLDR', 'physicalDHT'],
+    connectsFrom: ['potentiometer', 'climate', 'ldr', 'rainDetector', 'soilMoisture', 'counter', 'slider', 'physicalPotentiometer', 'physicalLDR', 'physicalCLIMATE'],
   },
   counter: {
     acceptedConnections: ['oneEntry', 'allExit'],
@@ -992,7 +992,7 @@ export const deviceConnectorRules = {
   },
   slider: {
     acceptedConnections: ['oneEntry', 'allExit'],
-    connectsFrom: ['potentiometer', 'dht', 'ldr', 'rainDetector', 'soilMoisture', 'counter', 'slider', 'physicalPotentiometer', 'physicalLDR', 'physicalDHT'],
+    connectsFrom: ['potentiometer', 'climate', 'ldr', 'rainDetector', 'soilMoisture', 'counter', 'slider', 'physicalPotentiometer', 'physicalLDR', 'physicalCLIMATE'],
     connectsTo: ['all'],
   },
   passValue: {

@@ -14,8 +14,8 @@ import DeviceBody from '../../SharedDevice/DeviceBody';
 import {
   thermometerIcon,
   dropIcon,
-  inputDht,
-  inputContainerDht
+  inputClimate,
+  inputContainerClimate
 } from './styles.module.css';
 
 const MAX_TEMPERATURE = 50;
@@ -23,7 +23,7 @@ const MIN_TEMPERATURE = -50;
 const MAX_HUMIDITY = 1023;
 const MIN_HUMIDITY = 0;
 
-const Dht = memo(function Dht({
+const Climate = memo(function Climate({
   data, dragRef, onSaveData
 }) {
 
@@ -98,8 +98,8 @@ const Dht = memo(function Dht({
               onTransformValue: () => transformationFormula(data.value.temperature.current)
             },
             className: {
-              container: [inputContainerDht],
-              input: [inputDht]
+              container: [inputContainerClimate],
+              input: [inputClimate]
             },
             children: <Thermometer className={thermometerIcon} />
           },
@@ -113,8 +113,8 @@ const Dht = memo(function Dht({
               onTransformValue: () => transformHumidityValue(data.value.humidity.current, MAX_HUMIDITY)
             },
             className: {
-              container: [inputContainerDht],
-              input: [inputDht]
+              container: [inputContainerClimate],
+              input: [inputClimate]
             },
             children: <Drop className={dropIcon} />
 
@@ -139,7 +139,7 @@ const Dht = memo(function Dht({
             }
           }}
           actionConfig={{
-            typeContent: 'config-dht',
+            typeContent: 'config-climate',
             onSave: handleSettingUpdate,
             data: {
               scaleTypeDefault: scaleType
@@ -179,10 +179,10 @@ const Dht = memo(function Dht({
   );
 });
 
-Dht.propTypes = {
+Climate.propTypes = {
   data: P.object.isRequired,
   dragRef: P.func.isRequired,
   onSaveData: P.func.isRequired
 }
 
-export default Dht;
+export default Climate;
