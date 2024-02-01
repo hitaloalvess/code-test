@@ -6,6 +6,9 @@ import { shallow } from 'zustand/shallow';
 import { mockDevices } from '@/data/devices.js';
 import { useStore } from '@/store';
 import { useModal } from '@/hooks/useModal';
+import { apiMicrocode } from '@/services/api-microcode';
+import { MicrocodeHttpRoutes } from '@/constants/hardware-communication';
+import { transformDeviceName } from '@/utils/devices-functions'
 
 
 export const SidebarContext = createContext();
@@ -28,6 +31,40 @@ export const SidebarProvider = ({ children }) => {
     drop(el);
     sidebarRef.current = el;
     loadRef('sidebarRef', sidebarRef);
+  }
+
+  const handleSelectArea = (currentArea) => {
+    setCurrentArea(currentArea);
+  }
+
+  const handleCreatePhysicalDevice = async ({ mac, type }) => {
+
+    const { name, category } = await apiMicrocode.get(`${MicrocodeHttpRoutes.HARDWARE_INFO}/${type}`);
+    const deviceName = transformDeviceName(name, 'rm-space-firstLower');
+    const device = devices[category].find(device => device.name === deviceName);
+
+    const newPhysicalDevice = {
+      ...device,
+      mac,
+      id: mac,
+      name: `physical${transformDeviceName(name, 'firstLetterUpper')}`,
+      label: name,
+      type: 'physical',
+      typeId: type
+    }
+
+    setDevices(prevDevices => {
+      return {
+        ...prevDevices,
+        hardware: [
+          ...prevDevices.hardware,
+          {
+            ...newPhysicalDevice,
+            inUse: false
+          }
+        ]
+      }
+    })
   }
 
   const handleStatusHardwareDevice = ({ id, inUse }) => {
@@ -53,9 +90,6 @@ export const SidebarProvider = ({ children }) => {
     });
   }
 
-  const handleSelectArea = (currentArea) => {
-    setCurrentArea(currentArea);
-  }
 
   const [{ isOver }, drop] = useDrop(() => ({
     accept: 'device',
@@ -91,7 +125,8 @@ export const SidebarProvider = ({ children }) => {
       drop,
       attachRef,
       handleSelectArea,
-      handleStatusHardwareDevice
+      handleStatusHardwareDevice,
+      handleCreatePhysicalDevice
     }}>
       {children}
     </SidebarContext.Provider>
@@ -105,3 +140,4 @@ SidebarProvider.propTypes = {
     P.object
   ])
 }
+

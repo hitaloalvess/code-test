@@ -37,17 +37,11 @@ import devicePassValue from '@/assets/images/devices/event/passValue.svg';
 import deviceStickynote from '@/assets/images/devices/tool/stickyNote.svg'
 
 export const deviceTypes = [
-  { id: 1, name: 'Buzzer', category: 'exit' },
-  { id: 2, name: 'Climate', category: 'entry'  },
-  { id: 3, name: 'Infrared', category: 'entry' },
-  { id: 4, name: 'Laser', category: 'exit' },
-  { id: 5, name: 'Photoresist', category: 'entry' },
-  { id: 6, name: 'Led', category: 'exit' },
-  { id: 7, name: 'Led Mono', category: 'exit' },
-  { id: 8, name: 'Potentiometer', category: 'entry' },
-  { id: 9, name: 'Push Button', category: 'entry' },
-  { id: 10, name: 'Switch', category: 'entry' },
-  { id: 11, name: 'Shake Motor', category: 'exit' },
+  { id: 1, name: 'rain', category: 'entry' },
+  { id: 2, name: 'soil', category: 'entry' },
+  { id: 3, name: 'climate', category: 'entry'  },
+  { id: 4, name: 'photoresist', category: 'entry' },
+  { id: 5, name: 'bargaph', category: 'entry' }
 ]
 
 export const mockDevices = {

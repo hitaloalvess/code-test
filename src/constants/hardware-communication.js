@@ -1,6 +1,6 @@
 
 
-export const HardwareCommunicationHttpRoutes = {
-  CONNECT: 'connect/devices',
-
+export const MicrocodeHttpRoutes = {
+  HARDWARE_CONNECT: 'hardware/connect',
+  HARDWARE_INFO: 'hardware-info'
 }

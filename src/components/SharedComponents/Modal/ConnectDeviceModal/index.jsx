@@ -44,9 +44,10 @@ const ConnectDeviceModal = ({
       }
 
       setIsLoading(true);
-      handleConfirm(data);
+      await handleConfirm(data);
 
     } catch (error) {
+      setIsLoading(false);
       toast.error(error.response.data.message);
     }
 

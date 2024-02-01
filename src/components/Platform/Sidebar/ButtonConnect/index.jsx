@@ -1,13 +1,13 @@
 import { PlusCircle } from '@phosphor-icons/react';
 
-import { useHardwareCommunication, useAuth, useModal } from '@/hooks'
+import { useHardwareCommunication, useContextAuth, useModal } from '@/hooks'
 
 import * as BC from './styles.module.css';
 
 const ButtonConnect = () => {
 
   const { enableModal } = useModal();
-  const { user } = useAuth();
+  const { person } = useContextAuth();
   const { connectHardware } = useHardwareCommunication();
 
   const handleOpenModal = () => {
@@ -15,7 +15,7 @@ const ButtonConnect = () => {
       typeContent: 'connect-device',
       title: 'Conectar dispositivo',
       subtitle: 'Insira as informações do dispositivo que deseja conectar',
-      handleConfirm: ({ mac }) => connectHardware({ mac, userId: user.id })
+      handleConfirm: ({ mac }) => connectHardware({ mac, userId: person.id })
     })
   }
 
