@@ -59,15 +59,69 @@
   z-index: 99;
 }
 
+/* The switch - the box around the slider */
+.toggle {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+/* Hide default HTML checkbox */
+.toggle input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* The slider */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #2196F3;
+  -webkit-transition: .4s;
+  transition: .4s;
+  border-radius: 34px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+  border-radius: 50%;
+}
+
+input:checked + .slider:before {
+  transform: translateX(26px);
+}
+
+.labelInput {
+  font-size: 16px;
+}
+
+.textExit{
+  position: absolute;
+  right: 73px;
+  top: 8px;
+}
+
+.textEntry {
+  position: absolute;
+  left: 76px;
+  bottom: 10px;
+}
 
 @media (((max-height: 481px) and (orientation: landscape)) or ((max-width: 481px) and (orientation: portrait))) {
     /* MOBILE */
 
-    .configLedContent {
-        justify-content: flex-start;
-        gap: 16px;
-        max-height: 320px;
-        overflow-y: auto;
-        padding: 8px 24px;
-    }
 }

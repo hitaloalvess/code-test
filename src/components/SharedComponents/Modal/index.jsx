@@ -22,9 +22,9 @@ const ModalContainer = ({ modalIsOpen, onClose, enabledModals }) => {
   return (
     <>
       {
-        enabledModals.map(({ Component, ...modal }, index) => (
+        enabledModals.map(({ Component, enableClose = true, modalStyle = customStyles, ...modal }, index) => (
           <Modal
-            style={customStyles}
+            style={modalStyle}
             isOpen={modalIsOpen}
             onRequestClose={() => onClose(modal.typeContent)}
             contentLabel='Example Modal'
@@ -40,12 +40,13 @@ const ModalContainer = ({ modalIsOpen, onClose, enabledModals }) => {
                   loading='lazy'
                 />
 
-                <button
+                {enableClose && <button
                   className={M.btnClose}
                   onClick={() => onClose(modal.typeContent)}
                 >
                   <X />
-                </button>
+                </button>}
+
               </header>
 
               <Component

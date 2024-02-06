@@ -1,16 +1,37 @@
-.passValueNumber {
+.numberDisplay {
   position: absolute;
-  top: 22px;
+  top: 33px;
   color: var(--black);
-  font-size: 20px;
+  font-size: 16pxpx;
   font-weight: bold;
   text-align: center;
-  /* margin: -65px auto 0 auto; */
+}
+
+.titleDisplay {
+  position: absolute;
+  top: 19px;
+  color: var(--black);
+  font-size: 12px;
+  font-weight: bold;
+  text-align: center;
 }
 
 @media (((max-height: 481px) and (orientation: landscape)) or ((max-width: 481px) and (orientation: portrait))) {
-  .passValueNumber {
-    top: 9px;
-    font-size: 18px;
+  .numberDisplay {
+    position: absolute;
+    top: 30px;
+    color: var(--black);
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+  }
+
+  .titleDisplay {
+    position: absolute;
+    top: 19px;
+    color: var(--black);
+    font-size: 12px;
+    font-weight: bold;
+    text-align: center;
   }
 }

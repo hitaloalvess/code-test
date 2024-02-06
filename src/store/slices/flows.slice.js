@@ -375,10 +375,8 @@ export const createFlowsSlice = (set, get) => ({
 
     const selectedFlow = findFlowsByDeviceId(flows, deviceId);
 
-
     if (!selectedFlow) {
       deleteDevice(deviceId);
-
       return;
     }
 

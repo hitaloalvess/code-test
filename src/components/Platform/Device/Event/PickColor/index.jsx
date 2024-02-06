@@ -79,7 +79,6 @@ const PickColor = ({
     const deviceValueCurrent = device.value[connection.deviceFrom.connector.name].current;
     const deviceValueMax  = device.value[connection.deviceFrom.connector.name].max;
 
-    console.log (device.value);
     const newValue = {
       ...data.value,
       send: {
