@@ -45,6 +45,7 @@ const ConnectDeviceModal = ({
 
       setIsLoading(true);
       await handleConfirm(data);
+      setIsLoading(false);
 
     } catch (error) {
       setIsLoading(false);

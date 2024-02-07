@@ -5,8 +5,8 @@ import { useDrag } from 'react-dnd';
 import P from 'prop-types';
 import { isMobile } from 'react-device-detect';
 
-import { socket } from '@/services/socket';
-import { useAuth } from '@/hooks/useAuth';
+// import { socket } from '@/services/socket';
+// import { useContextAuth } from '@/hooks';
 
 import * as MDP from './styles.module.css';
 
@@ -17,7 +17,7 @@ const MenuDevicePhysical = ({ device, onUpdateStatus }) => {
 
   const intervalPressed = useRef(null);
   const timeoutRef = useRef(null);
-  const { user } = useAuth();
+  // const { person } = useContextAuth();
   const [currentState, setCurrentState] = useState({
     isDisabled: false,
     isFirstUse: true,
@@ -59,11 +59,11 @@ const MenuDevicePhysical = ({ device, onUpdateStatus }) => {
 
     //ENVIAR MENSAGEM AO BACKEND PARA O SENSOR ENTRAR EM WATCHDOG
 
-    socket.emit('sensor/update/activation', {
-      cpf: user.cpf,
-      mac: device.id,
-      active: false
-    });
+    // socket.emit('sensor/update/activation', {
+    //   id: person.id,
+    //   mac: device.id,
+    //   active: false
+    // });
   }
 
   const handleMovementInMoutingPanel = () => {
@@ -103,12 +103,6 @@ const MenuDevicePhysical = ({ device, onUpdateStatus }) => {
 
   useEffect(() => {
     timeoutRef.current = setTimeout(handleDisabling, TIMEOUT_DISABLED);
-
-    socket.on(`${user.cpf}/${device.id}/update/activation`, () => {
-      console.log({
-        title: 'Recebi uma mensagem de activação'
-      })
-    });
 
     return () => {
       clearTimeout(timeoutRef.current);

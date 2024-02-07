@@ -39,7 +39,9 @@ export const SidebarProvider = ({ children }) => {
 
   const handleCreatePhysicalDevice = async ({ mac, type }) => {
 
-    const { name, category } = await apiMicrocode.get(`${MicrocodeHttpRoutes.HARDWARE_INFO}/${type}`);
+    const { data } = await apiMicrocode.get(MicrocodeHttpRoutes.HARDWARE_GET_INFO(type));
+    const { name, category }= data.hardware;
+
     const deviceName = transformDeviceName(name, 'rm-space-firstLower');
     const device = devices[category].find(device => device.name === deviceName);
 

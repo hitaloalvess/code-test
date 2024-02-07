@@ -1,6 +1,6 @@
 
 
 export const MicrocodeHttpRoutes = {
-  HARDWARE_CONNECT: 'hardware/connect',
-  HARDWARE_INFO: 'hardware-info'
+  HARDWARE_CONNECT: 'hardwares/connect',
+  HARDWARE_GET_INFO: (type) => `hardwares/${type}`
 }

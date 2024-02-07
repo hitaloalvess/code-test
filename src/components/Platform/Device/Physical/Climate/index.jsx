@@ -44,18 +44,18 @@ const PhysicalClimate = memo(function Climate({
 
   useEffect(() => {
 
-    socket.emit('sensor/update/activation', {
-      mac, cpf: user.cpf, active: true
-    });
+    // socket.emit('sensor/update/activation', {
+    //   mac, cpf: user.cpf, active: true
+    // });
 
     // socket.on(`${user.cpf}/sensor/${typeId}/${mac}`, (data) => {
     //   console.log({ data });
     // })
 
     return () => {
-      socket.emit('sensor/update/activation', {
-        mac, cpf: user.cpf, active: false
-      })
+      // socket.emit('sensor/update/activation', {
+      //   mac, cpf: user.cpf, active: false
+      // })
     }
   }, []);
 

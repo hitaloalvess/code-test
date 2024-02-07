@@ -37,6 +37,7 @@ import devicePassValue from '@/assets/images/devices/event/passValue.svg';
 import deviceStickynote from '@/assets/images/devices/tool/stickyNote.svg'
 
 export const deviceTypes = [
+  { id: 0, name: 'Not device', category:'not'},
   { id: 1, name: 'rain', category: 'entry' },
   { id: 2, name: 'soil', category: 'entry' },
   { id: 3, name: 'climate', category: 'entry'  },
