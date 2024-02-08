@@ -1,6 +1,6 @@
 import { Envelope, Lock } from '@phosphor-icons/react';
 
-import { apiAuth } from '@/services/api'
+import { deleteAccount } from '@/api'
 import { useContextAuth } from '@/hooks/useAuth';
 import { useModal } from '@/hooks/useModal';
 import { Form } from '@/components/SharedComponents/Form';
@@ -29,7 +29,10 @@ const CredentialsSection = () => {
   const handleDeleteAccount = async () => {
     try {
 
-      await apiAuth.delete(`/${person.type}s/${person.id}`);
+      await deleteAccount({
+        personType: person.type,
+        personId: person.id
+      })
 
       toast.success('Conta deletada com sucesso');
 

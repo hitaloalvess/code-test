@@ -2,10 +2,11 @@
 import { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { apiAuth } from '@/services/api';
+import { getProfile, signIn } from '@/api';
+import { apiAuth } from '@/lib/axios';
 import { toast } from "react-toastify";
 import { AuthContext } from '@/contexts/AuthContext';
-// import { apiMicrocode } from '../services/api-microcode';
+// import { apiMicrocode } from '../lib/axios';
 // import { useModal } from '@/hooks/useModal';
 
 
@@ -27,7 +28,7 @@ export const useAuth = () => {
   const isAuthenticated = useMemo(() => !!person, [person]);
 
   const handleGetProfile = async () => {
-    const { data: { person } } = await apiAuth.get('/me');
+    const { person } = await getProfile();
 
     setPerson(person);
 
@@ -39,9 +40,7 @@ export const useAuth = () => {
 
       setIsLoading(true);
 
-      const { data: { token } } = await apiAuth.post('/sessions', {
-        email, password
-      });
+      const { token } = await signIn({ email, password });
 
       localStorage.setItem('@Microdigo:token', JSON.stringify(token));
 
@@ -99,16 +98,16 @@ export const useAuth = () => {
 
     const token = localStorage.getItem('@Microdigo:token');
 
-    if(token){
+    if (token) {
 
-      try{
+      try {
         handleGetProfile().catch(error => console.log(error));
-      }catch(error){
+      } catch (error) {
         toast.error(error?.message);
       }
 
     }
-  },[])
+  }, [])
 
   return {
     person,

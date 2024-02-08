@@ -4,7 +4,7 @@ import { shallow } from 'zustand/shallow';
 import { Thermometer, Drop } from '@phosphor-icons/react';
 
 import { useAuth } from '@/hooks/useAuth';
-import { socket } from '@/services/socket';
+import { socket } from '@/lib/websocket';
 import { useStore } from '@/store';
 import { formulasForTransformation, transformHumidityValue } from '@/utils/devices-functions';
 
@@ -20,7 +20,7 @@ const PhysicalClimate = memo(function Climate({
 }) {
   const isFirstRender = useRef(true);
   const { user } = useAuth();
-  const { id, imgSrc, name, posX, posY , mac } = data;
+  const { id, imgSrc, name, posX, posY, mac } = data;
 
   const {
     executeFlow,
@@ -60,7 +60,7 @@ const PhysicalClimate = memo(function Climate({
   }, []);
 
   useEffect(() => {
-    if(isFirstRender.current){
+    if (isFirstRender.current) {
       isFirstRender.current = false;
 
       return;
@@ -73,7 +73,7 @@ const PhysicalClimate = memo(function Climate({
   }, [data.value.temperature.current]);
 
   useEffect(() => {
-    if(isFirstRender.current){
+    if (isFirstRender.current) {
       isFirstRender.current = false;
 
       return;
@@ -88,22 +88,22 @@ const PhysicalClimate = memo(function Climate({
 
     <>
       <div className={PD.showValueContainer}>
-          <p
-            className={PD.showValue}
-          >
-            {transformationFormula(data.value.temperature.current)}
+        <p
+          className={PD.showValue}
+        >
+          {transformationFormula(data.value.temperature.current)}
 
-            <Thermometer className={PD.thermometerIcon}/>
-          </p>
+          <Thermometer className={PD.thermometerIcon} />
+        </p>
 
 
-          <p
-            className={PD.showValue}
-          >
-            {transformHumidityValue(data.value.humidity.current, MAX_HUMIDITY)}
+        <p
+          className={PD.showValue}
+        >
+          {transformHumidityValue(data.value.humidity.current, MAX_HUMIDITY)}
 
-            <Drop className={PD.dropIcon} />
-          </p>
+          <Drop className={PD.dropIcon} />
+        </p>
 
       </div>
 

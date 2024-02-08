@@ -1,17 +1,24 @@
-import { useMutation, useQuery } from '@tanstack/react-query';
 import { shallow } from 'zustand/shallow';
+import { toast } from 'react-toastify';
+import { useMutation, useQuery } from '@tanstack/react-query';
+
+import {
+  getProjectsByAccountId,
+  createProject,
+  updateProject,
+  deleteProject,
+  getProjectById
+} from '@/api';
+import { useStore } from '@/store';
+import { queryClient } from '@/lib/react-query';
+import { useContextAuth } from '@/hooks/useAuth';
 
 import { removeHTMLElementRef } from "@/utils/projects-functions";
-import { useStore } from '@/store';
-import { apiMicrocode } from '@/services/api-microcode';
-import { queryClient } from '@/services/queryClient';
 import { formattedDate } from '../utils/date-functions';
-import { useContextAuth } from '@/hooks/useAuth';
-import { toast } from 'react-toastify';
 
 export async function getProjects(personId) {
 
-  const { data: { projects } } = await apiMicrocode.get(`/projects/user/${personId}`);
+  const { projects } = await getProjectsByAccountId({ id: personId });
 
   const transformProjects = projects.map(project => {
     return {
@@ -38,7 +45,7 @@ export const useProject = () => {
     createFlow: store.createFlow,
   }), shallow);
 
-  const createProject = useMutation(
+  const create = useMutation(
     async (data) => {
 
       const newProject = {
@@ -48,8 +55,7 @@ export const useProject = () => {
         flows: []
       }
 
-      const { data: { project } } = await apiMicrocode.post(`/projects`, newProject);
-
+      const { project } = await createProject(newProject);
       return project;
     },
     {
@@ -60,12 +66,14 @@ export const useProject = () => {
     }
   )
 
-  const updateProject = useMutation(
+  const update = useMutation(
     async (data) => {
       const newProject = { ...data }
 
-      const { data: { project } } = await apiMicrocode.put(`/projects/${data.id}`, newProject);
-
+      const { project } = await updateProject({
+        projectId: data.id,
+        data: newProject
+      })
       return project;
     },
     {
@@ -76,7 +84,7 @@ export const useProject = () => {
     }
   );
 
-  const saveProject = async (data) => {
+  const save = async (data) => {
     let newProject = {
       ...data,
       devices: getDevices(),
@@ -121,15 +129,16 @@ export const useProject = () => {
       flows: transformFlows
     }
 
-    const response = await apiMicrocode.put(`/projects/${data.id}`, newProject);
-
-    return response.data;
+    const { project } = await updateProject({
+      projectId: data.id,
+      data: newProject
+    })
+    return project;
   };
 
-  const deleteProject = useMutation(
+  const remove = useMutation(
     async (projectId) => {
-      const { data: { project } } = await apiMicrocode.delete(`/projects/${projectId}`);
-
+      const { project } = await deleteProject({ projectId })
       return project;
     },
     {
@@ -141,8 +150,8 @@ export const useProject = () => {
     }
   );
 
-  const loadProject = async (projectId) => {
-    const { data: { project } } = await apiMicrocode.get(`/projects/${projectId}`);
+  const load = async (projectId) => {
+    const { project } = await getProjectById({ projectId });
 
     const deviceList = Object.values(project.devices).map(async (device) => {
       loadDevice({ ...device });
@@ -189,11 +198,11 @@ export const useProject = () => {
   };
 
   return {
-    createProject,
-    updateProject,
-    deleteProject,
-    loadProject,
-    saveProject
+    createProject: create,
+    updateProject: update,
+    deleteProject: remove,
+    loadProject: load,
+    saveProject: save
   }
 }
 

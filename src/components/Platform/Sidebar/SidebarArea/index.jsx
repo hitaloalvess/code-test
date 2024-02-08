@@ -8,7 +8,7 @@ import ButtonConnect from '../ButtonConnect';
 import * as SA from './styles.module.css';
 const SidebarArea = () => {
 
-  const { activeTrashArea, devices, currentArea, handleStatusHardwareDevice } = useSidebar();
+  const { activeTrashArea, devices, currentArea } = useSidebar();
 
   return (
     <div className={SA.container}>
@@ -24,7 +24,6 @@ const SidebarArea = () => {
               <MenuDevicePhysical
                 key={device.id}
                 device={device}
-                onUpdateStatus={handleStatusHardwareDevice}
               />
           ))
         }
