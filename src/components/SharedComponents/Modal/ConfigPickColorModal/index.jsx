@@ -2,8 +2,8 @@ import { useRef } from "react";
 import P from 'prop-types';
 
 import {
-  configSliderContent,
-  configSliderTitle,
+  configContent,
+  configTitle,
   inputsArea,
   inputArea,
   labelInput
@@ -32,11 +32,11 @@ const ConfigPickColorModal = ({ closeModal, contentData }) => {
 
 
     <section
-      className={configSliderContent}
+      className={configContent}
     >
       <header>
         <h1
-          className={configSliderTitle}
+          className={configTitle}
         >
           Pick Color
         </h1>

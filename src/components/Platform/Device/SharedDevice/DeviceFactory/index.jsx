@@ -32,6 +32,7 @@ import Loop from '../../Event/Loop';
 import PassValue from '../../Event/PassValue';
 
 import Stickynote from '../../Tool/Stickynote';
+import Variable from '../../Tool/Variable';
 
 const DeviceFactory = ({
   data, dragRef, onSaveData
@@ -65,7 +66,8 @@ const DeviceFactory = ({
     timer: Timer,
     loop: Loop,
     stickynote: Stickynote,
-    passValue: PassValue
+    passValue: PassValue,
+    variable: Variable
   }
 
   const CurrentDevice = devices[data.name];

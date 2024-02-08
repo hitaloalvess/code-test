@@ -35,6 +35,7 @@ import devicePassValue from '@/assets/images/devices/event/passValue.svg';
 
 //tool
 import deviceStickynote from '@/assets/images/devices/tool/stickyNote.svg'
+import deviceVariable from '@/assets/images/devices/event/loop.svg'
 
 export const mockDevices = {
   entry: [
@@ -859,6 +860,38 @@ export const mockDevices = {
       },
       posX: 0,
       posY: 0
+    },
+    {
+      id: 52,
+      imgSrc: deviceVariable,
+      name: 'variable',
+      label: 'Variável',
+      type: 'virtual',
+      category: 'tool',
+      value: {
+        send: {
+          current: 0
+        },
+        groupName: null,
+      },
+      posX: 0,
+      posY: 0,
+      connectors: {
+        receive: {
+          id: null,
+          name: 'receive',
+          type: 'entry',
+          x: 0,
+          y: 0
+        },
+        send: {
+          id: null,
+          name: 'send',
+          type: 'exit',
+          x: 0,
+          y: 0
+        },
+      }
     }
   ]
 };
@@ -986,6 +1019,11 @@ export const deviceConnectorRules = {
     connectsTo: ['all'],
   },
   sticknote: {
+    acceptedConnections: ['oneEntry', 'allExit'],
+    connectsFrom: ['all'],
+    connectsTo: ['all'],
+  },
+  variable: {
     acceptedConnections: ['oneEntry', 'allExit'],
     connectsFrom: ['all'],
     connectsTo: ['all'],
