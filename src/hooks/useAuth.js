@@ -2,7 +2,7 @@
 import { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { getProfile, signIn } from '@/api';
+import { getProfile, signIn } from '@/api/http';
 import { apiAuth } from '@/lib/axios';
 import { toast } from "react-toastify";
 import { AuthContext } from '@/contexts/AuthContext';

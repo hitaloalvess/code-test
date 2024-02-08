@@ -1,6 +1,6 @@
 import { Envelope, Lock } from '@phosphor-icons/react';
 
-import { deleteAccount } from '@/api'
+import { deleteAccount } from '@/api/http'
 import { useContextAuth } from '@/hooks/useAuth';
 import { useModal } from '@/hooks/useModal';
 import { Form } from '@/components/SharedComponents/Form';

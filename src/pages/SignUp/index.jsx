@@ -16,7 +16,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'react-toastify';
 
 import { isValidCPF, isValidPhoneNumber, removeSpaces, removeSpecialCharacters } from '@/utils/form-validation-functions';
-import { createAccount } from '@/api';
+import { createAccount } from '@/api/http';
 import LogoMicrodigo from '@/assets/images/logo-microdigo.svg';
 import Banner from '@/components/SharedComponents/Banner';
 import ButtonAcceptsTerms from '@/components/SignUp/ButtonAcceptsTerms';

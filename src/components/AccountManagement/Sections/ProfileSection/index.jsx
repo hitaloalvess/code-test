@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 import { useForm } from 'react-hook-form';
 import { Cake, Flag, PhoneCall, User } from '@phosphor-icons/react';
 
-import { updateAccount } from '@/api';
+import { updateAccount } from '@/api/http';
 import { useContextAuth } from '@/hooks/useAuth';
 import { isValidPhoneNumber, removeSpaces, removeSpecialCharacters } from '@/utils/form-validation-functions';
 import { Form } from '@/components/SharedComponents/Form';

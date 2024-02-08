@@ -8,7 +8,7 @@ import {
   updateProject,
   deleteProject,
   getProjectById
-} from '@/api';
+} from '@/api/http';
 import { useStore } from '@/store';
 import { queryClient } from '@/lib/react-query';
 import { useContextAuth } from '@/hooks/useAuth';
