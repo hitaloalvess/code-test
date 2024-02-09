@@ -1,6 +1,7 @@
 import { PlusCircle } from '@phosphor-icons/react';
 
-import { useHardwareCommunication, useContextAuth, useModal, useSidebar } from '@/hooks'
+import { createHardwareConnection } from '@/api/http';
+import { useContextAuth, useModal, useSidebar } from '@/hooks'
 
 import * as BC from './styles.module.css';
 
@@ -8,7 +9,6 @@ const ButtonConnect = () => {
 
   const { enableModal, disableModal } = useModal();
   const { person } = useContextAuth();
-  const { connectHardware } = useHardwareCommunication();
   const { handleCreatePhysicalDevice } = useSidebar();
 
   const handleOpenModal = () => {
@@ -17,12 +17,10 @@ const ButtonConnect = () => {
       title: 'Conectar dispositivo',
       subtitle: 'Insira as informações do dispositivo que deseja conectar',
       handleConfirm: async ({ mac }) => {
-        const { device } = await connectHardware({ mac, userId: person.id });
+        const { hardware: { config } } = await createHardwareConnection({ mac, userId: person.id });
+        handleCreatePhysicalDevice({ mac: config.mac, type: config.type });
 
         disableModal();
-
-        const { config } = device;
-        handleCreatePhysicalDevice({ mac: config.mac, type: config.type });
       }
     })
   }

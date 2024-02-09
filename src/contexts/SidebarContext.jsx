@@ -2,12 +2,13 @@ import P from 'prop-types';
 import { createContext, useState, useRef } from "react";
 import { useDrop } from 'react-dnd';
 import { shallow } from 'zustand/shallow';
+import { isMobile } from 'react-device-detect';
 
 import { mockDevices } from '@/data/devices.js';
+import { getHardwareInfoByType } from '@/api/http';
 import { useStore } from '@/store';
 import { useModal } from '@/hooks/useModal';
-import { apiMicrocode } from '@/services/api-microcode';
-import { MicrocodeHttpRoutes } from '@/constants/hardware-communication';
+
 import { transformDeviceName } from '@/utils/devices-functions'
 
 
@@ -39,9 +40,7 @@ export const SidebarProvider = ({ children }) => {
 
   const handleCreatePhysicalDevice = async ({ mac, type }) => {
 
-    const { data } = await apiMicrocode.get(MicrocodeHttpRoutes.HARDWARE_GET_INFO(type));
-    const { name, category }= data.hardware;
-
+    const { hardware: { name, category } } = await getHardwareInfoByType({ hardwareType: type });
     const deviceName = transformDeviceName(name, 'rm-space-firstLower');
     const device = devices[category].find(device => device.name === deviceName);
 
@@ -52,7 +51,11 @@ export const SidebarProvider = ({ children }) => {
       name: `physical${transformDeviceName(name, 'firstLetterUpper')}`,
       label: name,
       type: 'physical',
-      typeId: type
+      typeId: type,
+      inUse: false,
+      isDisabled: false,
+      isFirstUse: true,
+      canDrag: isMobile ? false : true
     }
 
     setDevices(prevDevices => {
@@ -62,26 +65,25 @@ export const SidebarProvider = ({ children }) => {
           ...prevDevices.hardware,
           {
             ...newPhysicalDevice,
-            inUse: false
           }
         ]
       }
     })
   }
 
-  const handleStatusHardwareDevice = ({ id, inUse }) => {
+  const handleChangeHardwareDevice = ({ device }) => {
     setDevices(prevDevices => {
 
-      const newHardwareDevices = prevDevices?.hardware.map(device => {
+      const newHardwareDevices = prevDevices?.hardware.map(prevDevice => {
 
-        if (device.id === id) {
+        if (prevDevice.id === device.id) {
           return {
-            ...device,
-            inUse
+            ...prevDevice,
+            ...device
           }
         }
 
-        return device;
+        return prevDevice;
       });
 
       return {
@@ -105,11 +107,16 @@ export const SidebarProvider = ({ children }) => {
           disableModal('confirmation');
 
           if (item.type === 'physical') {
-            handleStatusHardwareDevice({
-              id: item.mac,
-              inUse: false
+            handleChangeHardwareDevice({
+              device: {
+                id: item.mac,
+                inUse: false,
+                isDisabled: true,
+                canDrag: false
+              }
             })
 
+            //Todo: enviar mensagem ao backend para desvincular o usuário do dispositivo
           }
         }
       })
@@ -127,7 +134,7 @@ export const SidebarProvider = ({ children }) => {
       drop,
       attachRef,
       handleSelectArea,
-      handleStatusHardwareDevice,
+      handleChangeHardwareDevice,
       handleCreatePhysicalDevice
     }}>
       {children}

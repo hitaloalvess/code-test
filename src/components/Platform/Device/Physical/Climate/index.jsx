@@ -1,11 +1,10 @@
 import { memo, useState, useEffect, useMemo, useRef } from 'react';
 import P from 'prop-types';
-import { shallow } from 'zustand/shallow';
 import { Thermometer, Drop } from '@phosphor-icons/react';
 
-import { useAuth } from '@/hooks/useAuth';
-import { socket } from '@/lib/websocket';
-import { useStore } from '@/store';
+import { socketEvents } from '@/constants';
+import { useContextAuth } from '@/hooks';
+import { updateHardwareEvents, eventSubscribe, eventUnsubscribe } from '@/api/socket/hardware';
 import { formulasForTransformation, transformHumidityValue } from '@/utils/devices-functions';
 
 import ActionButtons from '@/components/Platform/Device/SharedDevice/ActionButtons';
@@ -18,19 +17,9 @@ const MAX_HUMIDITY = 1023;
 const PhysicalClimate = memo(function Climate({
   data, dragRef, onSaveData
 }) {
-  const isFirstRender = useRef(true);
-  const { user } = useAuth();
   const { id, imgSrc, name, posX, posY, mac } = data;
-
-  const {
-    executeFlow,
-    updateDeviceValueInFlow
-  } = useStore(store => ({
-    executeFlow: store.executeFlow,
-    updateDeviceValue: store.updateDeviceValue,
-    updateDeviceValueInFlow: store.updateDeviceValueInFlow
-  }), shallow);
-
+  const isFirstRender = useRef(true);
+  const { person } = useContextAuth();
   const [scaleType, setScaleType] = useState('celsius');
 
   const handleSettingUpdate = (newScaleType) => {
@@ -41,48 +30,31 @@ const PhysicalClimate = memo(function Climate({
     return formulasForTransformation[scaleType];
   }, [scaleType]);
 
+  const handleReceiveTelemetry = () => {
+    console.log('Telemetria recebida')
+  }
 
   useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
 
-    // socket.emit('sensor/update/activation', {
-    //   mac, cpf: user.cpf, active: true
-    // });
+      return;
+    }
 
-    // socket.on(`${user.cpf}/sensor/${typeId}/${mac}`, (data) => {
-    //   console.log({ data });
-    // })
+    eventSubscribe(socketEvents.TELEMETRY(mac, person.id), handleReceiveTelemetry);
 
     return () => {
-      // socket.emit('sensor/update/activation', {
-      //   mac, cpf: user.cpf, active: false
-      // })
+      updateHardwareEvents({
+        mac,
+        userId: person.id,
+        events : {
+          dashboard: false
+        }
+      })
+
+      eventUnsubscribe(socketEvents.TELEMETRY(mac, person.id));
     }
   }, []);
-
-  useEffect(() => {
-    if (isFirstRender.current) {
-      isFirstRender.current = false;
-
-      return;
-    }
-
-    updateDeviceValueInFlow({ connectorId: data.connectors.temperature.id, newValue: data.value.temperature });
-
-    executeFlow({ connectorId: data.connectors.temperature.id });
-
-  }, [data.value.temperature.current]);
-
-  useEffect(() => {
-    if (isFirstRender.current) {
-      isFirstRender.current = false;
-
-      return;
-    }
-
-    updateDeviceValueInFlow({ connectorId: data.connectors.humidity.id, newValue: data.value.humidity });
-
-    executeFlow({ connectorId: data.connectors.humidity.id });
-  }, [data.value.humidity.current]);
 
   return (
 

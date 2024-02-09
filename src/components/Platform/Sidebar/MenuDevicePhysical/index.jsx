@@ -1,28 +1,27 @@
 /* eslint-disable no-unused-vars */
-
 import { useEffect, useRef, useState } from 'react';
 import { useDrag } from 'react-dnd';
 import P from 'prop-types';
-import { isMobile } from 'react-device-detect';
+import { Repeat, TrashSimple } from '@phosphor-icons/react'
 
-// import { socket } from '@/services/socket';
-// import { useContextAuth } from '@/hooks';
+import { useSidebar, useContextAuth } from '@/hooks';
+
+import { disconnectHardware, updateHardwareEvents } from '@/api/socket/hardware';
 
 import * as MDP from './styles.module.css';
 
 const PRESSED_BREAK = 0.09; //90 ms
 const TIMEOUT_DISABLED = 1000 * 60; //1min
 
-const MenuDevicePhysical = ({ device, onUpdateStatus }) => {
+const MenuDevicePhysical = ({ device }) => {
 
   const intervalPressed = useRef(null);
   const timeoutRef = useRef(null);
-  // const { person } = useContextAuth();
-  const [currentState, setCurrentState] = useState({
-    isDisabled: false,
-    isFirstUse: true,
-    canDrag: isMobile ? false : true
-  });
+  const isFirstRender = useRef(true);
+
+  const { person } = useContextAuth();
+  const { handleChangeHardwareDevice } = useSidebar();
+
   const [refDevice, setRefDevice] = useState(null);
 
   const attachRef = (el) => {
@@ -32,10 +31,12 @@ const MenuDevicePhysical = ({ device, onUpdateStatus }) => {
 
   const handleTouchStart = () => {
     intervalPressed.current = setTimeout(() => {
-      setCurrentState(prevState => ({
-        ...prevState,
-        canDrag: !currentState.isDisabled ? true : false
-      }))
+      handleChangeHardwareDevice({
+        device: {
+          id: device.id,
+          canDrag: !device.isDisabled ? true : false
+        }
+      })
     }, PRESSED_BREAK * 1000);
   }
 
@@ -50,26 +51,22 @@ const MenuDevicePhysical = ({ device, onUpdateStatus }) => {
   }
 
   const handleDisabling = () => {
-    setCurrentState(prevState => ({
-      ...prevState,
-      isDisabled: true,
-      isFirstUse: false,
-      canDrag: false
-    }))
-
-    //ENVIAR MENSAGEM AO BACKEND PARA O SENSOR ENTRAR EM WATCHDOG
-
-    // socket.emit('sensor/update/activation', {
-    //   id: person.id,
-    //   mac: device.id,
-    //   active: false
-    // });
+    handleChangeHardwareDevice({
+      device: {
+        id: device.id,
+        isDisabled: true,
+        isFirstUse: false,
+        canDrag: false
+      }
+    })
   }
 
-  const handleMovementInMoutingPanel = () => {
-    let newState = { canDrag: false }
+  const handleDropOnMoutingPanel = ({ isValidDrop }) => {
+    if (!isValidDrop) return;
 
-    if(currentState.isFirstUse){
+    let newState = { canDrag: false, isFirstUse: device.isFirstUse }
+
+    if (device.isFirstUse) {
       newState = {
         ...newState,
         isFirstUse: false
@@ -79,15 +76,22 @@ const MenuDevicePhysical = ({ device, onUpdateStatus }) => {
       timeoutRef.current = null;
     }
 
-    setCurrentState(prevState => ({
-      ...prevState,
-      ...newState
-    }));
-
-    onUpdateStatus({
-      id: device.id,
-      inUse: true
+    handleChangeHardwareDevice({
+      device: {
+        id: device.id,
+        inUse: true,
+        ...newState
+      }
     });
+
+    updateHardwareEvents({
+      mac: device.mac,
+      userId: person.id,
+      events : {
+        dashboard: true,
+        isFirstUseInterval: newState.isFirstUse
+      }
+    })
 
   }
 
@@ -97,54 +101,68 @@ const MenuDevicePhysical = ({ device, onUpdateStatus }) => {
       ...device,
       draggedDevice: refDevice
     },
-    canDrag: () => currentState.canDrag,
-    end: () => handleMovementInMoutingPanel()
-  }), [ refDevice, device.inUse, currentState, timeoutRef.current]);
+    canDrag: () => device.canDrag,
+    end: (_, monitor) => {
+      handleDropOnMoutingPanel({
+        isValidDrop: monitor.didDrop()
+      })
+    }
+  }), [refDevice, device.inUse, device, timeoutRef.current]);
 
   useEffect(() => {
+    if(isFirstRender.current){
+      isFirstRender.current = false;
+
+      return;
+    }
+
     timeoutRef.current = setTimeout(handleDisabling, TIMEOUT_DISABLED);
 
+    const handleBeforeUnload = () => disconnectHardware({ mac: device.mac, userId: person.id })
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
     return () => {
+      disconnectHardware({ mac: device.mac, userId: person.id });
+
       clearTimeout(timeoutRef.current);
+      window.removeEventListener('beforeunload', handleBeforeUnload);
     }
   }, []);
 
-  useEffect(() => {
-
-    if(!currentState.isFirstUse && !device.inUse){
-      setCurrentState(prevState => ({
-        ...prevState,
-        isDisabled: true,
-        canDrag: false
-      }))
-    }
-  }, [device.inUse]);
-
   return (
-    <li
-      className={MDP.deviceItemContainer}
-      data-disabled={currentState.isDisabled}
-      data-inuse={device.inUse}
-      title={currentState.isDisabled ?
-        'Pressione o botão de restart do hardware para ativar o dispositivo na tela':
-        `Dispositivo físico ${device.label}`
-      }
-    >
-      <div
-        className={MDP.deviceItemContent}
-        ref={attachRef}
-        onTouchStart={handleTouchStart}
-        onTouchMove={handleTouchMove}
-        onTouchEnd={handleTouchEnd}
+    <>
+      <li
+        className={MDP.deviceItemContainer}
+
+        data-inuse={device.inUse}
+        title={device.isDisabled ?
+          'Pressione o botão de restart do hardware para ativar o dispositivo na tela' :
+          `Dispositivo físico ${device.label}`
+        }
       >
-        <img
-          src={device.imgSrc}
-          alt={device.name}
-          loading='lazy'
-        />
-      </div>
-      <p className={MDP.deviceItemLabel}>{device.label}</p>
-    </li>
+        <div
+          className={MDP.deviceItemContent}
+          ref={attachRef}
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
+          data-disabled={device.isDisabled}
+        >
+          <img
+            src={device.imgSrc}
+            alt={device.name}
+            loading='lazy'
+          />
+        </div>
+        <p className={MDP.deviceItemLabel}>{device.label}</p>
+
+        <div>
+          {device.isDisabled && <button><Repeat /></button>}
+          <button><TrashSimple /></button>
+        </div>
+
+      </li>
+    </>
   );
 };
 
@@ -154,14 +172,17 @@ MenuDevicePhysical.propTypes = {
       P.string,
       P.number
     ]).isRequired,
+    mac: P.string.isRequired,
     name: P.string.isRequired,
     label: P.string.isRequired,
     imgSrc: P.string.isRequired,
     type: P.string.isRequired,
     category: P.string.isRequired,
-    inUse: P.bool.isRequired
+    inUse: P.bool.isRequired,
+    isDisabled: P.bool.isRequired,
+    isFirstUse: P.bool.isRequired,
+    canDrag: P.bool.isRequired
   }),
-  onUpdateStatus: P.func.isRequired
 }
 
 export default MenuDevicePhysical;
