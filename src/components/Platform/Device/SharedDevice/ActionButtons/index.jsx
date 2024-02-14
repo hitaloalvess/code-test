@@ -34,7 +34,7 @@ const ActionButtons = memo(function ActionButtons
   return (
     <div
       className={
-        `${AB.container} ${currentOrientation} ${ AB.active }`
+        `${AB.container} ${currentOrientation} ${AB.active}`
       }
     >
       {
@@ -46,6 +46,11 @@ const ActionButtons = memo(function ActionButtons
               subtitle: actionDelete.subtitle,
               handleConfirm: () => {
                 deleteDeviceConnections({ deviceId: actionDelete.data.id });
+
+                if (actionDelete.onDelete) {
+                  actionDelete.onDelete();
+                }
+
                 disableModal('confirmation');
               }
             })}
@@ -82,6 +87,7 @@ ActionButtons.propTypes = {
   actionDelete: P.shape({
     title: P.string.isRequired,
     subtitle: P.string.isRequired,
+    onDelete: P.func,
     data: P.shape({
       id: P.string.isRequired
     }).isRequired

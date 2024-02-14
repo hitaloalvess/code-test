@@ -71,7 +71,20 @@ export const SidebarProvider = ({ children }) => {
     })
   }
 
-  const handleChangeHardwareDevice = ({ device }) => {
+  const handleDeletePhysicalDevice = (physicalDeviceId) => {
+    setDevices(prevDevices => {
+      const newHardwareDevices = prevDevices?.hardware.filter(prevDevice => {
+        return prevDevice.id !== physicalDeviceId
+      })
+
+      return {
+        ...prevDevices,
+        hardware: newHardwareDevices
+      }
+    })
+  }
+
+  const handlePhysicalDeviceInSidebar = ({ device }) => {
     setDevices(prevDevices => {
 
       const newHardwareDevices = prevDevices?.hardware.map(prevDevice => {
@@ -107,7 +120,7 @@ export const SidebarProvider = ({ children }) => {
           disableModal('confirmation');
 
           if (item.type === 'physical') {
-            handleChangeHardwareDevice({
+            handlePhysicalDeviceInSidebar({
               device: {
                 id: item.mac,
                 inUse: false,
@@ -134,8 +147,9 @@ export const SidebarProvider = ({ children }) => {
       drop,
       attachRef,
       handleSelectArea,
-      handleChangeHardwareDevice,
-      handleCreatePhysicalDevice
+      handlePhysicalDeviceInSidebar,
+      handleCreatePhysicalDevice,
+      handleDeletePhysicalDevice
     }}>
       {children}
     </SidebarContext.Provider>

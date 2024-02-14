@@ -8,7 +8,7 @@
   text-align: center;
 }
 
-.deviceItemContainer[data-inuse="true"]{
+.deviceItemContainer[data-inuse="true"] {
   display: none;
 }
 
@@ -24,7 +24,7 @@
   height: 100%;
 }
 
-.deviceItemContent[data-disabled="true"]{
+.deviceItemContent[data-disabled="true"] {
   opacity: 0.5;
 }
 
@@ -34,6 +34,15 @@
 
 .deviceItemLabel {
   font-size: 12px;
+}
+
+/* Actions */
+.deviceItemActionsContainer {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin: 4px 0;
 }
 
 /* Tablet */

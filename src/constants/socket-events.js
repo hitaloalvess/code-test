@@ -1,4 +1,4 @@
 
 export const socketEvents = {
-  TELEMETRY: (mac, userId) => `hardware/update/telemetry/${mac}/${userId}`,
+  TELEMETRY: (mac) => `hardware/update/telemetry/${mac}`,
 }

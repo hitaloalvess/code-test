@@ -1,7 +1,7 @@
 import { apiMicrocode } from '@/lib/axios';
 
 export async function createHardwareConnection({ mac, userId }) {
-  const response = await apiMicrocode.post('hardwares/connect', {
+  const response = await apiMicrocode.post('hardware/connect', {
     mac, userId
   });
 

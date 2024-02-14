@@ -1,0 +1,43 @@
+.btnMenuDevicePhysicalContainer {
+  width: 28px;
+  height: 28px;
+  border-radius: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  cursor: pointer;
+  background-color: var(--white);
+  transition: background-color 0.3s ease-in-out;
+}
+
+.btnMenuDevicePhysicalContainer svg {
+  width: 16px;
+  height: 16px;
+  transition: color 0.3s ease-in-out;
+}
+
+.btnMenuDevicePhysicalContainer:hover {
+  background-color: var(--blue);
+}
+
+
+.btnMenuDevicePhysicalContainer[data-btn-type="delete"]:hover {
+  background-color: var(--red);
+}
+
+.btnMenuDevicePhysicalContainer:hover svg {
+  color: var(--white);
+}
+
+@media (((max-height: 481px) and (orientation: landscape)) or ((max-width: 481px) and (orientation: portrait))) {
+  .btnMenuDevicePhysicalContainer {
+    width: 24px;
+    height: 24px;
+  }
+
+  .btnMenuDevicePhysicalContainer svg {
+    width: 12px;
+    height: 12px;
+  }
+}

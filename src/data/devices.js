@@ -1000,4 +1000,8 @@ export const deviceConnectorRules = {
     connectsFrom: ['all'],
     connectsTo: ['all'],
   },
+  physicalClimate: {
+    acceptedConnections: ['allExit'],
+    connectsTo: ['all']
+  },
 }

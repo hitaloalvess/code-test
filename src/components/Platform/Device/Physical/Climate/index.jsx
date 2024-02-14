@@ -1,7 +1,9 @@
 import { memo, useState, useEffect, useMemo, useRef } from 'react';
 import P from 'prop-types';
 import { Thermometer, Drop } from '@phosphor-icons/react';
+import { shallow } from 'zustand/shallow';
 
+import { useStore } from '@/store';
 import { socketEvents } from '@/constants';
 import { useContextAuth } from '@/hooks';
 import { updateHardwareEvents, eventSubscribe, eventUnsubscribe } from '@/api/socket/hardware';
@@ -12,8 +14,9 @@ import Connectors from '@/components/Platform/Device/SharedDevice/Connectors';
 import DeviceBody from '../../SharedDevice/DeviceBody';
 
 import * as PD from './styles.module.css';
+import PhysicalParamsDisplay from '../../SharedDevice/PhysicalParamsDisplay';
 
-const MAX_HUMIDITY = 1023;
+const MAX_HUMIDITY = 90;
 const PhysicalClimate = memo(function Climate({
   data, dragRef, onSaveData
 }) {
@@ -21,6 +24,16 @@ const PhysicalClimate = memo(function Climate({
   const isFirstRender = useRef(true);
   const { person } = useContextAuth();
   const [scaleType, setScaleType] = useState('celsius');
+
+  const {
+    executeFlow,
+    updateDeviceValue,
+    updateDeviceValueInFlow
+  } = useStore(store => ({
+    executeFlow: store.executeFlow,
+    updateDeviceValue: store.updateDeviceValue,
+    updateDeviceValueInFlow: store.updateDeviceValueInFlow
+  }), shallow);
 
   const handleSettingUpdate = (newScaleType) => {
     setScaleType(newScaleType);
@@ -30,8 +43,23 @@ const PhysicalClimate = memo(function Climate({
     return formulasForTransformation[scaleType];
   }, [scaleType]);
 
-  const handleReceiveTelemetry = () => {
-    console.log('Telemetria recebida')
+  const handleReceiveTelemetry = ({ telemetry }) => {
+    const { humidity, temperature } = telemetry;
+
+    const newValue = {
+      temperature: {
+        ...data.value.temperature,
+        current: temperature
+      },
+      humidity: {
+        ...data.value.humidity,
+        current: humidity,
+        max: MAX_HUMIDITY
+      }
+    };
+
+    onSaveData('value', newValue)
+    updateDeviceValue(id, { value: newValue })
   }
 
   useEffect(() => {
@@ -41,13 +69,13 @@ const PhysicalClimate = memo(function Climate({
       return;
     }
 
-    eventSubscribe(socketEvents.TELEMETRY(mac, person.id), handleReceiveTelemetry);
+    eventSubscribe(socketEvents.TELEMETRY(mac), handleReceiveTelemetry);
 
     return () => {
       updateHardwareEvents({
         mac,
         userId: person.id,
-        events : {
+        events: {
           dashboard: false
         }
       })
@@ -55,6 +83,21 @@ const PhysicalClimate = memo(function Climate({
       eventUnsubscribe(socketEvents.TELEMETRY(mac, person.id));
     }
   }, []);
+
+  useEffect(() => {
+
+    updateDeviceValueInFlow({ connectorId: data.connectors.temperature.id, newValue: data.value.temperature });
+
+    executeFlow({ connectorId: data.connectors.temperature.id });
+
+  }, [data.value.temperature.current]);
+
+  useEffect(() => {
+
+    updateDeviceValueInFlow({ connectorId: data.connectors.humidity.id, newValue: data.value.humidity });
+
+    executeFlow({ connectorId: data.connectors.humidity.id });
+  }, [data.value.humidity.current]);
 
   return (
 
@@ -85,7 +128,6 @@ const PhysicalClimate = memo(function Climate({
         ref={dragRef}
       >
 
-
         <ActionButtons
           orientation='left'
           actionDelete={{
@@ -93,7 +135,8 @@ const PhysicalClimate = memo(function Climate({
             subtitle: 'Tem certeza que deseja excluir o componente?',
             data: {
               id
-            }
+            },
+            onDelete: data.enablePhysicalDeviceInSidebar
           }}
           actionConfig={{
             typeContent: 'config-climate',
@@ -104,6 +147,7 @@ const PhysicalClimate = memo(function Climate({
           }}
         />
 
+        <PhysicalParamsDisplay connectionState={true} />
 
       </DeviceBody>
 
