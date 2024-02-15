@@ -22,7 +22,16 @@ export const applyMask = (typeMask, value) => {
 
     phone: (value) => value.replace(/\D/g, '')
       .replace(/(\d{2})(\d)/, '($1) $2')
-      .replace(/(\d{4})(\d{4})$/, '$1-$2')
+      .replace(/(\d{4})(\d{4})$/, '$1-$2'),
+
+    mac: (value) => value.replace(/[^\da-fA-F]/gi, '')
+      .replace(/^([\da-fA-F]{2})([\da-fA-F])/, '$1:$2')
+      .replace(/([\da-fA-F]{2})([\da-fA-F])/, '$1:$2')
+      .replace(/([\da-fA-F]{2})([\da-fA-F])/, '$1:$2')
+      .replace(/([\da-fA-F]{2})([\da-fA-F])/, '$1:$2')
+      .replace(/([\da-fA-F]{2})([\da-fA-F])/, '$1:$2')
+      .slice(0, 17) //12 character limit included ":"
+      .toLowerCase()
   }
 
   const maskSeleted = masks[typeMask];
