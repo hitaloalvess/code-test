@@ -1,26 +1,26 @@
-import { z } from 'zod';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { toast } from 'react-toastify';
 import P from 'prop-types';
+import { useEffect, useState } from 'react';
+import { z } from 'zod';
+import { Lock } from '@phosphor-icons/react';
+import { useForm } from 'react-hook-form';
+import { toast } from 'react-toastify';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 import { Form } from '@/components/SharedComponents/Form';
 import { Input } from '@/components/SharedComponents/Input';
 import { SpinnerLoader } from '@/components/SharedComponents/SpinnerLoader';
 
 import * as UP from './styles.module.css';
-import { Lock } from '@phosphor-icons/react';
-import { useEffect, useState } from 'react';
 
-const updatePasswordSchema = z.object({
-  mac: z.string().min(12, { message: 'O endereço mac deve ter no mínimo 12 caracteres' })
+const connectPhysicalDeviceSchema = z.object({
+  mac: z.string().min(17, { message: 'Endereço mac inválido' })
     .refine((value) => {
-      const regex = /^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$/;
+      const regex = /^([0-9a-f]{2}[:-]){5}([0-9a-f]{2})$/i;
       return regex.test(value)
-    }, { message: 'Mac address inválido' }),
+    }, { message: 'Endereço mac inválido' }),
 })
 
-const ConnectDeviceModal = ({
+const ConnectPhysicalDeviceModal = ({
   contentData
 }) => {
   const { title, handleConfirm } = contentData;
@@ -30,18 +30,17 @@ const ConnectDeviceModal = ({
   const {
     handleSubmit,
     register,
+    setValue,
     formState: { errors },
   } = useForm({
-    resolver: zodResolver(updatePasswordSchema),
+    resolver: zodResolver(connectPhysicalDeviceSchema),
     shouldFocusError: false
   });
 
   const handleSubmitForm = async (formData) => {
 
     try {
-      const data = {
-        ...formData,
-      }
+      const data = { ...formData }
 
       setIsLoading(true);
       await handleConfirm(data);
@@ -53,6 +52,8 @@ const ConnectDeviceModal = ({
     }
 
   }
+
+  const handleChangeValue = (nameField, value) => setValue(nameField, value, { shouldValidate: true })
 
   useEffect(() => {
 
@@ -87,8 +88,9 @@ const ConnectDeviceModal = ({
               error={errors.mac}
             >
               <Input.Icon icon={<Lock />} />
-              <Input.TextType
-                placeholder={"Insira o endereço mac"}
+              <Input.TextMaskType
+                placeholder={"Digite o endereço mac address"}
+                maskChange={handleChangeValue}
                 {...register('mac')}
               />
             </Input.Root>
@@ -107,7 +109,7 @@ const ConnectDeviceModal = ({
   );
 };
 
-ConnectDeviceModal.propTypes = {
+ConnectPhysicalDeviceModal.propTypes = {
   closeModal: P.func.isRequired,
   contentData: P.shape({
     title: P.string,
@@ -116,4 +118,4 @@ ConnectDeviceModal.propTypes = {
   }).isRequired
 }
 
-export default ConnectDeviceModal;
+export default ConnectPhysicalDeviceModal;

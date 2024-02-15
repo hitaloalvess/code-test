@@ -20,7 +20,7 @@ import ConfigCounterModal from '@/components/SharedComponents/Modal/ConfigCounte
 import ConfigLoopModal from '@/components/SharedComponents/Modal/ConfigLoopModal';
 import ConfigStickyNoteModal from '@/components/SharedComponents/Modal/ConfigStickyNoteModal';
 import ConfigPassValueModal from '@/components/SharedComponents/Modal/ConfigPassValueModal';
-import ConnectDevice from '@/components/SharedComponents/Modal/ConnectDeviceModal';
+import ConnectPhysicalDeviceModal from '@/components/SharedComponents/Modal/ConnectPhysicalDeviceModal';
 export const ModalContext = createContext();
 
 const contents = {
@@ -42,7 +42,7 @@ const contents = {
   'config-loop': ConfigLoopModal,
   'config-stickyNote': ConfigStickyNoteModal,
   'config-passValue': ConfigPassValueModal,
-  'connect-device': ConnectDevice
+  'connect-physical-device': ConnectPhysicalDeviceModal
 }
 
 export const ModalProvider = ({ children }) => {

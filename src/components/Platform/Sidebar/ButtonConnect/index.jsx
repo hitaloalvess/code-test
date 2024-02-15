@@ -13,7 +13,7 @@ const ButtonConnect = () => {
 
   const handleOpenModal = () => {
     enableModal({
-      typeContent: 'connect-device',
+      typeContent: 'connect-physical-device',
       title: 'Conectar dispositivo',
       subtitle: 'Insira as informações do dispositivo que deseja conectar',
       handleConfirm: async ({ mac }) => {
