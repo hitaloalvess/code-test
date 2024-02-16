@@ -36,8 +36,6 @@
     align-items: center;
     gap: 32px;
   }
-
-
 }
 
 /* Mobile up to 320px*/
@@ -46,14 +44,18 @@
     border-radius: 0;
     border-top: 2px solid var(--yellow-800);
   }
+
+  .menuButtons ul {
+    gap: 18px;
+  }
 }
 
 /* Mobile up to 480px and orientation landscape*/
 @media (max-height: 481px) and (orientation: landscape) {
 
   .menuButtons {
+    padding: 12px 0;
     width: 48px;
-    /* height: 90%; */
     max-height: 300px;
     border-radius: 12px;
   }

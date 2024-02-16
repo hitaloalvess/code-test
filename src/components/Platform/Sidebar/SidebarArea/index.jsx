@@ -11,9 +11,12 @@ const SidebarArea = () => {
   const { activeTrashArea, devices, currentArea } = useSidebar();
 
   return (
-    <div className={SA.container}>
+    <div className={SA.deviceListContainer}>
 
-      <div className={SA.devicesList}>
+      <div
+        className={SA.devicesList}
+        data-selected-device-list-type={currentArea}
+      >
         <ul>{
           Object.values(devices[currentArea]).map((device) => (
             device.type === 'virtual' ?

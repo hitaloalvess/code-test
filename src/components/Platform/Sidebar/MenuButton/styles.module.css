@@ -23,20 +23,20 @@
 /* Tablet */
 @media (max-width: 769px) and (orientation: portrait) {
   .menuButton {
-    width: 44px;
+    width: 36px;
   }
 }
 
 /* Mobile up to 480px */
 @media (max-width: 481px) {
   .menuButton {
-    width: 36px;
+    width: 32px;
   }
 }
 
 /* Mobile up to 480px and orientation landscape*/
 @media (max-height: 481px) and (orientation: landscape) {
   .menuButton {
-    width: 32px;
+    width: 24px;
   }
 }

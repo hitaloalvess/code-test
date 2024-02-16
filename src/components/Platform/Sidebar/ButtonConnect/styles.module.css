@@ -1,4 +1,5 @@
 .btnConnectContainer {
+  max-width: 80px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -25,4 +26,15 @@
 .btnConnectContainer:hover,
 .btnConnectContainer:hover .btnIcon {
   color: var(--blue);
+}
+
+@media (max-width: 769px) {
+  .btnConnectContainer {
+    font-size: 12px;
+  }
+
+  .btnIcon {
+    width: 24px;
+    height: 24px;
+  }
 }
