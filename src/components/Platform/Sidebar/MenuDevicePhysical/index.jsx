@@ -4,8 +4,9 @@ import { useDrag } from 'react-dnd';
 import P from 'prop-types';
 import { Repeat, TrashSimple } from '@phosphor-icons/react'
 
-import { useSidebar, useContextAuth, useModal } from '@/hooks';
 import { disconnectHardware, updateHardwareEvents } from '@/api/socket/hardware';
+import { createHardwareConnection } from '@/api/http';
+import { useSidebar, useContextAuth, useModal } from '@/hooks';
 
 import ButtonMenuDevicePhysical from '../ButtonMenuDevicePhysical'
 
@@ -22,7 +23,10 @@ const MenuDevicePhysical = ({ device }) => {
 
   const { person } = useContextAuth();
   const { enableModal, disableModal } = useModal();
-  const { handlePhysicalDeviceInSidebar, handleDeletePhysicalDevice } = useSidebar();
+  const {
+    handleChangePhysicalDeviceInSidebar,
+    handleDeletePhysicalDevice,
+  } = useSidebar();
 
   const [refDevice, setRefDevice] = useState(null);
 
@@ -33,7 +37,7 @@ const MenuDevicePhysical = ({ device }) => {
 
   const handleTouchStart = () => {
     intervalPressed.current = setTimeout(() => {
-      handlePhysicalDeviceInSidebar({
+      handleChangePhysicalDeviceInSidebar({
         device: {
           id: device.id,
           canDrag: !device.isDisabled ? true : false
@@ -53,7 +57,7 @@ const MenuDevicePhysical = ({ device }) => {
   }
 
   const handleDisabling = () => {
-    handlePhysicalDeviceInSidebar({
+    handleChangePhysicalDeviceInSidebar({
       device: {
         id: device.id,
         isDisabled: true,
@@ -61,6 +65,8 @@ const MenuDevicePhysical = ({ device }) => {
         canDrag: false
       }
     })
+
+    disconnectHardware({ mac: device.mac, userId: person.id })
   }
 
   const handleDropOnMoutingPanel = ({ isValidDrop }) => {
@@ -78,7 +84,7 @@ const MenuDevicePhysical = ({ device }) => {
       timeoutRef.current = null;
     }
 
-    handlePhysicalDeviceInSidebar({
+    handleChangePhysicalDeviceInSidebar({
       device: {
         id: device.id,
         inUse: true,
@@ -97,18 +103,50 @@ const MenuDevicePhysical = ({ device }) => {
 
   }
 
+  const handleReconnection = () => {
+    enableModal({
+      typeContent: 'connect-physical-device',
+      title: 'Conectar dispositivo',
+      subtitle: 'Insira as informações do dispositivo que deseja conectar',
+      handleConfirm: async ({ mac }) => {
+        await createHardwareConnection({ mac, userId: person.id });
+        handleChangePhysicalDeviceInSidebar({
+          device: {
+            id: device.mac,
+            inUse: false,
+            isDisabled: false,
+            canDrag: true
+          }
+        })
+
+        disableModal();
+      }
+    })
+  }
+
+  const handleDelete = () => enableModal({
+    typeContent: 'confirmation',
+    title: 'Deletar conexão',
+    subtitle: 'Deseja mesmo deletar a conexão com o hardware?',
+    handleConfirm: () => {
+      handleDeletePhysicalDevice(device.id)
+      disableModal('confirmation');
+    }
+  })
+
   const [_, drag] = useDrag(() => ({
     type: 'menu-device',
     item: {
       ...device,
       draggedDevice: refDevice,
-      enablePhysicalDeviceInSidebar: () => handlePhysicalDeviceInSidebar({
+      enablePhysicalDeviceInSidebar: () => handleChangePhysicalDeviceInSidebar({
         device: {
           id: device.mac,
           inUse: false,
           isDisabled: true,
           canDrag: false
         }
+
       })
     },
     canDrag: () => device.canDrag,
@@ -132,7 +170,6 @@ const MenuDevicePhysical = ({ device }) => {
     window.addEventListener('beforeunload', handleBeforeUnload);
 
     return () => {
-      // disconnectHardware({ mac: device.mac, userId: person.id });
 
       clearTimeout(timeoutRef.current);
       window.removeEventListener('beforeunload', handleBeforeUnload);
@@ -143,7 +180,6 @@ const MenuDevicePhysical = ({ device }) => {
     <>
       <li
         className={MDP.deviceItemContainer}
-
         data-inuse={device.inUse}
         title={device.isDisabled ?
           'Pressione o botão de restart do hardware para ativar o dispositivo na tela' :
@@ -169,7 +205,7 @@ const MenuDevicePhysical = ({ device }) => {
         <div className={MDP.deviceItemActionsContainer}>
           {device.isDisabled &&
             <ButtonMenuDevicePhysical
-              handleClick={() => console.log('Cliquei para reconectar')}
+              handleClick={handleReconnection}
               title='Botão de reconexão com hardware'
               data-btn-type='reconnection'
             >
@@ -177,18 +213,7 @@ const MenuDevicePhysical = ({ device }) => {
             </ButtonMenuDevicePhysical>
           }
           <ButtonMenuDevicePhysical
-            handleClick={
-              () => enableModal({
-                typeContent: 'confirmation',
-                title: 'Deletar conexão',
-                subtitle: 'Deseja mesmo deletar a conexão com o hardware?',
-                handleConfirm: () => {
-                  disconnectHardware({ mac: device.mac, userId: person.id })
-                  handleDeletePhysicalDevice(device.id)
-                  disableModal('confirmation');
-                }
-              })
-            }
+            handleClick={handleDelete}
             title='Botão de deletar conexão com hardware'
             data-btn-type='delete'
           >

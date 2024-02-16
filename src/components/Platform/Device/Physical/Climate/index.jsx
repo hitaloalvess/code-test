@@ -6,7 +6,12 @@ import { shallow } from 'zustand/shallow';
 import { useStore } from '@/store';
 import { socketEvents } from '@/constants';
 import { useContextAuth } from '@/hooks';
-import { updateHardwareEvents, eventSubscribe, eventUnsubscribe } from '@/api/socket/hardware';
+import {
+  updateHardwareEvents,
+  eventSubscribe,
+  eventUnsubscribe,
+  disconnectHardware
+} from '@/api/socket/hardware';
 import { formulasForTransformation, transformHumidityValue } from '@/utils/devices-functions';
 
 import ActionButtons from '@/components/Platform/Device/SharedDevice/ActionButtons';
@@ -35,13 +40,13 @@ const PhysicalClimate = memo(function Climate({
     updateDeviceValueInFlow: store.updateDeviceValueInFlow
   }), shallow);
 
-  const handleSettingUpdate = (newScaleType) => {
-    setScaleType(newScaleType);
-  }
-
   const transformationFormula = useMemo(() => {
     return formulasForTransformation[scaleType];
   }, [scaleType]);
+
+  const handleSettingUpdate = (newScaleType) => {
+    setScaleType(newScaleType);
+  }
 
   const handleReceiveTelemetry = ({ telemetry }) => {
     const { airUmid, temp } = telemetry;
@@ -78,7 +83,9 @@ const PhysicalClimate = memo(function Climate({
         events: {
           dashboard: false
         }
-      })
+      });
+
+      disconnectHardware({ mac, userId: person.id })
 
       eventUnsubscribe(socketEvents.TELEMETRY(mac, person.id));
     }
