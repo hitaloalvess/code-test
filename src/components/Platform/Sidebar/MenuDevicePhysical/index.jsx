@@ -150,7 +150,8 @@ const MenuDevicePhysical = ({ device }) => {
           canDrag: false
         }
 
-      })
+      }),
+      isCreateFromSidebar: true
     },
     canDrag: () => device.canDrag,
     end: (_, monitor) => {

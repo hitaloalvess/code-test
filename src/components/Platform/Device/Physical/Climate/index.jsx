@@ -25,10 +25,12 @@ const MAX_AIRUMID = 90;
 const PhysicalClimate = memo(function Climate({
   data, dragRef, onSaveData
 }) {
-  const { id, imgSrc, name, posX, posY, mac } = data;
+
+  const { id, imgSrc, name, posX, posY, mac, isCreateFromSidebar } = data;
   const isFirstRender = useRef(true);
   const { person } = useContextAuth();
   const [scaleType, setScaleType] = useState('celsius');
+  const [isConnected] = useState(!!isCreateFromSidebar);
 
   const {
     executeFlow,
@@ -133,6 +135,7 @@ const PhysicalClimate = memo(function Climate({
         name={name}
         imgSrc={imgSrc}
         ref={dragRef}
+        data-disable={!isConnected}
       >
 
         <ActionButtons
@@ -154,7 +157,7 @@ const PhysicalClimate = memo(function Climate({
           }}
         />
 
-        <PhysicalParamsDisplay connectionState={true} />
+        <PhysicalParamsDisplay connectionState={isConnected} />
 
       </DeviceBody>
 
@@ -169,7 +172,7 @@ const PhysicalClimate = memo(function Climate({
               containerRef: data.containerRef
             },
             updateConn: { posX, posY },
-            handleChangeData: onSaveData
+            handleChangeData: onSaveData,
           },
           {
             data: data.connectors.airUmid,
@@ -178,7 +181,7 @@ const PhysicalClimate = memo(function Climate({
               containerRef: data.containerRef
             },
             updateConn: { posX, posY },
-            handleChangeData: onSaveData
+            handleChangeData: onSaveData,
           }
         ]}
       />
@@ -190,7 +193,7 @@ const PhysicalClimate = memo(function Climate({
 PhysicalClimate.propTypes = {
   data: P.object.isRequired,
   dragRef: P.func.isRequired,
-  onSaveData: P.func.isRequired
+  onSaveData: P.func.isRequired,
 }
 
 export default PhysicalClimate;
