@@ -50,7 +50,7 @@
 @media (max-width: 769px) and (orientation: portrait) {
 
   .deviceItemContainer {
-    width: 112px;
+    width: 124px;
     height: 80px;
   }
 
@@ -61,7 +61,8 @@
 
   .deviceItemActionsContainer {
     position: absolute;
-    right: -18px;
+    top: -8px;
+    right: -12px;
     flex-direction: column;
     max-width: 30px;
   }
@@ -71,6 +72,15 @@
   .deviceItemContainer {
     width: 80px;
     height: 80px;
+  }
+
+  .deviceItemActionsContainer {
+    position: absolute;
+    top: 0;
+    right: -28px;
+    flex-direction: column;
+    gap: 4px;
+    max-width: 30px;
   }
 }
 
