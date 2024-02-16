@@ -23,7 +23,7 @@ const connectPhysicalDeviceSchema = z.object({
 const ConnectPhysicalDeviceModal = ({
   contentData
 }) => {
-  const { title, handleConfirm } = contentData;
+  const { title, handleConfirm, data } = contentData;
   const [isLoading, setIsLoading] = useState(false);
 
 
@@ -90,6 +90,7 @@ const ConnectPhysicalDeviceModal = ({
               <Input.Icon icon={<Lock />} />
               <Input.TextMaskType
                 placeholder={"Digite o endereço mac address"}
+                defaultValue={data?.mac ?? ''}
                 maskChange={handleChangeValue}
                 {...register('mac')}
               />
@@ -114,7 +115,10 @@ ConnectPhysicalDeviceModal.propTypes = {
   contentData: P.shape({
     title: P.string,
     handleConfirm: P.func,
-    isLoading: P.bool
+    isLoading: P.bool,
+    data: P.shape({
+      mac: P.string
+    })
   }).isRequired
 }
 

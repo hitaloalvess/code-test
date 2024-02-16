@@ -108,6 +108,9 @@ const MenuDevicePhysical = ({ device }) => {
       typeContent: 'connect-physical-device',
       title: 'Conectar dispositivo',
       subtitle: 'Insira as informações do dispositivo que deseja conectar',
+      data: {
+        mac: device.mac
+      },
       handleConfirm: async ({ mac }) => {
         await createHardwareConnection({ mac, userId: person.id });
         handleChangePhysicalDeviceInSidebar({
@@ -119,7 +122,7 @@ const MenuDevicePhysical = ({ device }) => {
           }
         })
 
-        disableModal();
+        disableModal('connect-physical-device');
       }
     })
   }
@@ -200,7 +203,7 @@ const MenuDevicePhysical = ({ device }) => {
             loading='lazy'
           />
         </div>
-        <p className={MDP.deviceItemLabel}>{device.label}</p>
+        <p className={MDP.deviceItemLabel}>{device.mac}</p>
 
         <div className={MDP.deviceItemActionsContainer}>
           {device.isDisabled &&
