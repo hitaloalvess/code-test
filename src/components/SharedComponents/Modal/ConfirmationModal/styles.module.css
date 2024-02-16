@@ -21,13 +21,13 @@
 .confirmationModalHeader svg {
   width: 100px;
   height: 100px;
-  color: var(--yellow);
+  color: var(--red);
 }
 
 .confirmationModalTitle {
   font-size: 32px;
   text-align: center;
-  color: var(--yellow);
+  color: var(--red);
 }
 
 .confirmationModalMsg {
@@ -46,10 +46,21 @@
   .confirmationModalContent {
     padding: 24px 32px;
     gap: 32px;
-    max-width: 320px;
+    max-width: 280px;
+  }
+
+  .confirmationModalTitle {
+    font-size: 24px;
+  }
+
+  .confirmationModalMsg {
+    font-size: 12px;
   }
 
   .confirmModalActions {
+    width: 100%;
+    flex-direction: column;
     gap: 12px;
   }
+
 }
