@@ -16,7 +16,7 @@ import DeviceBody from '../../SharedDevice/DeviceBody';
 import * as PD from './styles.module.css';
 import PhysicalParamsDisplay from '../../SharedDevice/PhysicalParamsDisplay';
 
-const MAX_HUMIDITY = 90;
+const MAX_AIRUMID = 90;
 const PhysicalClimate = memo(function Climate({
   data, dragRef, onSaveData
 }) {
@@ -44,17 +44,17 @@ const PhysicalClimate = memo(function Climate({
   }, [scaleType]);
 
   const handleReceiveTelemetry = ({ telemetry }) => {
-    const { humidity, temperature } = telemetry;
+    const { airUmid, temp } = telemetry;
 
     const newValue = {
-      temperature: {
-        ...data.value.temperature,
-        current: temperature
+      temp: {
+        ...data.value.temp,
+        current: temp.toFixed(2)
       },
-      humidity: {
-        ...data.value.humidity,
-        current: humidity,
-        max: MAX_HUMIDITY
+      airUmid: {
+        ...data.value.airUmid,
+        current: airUmid,
+        max: MAX_AIRUMID
       }
     };
 
@@ -86,18 +86,18 @@ const PhysicalClimate = memo(function Climate({
 
   useEffect(() => {
 
-    updateDeviceValueInFlow({ connectorId: data.connectors.temperature.id, newValue: data.value.temperature });
+    updateDeviceValueInFlow({ connectorId: data.connectors.temp.id, newValue: data.value.temp });
 
-    executeFlow({ connectorId: data.connectors.temperature.id });
+    executeFlow({ connectorId: data.connectors.temp.id });
 
-  }, [data.value.temperature.current]);
+  }, [data.value.temp.current]);
 
   useEffect(() => {
 
-    updateDeviceValueInFlow({ connectorId: data.connectors.humidity.id, newValue: data.value.humidity });
+    updateDeviceValueInFlow({ connectorId: data.connectors.airUmid.id, newValue: data.value.airUmid });
 
-    executeFlow({ connectorId: data.connectors.humidity.id });
-  }, [data.value.humidity.current]);
+    executeFlow({ connectorId: data.connectors.airUmid.id });
+  }, [data.value.airUmid.current]);
 
   return (
 
@@ -106,7 +106,7 @@ const PhysicalClimate = memo(function Climate({
         <p
           className={PD.showValue}
         >
-          {transformationFormula(data.value.temperature.current)}
+          {transformationFormula(data.value.temp.current)}
 
           <Thermometer className={PD.thermometerIcon} />
         </p>
@@ -115,7 +115,7 @@ const PhysicalClimate = memo(function Climate({
         <p
           className={PD.showValue}
         >
-          {transformHumidityValue(data.value.humidity.current, MAX_HUMIDITY)}
+          {transformHumidityValue(data.value.airUmid.current, MAX_AIRUMID)}
 
           <Drop className={PD.dropIcon} />
         </p>
@@ -156,7 +156,7 @@ const PhysicalClimate = memo(function Climate({
         type='exits'
         exitConnectors={[
           {
-            data: data.connectors.temperature,
+            data: data.connectors.temp,
             device: {
               id,
               containerRef: data.containerRef
@@ -165,7 +165,7 @@ const PhysicalClimate = memo(function Climate({
             handleChangeData: onSaveData
           },
           {
-            data: data.connectors.humidity,
+            data: data.connectors.airUmid,
             device: {
               id,
               containerRef: data.containerRef

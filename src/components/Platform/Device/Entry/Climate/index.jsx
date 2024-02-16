@@ -18,10 +18,10 @@ import {
   inputContainerClimate
 } from './styles.module.css';
 
-const MAX_TEMPERATURE = 50;
-const MIN_TEMPERATURE = -50;
-const MAX_HUMIDITY = 1023;
-const MIN_HUMIDITY = 0;
+const MAX_TEMP = 50;
+const MIN_TEMP = -50;
+const MAX_AIRUMID = 1023;
+const MIN_AIRUMID = 0;
 
 const Climate = memo(function Climate({
   data, dragRef, onSaveData
@@ -69,18 +69,18 @@ const Climate = memo(function Climate({
 
   useEffect(() => {
 
-    updateDeviceValueInFlow({ connectorId: data.connectors.temperature.id, newValue: data.value.temperature });
+    updateDeviceValueInFlow({ connectorId: data.connectors.temp.id, newValue: data.value.temp });
 
-    executeFlow({ connectorId: data.connectors.temperature.id });
+    executeFlow({ connectorId: data.connectors.temp.id });
 
-  }, [data.value.temperature.current]);
+  }, [data.value.temp.current]);
 
   useEffect(() => {
 
-    updateDeviceValueInFlow({ connectorId: data.connectors.humidity.id, newValue: data.value.humidity });
+    updateDeviceValueInFlow({ connectorId: data.connectors.airUmid.id, newValue: data.value.airUmid });
 
-    executeFlow({ connectorId: data.connectors.humidity.id });
-  }, [data.value.humidity.current]);
+    executeFlow({ connectorId: data.connectors.airUmid.id });
+  }, [data.value.airUmid.current]);
 
   return (
 
@@ -90,12 +90,12 @@ const Climate = memo(function Climate({
         inputs={[
           {
             data: {
-              minValue: MIN_TEMPERATURE,
-              maxValue: MAX_TEMPERATURE,
+              minValue: MIN_TEMP,
+              maxValue: MAX_TEMP,
               step: 0.1,
-              defaultValue: data.value.temperature.current,
-              onInput: (event) => handleOnInput(event, 'temperature'),
-              onTransformValue: () => transformationFormula(data.value.temperature.current)
+              defaultValue: data.value.temp.current,
+              onInput: (event) => handleOnInput(event, 'temp'),
+              onTransformValue: () => transformationFormula(data.value.temp.current)
             },
             className: {
               container: [inputContainerClimate],
@@ -105,12 +105,12 @@ const Climate = memo(function Climate({
           },
           {
             data: {
-              minValue: MIN_HUMIDITY,
-              maxValue: MAX_HUMIDITY,
+              minValue: MIN_AIRUMID,
+              maxValue: MAX_AIRUMID,
               step: 1,
-              defaultValue: data.value.humidity.current,
-              onInput: (event) => handleOnInput(event, 'humidity'),
-              onTransformValue: () => transformHumidityValue(data.value.humidity.current, MAX_HUMIDITY)
+              defaultValue: data.value.airUmid.current,
+              onInput: (event) => handleOnInput(event, 'airUmid'),
+              onTransformValue: () => transformHumidityValue(data.value.airUmid.current, MAX_AIRUMID)
             },
             className: {
               container: [inputContainerClimate],
@@ -155,7 +155,7 @@ const Climate = memo(function Climate({
         type='exits'
         exitConnectors={[
           {
-            data: data.connectors.temperature,
+            data: data.connectors.temp,
             device: {
               id,
               containerRef: data.containerRef
@@ -164,7 +164,7 @@ const Climate = memo(function Climate({
             handleChangeData: onSaveData
           },
           {
-            data: data.connectors.humidity,
+            data: data.connectors.airUmid,
             device: {
               id,
               containerRef: data.containerRef

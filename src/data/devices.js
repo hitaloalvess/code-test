@@ -37,10 +37,10 @@ import devicePassValue from '@/assets/images/devices/event/passValue.svg';
 import deviceStickynote from '@/assets/images/devices/tool/stickyNote.svg'
 
 export const deviceTypes = [
-  { id: 0, name: 'Not device', category:'not'},
+  { id: 0, name: 'Not device', category: 'not' },
   { id: 1, name: 'rain', category: 'entry' },
   { id: 2, name: 'soil', category: 'entry' },
-  { id: 3, name: 'climate', category: 'entry'  },
+  { id: 3, name: 'climate', category: 'entry' },
   { id: 4, name: 'photoresist', category: 'entry' },
   { id: 5, name: 'bargaph', category: 'entry' }
 ]
@@ -55,11 +55,11 @@ export const mockDevices = {
       type: 'virtual',
       category: 'entry',
       value: {
-        temperature: {
+        temp: {
           current: 0,
           max: 50
         },
-        humidity: {
+        airUmid: {
           current: 0,
           max: 1023
         }
@@ -67,17 +67,17 @@ export const mockDevices = {
       posX: 0,
       posY: 0,
       connectors: {
-        temperature: {
+        temp: {
           id: null,
           type: 'exit',
-          name: 'temperature',
+          name: 'temp',
           x: 0,
           y: 0
         },
-        humidity: {
+        airUmid: {
           id: null,
           type: 'exit',
-          name: 'humidity',
+          name: 'airUmid',
           x: 0,
           y: 0
         }
@@ -870,7 +870,7 @@ export const mockDevices = {
       posY: 0
     }
   ],
-  hardware:[]
+  hardware: []
 };
 
 export const deviceConnectorRules = {
