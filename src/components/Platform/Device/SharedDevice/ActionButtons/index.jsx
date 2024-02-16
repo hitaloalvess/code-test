@@ -1,5 +1,5 @@
 import P from 'prop-types';
-import { Gear, Trash } from '@phosphor-icons/react';
+import { Gear, Repeat, Trash } from '@phosphor-icons/react';
 import { shallow } from 'zustand/shallow';
 
 import { useStore } from '@/store';
@@ -11,7 +11,7 @@ import * as AB from './styles.module.css';
 import { memo, useMemo } from 'react';
 
 const ActionButtons = memo(function ActionButtons
-  ({ orientation = 'left', actionDelete = null, actionConfig = null }) {
+  ({ orientation = 'left', actionDelete = null, actionConfig = null, actionReconnect = null }) {
 
   const { enableModal, disableModal } = useModal();
 
@@ -78,6 +78,27 @@ const ActionButtons = memo(function ActionButtons
           </ActionButton>
         )
       }
+
+      {
+        actionReconnect && (
+          <ActionButton
+            onClick={
+              () => enableModal({
+                typeContent: actionReconnect.typeContent,
+                title: 'Conectar dispositivo',
+                subtitle: 'Insira as informações do dispositivo que deseja conectar',
+                handleConfirm: () => {
+                  actionReconnect.onSave()
+                  disableModal(actionReconnect.typeContent)
+                },
+                data: actionReconnect.data
+              })
+            }
+          >
+            <Repeat />
+          </ActionButton>
+        )
+      }
     </div>
   );
 });
@@ -93,6 +114,12 @@ ActionButtons.propTypes = {
     }).isRequired
   }),
   actionConfig: P.shape({
+    onClick: P.func,
+    typeContent: P.string,
+    onSave: P.func,
+    data: P.object
+  }),
+  actionReconnect: P.shape({
     onClick: P.func,
     typeContent: P.string,
     onSave: P.func,

@@ -12,6 +12,7 @@ import {
   eventUnsubscribe,
   disconnectHardware
 } from '@/api/socket/hardware';
+import { createHardwareConnection } from '@/api/http';
 import { formulasForTransformation, transformHumidityValue } from '@/utils/devices-functions';
 
 import ActionButtons from '@/components/Platform/Device/SharedDevice/ActionButtons';
@@ -25,12 +26,13 @@ const MAX_AIRUMID = 90;
 const PhysicalClimate = memo(function Climate({
   data, dragRef, onSaveData
 }) {
+  const { id, imgSrc, name, posX, posY, isCreateFromSidebar } = data;
 
-  const { id, imgSrc, name, posX, posY, mac, isCreateFromSidebar } = data;
   const isFirstRender = useRef(true);
   const { person } = useContextAuth();
+
   const [scaleType, setScaleType] = useState('celsius');
-  const [isConnected] = useState(!!isCreateFromSidebar);
+  const [isConnected, setIsConnected] = useState(!!isCreateFromSidebar);
 
   const {
     executeFlow,
@@ -76,20 +78,20 @@ const PhysicalClimate = memo(function Climate({
       return;
     }
 
-    eventSubscribe(socketEvents.TELEMETRY(mac), handleReceiveTelemetry);
+    eventSubscribe(socketEvents.TELEMETRY(id), handleReceiveTelemetry);
 
     return () => {
       updateHardwareEvents({
-        mac,
+        mac: id,
         userId: person.id,
         events: {
           dashboard: false
         }
       });
 
-      disconnectHardware({ mac, userId: person.id })
+      disconnectHardware({ mac: id, userId: person.id })
 
-      eventUnsubscribe(socketEvents.TELEMETRY(mac, person.id));
+      eventUnsubscribe(socketEvents.TELEMETRY(id, person.id));
     }
   }, []);
 
@@ -153,6 +155,26 @@ const PhysicalClimate = memo(function Climate({
             onSave: handleSettingUpdate,
             data: {
               scaleTypeDefault: scaleType
+            }
+          }}
+          actionReconnect={{
+            typeContent: 'connect-physical-device',
+            onSave: async () => {
+              await createHardwareConnection({ mac: id, userId: person.id });
+
+              updateHardwareEvents({
+                mac: id,
+                userId: person.id,
+                events: {
+                  dashboard: true
+                }
+              });
+
+              setIsConnected(true);
+
+            },
+            data: {
+              mac: id
             }
           }}
         />

@@ -30,7 +30,7 @@ export const createDevicesSlice = (set, get) => ({
 
 
     delete device.draggedDevice;
-    const id = v4();
+    const id = device.mac ?? v4();
 
 
     set((state) => ({
