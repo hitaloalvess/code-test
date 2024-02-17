@@ -87,8 +87,8 @@ const ActionButtons = memo(function ActionButtons
                 typeContent: actionReconnect.typeContent,
                 title: 'Conectar dispositivo',
                 subtitle: 'Insira as informações do dispositivo que deseja conectar',
-                handleConfirm: () => {
-                  actionReconnect.onSave()
+                handleConfirm: async () => {
+                  await actionReconnect.onSave()
                   disableModal(actionReconnect.typeContent)
                 },
                 data: actionReconnect.data

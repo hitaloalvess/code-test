@@ -47,8 +47,9 @@ const ConnectPhysicalDeviceModal = ({
       setIsLoading(false);
 
     } catch (error) {
+      const { message: errorMessage } = error.response.data;
       setIsLoading(false);
-      toast.error(error.response.data.message);
+      toast.error(errorMessage);
     }
 
   }

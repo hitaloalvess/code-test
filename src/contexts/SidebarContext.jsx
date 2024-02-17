@@ -1,21 +1,24 @@
 import P from 'prop-types';
-import { createContext, useState, useRef } from "react";
+import { createContext, useState, useRef, useEffect } from "react";
 import { useDrop } from 'react-dnd';
 import { shallow } from 'zustand/shallow';
 import { isMobile } from 'react-device-detect';
 
 import { mockDevices } from '@/data/devices.js';
-import { getHardwareInfoByType } from '@/api/http';
+import { getHardwareInfoByType, getProjectById } from '@/api/http';
 import { useStore } from '@/store';
 import { useModal } from '@/hooks/useModal';
 
 import { transformDeviceName } from '@/utils/devices-functions'
+import { useParams } from 'react-router-dom';
 
 
 export const SidebarContext = createContext();
 
 export const SidebarProvider = ({ children }) => {
-  const { enableModal, disableModal } = useModal();
+
+  const { id: projectId } = useParams();
+
   const {
     deleteDeviceConnections,
     loadRef,
@@ -25,6 +28,8 @@ export const SidebarProvider = ({ children }) => {
   }), shallow);
 
   const sidebarRef = useRef(null);
+  const isFirstRender = useRef(true);
+  const { enableModal, disableModal } = useModal();
   const [currentArea, setCurrentArea] = useState('entry');
   const [devices, setDevices] = useState(mockDevices);
 
@@ -107,6 +112,43 @@ export const SidebarProvider = ({ children }) => {
     });
   }
 
+  const loadPhysicalDevices = async () => {
+
+    const { project: { devices } } = await getProjectById({ projectId });
+
+    for (const device of Object.values(devices)) {
+      if (device.type === 'physical') {
+        const { id, name, type } = device;
+
+        const newPhysicalDevice = {
+          ...device,
+          mac: id,
+          id,
+          name,
+          label: name,
+          type: 'physical',
+          typeId: type,
+          inUse: true,
+          isDisabled: true,
+          isFirstUse: false,
+          canDrag: false
+        }
+
+        setDevices(prevDevices => {
+          return {
+            ...prevDevices,
+            hardware: [
+              ...prevDevices.hardware,
+              {
+                ...newPhysicalDevice,
+              }
+            ]
+          }
+        })
+      }
+    }
+  }
+
 
   const [{ isOver }, drop] = useDrop(() => ({
     accept: 'device',
@@ -122,14 +164,13 @@ export const SidebarProvider = ({ children }) => {
           if (item.type === 'physical') {
             handleChangePhysicalDeviceInSidebar({
               device: {
-                id: item.mac,
+                id: item.id,
                 inUse: false,
                 isDisabled: true,
                 canDrag: false
               }
             })
 
-            //Todo: enviar mensagem ao backend para desvincular o usuário do dispositivo
           }
         }
       })
@@ -138,6 +179,16 @@ export const SidebarProvider = ({ children }) => {
       isOver: !!monitor.isOver()
     })
   }), []);
+
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+
+      return;
+    }
+
+    loadPhysicalDevices()
+  }, [])
 
   return (
     <SidebarContext.Provider value={{

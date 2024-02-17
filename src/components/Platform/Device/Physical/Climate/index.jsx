@@ -71,6 +71,20 @@ const PhysicalClimate = memo(function Climate({
     updateDeviceValue(id, { value: newValue })
   }
 
+  const handleUnmount = () => {
+    updateHardwareEvents({
+      mac: id,
+      userId: person.id,
+      events: {
+        dashboard: false
+      }
+    });
+
+    disconnectHardware({ mac: id, userId: person.id })
+
+    eventUnsubscribe(socketEvents.TELEMETRY(id, person.id));
+  }
+
   useEffect(() => {
     if (isFirstRender.current) {
       isFirstRender.current = false;
@@ -80,18 +94,12 @@ const PhysicalClimate = memo(function Climate({
 
     eventSubscribe(socketEvents.TELEMETRY(id), handleReceiveTelemetry);
 
+    window.addEventListener('beforeunload', handleUnmount);
+
     return () => {
-      updateHardwareEvents({
-        mac: id,
-        userId: person.id,
-        events: {
-          dashboard: false
-        }
-      });
+      handleUnmount();
+      window.removeEventListener('beforeunload', handleUnmount);
 
-      disconnectHardware({ mac: id, userId: person.id })
-
-      eventUnsubscribe(socketEvents.TELEMETRY(id, person.id));
     }
   }, []);
 
@@ -142,14 +150,14 @@ const PhysicalClimate = memo(function Climate({
 
         <ActionButtons
           orientation='left'
-          actionDelete={{
-            title: 'Cuidado',
-            subtitle: 'Tem certeza que deseja excluir o componente?',
-            data: {
-              id
-            },
-            onDelete: data.enablePhysicalDeviceInSidebar
-          }}
+          // actionDelete={{
+          //   title: 'Cuidado',
+          //   subtitle: 'Tem certeza que deseja excluir o componente?',
+          //   data: {
+          //     id
+          //   },
+          //   onDelete: data.enablePhysicalDeviceInSidebar
+          // }}
           actionConfig={{
             typeContent: 'config-climate',
             onSave: handleSettingUpdate,
