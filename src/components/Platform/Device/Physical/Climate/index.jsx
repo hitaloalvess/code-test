@@ -10,7 +10,8 @@ import {
   updateHardwareEvents,
   eventSubscribe,
   eventUnsubscribe,
-  disconnectHardware
+  disconnectHardware,
+  clearHardware
 } from '@/api/socket/hardware';
 import { createHardwareConnection } from '@/api/http';
 import { formulasForTransformation, transformHumidityValue } from '@/utils/devices-functions';
@@ -71,7 +72,7 @@ const PhysicalClimate = memo(function Climate({
     updateDeviceValue(id, { value: newValue })
   }
 
-  const handleUnmount = () => {
+  const handleDisconnect = () => {
     updateHardwareEvents({
       mac: id,
       userId: person.id,
@@ -80,9 +81,13 @@ const PhysicalClimate = memo(function Climate({
       }
     });
 
-    disconnectHardware({ mac: id, userId: person.id })
+    disconnectHardware({ mac: id, userId: person.id });
 
     eventUnsubscribe(socketEvents.TELEMETRY(id, person.id));
+  }
+
+  const handleBeforeUnload = () => {
+    clearHardware({ mac: id, userId: person.id });
   }
 
   useEffect(() => {
@@ -94,11 +99,11 @@ const PhysicalClimate = memo(function Climate({
 
     eventSubscribe(socketEvents.TELEMETRY(id), handleReceiveTelemetry);
 
-    window.addEventListener('beforeunload', handleUnmount);
+    window.addEventListener('beforeunload', handleBeforeUnload);
 
     return () => {
-      handleUnmount();
-      window.removeEventListener('beforeunload', handleUnmount);
+      handleDisconnect();
+      window.removeEventListener('beforeunload', handleBeforeUnload);
 
     }
   }, []);

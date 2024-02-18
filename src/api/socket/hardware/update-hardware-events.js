@@ -7,6 +7,6 @@ import { socket } from '@/lib/websocket';
     events: { dashboard?:boolean, isFirstUseInterval?: boolean, proofLife?:boolean, standby?:boolean }
   }
 */
-export async function updateHardwareEvents({ mac, userId ,events }){
+export function updateHardwareEvents({ mac, userId, events }) {
   socket.emit('hardware/update/events', { mac, userId, events });
 }
