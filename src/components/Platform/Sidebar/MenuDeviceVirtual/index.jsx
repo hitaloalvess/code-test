@@ -53,6 +53,7 @@ const MenuDeviceVirtual = ({ device }) => {
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
+        onContextMenu={(e) => e.preventDefault()}
       >
         <img
           src={device.imgSrc}

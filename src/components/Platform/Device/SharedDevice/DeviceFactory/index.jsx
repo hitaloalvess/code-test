@@ -32,6 +32,7 @@ import Loop from '../../Event/Loop';
 import PassValue from '../../Event/PassValue';
 
 import Stickynote from '../../Tool/Stickynote';
+import Variable from '../../Tool/Variable';
 
 import PhysicalClimate from '../../Physical/Climate';
 
@@ -68,6 +69,7 @@ const DeviceFactory = ({
     loop: Loop,
     stickynote: Stickynote,
     passValue: PassValue,
+    variable: Variable,
     physicalClimate: PhysicalClimate,
   }
 

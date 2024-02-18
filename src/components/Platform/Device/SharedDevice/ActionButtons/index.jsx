@@ -11,14 +11,16 @@ import * as AB from './styles.module.css';
 import { memo, useMemo } from 'react';
 
 const ActionButtons = memo(function ActionButtons
-  ({ orientation = 'left', actionDelete = null, actionConfig = null, actionReconnect = null }) {
+  ({ orientation = 'left', actionDelete = null, actionConfig = null, actionDuplicate = null, actionReconnect = null }) {
 
   const { enableModal, disableModal } = useModal();
 
   const {
     deleteDeviceConnections,
+    insertDevice,
   } = useStore(store => ({
-    deleteDeviceConnections: store.deleteDeviceConnections,
+    createDevicesSlice: store.createDevicesSlice,
+    insertDevice: store.insertDevice,
   }), shallow);
 
   const currentOrientation = useMemo(() => {
@@ -80,6 +82,29 @@ const ActionButtons = memo(function ActionButtons
       }
 
       {
+        actionDuplicate && (
+          <ActionButton
+            onClick={actionDuplicate.onClick ?
+              actionDuplicate.onClick :
+              () => {
+                const position = {
+                  x: Math.floor(actionDuplicate.data.posX) + 36,
+                  y: Math.floor(actionDuplicate.data.posY) + 125
+                }
+
+                insertDevice({
+                  device: { ...actionDuplicate.data },
+                  dropPos: position,
+                });
+              }
+            }
+          >
+            <Gear />
+          </ActionButton>
+        )
+      }
+
+      {
         actionReconnect && (
           <ActionButton
             onClick={
@@ -124,7 +149,11 @@ ActionButtons.propTypes = {
     typeContent: P.string,
     onSave: P.func,
     data: P.object
-  })
+  }),
+  actionDuplicate: P.shape({
+    onClick: P.func,
+    data: P.object
+  }),
 }
 
 export default ActionButtons;

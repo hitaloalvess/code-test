@@ -71,6 +71,7 @@ const Device = memo(function Device({ device }) {
       className={D.deviceContainer}
       style={{ left: `${data.posX}px`, top: `${data.posY}px`, transform: `scale(${scale})` }}
       ref={deviceRef}
+      onContextMenu={e => e.preventDefault()}
     >
       <div
         className={D.deviceContent}

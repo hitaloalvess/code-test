@@ -14,12 +14,87 @@ export const createDevicesSlice = (set, get) => ({
     width: window.innerWidth * 1.5,
     height: window.innerHeight * 1.5
   },
+  devicesGroups: {},
+
+  getGroups: () => {
+    const { devicesGroups } = get();
+    return Object.keys(devicesGroups);
+  },
+
+  getGroupByName: (groupName) => {
+    const { devicesGroups } = get();
+    return devicesGroups[groupName]
+  },
+
+  updateDeviceGroup: (groupName, obj) => {
+    const { devicesGroups } = get();
+    const newDevicesGroups = { ...devicesGroups };
+
+    if (!Object.hasOwnProperty.call(obj, 'device')) {
+      const value = obj.value;
+      set({
+        devicesGroups: {
+          ...devicesGroups,
+          [groupName]: {
+            ...devicesGroups[groupName],
+            value
+          }
+        }
+      })
+      return;
+    }
+
+    const device = obj.device;
+
+    const groups = Object.keys(devicesGroups);
+    let sameGroup = false;
+
+    groups.forEach(element => {
+      const result = devicesGroups[element].devices.find((devicesId) => device.id === devicesId);
+
+      if (result !== undefined) {
+        if (element != groupName)
+          devicesGroups[element].devices.splice(devicesGroups[element].devices.indexOf(device.id), 1);
+        else
+          sameGroup = true;
+      }
+
+      if (devicesGroups[element].devices.length === 0)
+        delete newDevicesGroups[element];
+    });
+
+    if (!sameGroup)
+      newDevicesGroups[groupName].devices.push(device.id);
+
+    set({ devicesGroups: newDevicesGroups })
+  },
+
+  addGroup: (groupName, device) => {
+    const { updateDeviceGroup } = get();
+    const devices = [device.id]
+    set((state) => ({
+      devicesGroups: {
+        ...state.devicesGroups,
+        [`${groupName}`]: {
+          devices,
+          value: 0
+        }
+      }
+    }));
+
+    updateDeviceGroup(groupName, { device: device });
+  },
 
   insertDevice: ({ device, dropPos }) => {
     const { platformRef } = get();
 
+    Object.keys(device.connectors).forEach(connector => {
+      device.connectors[connector].id = null;
+    });
+
     const { width, height } = device.draggedDevice.getBoundingClientRect();
     const { x, y } = dropPos;
+
     const [posX, posY] = calcPositionDevice({
       x,
       y,
@@ -28,10 +103,7 @@ export const createDevicesSlice = (set, get) => ({
       containerRef: platformRef,
     });
 
-
-    delete device.draggedDevice;
     const id = device.mac ?? v4();
-
 
     set((state) => ({
       devices: {
@@ -44,17 +116,42 @@ export const createDevicesSlice = (set, get) => ({
         }
       }
     }));
+
+    const { devicesGroups } = get();
+    const newDevicesGroups = { ...devicesGroups };
+
+    if (device.value.groupName !== undefined && device.value.groupName !== null) {
+      newDevicesGroups[device.value.groupName].devices.push(device.id);
+      set({ devicesGroups: newDevicesGroups })
+    }
+
+
   },
 
   deleteDevice: (deviceId) => {
-
     const { devices } = get();
-
     const newDevices = { ...devices };
 
     delete newDevices[deviceId];
 
     set({ devices: newDevices })
+
+    const { devicesGroups } = get();
+    const newDevicesGroups = { ...devicesGroups };
+    const groups = Object.keys(devicesGroups);
+
+    groups.forEach(element => {
+      const result = devicesGroups[element].devices.find((device) => device === deviceId);
+
+      if (result !== undefined) {
+        devicesGroups[element].devices.splice(devicesGroups[element].devices.indexOf(deviceId), 1);
+      }
+
+      if (devicesGroups[element].devices.length === 0)
+        delete newDevicesGroups[element];
+    });
+
+    set({ devicesGroups: newDevicesGroups })
   },
 
   updateDeviceValue: (deviceId, newValues) => {

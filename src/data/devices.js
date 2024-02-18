@@ -35,15 +35,7 @@ import devicePassValue from '@/assets/images/devices/event/passValue.svg';
 
 //tool
 import deviceStickynote from '@/assets/images/devices/tool/stickyNote.svg'
-
-export const deviceTypes = [
-  { id: 0, name: 'Not device', category: 'not' },
-  { id: 1, name: 'rain', category: 'entry' },
-  { id: 2, name: 'soil', category: 'entry' },
-  { id: 3, name: 'climate', category: 'entry' },
-  { id: 4, name: 'photoresist', category: 'entry' },
-  { id: 5, name: 'bargaph', category: 'entry' }
-]
+import deviceVariable from '@/assets/images/devices/event/loop.svg'
 
 export const mockDevices = {
   entry: [
@@ -868,6 +860,38 @@ export const mockDevices = {
       },
       posX: 0,
       posY: 0
+    },
+    {
+      id: 52,
+      imgSrc: deviceVariable,
+      name: 'variable',
+      label: 'Variável',
+      type: 'virtual',
+      category: 'tool',
+      value: {
+        send: {
+          current: 0
+        },
+        groupName: null,
+      },
+      posX: 0,
+      posY: 0,
+      connectors: {
+        receive: {
+          id: null,
+          name: 'receive',
+          type: 'entry',
+          x: 0,
+          y: 0
+        },
+        send: {
+          id: null,
+          name: 'send',
+          type: 'exit',
+          x: 0,
+          y: 0
+        },
+      }
     }
   ],
   hardware: []
@@ -999,9 +1023,5 @@ export const deviceConnectorRules = {
     acceptedConnections: ['oneEntry', 'allExit'],
     connectsFrom: ['all'],
     connectsTo: ['all'],
-  },
-  physicalClimate: {
-    acceptedConnections: ['allExit'],
-    connectsTo: ['all']
   },
 }
