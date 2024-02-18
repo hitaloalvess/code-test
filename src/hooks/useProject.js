@@ -37,12 +37,12 @@ export const useProject = () => {
     getFlows,
     getDevices,
     loadDevice,
-    createFlow,
+    loadFlows
   } = useStore(store => ({
     getFlows: store.getFlows,
     getDevices: store.getDevices,
     loadDevice: store.loadDevice,
-    createFlow: store.createFlow,
+    loadFlows: store.loadFlows
   }), shallow);
 
   const create = useMutation(
@@ -158,42 +158,9 @@ export const useProject = () => {
       await new Promise(resolve => setTimeout(resolve, 250))
     });
 
-
     await Promise.all(deviceList);
 
-
-    const devices = getDevices();
-
-
-    Object.values(project.flows).forEach(flow => {
-      flow.connections.forEach(({ deviceFrom, deviceTo }) => {
-
-        const from = {
-          ...devices[deviceFrom.id],
-          connector: {
-            ...devices[deviceFrom.id].connectors[deviceFrom.connector.name]
-          }
-        }
-
-        const to = {
-          ...devices[deviceTo.id],
-          connector: {
-            ...devices[deviceTo.id].connectors[deviceTo.connector.name]
-          }
-        }
-
-        delete from.connectors;
-        delete to.connectors;
-
-        createFlow({
-          devices: {
-            from,
-            to
-          }
-        })
-      })
-    });
-
+    loadFlows({ flows: project.flows });
 
   };
 

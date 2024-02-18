@@ -559,5 +559,66 @@ export const createFlowsSlice = (set, get) => ({
     const { flows } = get();
 
     return flows;
+  },
+
+  loadFlows: ({ flows }) => {
+
+    const {
+      flows: currentFlows,
+      devices,
+      createLine,
+      executeFlow
+    } = get();
+
+    for (const flow of flows) {
+
+      for (const connection of flow.connections) {
+        const { deviceFrom, deviceTo } = connection;
+
+        const from = {
+          ...devices[deviceFrom.id],
+          connector: {
+            ...devices[deviceFrom.id].connectors[deviceFrom.connector.name]
+          }
+        }
+
+        const to = {
+          ...devices[deviceTo.id],
+          connector: {
+            ...devices[deviceTo.id].connectors[deviceTo.connector.name]
+          }
+        }
+
+        delete from.connectors;
+        delete to.connectors;
+
+        createLine({
+          id: connection.idLine,
+          idConnection: connection.id,
+          fromPos: {
+            x: deviceFrom.connector.x,
+            y: deviceFrom.connector.y
+          },
+          toPos: {
+            x: deviceTo.connector.x,
+            y: deviceTo.connector.y
+          }
+        });
+
+        const newFlows = {
+          ...currentFlows,
+          [flow.id]: {
+            id: flow.id,
+            connections: currentFlows[flow.id]?.connections.length > 0 ?
+              [...currentFlows[flow.id].connections, connection] :
+              [connection]
+          }
+        }
+
+        set({ flows: newFlows });
+        executeFlow({ connectorId: deviceFrom.connector.id });
+      }
+
+    }
   }
 })

@@ -4,9 +4,10 @@ export const createLinesSlice = (set, get) => ({
 
   lines: {},
 
-  createLine: ({ fromPos, toPos }) => {
+  createLine: ({ id = null, idConnection=null, fromPos, toPos }) => {
     const newLine = {
-      id: uuid(),
+      id: id ?? uuid(),
+      idConnection: idConnection ?? null,
       fromPos,
       toPos
     };
