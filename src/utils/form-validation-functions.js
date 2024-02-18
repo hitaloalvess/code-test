@@ -31,7 +31,7 @@ export const applyMask = (typeMask, value) => {
       .replace(/([\da-fA-F]{2})([\da-fA-F])/, '$1:$2')
       .replace(/([\da-fA-F]{2})([\da-fA-F])/, '$1:$2')
       .slice(0, 17) //12 character limit included ":"
-      .toLowerCase()
+      .toUpperCase()
   }
 
   const maskSeleted = masks[typeMask];

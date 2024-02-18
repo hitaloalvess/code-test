@@ -17,7 +17,9 @@ const connectPhysicalDeviceSchema = z.object({
     .refine((value) => {
       const regex = /^([0-9a-f]{2}[:-]){5}([0-9a-f]{2})$/i;
       return regex.test(value)
-    }, { message: 'Endereço mac inválido' }),
+    }, { message: 'Endereço mac inválido' })
+    .transform(value => value.toUpperCase())
+  ,
 })
 
 const ConnectPhysicalDeviceModal = ({
