@@ -561,14 +561,15 @@ export const createFlowsSlice = (set, get) => ({
 
   loadFlows: ({ flows }) => {
 
-    const {
-      flows: currentFlows,
-      devices,
-      createLine,
-      executeFlow
-    } = get();
+    const { devices, createLine, } = get();
+
+    let newFlows = {}
 
     for (const flow of flows) {
+      let newFlow = {
+        id: flow.id,
+        connections: []
+      }
 
       for (const connection of flow.connections) {
         const { deviceFrom, deviceTo } = connection;
@@ -603,20 +604,15 @@ export const createFlowsSlice = (set, get) => ({
           }
         });
 
-        const newFlows = {
-          ...currentFlows,
-          [flow.id]: {
-            id: flow.id,
-            connections: currentFlows[flow.id]?.connections.length > 0 ?
-              [...currentFlows[flow.id].connections, connection] :
-              [connection]
-          }
-        }
+        newFlow.connections.push(connection);
 
-        set({ flows: newFlows });
-        executeFlow({ connectorId: deviceFrom.connector.id });
       }
 
+      newFlows[flow.id] = newFlow
+
     }
+
+    set({ flows: newFlows })
+
   }
 })
