@@ -4,7 +4,7 @@ import { useDrag } from 'react-dnd';
 import P from 'prop-types';
 import { Repeat, TrashSimple } from '@phosphor-icons/react'
 
-import { disconnectHardware, updateHardwareEvents } from '@/api/socket/hardware';
+import { disconnectHardware, updateHardwareEvents, clearHardware } from '@/api/socket/hardware';
 import { createHardwareConnection } from '@/api/http';
 import { useSidebar, useContextAuth, useModal } from '@/hooks';
 
@@ -170,13 +170,8 @@ const MenuDevicePhysical = ({ device }) => {
 
     timeoutRef.current = setTimeout(handleDisabling, TIMEOUT_DISABLED);
 
-    const handleBeforeUnload = () => disconnectHardware({ mac: device.mac, userId: person.id })
-    window.addEventListener('beforeunload', handleBeforeUnload);
-
     return () => {
-
       clearTimeout(timeoutRef.current);
-      window.removeEventListener('beforeunload', handleBeforeUnload);
     }
   }, []);
 

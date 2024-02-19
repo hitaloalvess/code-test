@@ -6,8 +6,9 @@ import { isMobile } from 'react-device-detect';
 
 import { mockDevices } from '@/data/devices.js';
 import { getHardwareInfoByType, getProjectById } from '@/api/http';
+import { clearHardware } from '@/api/socket/hardware';
 import { useStore } from '@/store';
-import { useModal } from '@/hooks/useModal';
+import { useModal, useContextAuth } from '@/hooks';
 
 import { transformDeviceName } from '@/utils/devices-functions'
 import { useParams } from 'react-router-dom';
@@ -18,6 +19,7 @@ export const SidebarContext = createContext();
 export const SidebarProvider = ({ children }) => {
 
   const { id: projectId } = useParams();
+  const { person } = useContextAuth();
 
   const {
     deleteDeviceConnections,
@@ -114,9 +116,9 @@ export const SidebarProvider = ({ children }) => {
 
   const loadPhysicalDevices = async () => {
 
-    const { project: { devices } } = await getProjectById({ projectId });
+    const { project } = await getProjectById({ projectId });
 
-    for (const device of Object.values(devices)) {
+    for (const device of Object.values(project.devices)) {
       if (device.type === 'physical') {
         const { id, name, type } = device;
 
@@ -180,15 +182,31 @@ export const SidebarProvider = ({ children }) => {
     })
   }), []);
 
+  const handleBeforeUnload = () => {
+    for (const hardware of devices.hardware) {
+      clearHardware({ mac: hardware.id, userId: person.id });
+
+    }
+
+  }
+
   useEffect(() => {
     if (isFirstRender.current) {
       isFirstRender.current = false;
 
       return;
     }
-
     loadPhysicalDevices()
+
   }, [])
+
+  useEffect(() => {
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    }
+  }, [devices.hardware])
 
   return (
     <SidebarContext.Provider value={{
