@@ -1,17 +1,24 @@
-import { useMutation, useQuery } from '@tanstack/react-query';
 import { shallow } from 'zustand/shallow';
+import { toast } from 'react-toastify';
+import { useMutation, useQuery } from '@tanstack/react-query';
+
+import {
+  getProjectsByAccountId,
+  createProject,
+  updateProject,
+  deleteProject,
+  getProjectById
+} from '@/api/http';
+import { useStore } from '@/store';
+import { queryClient } from '@/lib/react-query';
+import { useContextAuth } from '@/hooks/useAuth';
 
 import { removeHTMLElementRef } from "@/utils/projects-functions";
-import { useStore } from '@/store';
-import { apiMicroCode } from '@/services/apiMicroCode';
-import { queryClient } from '@/services/queryClient';
 import { formattedDate } from '../utils/date-functions';
-import { useContextAuth } from '@/hooks/useAuth';
-import { toast } from 'react-toastify';
 
 export async function getProjects(personId) {
 
-  const { data: { projects } } = await apiMicroCode.get(`/projects/user/${personId}`);
+  const { projects } = await getProjectsByAccountId({ id: personId });
 
   const transformProjects = projects.map(project => {
     return {
@@ -30,15 +37,15 @@ export const useProject = () => {
     getFlows,
     getDevices,
     loadDevice,
-    createFlow,
+    loadFlows
   } = useStore(store => ({
     getFlows: store.getFlows,
     getDevices: store.getDevices,
     loadDevice: store.loadDevice,
-    createFlow: store.createFlow,
+    loadFlows: store.loadFlows
   }), shallow);
 
-  const createProject = useMutation(
+  const create = useMutation(
     async (data) => {
 
       const newProject = {
@@ -48,8 +55,7 @@ export const useProject = () => {
         flows: []
       }
 
-      const { data: { project }} = await apiMicroCode.post(`/projects`, newProject);
-
+      const { project } = await createProject(newProject);
       return project;
     },
     {
@@ -60,12 +66,14 @@ export const useProject = () => {
     }
   )
 
-  const updateProject = useMutation(
+  const update = useMutation(
     async (data) => {
       const newProject = { ...data }
 
-      const { data: { project }} = await apiMicroCode.put(`/projects/${data.id}`, newProject);
-
+      const { project } = await updateProject({
+        projectId: data.id,
+        data: newProject
+      })
       return project;
     },
     {
@@ -76,7 +84,7 @@ export const useProject = () => {
     }
   );
 
-  const saveProject = async (data) => {
+  const save = async (data) => {
     let newProject = {
       ...data,
       devices: getDevices(),
@@ -121,15 +129,16 @@ export const useProject = () => {
       flows: transformFlows
     }
 
-    const response = await apiMicroCode.put(`/projects/${data.id}`, newProject);
-
-    return response.data;
+    const { project } = await updateProject({
+      projectId: data.id,
+      data: newProject
+    })
+    return project;
   };
 
-  const deleteProject = useMutation(
+  const remove = useMutation(
     async (projectId) => {
-      const { data:{ project }} = await apiMicroCode.delete(`/projects/${projectId}`);
-
+      const { project } = await deleteProject({ projectId })
       return project;
     },
     {
@@ -141,59 +150,26 @@ export const useProject = () => {
     }
   );
 
-  const loadProject = async (projectId) => {
-    const { data: { project } } = await apiMicroCode.get(`/projects/${projectId}`);
+  const load = async (projectId) => {
+    const { project } = await getProjectById({ projectId });
 
     const deviceList = Object.values(project.devices).map(async (device) => {
       loadDevice({ ...device });
       await new Promise(resolve => setTimeout(resolve, 250))
     });
 
-
     await Promise.all(deviceList);
 
-
-    const devices = getDevices();
-
-
-    Object.values(project.flows).forEach(flow => {
-      flow.connections.forEach(({ deviceFrom, deviceTo }) => {
-
-        const from = {
-          ...devices[deviceFrom.id],
-          connector: {
-            ...devices[deviceFrom.id].connectors[deviceFrom.connector.name]
-          }
-        }
-
-        const to = {
-          ...devices[deviceTo.id],
-          connector: {
-            ...devices[deviceTo.id].connectors[deviceTo.connector.name]
-          }
-        }
-
-        delete from.connectors;
-        delete to.connectors;
-
-        createFlow({
-          devices: {
-            from,
-            to
-          }
-        })
-      })
-    });
-
+    loadFlows({ flows: project.flows });
 
   };
 
   return {
-    createProject,
-    updateProject,
-    deleteProject,
-    loadProject,
-    saveProject
+    createProject: create,
+    updateProject: update,
+    deleteProject: remove,
+    loadProject: load,
+    saveProject: save
   }
 }
 

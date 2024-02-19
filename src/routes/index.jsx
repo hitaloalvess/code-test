@@ -3,8 +3,8 @@ import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 
 import PlatformGuard from './CustomRoutes/PlatformGuard';
 import PrivateRoutes from './CustomRoutes/PrivateRoutes';
-import { setupInterceptorsApiAuth } from '@/services/apiAuth';
-import { setupInterceptorsApiMicroCode } from '@/services/apiMicroCode';
+import { setupResponseInterceptorsApiAuth } from '@/lib/axios';
+import { setupResponseInterceptorsApiMicroCode } from '@/lib/axios';
 import SignIn from '@/pages/SignIn';
 import SignUp from '@/pages/SignUp';
 import AccountManagement from '@/pages/AccountManagement';
@@ -20,8 +20,8 @@ const RoutesApp = () => {
   const { disableModal } = useModal();
 
   useEffect(() => {
-    setupInterceptorsApiAuth(navigate);
-    setupInterceptorsApiMicroCode(navigate);
+    setupResponseInterceptorsApiAuth(navigate);
+    setupResponseInterceptorsApiMicroCode(navigate);
   }, [navigate]);
 
   useEffect(() => {

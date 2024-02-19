@@ -1,13 +1,13 @@
 import P from 'prop-types';
 
-import Dht from '../../Entry/Dht';
-import Ldr from '../../Entry/Ldr';
+import Climate from '../../Entry/Climate';
+import Photoresist from '../../Entry/Photoresist';
 import Potentiometer from '../../Entry/Potentiometer';
 import Switch from '../../Entry/Switch';
 import PushButton from '../../Entry/PushButton';
 import Infrared from '../../Entry/Infrared';
-import SoilMoisture from '../../Entry/SoilMoisture';
-import RainDetector from '../../Entry/RainDetector';
+import Soil from '../../Entry/Soil';
+import Rain from '../../Entry/Rain';
 
 import Led from '../../Exit/Led';
 import LedMono from '../../Exit/LedMono';
@@ -32,14 +32,17 @@ import Loop from '../../Event/Loop';
 import PassValue from '../../Event/PassValue';
 
 import Stickynote from '../../Tool/Stickynote';
+import Variable from '../../Tool/Variable';
+
+import PhysicalClimate from '../../Physical/Climate';
 
 const DeviceFactory = ({
   data, dragRef, onSaveData
 }) => {
 
   const devices = {
-    dht: Dht,
-    ldr: Ldr,
+    climate: Climate,
+    photoresist: Photoresist,
     potentiometer: Potentiometer,
     pushButton: PushButton,
     switch: Switch,
@@ -60,12 +63,14 @@ const DeviceFactory = ({
     slider: Slider,
     pickColor: PickColor,
     counter: Counter,
-    soilMoisture: SoilMoisture,
-    rainDetector: RainDetector,
+    soil: Soil,
+    rain: Rain,
     timer: Timer,
     loop: Loop,
     stickynote: Stickynote,
-    passValue: PassValue
+    passValue: PassValue,
+    variable: Variable,
+    physicalClimate: PhysicalClimate,
   }
 
   const CurrentDevice = devices[data.name];

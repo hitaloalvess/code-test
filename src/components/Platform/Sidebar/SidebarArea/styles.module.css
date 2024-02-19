@@ -1,4 +1,4 @@
-.container {
+.deviceListContainer {
   position: relative;
   width: 124px;
   height: 90%;
@@ -49,34 +49,39 @@
 /* Tablet */
 @media (max-width: 769px) and (orientation:portrait) {
 
-  .container {
+  .deviceListContainer {
     width: 500px;
     height: 112px;
     border-radius: 12px 12px 0 0;
     padding: 0 0 0 16px;
   }
 
-  .devicesList {
-    justify-content: flex-start;
-  }
-
-  .container ul {
+  .deviceListContainer ul {
 
     display: flex;
     align-items: center;
     gap: 8px;
   }
+
+  .devicesList {
+    justify-content: flex-start;
+  }
+
+  .devicesList[data-selected-device-list-type="hardware"] ul {
+    flex-direction: row-reverse;
+  }
+
 }
 
 /* Mobile up to 480px*/
 @media (max-width: 481px) {
 
-  .container {
+  .deviceListContainer {
     max-width: 380px;
     height: 100px;
   }
 
-  .container ul {
+  .deviceListContainer ul {
     gap: 24px;
   }
 
@@ -88,7 +93,7 @@
 
 /* Mobile up to 420px*/
 @media (max-width: 420px) {
-  .container {
+  .deviceListContainer {
     max-width: 100%;
     border-radius: 0 0 0 0;
     border: none;
@@ -102,7 +107,7 @@
 /* Mobile up to 480px to height and orientation landscape*/
 @media (max-height: 481px) and (orientation: landscape) {
 
-  .container {
+  .deviceListContainer {
     width: 100%;
     max-width: 84px;
     height: 100%;

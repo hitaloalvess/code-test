@@ -7,7 +7,7 @@ import ConfigDelayModal from '@/components/SharedComponents/Modal/ConfigDelayMod
 import ConfigBuzzerModal from '@/components/SharedComponents/Modal/ConfigBuzzerModal';
 import ConfigSliderModal from '@/components/SharedComponents/Modal/ConfigSliderModal';
 import ConfirmationModal from '@/components/SharedComponents/Modal/ConfirmationModal';
-import ConfigDhtModal from '@/components/SharedComponents/Modal/ConfigDhtModal';
+import ConfigClimateModal from '@/components/SharedComponents/Modal/ConfigClimateModal';
 import ConfigComparatorModal from '@/components/SharedComponents/Modal/ConfigComparatorModal';
 import ConfigPickColorModal from '@/components/SharedComponents/Modal/ConfigPickColorModal';
 import UpdatePasswordModal from '@/components/SharedComponents/Modal/UpdatePasswordModal';
@@ -20,7 +20,8 @@ import ConfigCounterModal from '@/components/SharedComponents/Modal/ConfigCounte
 import ConfigLoopModal from '@/components/SharedComponents/Modal/ConfigLoopModal';
 import ConfigStickyNoteModal from '@/components/SharedComponents/Modal/ConfigStickyNoteModal';
 import ConfigPassValueModal from '@/components/SharedComponents/Modal/ConfigPassValueModal';
-
+import ConfigVariableModal from '@/components/SharedComponents/Modal/ConfigVariableModal'
+import ConnectPhysicalDeviceModal from '@/components/SharedComponents/Modal/ConnectPhysicalDeviceModal';
 export const ModalContext = createContext();
 
 const contents = {
@@ -29,7 +30,7 @@ const contents = {
   'config-buzzer': ConfigBuzzerModal,
   'config-delay': ConfigDelayModal,
   'config-slider': ConfigSliderModal,
-  'config-dht': ConfigDhtModal,
+  'config-climate': ConfigClimateModal,
   'config-comparator': ConfigComparatorModal,
   'config-pickColor': ConfigPickColorModal,
   'update-password': UpdatePasswordModal,
@@ -42,6 +43,8 @@ const contents = {
   'config-loop': ConfigLoopModal,
   'config-stickyNote': ConfigStickyNoteModal,
   'config-passValue': ConfigPassValueModal,
+  'config-variable': ConfigVariableModal,
+  'connect-physical-device': ConnectPhysicalDeviceModal
 }
 
 export const ModalProvider = ({ children }) => {

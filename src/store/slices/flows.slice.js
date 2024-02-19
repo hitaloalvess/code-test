@@ -375,10 +375,8 @@ export const createFlowsSlice = (set, get) => ({
 
     const selectedFlow = findFlowsByDeviceId(flows, deviceId);
 
-
     if (!selectedFlow) {
       deleteDevice(deviceId);
-
       return;
     }
 
@@ -559,5 +557,62 @@ export const createFlowsSlice = (set, get) => ({
     const { flows } = get();
 
     return flows;
+  },
+
+  loadFlows: ({ flows }) => {
+
+    const { devices, createLine, } = get();
+
+    let newFlows = {}
+
+    for (const flow of flows) {
+      let newFlow = {
+        id: flow.id,
+        connections: []
+      }
+
+      for (const connection of flow.connections) {
+        const { deviceFrom, deviceTo } = connection;
+
+        const from = {
+          ...devices[deviceFrom.id],
+          connector: {
+            ...devices[deviceFrom.id].connectors[deviceFrom.connector.name]
+          }
+        }
+
+        const to = {
+          ...devices[deviceTo.id],
+          connector: {
+            ...devices[deviceTo.id].connectors[deviceTo.connector.name]
+          }
+        }
+
+        delete from.connectors;
+        delete to.connectors;
+
+        createLine({
+          id: connection.idLine,
+          idConnection: connection.id,
+          fromPos: {
+            x: deviceFrom.connector.x,
+            y: deviceFrom.connector.y
+          },
+          toPos: {
+            x: deviceTo.connector.x,
+            y: deviceTo.connector.y
+          }
+        });
+
+        newFlow.connections.push(connection);
+
+      }
+
+      newFlows[flow.id] = newFlow
+
+    }
+
+    set({ flows: newFlows })
+
   }
 })

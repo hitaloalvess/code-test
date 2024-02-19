@@ -1,5 +1,5 @@
 import P from 'prop-types';
-import { Gear, Trash } from '@phosphor-icons/react';
+import { Gear, Repeat, Trash } from '@phosphor-icons/react';
 import { shallow } from 'zustand/shallow';
 
 import { useStore } from '@/store';
@@ -11,14 +11,16 @@ import * as AB from './styles.module.css';
 import { memo, useMemo } from 'react';
 
 const ActionButtons = memo(function ActionButtons
-  ({ orientation = 'left', actionDelete = null, actionConfig = null }) {
+  ({ orientation = 'left', actionDelete = null, actionConfig = null, actionDuplicate = null, actionReconnect = null }) {
 
   const { enableModal, disableModal } = useModal();
 
   const {
     deleteDeviceConnections,
+    insertDevice,
   } = useStore(store => ({
-    deleteDeviceConnections: store.deleteDeviceConnections,
+    createDevicesSlice: store.createDevicesSlice,
+    insertDevice: store.insertDevice,
   }), shallow);
 
   const currentOrientation = useMemo(() => {
@@ -34,7 +36,7 @@ const ActionButtons = memo(function ActionButtons
   return (
     <div
       className={
-        `${AB.container} ${currentOrientation} ${ AB.active }`
+        `${AB.container} ${currentOrientation} ${AB.active}`
       }
     >
       {
@@ -46,6 +48,11 @@ const ActionButtons = memo(function ActionButtons
               subtitle: actionDelete.subtitle,
               handleConfirm: () => {
                 deleteDeviceConnections({ deviceId: actionDelete.data.id });
+
+                if (actionDelete.onDelete) {
+                  actionDelete.onDelete();
+                }
+
                 disableModal('confirmation');
               }
             })}
@@ -73,6 +80,50 @@ const ActionButtons = memo(function ActionButtons
           </ActionButton>
         )
       }
+
+      {
+        actionDuplicate && (
+          <ActionButton
+            onClick={actionDuplicate.onClick ?
+              actionDuplicate.onClick :
+              () => {
+                const position = {
+                  x: Math.floor(actionDuplicate.data.posX) + 36,
+                  y: Math.floor(actionDuplicate.data.posY) + 125
+                }
+
+                insertDevice({
+                  device: { ...actionDuplicate.data },
+                  dropPos: position,
+                });
+              }
+            }
+          >
+            <Gear />
+          </ActionButton>
+        )
+      }
+
+      {
+        actionReconnect && (
+          <ActionButton
+            onClick={
+              () => enableModal({
+                typeContent: actionReconnect.typeContent,
+                title: 'Conectar dispositivo',
+                subtitle: 'Insira as informações do dispositivo que deseja conectar',
+                handleConfirm: async () => {
+                  await actionReconnect.onSave()
+                  disableModal(actionReconnect.typeContent)
+                },
+                data: actionReconnect.data
+              })
+            }
+          >
+            <Repeat />
+          </ActionButton>
+        )
+      }
     </div>
   );
 });
@@ -82,6 +133,7 @@ ActionButtons.propTypes = {
   actionDelete: P.shape({
     title: P.string.isRequired,
     subtitle: P.string.isRequired,
+    onDelete: P.func,
     data: P.shape({
       id: P.string.isRequired
     }).isRequired
@@ -91,7 +143,17 @@ ActionButtons.propTypes = {
     typeContent: P.string,
     onSave: P.func,
     data: P.object
-  })
+  }),
+  actionReconnect: P.shape({
+    onClick: P.func,
+    typeContent: P.string,
+    onSave: P.func,
+    data: P.object
+  }),
+  actionDuplicate: P.shape({
+    onClick: P.func,
+    data: P.object
+  }),
 }
 
 export default ActionButtons;

@@ -5,7 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'react-toastify';
 import P from 'prop-types';
 
-import { apiAuth } from '@/services/apiAuth';
+import { updatePassword } from '@/api/http';
 import { Form } from '@/components/SharedComponents/Form';
 import { Input } from '@/components/SharedComponents/Input';
 import { InputPassword } from '@/components/SharedComponents/Input/InputPasswordType';
@@ -78,7 +78,7 @@ const UpdatePasswordModal = ({
 
     try {
 
-      await apiAuth.patch('/credentials/password', data);
+      await updatePassword(data)
       toast.success('Senha atualizada com sucesso!');
 
       closeModal();

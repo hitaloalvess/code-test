@@ -7,7 +7,7 @@ import { QueryClientProvider } from '@tanstack/react-query';
 import RoutesApp from "./routes"
 import { ModalProvider } from '@/contexts/ModalContext';
 import { AuthProvider } from './contexts/AuthContext';
-import { queryClient } from '@/services/queryClient';
+import { queryClient } from '@/lib/react-query';
 
 import './styles/global.css';
 

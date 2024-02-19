@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom";
 import { shallow } from 'zustand/shallow';
 
 import { useStore } from '@/store';
-import { useProject } from '@/hooks/useProject';
+import { useProject } from '@/hooks';
 
 import { SpinnerLoader } from '@/components/SharedComponents/SpinnerLoader';
 import CircleButton from "..";
@@ -32,8 +32,8 @@ const SaveButton = () => {
 
 
   const handleSave = async () => {
-    if (!hasProjectUpdate) return;
 
+    if (!hasProjectUpdate) return;
 
     try {
       setIsLoading(true);
@@ -50,7 +50,7 @@ const SaveButton = () => {
 
   useEffect(() => {
 
-    interval.current = setInterval(() => handleSave().catch(err => console.log(err)), INTERVAL_UPDATE);
+    interval.current = setInterval(handleSave, INTERVAL_UPDATE);
 
     return () => {
       clearInterval(interval.current);
@@ -66,8 +66,7 @@ const SaveButton = () => {
       name={'save-button'}
       alt='Imagem do botão de salvamento automatico'
       title='Botão de salvamento automático'
-      handleClick={() => handleSave().catch(err => console.log(err))
-      }
+      handleClick={handleSave}
     >
       {
         isLoading ?

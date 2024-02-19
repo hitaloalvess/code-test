@@ -1,43 +1,52 @@
 import { Trash } from '@phosphor-icons/react';
-import { mockDevices } from '@/data/devices.js';
-import P from 'prop-types';
+import { useSidebar } from '@/hooks/useSidebar';
 
-import MenuDevice from '../MenuDevice';
+import MenuDeviceVirtual from '../MenuDeviceVirtual';
+import MenuDevicePhysical from '../MenuDevicePhysical';
+import ButtonConnect from '../ButtonConnect';
 
-import { container, trashArea, devicesList } from './styles.module.css';
+import * as SA from './styles.module.css';
+const SidebarArea = () => {
 
-const SidebarArea = ({ area, activeTrashArea }) => {
+  const { activeTrashArea, devices, currentArea } = useSidebar();
+
   return (
-    <div className={container}>
+    <div className={SA.deviceListContainer}>
 
-      <div className={devicesList}>
-        <ul
-        >
+      <div
+        className={SA.devicesList}
+        data-selected-device-list-type={currentArea}
+      >
+        <ul>{
+          Object.values(devices[currentArea]).map((device) => (
+            device.type === 'virtual' ?
+              <MenuDeviceVirtual
+                key={device.id}
+                device={device}
+              /> :
+              <MenuDevicePhysical
+                key={device.id}
+                device={device}
+              />
+          ))
+        }
+
           {
-            mockDevices[area]
-              .map((device) => (
-                <MenuDevice
-                  key={device.id}
-                  device={device}
-                />
-              ))
+            currentArea === 'hardware' &&
+            <ButtonConnect />
           }
         </ul>
       </div>
+
       {activeTrashArea && (
         <div
-          className={trashArea}
+          className={SA.trashArea}
         >
           <Trash />
         </div>
       )}
+
     </div>
   );
 };
-
-SidebarArea.propTypes = {
-  area: P.string.isRequired,
-  activeTrashArea: P.bool.isRequired
-}
-
 export default SidebarArea;

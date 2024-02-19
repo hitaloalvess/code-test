@@ -1,11 +1,13 @@
 import { mockMenuButtons } from '@/data/sidebar.js';
-import P from 'prop-types';
+import { useSidebar } from '@/hooks/useSidebar';
 
 import MenuButton from '../MenuButton';
 
 import { menuButtons } from './styles.module.css';
 
-const MenuButtons = ({ handleSelectArea, area }) => {
+const MenuButtons = () => {
+  const { handleSelectArea, currentArea } = useSidebar();
+
   return (
     <div className={menuButtons}>
       <ul>
@@ -15,7 +17,7 @@ const MenuButtons = ({ handleSelectArea, area }) => {
               <MenuButton
                 type={typeArea}
                 src={imgSrc}
-                active={typeArea === area}
+                active={typeArea === currentArea}
                 onClick={handleSelectArea}
                 textTitle={title}
               />
@@ -26,10 +28,5 @@ const MenuButtons = ({ handleSelectArea, area }) => {
     </div>
   );
 };
-
-MenuButtons.propTypes = {
-  handleSelectArea: P.func.isRequired,
-  area: P.string.isRequired
-}
 
 export default MenuButtons;

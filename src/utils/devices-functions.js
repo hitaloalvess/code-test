@@ -63,7 +63,27 @@ export const calcDimensionsDeviceArea = (devices) => {
   return maxDimensions;
 }
 
-// DEVICE DHT
+export const transformDeviceName = (name, tranformType) => {
+  if(name.length === 0) return name;
+
+  const types = {
+    'firstLetterUpper': (name) => `${name.charAt(0).toUpperCase()}${name.slice(1)}`,
+    'firstLetterLower': (name) => `${name.charAt(0).toLowerCase()}${name.slice(1)}`,
+    'rm-space': (name) => name.replace(/\s/g, '').toLowerCase(),
+    'rm-space-firstLower': (name) => {
+      const nameWithoutSpace = types['rm-space'](name);
+      const nameFirstLetterLower = types['firstLetterLower'](nameWithoutSpace);
+
+      return nameFirstLetterLower;
+    }
+  }
+
+  const selectTransformType = types[tranformType];
+
+  return selectTransformType(name);
+}
+
+// DEVICE CLIMATE
 export const formulasForTransformation = {
   celsius: (temp) => {
     const convertedValue = Number(temp);

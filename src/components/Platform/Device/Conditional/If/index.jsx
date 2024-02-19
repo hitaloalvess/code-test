@@ -14,8 +14,9 @@ import {
   ifNumber
 } from './styles.module.css';
 
+import * as I from './styles.module.css';
 
-import eventBaseImg from '@/assets/images/devices/event/eventBase.svg';
+import baseImg from '@/assets/images/devices/conditional/if/ifBase.svg';
 
 const defaultValuesOfType = {
   'number': 0,
@@ -59,7 +60,7 @@ const If = ({
 
   const handleSpecialDeviceValues = (deviceData, objValue) => {
     const devices = {
-      'dht': (deviceData, objValue) => {
+      'climate': (deviceData, objValue) => {
 
         const { connector } = deviceData;
         const { current, max } = objValue;
@@ -257,8 +258,9 @@ const If = ({
     <>
 
       <DeviceBody
+        classesForBody={[I.bg]}
         name={name}
-        imgSrc={eventBaseImg}
+        imgSrc={baseImg}
         ref={dragRef}
       >
 

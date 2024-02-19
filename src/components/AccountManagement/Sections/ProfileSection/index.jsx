@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 import { useForm } from 'react-hook-form';
 import { Cake, Flag, PhoneCall, User } from '@phosphor-icons/react';
 
-import { apiAuth } from '@/services/apiAuth';
+import { updateAccount } from '@/api/http';
 import { useContextAuth } from '@/hooks/useAuth';
 import { isValidPhoneNumber, removeSpaces, removeSpecialCharacters } from '@/utils/form-validation-functions';
 import { Form } from '@/components/SharedComponents/Form';
@@ -51,9 +51,11 @@ const ProfileSection = () => {
     }
 
     try {
-
-      const { data } = await apiAuth.put(`/${person.type}s/${person.id}`, formData);
-
+      const { data } = await updateAccount({
+        personType: person.type,
+        personId: person.id,
+        data: formData
+      })
       handleUpdatePerson(data.person);
       toast.success('Usuário atualizado com sucesso!');
 

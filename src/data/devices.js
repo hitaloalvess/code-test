@@ -1,12 +1,12 @@
 //entry
-import deviceLdr from '@/assets/images/devices/entry/ldr.svg';
+import deviceLdr from '@/assets/images/devices/entry/photoresist.svg';
 import devicePotentiometer from '@/assets/images/devices/entry/potentiometer.svg';
 import deviceSwitch from '@/assets/images/devices/entry/switchOff.svg';
 import devicePushButton from '@/assets/images/devices/entry/pushButtonOff.svg';
-import deviceDht from '@/assets/images/devices/entry/dht.svg';
+import deviceClimate from '@/assets/images/devices/entry/climate.svg';
 import deviceInfrared from '@/assets/images/devices/entry/infrared.svg';
 // import deviceSoilMoisture from '@/assets/images/devices/event/eventBase.svg';
-// import deviceRainDetector from '@/assets/images/devices/event/eventBase.svg';
+// import deviceRain from '@/assets/images/devices/event/eventBase.svg';
 
 //exit
 import deviceLed from '@/assets/images/devices/exit/led.svg';
@@ -22,7 +22,7 @@ import deviceAnd from '@/assets/images/devices/conditional/and.svg';
 import deviceOr from '@/assets/images/devices/conditional/or.svg';
 import deviceNot from '@/assets/images/devices/conditional/not.svg';
 import deviceComparator from '@/assets/images/devices/conditional/comparator.svg';
-import deviceIf from '@/assets/images/devices/conditional/comparator.svg';
+import deviceIf from '@/assets/images/devices/conditional/if/if.svg';
 import deviceCounter from '@/assets/images/devices/conditional/counter/counter.svg';
 
 //event
@@ -35,22 +35,23 @@ import devicePassValue from '@/assets/images/devices/event/passValue.svg';
 
 //tool
 import deviceStickynote from '@/assets/images/devices/tool/stickyNote.svg'
+import deviceVariable from '@/assets/images/devices/event/loop.svg'
 
 export const mockDevices = {
   entry: [
     {
       id: 10,
-      imgSrc: deviceDht,
-      name: 'dht',
+      imgSrc: deviceClimate,
+      name: 'climate',
       label: 'Sensor de temperatura',
       type: 'virtual',
       category: 'entry',
       value: {
-        temperature: {
+        temp: {
           current: 0,
           max: 50
         },
-        humidity: {
+        airUmid: {
           current: 0,
           max: 1023
         }
@@ -58,17 +59,17 @@ export const mockDevices = {
       posX: 0,
       posY: 0,
       connectors: {
-        temperature: {
+        temp: {
           id: null,
           type: 'exit',
-          name: 'temperature',
+          name: 'temp',
           x: 0,
           y: 0
         },
-        humidity: {
+        airUmid: {
           id: null,
           type: 'exit',
-          name: 'humidity',
+          name: 'airUmid',
           x: 0,
           y: 0
         }
@@ -101,7 +102,7 @@ export const mockDevices = {
     {
       id: 12,
       imgSrc: deviceLdr,
-      name: 'ldr',
+      name: 'photoresist',
       label: 'Sensor de luz',
       type: 'virtual',
       category: 'entry',
@@ -199,8 +200,8 @@ export const mockDevices = {
     },
     // {
     //   id: 16,
-    //   imgSrc: deviceRainDetector,
-    //   name: 'rainDetector',
+    //   imgSrc: deviceRain,
+    //   name: 'rain',
     //   label: 'Sensor de radiação',
     //   type: 'virtual',
     //   category: 'entry',
@@ -225,7 +226,7 @@ export const mockDevices = {
     // {
     //   id: 17,
     //   imgSrc: deviceSoilMoisture,
-    //   name: 'soilMoisture',
+    //   name: 'soil',
     //   label: 'Sensor de humidade do solo',
     //   type: 'virtual',
     //   category: 'entry',
@@ -859,8 +860,41 @@ export const mockDevices = {
       },
       posX: 0,
       posY: 0
+    },
+    {
+      id: 52,
+      imgSrc: deviceVariable,
+      name: 'variable',
+      label: 'Variável',
+      type: 'virtual',
+      category: 'tool',
+      value: {
+        send: {
+          current: 0
+        },
+        groupName: null,
+      },
+      posX: 0,
+      posY: 0,
+      connectors: {
+        receive: {
+          id: null,
+          name: 'receive',
+          type: 'entry',
+          x: 0,
+          y: 0
+        },
+        send: {
+          id: null,
+          name: 'send',
+          type: 'exit',
+          x: 0,
+          y: 0
+        },
+      }
     }
-  ]
+  ],
+  hardware: []
 };
 
 export const deviceConnectorRules = {
@@ -868,11 +902,11 @@ export const deviceConnectorRules = {
     acceptedConnections: ['allExit'],
     connectsTo: ['all']
   },
-  dht: {
+  climate: {
     acceptedConnections: ['allExit'],
     connectsTo: ['all']
   },
-  ldr: {
+  photoresist: {
     acceptedConnections: ['allExit'],
     connectsTo: ['all']
   },
@@ -880,11 +914,11 @@ export const deviceConnectorRules = {
     acceptedConnections: ['allExit'],
     connectsTo: ['all']
   },
-  soilMoisture: {
+  soil: {
     acceptedConnections: ['allExit'],
     connectsTo: ['all']
   },
-  rainDetector: {
+  rain: {
     acceptedConnections: ['allExit'],
     connectsTo: ['all']
   },
@@ -902,11 +936,11 @@ export const deviceConnectorRules = {
   },
   buzzer: {
     acceptedConnections: ['oneEntry'],
-    connectsFrom: ['potentiometer', 'ldr', 'rainDetector', 'soilMoisture', 'pushButton', 'counter', 'and', 'or', 'not', 'comparator', 'if', 'toggle', 'slider', 'delay', 'switch', 'physicalPotentiometer', 'physicalLDR']
+    connectsFrom: ['potentiometer', 'photoresist', 'rain', 'soil', 'pushButton', 'counter', 'and', 'or', 'not', 'comparator', 'if', 'toggle', 'slider', 'delay', 'switch', 'physicalPotentiometer', 'physicalLDR']
   },
   shakeMotor: {
     acceptedConnections: ['oneEntry'],
-    connectsFrom: ['potentiometer', 'ldr', 'rainDetector', 'soilMoisture', 'pushButton', 'counter', 'and', 'or', 'not', 'comparator', 'if', 'toggle', 'slider', 'delay', 'switch', 'physicalPotentiometer', 'physicalLDR']
+    connectsFrom: ['potentiometer', 'photoresist', 'rain', 'soil', 'pushButton', 'counter', 'and', 'or', 'not', 'comparator', 'if', 'toggle', 'slider', 'delay', 'switch', 'physicalPotentiometer', 'physicalLDR']
   },
   ledMono: {
     acceptedConnections: ['oneEntry'],
@@ -918,7 +952,7 @@ export const deviceConnectorRules = {
   },
   bargraph: {
     acceptedConnections: ['oneEntry'],
-    connectsFrom: ['potentiometer', 'dht', 'ldr', 'rainDetector', 'soilMoisture', 'counter', 'slider', 'physicalPotentiometer', 'physicalLDR', 'physicalDHT'],
+    connectsFrom: ['potentiometer', 'climate', 'photoresist', 'rain', 'soil', 'counter', 'slider', 'physicalPotentiometer', 'physicalLDR', 'physicalCLIMATE'],
   },
   counter: {
     acceptedConnections: ['oneEntry', 'allExit'],
@@ -973,11 +1007,11 @@ export const deviceConnectorRules = {
   pickColor: {
     acceptedConnections: ['oneEntry', 'allExit'],
     connectsFrom: ['all'],
-    connectsTo: ['or','led', 'physicalLED'],
+    connectsTo: ['or', 'led', 'physicalLED'],
   },
   slider: {
     acceptedConnections: ['oneEntry', 'allExit'],
-    connectsFrom: ['potentiometer', 'dht', 'ldr', 'rainDetector', 'soilMoisture', 'counter', 'slider', 'physicalPotentiometer', 'physicalLDR', 'physicalDHT'],
+    connectsFrom: ['potentiometer', 'climate', 'photoresist', 'rain', 'soil', 'counter', 'slider', 'physicalPotentiometer', 'physicalLDR', 'physicalCLIMATE'],
     connectsTo: ['all'],
   },
   passValue: {
@@ -989,5 +1023,9 @@ export const deviceConnectorRules = {
     acceptedConnections: ['oneEntry', 'allExit'],
     connectsFrom: ['all'],
     connectsTo: ['all'],
+  },
+  physicalClimate: {
+    acceptedConnections: ['allExit'],
+    connectsTo: ['all']
   },
 }

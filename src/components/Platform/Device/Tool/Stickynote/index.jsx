@@ -56,7 +56,7 @@ const handleSettingUpdate = useCallback((newColor) => {
   return (
     <>
       <DeviceBody
-        classesForBody={[S.testBg]}
+        classesForBody={[S.background]}
         name={name}
         imgSrc={imgSrc}
         ref={dragRef}

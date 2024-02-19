@@ -108,7 +108,7 @@ const Slider = ({
       const toConnector = devices[conn.deviceTo.id].connectors[conn.deviceTo.connector.name];
       toConnector.defaultReceiveBehavior({
         value: value.send.current,
-        max: value.send.max
+        max: value.limit
       });
     })
   }

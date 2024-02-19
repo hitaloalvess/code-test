@@ -1,21 +1,29 @@
 .ifNumber {
   position: absolute;
   width: 64px;
-  top: 14px;
+  top: 28px;
   left: 8px;
-  font-size: 14px;
-  line-height: 22px;
+  font-size: 12px;
+  line-height: 27px;
   font-weight: bold;
   text-align: center;
   color: var(--black);
   /* margin: -57px auto 0 auto; */
 }
 
+.bg {
+  height: 118px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  transition: transform .3s ease-in-out;
+}
+
 @media (((max-height: 481px) and (orientation: landscape)) or ((max-width: 481px) and (orientation: portrait))) {
   .ifNumber {
-    top: 12px;
+    top: 37px;
     left: -3px;
-    line-height: 13px;
-    font-size: 11px;
+    line-height: 22px;
+    font-size: 9px;
   }
 }

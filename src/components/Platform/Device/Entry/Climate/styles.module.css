@@ -1,0 +1,52 @@
+.thermometerIcon,
+.dropIcon {
+  font-size: 20px;
+}
+
+.thermometerIcon {
+  fill: var(--red);
+}
+
+.dropIcon {
+  fill: var(--blue);
+}
+
+.inputClimate {
+  opacity: 1;
+  transition: transform 0.2s ease-in-out, width 0.2s ease-in-out;
+}
+
+
+.inputClimate:hover {
+  opacity: 1;
+  position: relative;
+  transform: translateX(0);
+  width: 85px !important;
+  height: 6px;
+}
+
+.inputContainerClimate {
+  position: relative;
+  top: 0;
+  display: flex;
+  justify-content: center;
+}
+
+.inputContainerClimate input {
+  width: 0px !important;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.inputContainerClimate:hover input {
+  width: 80px !important;
+  opacity: 1;
+  pointer-events: all;
+}
+
+
+@media(max-width: 768px) {
+  .inputContainerClimate:hover input {
+    width: 60px !important;
+  }
+}
