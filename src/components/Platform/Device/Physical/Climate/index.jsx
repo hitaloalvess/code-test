@@ -7,11 +7,9 @@ import { useStore } from '@/store';
 import { socketEvents } from '@/constants';
 import { useContextAuth } from '@/hooks';
 import {
-  updateHardwareEvents,
+  updateHardware,
   eventSubscribe,
   eventUnsubscribe,
-  disconnectHardware,
-  clearHardware
 } from '@/api/socket/hardware';
 import { createHardwareConnection } from '@/api/http';
 import { formulasForTransformation, transformHumidityValue } from '@/utils/devices-functions';
@@ -73,21 +71,21 @@ const PhysicalClimate = memo(function Climate({
   }
 
   const handleDisconnect = () => {
-    updateHardwareEvents({
+
+    updateHardware({
       mac: id,
       userId: person.id,
-      events: {
-        dashboard: false
+      data: {
+        events: {
+          dashboard: false
+        },
+        user: {
+          uuid: null
+        }
       }
     });
 
-    disconnectHardware({ mac: id, userId: person.id });
-
     eventUnsubscribe(socketEvents.TELEMETRY(id, person.id));
-  }
-
-  const handleBeforeUnload = () => {
-    clearHardware({ mac: id, userId: person.id });
   }
 
   useEffect(() => {
@@ -99,12 +97,8 @@ const PhysicalClimate = memo(function Climate({
 
     eventSubscribe(socketEvents.TELEMETRY(id), handleReceiveTelemetry);
 
-    window.addEventListener('beforeunload', handleBeforeUnload);
-
     return () => {
       handleDisconnect();
-      window.removeEventListener('beforeunload', handleBeforeUnload);
-
     }
   }, []);
 
@@ -155,14 +149,6 @@ const PhysicalClimate = memo(function Climate({
 
         <ActionButtons
           orientation='left'
-          // actionDelete={{
-          //   title: 'Cuidado',
-          //   subtitle: 'Tem certeza que deseja excluir o componente?',
-          //   data: {
-          //     id
-          //   },
-          //   onDelete: data.enablePhysicalDeviceInSidebar
-          // }}
           actionConfig={{
             typeContent: 'config-climate',
             onSave: handleSettingUpdate,
@@ -175,11 +161,13 @@ const PhysicalClimate = memo(function Climate({
             onSave: async () => {
               await createHardwareConnection({ mac: id, userId: person.id });
 
-              updateHardwareEvents({
+              updateHardware({
                 mac: id,
                 userId: person.id,
-                events: {
-                  dashboard: true
+                data: {
+                  events: {
+                    dashboard: true
+                  }
                 }
               });
 
