@@ -1,4 +1,4 @@
-import { SidebarProvider } from '@/contexts/SideBarContext';
+import { SidebarProvider } from '@/contexts/SidebarContext';
 
 import SidebarArea from './SidebarArea';
 import MenuButtons from './MenuButtons';
