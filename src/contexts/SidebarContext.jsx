@@ -30,7 +30,6 @@ export const SidebarProvider = ({ children }) => {
   }), shallow);
 
   const sidebarRef = useRef(null);
-  const isFirstRender = useRef(true);
   const { enableModal, disableModal } = useModal();
   const [currentArea, setCurrentArea] = useState('entry');
   const [devices, setDevices] = useState(mockDevices);
@@ -191,11 +190,7 @@ export const SidebarProvider = ({ children }) => {
   }
 
   useEffect(() => {
-    if (isFirstRender.current) {
-      isFirstRender.current = false;
 
-      return;
-    }
     loadPhysicalDevices()
 
   }, [])
