@@ -4,12 +4,13 @@ import { createHardwareConnection } from '@/api/http';
 import { useContextAuth, useModal, useSidebar } from '@/hooks'
 
 import * as BC from './styles.module.css';
+import { toast } from 'react-toastify';
 
 const ButtonConnect = () => {
 
   const { enableModal, disableModal } = useModal();
   const { person } = useContextAuth();
-  const { handleCreatePhysicalDevice } = useSidebar();
+  const { handleCreatePhysicalDevice, devices } = useSidebar();
 
   const handleOpenModal = () => {
     enableModal({
@@ -17,6 +18,14 @@ const ButtonConnect = () => {
       title: 'Conectar dispositivo',
       subtitle: 'Insira as informações do dispositivo que deseja conectar',
       handleConfirm: async ({ mac }) => {
+
+        const hasHardware = devices.hardware.find(hardware => hardware.id === mac)
+
+        if (hasHardware) {
+          toast.warning(`Já existe um dispositivo criado com esse endereço mac`)
+          return;
+        }
+
         const { hardware: { config } } = await createHardwareConnection({ mac, userId: person.id });
         handleCreatePhysicalDevice({ mac: config.mac, type: config.type });
 
