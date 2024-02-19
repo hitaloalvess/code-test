@@ -197,6 +197,7 @@ const MenuDevicePhysical = ({ device }) => {
           onTouchMove={handleTouchMove}
           onTouchEnd={handleTouchEnd}
           data-disabled={device.isDisabled}
+          onContextMenu={(e) => e.preventDefault()}
         >
           <img
             src={device.imgSrc}

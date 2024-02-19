@@ -15,14 +15,12 @@ export const replaceStringInFunc = (key, value) => {
 }
 
 export const removeHTMLElementRef = (objElement) => {
-  const entries = Object.entries(objElement);
-
-  const newObj = entries.reduce((acc, value) => {
+  const newObj = Object.entries(objElement).reduce((acc, value) => {
     const objkey = value[0];
     const objValue = value[1];
 
-    if ((objValue?.current && objValue?.current instanceof Element) ||
-      (objValue instanceof Function)) {
+    if (objValue?.current instanceof Element ||
+      objValue instanceof Function || objValue instanceof Element) {
       return acc;
     }
 
@@ -31,6 +29,7 @@ export const removeHTMLElementRef = (objElement) => {
       [objkey]: objValue
     }
   }, {});
+
 
   return newObj;
 }
