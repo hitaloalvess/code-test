@@ -42,8 +42,6 @@ const MoutingPanel = () => {
     changeHasProjectUpdate: store.changeHasProjectUpdate,
   }), shallow);
 
-  const isFirstRender = useRef(true);
-
   const deviceDrop = (item, monitor) => {
 
     const itemType = monitor.getItemType();
@@ -69,11 +67,6 @@ const MoutingPanel = () => {
   }), [devices]);
 
   useEffect(() => {
-    if (isFirstRender.current) {
-      isFirstRender.current = false;
-
-      return;
-    }
 
     loadProject(projectId)
       .then(() => changeHasProjectUpdate(false))
@@ -85,13 +78,6 @@ const MoutingPanel = () => {
   }, [projectId]);
 
   useEffect(() => {
-    if (isFirstRender.current) {
-      isFirstRender.current = false;
-
-      return;
-    }
-
-
     if (!hasProjectUpdate) {
       changeHasProjectUpdate(true);
     }
