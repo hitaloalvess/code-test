@@ -1,4 +1,4 @@
-import { memo, useState, useEffect, useMemo } from 'react';
+import { memo, useState, useEffect, useMemo, useRef } from 'react';
 import P from 'prop-types';
 import { Thermometer, Drop } from '@phosphor-icons/react';
 import { shallow } from 'zustand/shallow';
@@ -28,7 +28,7 @@ const PhysicalClimate = memo(function Climate({
   const { id, imgSrc, name, posX, posY, isCreateFromSidebar } = data;
 
   const { person } = useContextAuth();
-
+  const isFirstRender = useRef(true);
   const [scaleType, setScaleType] = useState('celsius');
   const [isConnected, setIsConnected] = useState(!!isCreateFromSidebar);
 
@@ -88,6 +88,13 @@ const PhysicalClimate = memo(function Climate({
   }
 
   useEffect(() => {
+    //Todo: Remover para deploy
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+
+      return;
+    }
+
     eventSubscribe(socketEvents.TELEMETRY(id), handleReceiveTelemetry);
 
     return () => {

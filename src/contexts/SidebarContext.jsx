@@ -3,6 +3,7 @@ import { createContext, useState, useRef, useEffect } from "react";
 import { useDrop } from 'react-dnd';
 import { shallow } from 'zustand/shallow';
 import { isMobile } from 'react-device-detect';
+import { useParams } from 'react-router-dom';
 
 import { mockDevices } from '@/data/devices.js';
 import { getHardwareInfoByType, getProjectById } from '@/api/http';
@@ -11,8 +12,6 @@ import { useStore } from '@/store';
 import { useModal, useContextAuth } from '@/hooks';
 
 import { transformDeviceName } from '@/utils/devices-functions'
-import { useParams } from 'react-router-dom';
-
 
 export const SidebarContext = createContext();
 
@@ -29,6 +28,7 @@ export const SidebarProvider = ({ children }) => {
     loadRef: store.loadRef,
   }), shallow);
 
+  const isFirstRender = useRef(true);
   const sidebarRef = useRef(null);
   const { enableModal, disableModal } = useModal();
   const [currentArea, setCurrentArea] = useState('entry');
@@ -182,6 +182,10 @@ export const SidebarProvider = ({ children }) => {
   }), []);
 
   const handleBeforeUnload = () => {
+    console.log({
+      title: 'Dentro de handleBeforeUnload',
+      devices: devices.hardware
+    })
     for (const hardware of devices.hardware) {
       clearHardware({ mac: hardware.id, userId: person.id });
 
@@ -190,18 +194,31 @@ export const SidebarProvider = ({ children }) => {
   }
 
   useEffect(() => {
+    //Todo: Remover para deploy
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
 
+      return;
+    }
     loadPhysicalDevices()
 
   }, [])
 
   useEffect(() => {
+    //Todo: Remover para deploy
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+
+      return;
+    }
     window.addEventListener('beforeunload', handleBeforeUnload);
 
     return () => {
+      console.log({ title: 'Desmontando useEffect devices.hardware' });
+      handleBeforeUnload();
       window.removeEventListener('beforeunload', handleBeforeUnload);
     }
-  }, [devices.hardware])
+  }, [devices.hardware.length])
 
   return (
     <SidebarContext.Provider value={{
